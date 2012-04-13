@@ -1,0 +1,15 @@
+{
+  "module" : {
+  	"name" : "101wikiTo101json",
+  	"contact" : "Thomas Schmorleiz",
+  	"languages" : ["PHP", "Python"],
+  	"libraries" : ["ApiWrapper2.php", "ApiWrapper.php"], 
+  	"inputresources" : ["101wiki"], 
+  	"inputdirs" : [],
+  	"outputfiles" : ["/dumps/101companies.json", "/dumps/101companiesListed.json"]
+  	"plugin_deployWeb" : {
+  		"source" :  ["/dumps/101companies.json", "/dumps/101companiesListed.json"],
+  		"target" : "dumps/"
+  	}
+  }
+}
