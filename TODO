@@ -1,0 +1,3 @@
+- Accumulate return codes.
+- Send email in case of failure.
+
