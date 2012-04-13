@@ -1,0 +1,9 @@
+{
+  "library" : {
+  	"name" : "megalib",
+  	"contact" : "Jean-Marie Favre",
+  	"languages" : ["PHP"],
+  	"dependencies" : ["arc2"],
+  	"summary" : ""
+  }
+}
