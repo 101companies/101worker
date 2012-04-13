@@ -4,8 +4,8 @@ modules = ${testSucceed}
 
 run:
 	@echo Performing all registered modules
-	@make prepare
-	@make $(patsubst %, %.run, ${modules})
+	@make prepare -s
+	@make $(patsubst %, %.run, ${modules}) -s
 
 %.run:
 	@${runner} $*
@@ -13,6 +13,10 @@ run:
 prepare:
 	@make ../101temps -s
 	@make ../101results -s
+
+push:
+	git commit -a
+	git push
 
 ../101temps:
 	@mkdir ../101temps
