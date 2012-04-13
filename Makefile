@@ -1,3 +1,8 @@
-all:
-	@echo Performing all registered modules
+runner = tools/runner.sh
 
+run:
+	@echo Performing all registered modules
+	make runTestSucceed
+
+runTestSucceed:
+	${runner} testSucceedNoOp
