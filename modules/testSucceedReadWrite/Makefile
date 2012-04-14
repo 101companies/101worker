@@ -6,6 +6,7 @@ temp = ${tempsdir}/${r}
 result = ${resultsdir}/${r}
 
 run: ${arg}
+	@rm -f ${temp}
 	@python program.py ${arg} ${temp}
 	@mv ${temp} ${result}
 
