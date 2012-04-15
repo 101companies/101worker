@@ -11,7 +11,7 @@ Testing
 
 See modules/test* for typical scenarios of modules.
 Run "make testOk.reconfigure" to prepare for positive tests.
-Run "make testFaik.reconfigure" to prepare for negative tests.
+Run "make testFail.reconfigure" to prepare for negative tests.
 Run "make" to to exercise positive and negative tests.
 Run "make production.reconfigure" to return to production.
 An email is send in the case of failing modules.

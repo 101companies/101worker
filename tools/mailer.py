@@ -4,7 +4,8 @@ from email.mime.text import MIMEText
 
 # Configure addresses and server
 emailFrom = "softlang@uni-koblenz.de"
-emailTo = "laemmel@uni-koblenz.de"
+# emailTo = "laemmel@uni-koblenz.de" # for testing
+emailTo = "gatekeepers@101companies.org"
 emailServer = "deliver.uni-koblenz.de"
 
 # Send the email
