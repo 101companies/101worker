@@ -5,7 +5,7 @@ result = ${resultsdir}/geshi/src/geshi
 
 run: ${orig}
 	@make clean
-	@cp -r ${orig} ${result}
+	@cp -r ${orig} ${resultsdir}
 	@python program.py ${repo} ${result}
 
 clean:
