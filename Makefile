@@ -5,11 +5,23 @@ run:
 	@make prepare -s
 	@cd modules; make run -s
 	@python tools/mailer.py
-	@git pull -q # upgrade past every run
+
+
+# Test target; run a few modules without logging
+
+test:
+	make testOkNoOp.run
+	make testOkWrite.run
+	make testOkReadWrite.run
+
+# Run a specific module in sandbox mode
+
+%.run: modules/%/Makefile
+	cd modules/$*; make
 
 # Reconfiguration for a module lists
 
-%.reconfigure:
+%.reconfigure: configs/%.config
 	@cd configs; \
 	rm -f current.config; \
 	cp $*.config current.config; \
@@ -24,6 +36,7 @@ clean:
 # Internal target: prepare a run or even a clean
 
 prepare:
+	@git pull -q # upgrade before every run
 	@make configs/current.config -s
 	@make ../101logs -s
 	@make ../101temps -s
