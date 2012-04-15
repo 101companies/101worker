@@ -9,4 +9,4 @@ ${resultsdir}/101repo:
 	git clone https://github.com/101companies/101repo	
 
 clean:
-	@rm -f ${temp} ${resultsdir}/101repo
+	@rm -rf ${resultsdir}/101repo
