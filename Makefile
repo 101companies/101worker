@@ -3,7 +3,7 @@
 run:
 	@echo Performing all modules.
 	@make prepare -s
-	@cd modules; make run
+	@cd modules; make run -s
 	@python tools/mailer.py
 	@git pull -q # upgrade past every run
 
@@ -19,7 +19,7 @@ run:
 
 clean:
 	@make prepare -s
-	@cd modules; make clean
+	@cd modules; make clean -s
 
 # Internal target: prepare a run or even a clean
 
@@ -39,7 +39,7 @@ push:
 # Internal target: use production configuration by default.
 
 configs/current.config: configs/production.config
-	make production.reconfigure
+	make production.reconfigure -s
 
 # Internal target: make sure 101logs directory exists.
 
