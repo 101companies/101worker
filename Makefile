@@ -38,6 +38,7 @@ clean:
 prepare:
 	@git pull -q # upgrade before every run
 	@make configs/current.config -s
+	@make ../101web -s
 	@make ../101logs -s
 	@make ../101temps -s
 	@make ../101results -s
@@ -53,6 +54,11 @@ push:
 
 configs/current.config: configs/production.config
 	make production.reconfigure -s
+
+# Internal target: make sure 101web directory exists.
+
+../101web:
+	@mkdir ../101web
 
 # Internal target: make sure 101logs directory exists.
 
