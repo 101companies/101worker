@@ -2,9 +2,10 @@
 
 run:
 	@echo Performing all modules.
-	@make prepare -s
+	@make before-run -s
 	@cd modules; make run -s
 	@python tools/mailer.py
+	@make after-run -s
 
 
 # Test target; run a few modules without logging
@@ -33,16 +34,20 @@ clean:
 	@make prepare -s
 	@cd modules; make clean -s
 
-# Internal target: prepare a run or even a clean
+# Internal target: things to be done before a run
 
-prepare:
-	@git pull -q # upgrade before every run
+before-run:
 	@make configs/current.config -s
 	@make ../101web -s
 	@make ../101logs -s
 	@make ../101temps -s
 	@make ../101results -s
 	@rm -f ../101logs/runner.log
+
+# Internal target: things to be done after a run
+
+after-run:
+	@git pull -q # upgrade past every run
 
 # Target for git-related convenience
 

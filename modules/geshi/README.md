@@ -4,5 +4,5 @@ Complement geshi so that scattered geshi files are gathered.
 
 For each language, the subdirectory "geshi" is searched
 
-In this subdirectories, the "*.php*" files are copied to the geshi directory.
+In these subdirectories, the "*.php*" files are copied to the geshi directory.
 

@@ -21,6 +21,7 @@ Modules should access the file system as follows:
 
 * Module results are temporarily to be stored in "../101temps".
 * Module results are eventually to be stored in "../101results".
+* Module results for the web are eventually to be stored in "../101web".
 * Module arguments are to be fetched from "../101results".
 
 All the mentioned directories are automatically created, if needed.
@@ -28,7 +29,7 @@ All the mentioned directories are automatically created, if needed.
 
 # Production cycle by 101worker
 
-101worker repeatedly executions a certain list of modules.
+101worker repeatedly executes a certain list of modules.
 
 See the file "101worker/configs/production.config" for the list.
 
@@ -41,7 +42,7 @@ The production cycle can be manually invoked as follows:
 
 The idea is that a cron job performs these commands regularly.
 
-101worker updates itself by "git pull" before each run.
+101worker updates itself with "git pull" after each run.
 
 In this manner, production modules can also be added remotely.
 
@@ -55,6 +56,8 @@ The log is sent via email to the 101gatekeepers, if any module failed.
 The default list is "101worker/configs/production.config".
 
 Alternative module lists may be good for testing 101worker.
+
+However, testing is also reasonably supported by the make target "%.run".
 
 A list <x> can be selected as follows:
 
