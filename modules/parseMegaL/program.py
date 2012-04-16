@@ -13,6 +13,7 @@ if (len(sys.argv) == 2):
                   file = os.path.join(subdir, f)
                   if (f.endswith('.megal')):
                      print file
+                  #
                   # status, output = commands.getstatusoutput(command)
    sys.exit(0)
 else:
