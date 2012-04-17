@@ -1,10 +1,14 @@
 include ../Makefile.vars
 repo = ${resultsdir}/101repo
-result = ${resultsdir}/geshi/src/geshi
+antlr = ${repo}/technologies/ANTLR/antlr-3.2.jar
+parser = ${repo}/languages/MegaL/parser
 
-run: ${orig}
-	@make clean
+run: ${repo} ${parser}
+	@cd ${parser}; make -s
 	@python program.py ${repo}
 
+%.parse:
+	java -cp ${parser}:${antlr} megal.parser.Main $*
+
 clean:
-	@#no-op
+	@cd ${parser}; make clean

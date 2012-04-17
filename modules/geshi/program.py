@@ -1,19 +1,22 @@
 import os
+import os.path
 import sys
 import commands
 
 if (len(sys.argv) == 3):
-   repo = sys.argv[1]
+   repo = sys.argv[1] 
    result = sys.argv[2]
-   for dir, subdirs, _ in os.walk(repo+"/languages"):
-      for s in subdirs:
-         if (s=="geshi"):
-            subdir = os.path.join(dir, s)
-            for _, _, files in os.walk(subdir):             
-               for f in files:
-                  file = os.path.join(subdir, f)
-                  command = 'cp '+file+' '+result
-                  status, output = commands.getstatusoutput(command)
+   for lang in os.listdir(repo+'/languages'):
+      dir = repo+'/languages/'+lang+'/geshi'
+      if (os.path.isdir(dir)):
+         for f in os.listdir(dir):
+            file = dir+'/'+f
+            if (f.endswith('.php')):
+               print 'Gathering '+file
+               command = 'cp '+file+' '+result
+               status, output = commands.getstatusoutput(command)
+               if (status):
+                  sys.exit(status)
    sys.exit(0)
 else:
    sys.exit(-1)
