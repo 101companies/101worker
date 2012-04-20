@@ -1,9 +1,10 @@
 include ../Makefile.vars
 repo = ${resultsdir}/101repo
+dev = ${resultsdir}/101dev
 geshi = ${resultsdir}/geshi
-xsdClasses = ../../../101dev/sandbox/m12/implementations/xsdClasses/docs
+xsdClasses = ${dev}/sandbox/m12/implementations/xsdClasses/docs
 
-run: ${repo} ${geshi}
+run: ${repo} ${geshi} ${xsdClasses}
 	@rm -rf ${webdir}/MegaModels
 	@mkdir ${webdir}/MegaModels
 	@mkdir ${webdir}/MegaModels/capabilities
