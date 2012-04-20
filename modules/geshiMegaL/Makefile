@@ -7,7 +7,7 @@ run: ${repo} ${geshi}
 
 %.geshi:
 	@echo $*
-	@mkdir -p ${webdir}${dir ${subst ${repo},,$*}}
+	@mkdir -p ${webdir}/${dir ${subst ${repo},,$*}}
 	@php ${geshi}/run.php $* ${webdir}${subst ${repo},,$*}.html megal
 
 clean:
