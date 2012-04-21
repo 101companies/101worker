@@ -1,5 +1,5 @@
 include ../Makefile.vars
-env = ~/Projects/101/101web
+env = ${webdir}
 basic = ${env}/all.json
 linkified = ${env}/allLinkified.json
 
