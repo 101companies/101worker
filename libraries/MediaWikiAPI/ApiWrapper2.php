@@ -3,7 +3,6 @@
 //define('BASE_PATH',str_replace('API','',dirname(__FILE__)));
 require_once('ApiWrapper.php' );
 require_once('Pages.php');
-
 class Wiki{
 
     function getPage($title){
