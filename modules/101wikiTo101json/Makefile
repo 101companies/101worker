@@ -7,3 +7,5 @@ run:
 	@php jsongenerator.php ${basic}
 	@python text2list.py ${basic} ${linkified}
 
+clean:
+
