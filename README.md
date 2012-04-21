@@ -51,6 +51,23 @@ A log of the latest cycle is stored in "../101logs/runner.log".
 The log is sent via email to the 101gatekeepers, if any module failed.
 
 
+# Adding a module
+
+Follow these steps:
+
+* Change directory to "101worker/modules".
+* Create a subdirectory for the new module, be it <x>.
+* Change to <x>.
+* Create a Makefile with a "run" target.
+* (You may want to create a "clean" target for any temporary stuff.)
+* Create a README.md file with some minimal documentation.
+
+Finally, also register the module:
+
+* Change directory to "101worker/config".
+* Add the module name to "production.config".
+
+
 # Alternative module lists
 
 The default list is "101worker/configs/production.config".

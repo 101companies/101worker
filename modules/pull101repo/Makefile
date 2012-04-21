@@ -7,6 +7,3 @@ run: ${resultsdir}/101repo
 ${resultsdir}/101repo:
 	@cd ${resultsdir}; \
 	git clone https://github.com/101companies/101repo	
-
-clean:
-	@rm -rf ${resultsdir}/101repo
