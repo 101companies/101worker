@@ -7,6 +7,3 @@ run: ${resultsdir}/101dev
 ${resultsdir}/101dev:
 	@cd ${resultsdir}; \
 	git clone https://github.com/101companies/101dev
-
-clean:
-	@rm -rf ${resultsdir}/101dev
