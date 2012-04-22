@@ -1,3 +1,7 @@
-run:
-	ssh wiki101@sl-mac.uni-koblenz.de "cd Sites/wiki/extensions/xmlCatTree; make rebuild"
+include ../Makefile.vars
 
+run:
+	@php rebuild.php ${webdir}/catTree.xml
+
+clean:
+	
