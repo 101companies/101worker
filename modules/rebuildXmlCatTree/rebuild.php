@@ -22,7 +22,7 @@ require_once(BASE_PATH.'/../../libraries/MediaWikiAPI/Pages.php');
  		$pageNode = $catNode->addChild("page");
 		$pageNode->addAttribute("name", $member);
 		$page = new Page($member);
-		$pageNode->addAttribute("intent", $p->intent);
+		$pageNode->addAttribute("intent", $page->intent);
  	}
  }
 
