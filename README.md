@@ -6,16 +6,21 @@ All modules are located in "101worker/modules".
 
 See "101worker/modules/test*" for illustrative modules.
 
-A module <x> can be executed as follows:
+A module x can be executed as follows:
 
 * Change directory to "101worker".
-* Enter "make <x>.run".
+* Enter "make x.run".
 
 This mode of execution is good for testing.
 
 See the "test" target of "101worker/Makefile" for illustration.
 
 Modules would be added to the production list at some point; see below.
+
+# Module Contracts
+
+Module could be written in any languages  but must follow the following
+constraints.
 
 Modules should access the file system as follows:
 
