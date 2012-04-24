@@ -354,8 +354,8 @@ foreach($impltitles as $impltitle){
    $result = implJSON($impltitle,$indexs);
    array_push($jsons, $result['json']);
    #array_push($implj, $result['json']);
-   $implj['101implementation:'.$impltitle] = $result['json'];
-   array_push($fti, '101implementation:'.$impltitle);
+   $implj[$impltitle] = $result['json'];
+   array_push($fti, $impltitle);
    foreach($result['feats'] as $feato){
      $feat = $feato['name'];
      if (array_key_exists($feat, $coverage))
@@ -417,8 +417,8 @@ foreach($ontology as $x => $info) {
   $result = catJSON($x, $info['categories'], $info['members']);
   array_push($jsons, $result['json']);
   #array_push($catj, $result['json']);
-  $catj['Category:'.$x] = $result['json'];
-  array_push($ftca, 'Category:'.$x);
+  $catj[$x] = $result['json'];
+  array_push($ftca, $x);
 }
 #$all .= '"CategoryMembers":'. json_encode($ftca).PHP_EOL.','.PHP_EOL;
 $all .= '"Category":'. saveJSON('category', $catj).PHP_EOL.','.PHP_EOL;
@@ -429,8 +429,8 @@ foreach($feattitles as $feattitle){
   $result = featJSON($feattitle, $coverage[lcfirst($feattitle)],$indexs);
   array_push($jsons, $result['json']);
   #array_push($featj, $result['json']);
-  $featj['101feature:'.$feattitle] = $result['json'];
-  array_push($ftf, '101feature:'.$feattitle);
+  $featj[$feattitle] = $result['json'];
+  array_push($ftf, $feattitle);
 }
 #$all .= '"FeatureMembers":'. json_encode($ftf).PHP_EOL.','.PHP_EOL;
 $all .= '"Feature":'. saveJSON('feature', $featj).PHP_EOL.','.PHP_EOL;
@@ -440,8 +440,8 @@ foreach($langtitles as $langtitle){
   $result = langJSON($langtitle, $languse[$langtitle],$indexs);
   array_push($jsons, $result['json']);
   #array_push($langj, $result['json']);
-  $langj['Language:'.$langtitle] = $result['json'];
-  array_push($ftl, 'Language:'.$langtitle);
+  $langj[$langtitle] = $result['json'];
+  array_push($ftl, $langtitle);
 }
 #$all .= '"LanguageMembers":'. json_encode($ftl).PHP_EOL.','.PHP_EOL;
 $all .= '"Language":'. saveJSON('language', $langj).PHP_EOL.','.PHP_EOL;
@@ -451,8 +451,8 @@ foreach($techtitles as $techtitle){
   $result = techJSON($techtitle, $techuse[$techtitle],$indexs);
   array_push($jsons, $result['json']);
   #array_push($techj, $result['json']);
-  $techj['Technology:'.$techtitle] = $result['json'];
-  array_push($ftt, 'Technology:'.$techtitle);
+  $techj[$techtitle] = $result['json'];
+  array_push($ftt, $techtitle);
 }
 #$all .= '"TechnologyMembers":'. json_encode($ftt).PHP_EOL.','.PHP_EOL;
 $all .= '"Technology":'. saveJSON('technology', $techj).PHP_EOL.PHP_EOL.'}'.PHP_EOL;
