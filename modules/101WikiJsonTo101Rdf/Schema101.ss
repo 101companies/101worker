@@ -18,7 +18,7 @@ Category {
   name: string! ;
   type: string! ;
   url: string! ;
-  intent: string? ; 
+  headline: string? ; 
   // discussion:string? ;  // See Note (1)
   categories: Category* ;
   languageMembers: Language* ;
@@ -33,7 +33,7 @@ Concept {
   name: string! ;
   type: string! ;
   url: string! ;
-  intent:string? ;
+  headline:string? ;
   // discussion:string?   // See Note (1)
 }
         
@@ -42,7 +42,7 @@ Feature {
   name: string! ;
   type: string! ;
   url: string! ;
-  summary:string! ;
+  headline:string! ;
   // description:string? ;  // See Note (1)
   // illustration:string? ; // See Note (1)
   implementations:Implementation*
@@ -53,7 +53,7 @@ Implementation {
   name: string! ;
   type: string! ;
   url: string! ;
-  summary: string! ;
+  headline: string! ;
   // motivation: string! ;  // See Note (1)
   features: Feature* ;
   languages: Language* ;
@@ -66,7 +66,7 @@ Language {
   name: string! ;
   type: string! ;
   url: string! ;
-  summary: string! ;
+  headline: string! ;
   // description: string? ;  // See Note (1)
   implementations: Implementation*
 }
@@ -76,9 +76,18 @@ Technology {
   name: string! ;
   type: string! ;
   url: string! ;
-  summary: string! ; 
+  headline: string! ; 
   // description: string? ;   // See Note (1)
   implementations: Implementation*
+}
+
+Page {
+  id: string@ ;
+  name: string! ;
+  type: string! ;
+  url: string! ;
+  headline: string! ; 
+  // discussion:string? ;  // See Note (1)
 }
 
 
