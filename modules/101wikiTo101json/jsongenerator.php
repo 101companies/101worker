@@ -42,11 +42,12 @@ function concJSON($title) {
 }
 
 function catJSON($title, $subcs, $members) {
-  $prefix2Type['Language'] = 'language';
-  $prefix2Type[''] = 'concept';
-  $prefix2Type['101feature'] = 'feature';
-  $prefix2Type['101implementation'] = "implementation";
-  $prefix2Type['Technology'] = 'technology';
+  $prefix2Type['Language'] = 'Language';
+  $prefix2Type[''] = 'Concept';
+  $prefix2Type['101feature'] = 'Feature';
+  $prefix2Type['101implementation'] = "Implementation";
+  $prefix2Type['Technology'] = 'Technology';
+  $prefix2Type['Category'] = 'Category';
 	echo "Generating JSON for category \"".$title."\"... ";
 	$page = new Page("Category:".$title);
 	$top = array();
