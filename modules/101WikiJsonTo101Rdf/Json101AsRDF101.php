@@ -19,7 +19,7 @@ $graphasrdf->addERGraph(
 // Save the triples in different file formats
 if (DEBUG) echo "<h2>Saving the triples in files</h2>" ;
 $tripleset = $graphasrdf->getTripleSet() ;
-$formats='HTML,GraphML,Turtle,RDFXML,RDFJSON,NTriples' ;
+$formats='HTML,GraphML,Graphviz,Turtle,RDFXML,RDFJSON,NTriples' ;
 $tripleset->saveFiles($formats,RDF_WIKI_101_DATA_GENERATED_CORE_FILENAME) ;
 
 
