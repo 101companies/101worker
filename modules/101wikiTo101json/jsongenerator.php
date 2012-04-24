@@ -296,7 +296,6 @@ function saveJSON($title, $jsons){
 // check for path information
 if (count($argv) <= 1)
   exit("Need output path for json result\n");
-
 // MAIN
 $allPages = getAllPages();
 $indexs = array();
@@ -316,6 +315,9 @@ $feattitles = array();
 $langtitles = array();
 $techtitles = array();
 foreach($allPages as $page) {
+  $s = getPage($page['title']);
+  if ($s == null)
+    continue;
   $namespace = getNamespace($page['title']);
   if(!in_array($namespace,$nss)){
     array_push($nss, $namespace);
