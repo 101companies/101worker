@@ -22,6 +22,25 @@ function getNamespace($title){
   	return substr($title, 0, strpos($title,":"));
 }
 
+function pageJSON($title) {
+  echo "Generating JSON for page \"".$title."\"... ";
+  $page = new Page($title);
+  $top = array();
+  $top['name'] = $title;
+  $top['type'] = 'Page';
+  $top['url'] = BASE101URL.$title;
+  $top['headline'] = $page->intent;
+  if ($page->intent == null)
+    $top['headline'] = "";
+  $top['dicussion'] = $page->discussion;
+  if ($page->dicussion == null)
+      $top['dicussion'] = "";
+  $result = array();
+    $result['json'] = '$'.json_encode($top).'$';    
+  echo "DONE".PHP_EOL;
+    return $result;  
+}
+
 function concJSON($title) {
 	echo "Generating JSON for concept or term \"".$title."\"... ";
 	$page = new Page($title);
@@ -29,9 +48,9 @@ function concJSON($title) {
   $top['name'] = $title;
   $top['type'] = 'Concept';
   $top['url'] = BASE101URL.$title;
-  $top['intent'] = $page->intent;
+  $top['headline'] = $page->intent;
   if ($page->intent == null)
-  	$top['intent'] = "";
+  	$top['headline'] = "";
 	$top['dicussion'] = $page->discussion;
 	if ($page->dicussion == null)
   		$top['dicussion'] = "";
@@ -54,9 +73,9 @@ function catJSON($title, $subcs, $members) {
   $top['name'] = $title;
   $top['type'] = 'Category';
   $top['url'] = BASE101URL.'Category:'.$title;
-  $top['intent'] = $page->intent;
+  $top['headline'] = $page->intent;
   if ($page->intent == null)
-  		$top['intent'] = "";
+  		$top['headline'] = "";
 	$top['dicussion'] = $page->discussion;
 	if ($page->dicussion == null)
   		$top['dicussion'] = "";
@@ -99,9 +118,9 @@ function implJSON($title,&$indexs){
   $top['name'] = $title;
   $top['type'] = 'Implementation';
   $top['url'] = BASE101URL.'101implementation:'.$title;  
-  $top['summary'] = $page->intent;
+  $top['headline'] = $page->intent;
   if($page->intent == null)
-    $top['summary'] = "";
+    $top['headline'] = "";
   $top['motivation'] = trim($page->motivation);
   $feats = array();
   $featIds = array();
@@ -175,9 +194,9 @@ function featJSON($title, $impltitles,$indexs){
   $top['name'] = $title;
   $top['type'] = 'Feature';
   $top['url'] = BASE101URL.'101feature:'.$title;
-  $top['summary'] = $page->intent;
+  $top['headline'] = $page->intent;
   if($page->intent == null)
-    $top['summary'] = "";
+    $top['headline'] = "";
   if($page->description != "")
     $top['description'] = trim($page->description); 
   if($page->illustration != "")
@@ -205,9 +224,9 @@ function langJSON($title, $impltitles,$indexs){
   $top['name'] = $title;
   $top['type'] = 'Language';
   $top['url'] = BASE101URL.'Language:'.$title;
-  $top['summary'] = $page->intent;
+  $top['headline'] = $page->intent;
   if($page->intent == null)
-    $top['summary'] = "";
+    $top['headline'] = "";
   if($page->description != "")
     $top['description'] = trim($page->description); 
    $impls = array();
@@ -231,9 +250,9 @@ function techJSON($title, $impltitles,$indexs){
   $top['name'] = $title;
   $top['type'] = 'Technology';
   $top['url'] = BASE101URL.'Technology:'.$title;
-  $top['summary'] = $page->intent;
+  $top['headline'] = $page->intent;
   if($page->intent == null)
-    $top['summary'] = "";
+    $top['headline'] = "";
   if($page->description != "")
     $top['description'] = trim($page->description); 
     $impls = array();
@@ -259,7 +278,7 @@ function emptyJSON($title, $type, $impltitles, $indexs){
   $top['name'] = $title;
   $top['type'] = ucfirst($type);
   $top['url'] = $indexs[$prefixs[$type].':'.$title];
-  $top['summary'] = "";
+  $top['headline'] = "";
   $impls = array();
   foreach($impltitles as $impltitle){
       array_push($impls, $indexs['101implementation:'.$impltitle]);
@@ -315,9 +334,10 @@ $impltitles = array();
 $feattitles = array();
 $langtitles = array();
 $techtitles = array();
+$pagetitles = array();
 foreach($allPages as $page) {
   $s = getPage($page['title']);
-  if ($s == null)
+  if ($s == null or startsWith("#REDIRECT", $s))
     continue;
   $namespace = getNamespace($page['title']);
   if(!in_array($namespace,$nss)){
@@ -340,7 +360,10 @@ foreach($allPages as $page) {
       break;
     case "Technology":                                                                                                                                                                             
       array_push($techtitles, $title);
-      break;    
+      break;  
+    default:
+      array_push($pagetitles, $page['title']);
+      break;   
   }
 }
 var_dump($conctitles);
@@ -402,6 +425,18 @@ foreach($impltitles as $impltitle){
 #$all .= '"ImplementationMembers":'. json_encode($fti).PHP_EOL.','.PHP_EOL;
 $all .= '"Implementation":'. saveJSON('implementation', $implj).PHP_EOL.','.PHP_EOL;
 var_dump($missing);
+
+$pagej = array();
+$ftpa = array();
+foreach($pagetitles as $pagetitle) {
+  $result = pageJSON($pagetitle);
+  array_push($jsons, $result['json']);
+  $pagej[$pagetitle] = $result['json'];
+  array_push($ftpa, $pagetitle);
+}
+#$all .= '"ConceptMembers":'. json_encode($ftco).PHP_EOL.','.PHP_EOL;
+$all .= '"Page":'. saveJSON('pagetitle', $pagej).PHP_EOL.','.PHP_EOL;
+
 $concj = array();
 $ftco = array();
 foreach($conctitles as $conctitle) {
