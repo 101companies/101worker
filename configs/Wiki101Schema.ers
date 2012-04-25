@@ -1,10 +1,13 @@
-// schema of the 101 companies in the SimpleGraph Schema Notation (see megalib/SimpleGraph.php)
+// schema of the 101 wiki in the Entity Relationship Schema Notation 
+// (see megalib/ERGraphGraph.php)
 // @ means key
 // ! means 1
 // ? means 0..1
 // * means *
-// This file is used in particular in the context of the transformation json101AsRdf101
-// Only the classes and attributes listed below will be converted
+// This file is used in particular in the context of the module Wiki101JsonToWiki101Rdf
+// to drive the transformation from Json to RDF (via ERGraph).
+//
+// IMPORTANT: Only the classes and attributes listed below will be converted
 // This means that there could be more classes and attributes in the original json file.
 // Attributes names should be the same as those in the json files.
 // There is a mapping file for the binding between class and top level category.   
@@ -21,7 +24,7 @@ Category {
   headline: string? ;
   headline_links: Entity* ; 
   // discussion:string? ;  // See Note (1)
-  // discussion_links:Entity* ;  // See Note (1)
+  discussion_links:Entity* ;
   categories: Category* ;
   languageMembers: Language* ;
   conceptMembers: Concept* ;
@@ -38,7 +41,7 @@ Concept {
   headline:string? ;
   headline_links: Entity* ;
   // discussion:string?  ; // See Note (1)
-  // discussion_links:Entity* ;  // See Note (1)
+  discussion_links:Entity* ;
 }
         
 Feature {
@@ -49,9 +52,9 @@ Feature {
   headline:string! ;
   headline_links: Entity* ;
   // description:string? ;  // See Note (1)
-  // description_links:Entity* ; ;  // See Note (1)
+  description_links:Entity* ; 
   // illustration:string? ; // See Note (1)
-  // illustration_links:Entity* ; // See Note (1)
+  illustration_links:Entity* ;
   implementations:Implementation*
 }
     
@@ -63,12 +66,12 @@ Implementation {
   headline: string! ;
   headline_links: Entity* ;
   // motivation: string! ;  // See Note (1)
-  // motivation_links:Entity* ;  // See Note (1)
+  motivation_links:Entity* ;
   features: Feature* ;
   languages: Language* ;
   technologies: Technology* ;
   // usage:string? ; // See Note (1)
-  // usage_links:Entity* ;  // See Note (1)
+  usage_links:Entity* ; 
 }
     
 Language {
@@ -77,9 +80,9 @@ Language {
   type: string! ;
   url: string! ;
   headline: string! ;
-  headline_links: Enitiy* ;
+  headline_links: Entity* ;
   // description: string? ;  // See Note (1)
-  // description_links:Enitiy* ; ;  // See Note (1)
+  description_links:Entity* ;
   implementations: Implementation*
 }
     
@@ -91,7 +94,7 @@ Technology {
   headline: string! ;
   headline_links: Entity* ; 
   // description: string? ;   // See Note (1)
-  // description_links:Entity* ; ;  // See Note (1)
+  description_links:Entity* ; 
   implementations: Implementation*
 }
 
@@ -103,12 +106,6 @@ Page {
   headline: string! ; 
   headline_links: Entity* ;
   // discussion:string? ;  // See Note (1)
-  // discussion_links:Entity* ;  // See Note (1)
+  discussion_links:Entity* 
 }
-
-Entity {
-  type: string! ;
-  name: string! ;
-}
-
 

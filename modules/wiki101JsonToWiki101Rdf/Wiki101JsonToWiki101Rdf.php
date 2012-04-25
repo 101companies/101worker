@@ -4,17 +4,17 @@ require_once '../../configs/RDF101.config.php' ;
 require_once ABSPATH_MEGALIB.'JsonGraphAsERGraph.php' ;
 require_once ABSPATH_MEGALIB.'ERGraphAsRDF.php' ;
 require_once ABSPATH_MEGALIB.'HTML.php' ;
-
-// Create a SimpleGraph from the existing json file
+echo 'ABSPATH_BASE='.ABSPATH_BASE.'  ' ;
+echo 'ABSPATH_WORKER_WEB_DIR='.ABSPATH_WORKER_WEB_DIR.'  ' ;
+echo URL_WIKI_101_JSON_URL.' toto' ;
 $graph = jsonGraphToERGraph(
             URL_WIKI_101_JSON_URL,
             WIKI_101_SCHEMA_URL,
             WIKI_101_ENTITY_JSON_MAPPING_URL) ;
 
-// Convert this simple graph to a RDF triple set
 $graphasrdf = new ERGraphAsRDF() ;
 $graphasrdf->addERGraph(
-    $graph,RDF_DATA_101_PREFIX_URL,RDF_SCHEMA_101_PREFIX_URL) ;
+    $graph,RDF_DATA_101_URI_PATTERN,RDF_SCHEMA_101_PREFIX_URL) ;
 
 // Save the triples in different file formats
 if (DEBUG) echo "======= Saving the triples in files =========\n" ;
