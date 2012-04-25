@@ -74,6 +74,7 @@ configs/current.config: configs/production.config
 
 ../101web:
 	@mkdir ../101web
+	@mkdir ../101web/dumps
 
 # Internal target: make sure 101logs directory exists.
 
