@@ -36,7 +36,6 @@ function get101Store() {
   
   // define the prefixes available in SPARQL endpoint for instance
   $prefixes101 = array (
-      RDF_DATA_101_PREFIX=>RDF_DATA_101_PREFIX_URL, 
       RDF_SCHEMA_101_PREFIX=>RDF_SCHEMA_101_PREFIX_URL) ;
   
   $configurationStore101 = new RDFStoreConfiguration(

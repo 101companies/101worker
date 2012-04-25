@@ -12,7 +12,7 @@ $corefilename=$argv[1] ;
 $schemafile=$argv[2] ;
 
 
-$graph = jsonGraphToERGraph($corefilename,$schemafile) ;
+$graph = jsonGraphToERGraph($corefilename.'.json',$schemafile) ;
 
 $graphasrdf = new ERGraphAsRDF() ;
 $graphasrdf->addERGraph(
@@ -39,7 +39,8 @@ $endPointCode =
    require_once("../101worker/configs/RDF101.config.php") ;
    get101Store()->startSparqlEndpoint() ;
   ' ;   
+
 if (file_put_contents(RDF_STORE_END_POINT_CODE,$endPointCode)===false) {
-  die("Cannot create '.RDF_STORE_END_POINT_CODE);
+  die("Cannot create ".RDF_STORE_END_POINT_CODE);
 }
 
