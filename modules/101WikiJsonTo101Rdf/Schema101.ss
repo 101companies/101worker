@@ -107,7 +107,6 @@ Page {
 }
 
 Entity {
-  id: string@ ;
   type: string! ;
   name: string! ;
 }
