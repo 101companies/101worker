@@ -7,11 +7,25 @@ ini_set('display_errors','On');
 require_once(BASE_PATH.'/../../libraries/MediaWikiAPI/ApiWrapper2.php');
 require_once(BASE_PATH.'/../../libraries/MediaWikiAPI/ApiWrapper.php');
 
+
+
 if(function_exists('lcfirst') === false) {
     function lcfirst($str) {
         $str[0] = strtolower($str[0]);
         return $str;
     }
+}
+
+function escape101($string) {
+  $string = str_replace(" ", "_", $string);
+  $string = str_replace("#", "ASHARP", $string);
+  $string = str_replace("+", "APLUS", $string);
+  $string = str_replace(":", "ACOLON", $string);
+  $string = str_replace(".", "ADOT", $string);
+  $string = str_replace("-", "ADASH", $string);
+  $string = str_replace("?", "AQUESTION", $string);
+  $string = str_replace("/", "ASLASH", $string);
+  return $string;
 }
 
 // helper
@@ -105,9 +119,9 @@ function catJSON($title, $subcs, $members) {
   	$subo = array();
     $subo['type'] = getTypeName($sub);
     if ($subo['type'] == "Page")
-  	 $subo['name'] = $sub;
+  	 $subo['name'] = escape101($sub);
     else
-     $subo['name'] = getName($sub); 
+     $subo['name'] = escape101(getName($sub)); 
   	array_push($subs, $subo);
   }
 	$top['categories'] = $subs;
@@ -120,9 +134,9 @@ function catJSON($title, $subcs, $members) {
     $memo = array();
     $memo['type'] = getTypeName($member);
     if ($memo['type'] == "Page")
-      $memo['name'] = $member;
+      $memo['name'] = escape101($member);
     else
-      $memo['name'] = getName($member);
+      $memo['name'] = escape101(getName($member));
     $curPrefix = getNamespace($member);
     array_push($mems[$memo['type']], $memo);
 	}
@@ -152,7 +166,7 @@ function implJSON($title,&$indexs){
   $missingFeats = array();
   foreach($page->getFeats() as $feat){
    	   $feato = array();
-       $feato['name'] = $feat;
+       $feato['name'] = escape101($feat);
        $feato['type'] = "Feature";
        array_push($feats, $feato);
        if ( $indexs['101feature:'.$feat] == NULL) {
@@ -168,7 +182,7 @@ function implJSON($title,&$indexs){
   $missingLangs = array();
   foreach($page->getLangs() as $lang){
   	  $lango = array();
-      $lango['name'] = $lang;
+      $lango['name'] = escape101($lang);
       $lango['type'] = "Language";
       array_push($langs, $lango);
       if ($indexs['Language:'.$lang] == NULL) {
@@ -183,7 +197,7 @@ function implJSON($title,&$indexs){
   $missingTechs = array();
   foreach($page->getTechs() as $tech){
       $techo = array();
-      $techo['name'] = $tech;
+      $techo['name'] = escape101($tech);
       $techo['type'] = "Technology";
       array_push($techs, $techo);
       if ($indexs['Technology:'.$tech] == NULL) {
@@ -233,7 +247,7 @@ function featJSON($title, $impltitles,$indexs){
   foreach($impltitles as $impltitle){
       echo $impltitle;
   	   $pair = array();
-  	   $pair['name'] = $impltitle;
+  	   $pair['name'] = escape101($impltitle);
        $pair['type'] = "Implementation";
        array_push($impls, $pair);
   }
@@ -262,7 +276,7 @@ function langJSON($title, $impltitles,$indexs){
    $impls = array();
   foreach($impltitles as $impltitle){
   	   $pair = array();
-  	   $pair['name'] = $impltitle;
+  	   $pair['name'] = escape101($impltitle);
        $pair['type'] = "Implementation";
        array_push($impls, $pair);
   }
@@ -289,7 +303,7 @@ function techJSON($title, $impltitles,$indexs){
     $impls = array();
   foreach($impltitles as $impltitle){
   	   $pair = array();
-  	   $pair['name'] = $impltitle;
+  	   $pair['name'] = escape101($impltitle);
        $pair['type'] = "Implementation";
        array_push($impls, $pair);
   }
@@ -337,7 +351,7 @@ function saveJSON($title, $jsons){
   $replacement = array(",\n\t\"", "{\n\t", "\n}","},\n\t\t{"); 
   $texts = array();
   foreach($jsons as $name => $json){
-    array_push($texts, '"'.$name.'" : '.str_replace($pattern, $replacement, $json));
+    array_push($texts, '"'.escape101($name).'" : '.str_replace($pattern, $replacement, $json));
   }
   #fwrite($file, '['.PHP_EOL.implode(','.PHP_EOL, $texts).PHP_EOL.']');
   #fclose($file);
@@ -368,7 +382,12 @@ $feattitles = array();
 $langtitles = array();
 $techtitles = array();
 $pagetitles = array();
+$allchars = array();
 foreach($allPages as $page) {
+  for($p = 1; $p < strlen($page['title']); $p++) {
+    if (!in_array($page['title'][$p], $allchars))
+      array_push($allchars, $page['title'][$p]); 
+  }
   $s = getPage($page['title']);
   if ($s == null or startsWith("#REDIRECT", $s))
     continue;
@@ -382,7 +401,7 @@ foreach($allPages as $page) {
   	case "":
   	  array_push($conctitles, $title);
   	  break;
-    case "101implementation":                                                                                                                                                                                 
+    case "101implementation":  
       array_push($impltitles, $title);
       break;
     case "101feature":                                                                                                                                                                             
@@ -399,7 +418,7 @@ foreach($allPages as $page) {
       break;   
   }
 }
-var_dump($conctitles);
+//return 0;
 $ontology = getOntology();
 var_dump($ontology);
 $coverage = array();
