@@ -4,13 +4,15 @@ require_once '../../configs/RDF101.config.php' ;
 require_once ABSPATH_MEGALIB.'JsonGraphAsERGraph.php' ;
 require_once ABSPATH_MEGALIB.'ERGraphAsRDF.php' ;
 require_once ABSPATH_MEGALIB.'HTML.php' ;
-echo 'ABSPATH_BASE='.ABSPATH_BASE.'  ' ;
-echo 'ABSPATH_WORKER_WEB_DIR='.ABSPATH_WORKER_WEB_DIR.'  ' ;
-echo URL_WIKI_101_JSON_URL.' toto' ;
-$graph = jsonGraphToERGraph(
-            URL_WIKI_101_JSON_URL,
-            WIKI_101_SCHEMA_URL,
-            WIKI_101_ENTITY_JSON_MAPPING_URL) ;
+//echo 'ABSPATH_BASE='.ABSPATH_BASE.'  ' ;
+//echo 'ABSPATH_WORKER_WEB_DIR='.ABSPATH_WORKER_WEB_DIR.'  ' ;
+//echo URL_WIKI_101_JSON_URL.' toto' ;
+
+$corefilename=$argv[1] ;
+$schemafile=$argv[2] ;
+
+
+$graph = jsonGraphToERGraph($corefilename,$schemafile) ;
 
 $graphasrdf = new ERGraphAsRDF() ;
 $graphasrdf->addERGraph(
@@ -20,7 +22,7 @@ $graphasrdf->addERGraph(
 if (DEBUG) echo "======= Saving the triples in files =========\n" ;
 $tripleset = $graphasrdf->getTripleSet() ;
 $formats='HTML,GraphML,Graphviz,Turtle,RDFXML,RDFJSON,NTriples' ;
-$tripleset->saveFiles($formats,RDF_WIKI_101_DATA_GENERATED_CORE_FILENAME) ;
+$tripleset->saveFiles($formats,$corefilename) ;
 
 
 
@@ -37,5 +39,7 @@ $endPointCode =
    require_once("../101worker/configs/RDF101.config.php") ;
    get101Store()->startSparqlEndpoint() ;
   ' ;   
-file_put_contents(RDF_STORE_END_POINT_CODE,$endPointCode) ;
+if (file_put_contents(RDF_STORE_END_POINT_CODE,$endPointCode)===false) {
+  die("Cannot create '.RDF_STORE_END_POINT_CODE);
+}
 
