@@ -19,9 +19,9 @@ Category {
   type: string! ;
   url: string! ;
   headline: string? ;
-  headline_links: Enitiy* ; 
+  headline_links: Entity* ; 
   // discussion:string? ;  // See Note (1)
-  // discussion_links:Enitiy* ;  // See Note (1)
+  // discussion_links:Entity* ;  // See Note (1)
   categories: Category* ;
   languageMembers: Language* ;
   conceptMembers: Concept* ;
@@ -36,9 +36,9 @@ Concept {
   type: string! ;
   url: string! ;
   headline:string? ;
-  headline_links: Enitiy* ;
+  headline_links: Entity* ;
   // discussion:string?  ; // See Note (1)
-  // discussion_links:Enitiy* ;  // See Note (1)
+  // discussion_links:Entity* ;  // See Note (1)
 }
         
 Feature {
@@ -47,11 +47,11 @@ Feature {
   type: string! ;
   url: string! ;
   headline:string! ;
-  headline_links: Enitiy* ;
+  headline_links: Entity* ;
   // description:string? ;  // See Note (1)
-  // description_links:Enitiy* ; ;  // See Note (1)
+  // description_links:Entity* ; ;  // See Note (1)
   // illustration:string? ; // See Note (1)
-  // illustration_links:Enitiy* ; // See Note (1)
+  // illustration_links:Entity* ; // See Note (1)
   implementations:Implementation*
 }
     
@@ -61,14 +61,14 @@ Implementation {
   type: string! ;
   url: string! ;
   headline: string! ;
-  headline_links: Enitiy* ;
+  headline_links: Entity* ;
   // motivation: string! ;  // See Note (1)
-  // motivation_links:Enitiy* ;  // See Note (1)
+  // motivation_links:Entity* ;  // See Note (1)
   features: Feature* ;
   languages: Language* ;
   technologies: Technology* ;
   // usage:string? ; // See Note (1)
-  // usage_links:Enitiy* ;  // See Note (1)
+  // usage_links:Entity* ;  // See Note (1)
 }
     
 Language {
@@ -89,9 +89,9 @@ Technology {
   type: string! ;
   url: string! ;
   headline: string! ;
-  headline_links: Enitiy* ; 
+  headline_links: Entity* ; 
   // description: string? ;   // See Note (1)
-  // description_links:Enitiy* ; ;  // See Note (1)
+  // description_links:Entity* ; ;  // See Note (1)
   implementations: Implementation*
 }
 
@@ -101,12 +101,12 @@ Page {
   type: string! ;
   url: string! ;
   headline: string! ; 
-  headline_links: Enitiy* ;
+  headline_links: Entity* ;
   // discussion:string? ;  // See Note (1)
-  // discussion_links:Enitiy* ;  // See Note (1)
+  // discussion_links:Entity* ;  // See Note (1)
 }
 
-Enitiy {
+Entity {
   id: string@ ;
   type: string! ;
   name: string! ;
