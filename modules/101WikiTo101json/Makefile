@@ -1,6 +1,6 @@
 include ../Makefile.vars
 basic = ${tempsdir}/Wiki101FullTemp.json
-linkified = ${webdir}/Wiki101Full.json
+linkified = ${webdir}/dumps/Wiki101Full.json
 
 run:
 	@php jsongenerator.php ${basic}
