@@ -22,6 +22,27 @@ function getNamespace($title){
   	return substr($title, 0, strpos($title,":"));
 }
 
+function getName($title) {
+  if(strpos($title,":") === FALSE)
+    return $title;
+  else 
+    return substr($title, strpos($title,":") + 1, strlen($title));
+}
+
+function getTypeName($title) {
+  $prefix2Type['Language'] = 'Language';
+  $prefix2Type[''] = 'Concept';
+  $prefix2Type['101feature'] = 'Feature';
+  $prefix2Type['101implementation'] = "Implementation";
+  $prefix2Type['Technology'] = 'Technology';
+  $prefix2Type['Category'] = 'Category';
+  $prefix = getNamespace($title);
+  if (array_key_exists($prefix, $prefix2Type)) 
+    return $prefix2Type[$prefix];
+  else
+    return "Page";
+}
+
 function pageJSON($title) {
   echo "Generating JSON for page \"".$title."\"... ";
   $page = new Page($title);
@@ -79,30 +100,34 @@ function catJSON($title, $subcs, $members) {
 	$top['dicussion'] = $page->discussion;
 	if ($page->dicussion == null)
   		$top['dicussion'] = "";
-  	$subs = array();
-  	foreach($subcs as $sub){
-  		$subo = array();
-  		$subo['name'] = $sub;
-  		array_push($subs, $subo);
-  	}
+  $subs = array();
+  foreach($subcs as $sub){
+  	$subo = array();
+    $subo['type'] = getTypeName($sub);
+    if ($subo['type'] == "Page")
+  	 $subo['name'] = $sub;
+    else
+     $subo['name'] = getName($sub); 
+  	array_push($subs, $subo);
+  }
 	$top['categories'] = $subs;
 	$mems = array();
   foreach ($prefix2Type as $prefix => $type) {
     $mems[$type] = array();
   }
+  $mems["Page"] = array();
 	foreach($members as $member){  
-    $curPrefix = getNamespace($member);
     $memo = array();
-    $memo['name'] = $member;
-    foreach($prefix2Type as $prefix => $type){
-      if ($curPrefix == $prefix) {
-        array_push($mems[$type], $memo);
-      }
-          
-    }
+    $memo['type'] = getTypeName($member);
+    if ($memo['type'] == "Page")
+      $memo['name'] = $member;
+    else
+      $memo['name'] = getName($member);
+    $curPrefix = getNamespace($member);
+    array_push($mems[$memo['type']], $memo);
 	}
   foreach($mems as $type => $members){
-    $top[$type.'Members'] = $members;  
+    $top[lcfirst($type.'Members')] = $members;  
   }
 	
 	$result = array();
@@ -127,7 +152,8 @@ function implJSON($title,&$indexs){
   $missingFeats = array();
   foreach($page->getFeats() as $feat){
    	   $feato = array();
-       $feato['name'] = '101feature:'.$feat;
+       $feato['name'] = $feat;
+       $feato['type'] = "Feature";
        array_push($feats, $feato);
        if ( $indexs['101feature:'.$feat] == NULL) {
        	array_push($missingFeats, $feat);
@@ -142,7 +168,8 @@ function implJSON($title,&$indexs){
   $missingLangs = array();
   foreach($page->getLangs() as $lang){
   	  $lango = array();
-      $lango['name'] = 'Language:'.$lang;
+      $lango['name'] = $lang;
+      $lango['type'] = "Language";
       array_push($langs, $lango);
       if ($indexs['Language:'.$lang] == NULL) {
         array_push($missingLangs, $lang);
@@ -156,7 +183,8 @@ function implJSON($title,&$indexs){
   $missingTechs = array();
   foreach($page->getTechs() as $tech){
       $techo = array();
-      $techo['name'] = 'Technology:'.$tech;
+      $techo['name'] = $tech;
+      $techo['type'] = "Technology";
       array_push($techs, $techo);
       if ($indexs['Technology:'.$tech] == NULL) {
       	array_push($missingTechs, $tech);
@@ -203,8 +231,10 @@ function featJSON($title, $impltitles,$indexs){
     $top['illustration'] = trim($page->illustration);
   $impls = array();
   foreach($impltitles as $impltitle){
+      echo $impltitle;
   	   $pair = array();
   	   $pair['name'] = $impltitle;
+       $pair['type'] = "Implementation";
        array_push($impls, $pair);
   }
   $top['implementations'] = $impls;
@@ -233,6 +263,7 @@ function langJSON($title, $impltitles,$indexs){
   foreach($impltitles as $impltitle){
   	   $pair = array();
   	   $pair['name'] = $impltitle;
+       $pair['type'] = "Implementation";
        array_push($impls, $pair);
   }
   $top['implementations'] = $impls;
@@ -259,6 +290,7 @@ function techJSON($title, $impltitles,$indexs){
   foreach($impltitles as $impltitle){
   	   $pair = array();
   	   $pair['name'] = $impltitle;
+       $pair['type'] = "Implementation";
        array_push($impls, $pair);
   }
   $top['implementations'] = $impls;
@@ -312,6 +344,7 @@ function saveJSON($title, $jsons){
   return '{'.PHP_EOL.implode(','.PHP_EOL, $texts).PHP_EOL.'}';
 
 }
+
 
 // check for path information
 if (count($argv) <= 1)
@@ -464,7 +497,8 @@ $all .= '"Category":'. saveJSON('category', $catj).PHP_EOL.','.PHP_EOL;
 $featj = array();
 $ftf = array();
 foreach($feattitles as $feattitle){
-  $result = featJSON($feattitle, $coverage[lcfirst($feattitle)],$indexs);
+  //var_dump($coverage[$feattitle]);
+  $result = featJSON($feattitle, $coverage[$feattitle],$indexs);
   array_push($jsons, $result['json']);
   #array_push($featj, $result['json']);
   $featj[$feattitle] = $result['json'];
