@@ -18,8 +18,10 @@ Category {
   name: string! ;
   type: string! ;
   url: string! ;
-  headline: string? ; 
+  headline: string? ;
+  headline_links: Enitiy* ; 
   // discussion:string? ;  // See Note (1)
+  // discussion_links:Enitiy* ;  // See Note (1)
   categories: Category* ;
   languageMembers: Language* ;
   conceptMembers: Concept* ;
@@ -34,7 +36,9 @@ Concept {
   type: string! ;
   url: string! ;
   headline:string? ;
-  // discussion:string?   // See Note (1)
+  headline_links: Enitiy* ;
+  // discussion:string?  ; // See Note (1)
+  // discussion_links:Enitiy* ;  // See Note (1)
 }
         
 Feature {
@@ -43,8 +47,11 @@ Feature {
   type: string! ;
   url: string! ;
   headline:string! ;
+  headline_links: Enitiy* ;
   // description:string? ;  // See Note (1)
+  // description_links:Enitiy* ; ;  // See Note (1)
   // illustration:string? ; // See Note (1)
+  // illustration_links:Enitiy* ; // See Note (1)
   implementations:Implementation*
 }
     
@@ -54,11 +61,14 @@ Implementation {
   type: string! ;
   url: string! ;
   headline: string! ;
+  headline_links: Enitiy* ;
   // motivation: string! ;  // See Note (1)
+  // motivation_links:Enitiy* ;  // See Note (1)
   features: Feature* ;
   languages: Language* ;
   technologies: Technology* ;
-  // usage:string?  // See Note (1)
+  // usage:string? ; // See Note (1)
+  // usage_links:Enitiy* ;  // See Note (1)
 }
     
 Language {
@@ -67,7 +77,9 @@ Language {
   type: string! ;
   url: string! ;
   headline: string! ;
+  headline_links: Enitiy* ;
   // description: string? ;  // See Note (1)
+  // description_links:Enitiy* ; ;  // See Note (1)
   implementations: Implementation*
 }
     
@@ -76,8 +88,10 @@ Technology {
   name: string! ;
   type: string! ;
   url: string! ;
-  headline: string! ; 
+  headline: string! ;
+  headline_links: Enitiy* ; 
   // description: string? ;   // See Note (1)
+  // description_links:Enitiy* ; ;  // See Note (1)
   implementations: Implementation*
 }
 
@@ -87,7 +101,15 @@ Page {
   type: string! ;
   url: string! ;
   headline: string! ; 
+  headline_links: Enitiy* ;
   // discussion:string? ;  // See Note (1)
+  // discussion_links:Enitiy* ;  // See Note (1)
+}
+
+Enitiy {
+  id: string@ ;
+  type: string! ;
+  name: string! ;
 }
 
 
