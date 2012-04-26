@@ -362,7 +362,7 @@ function saveJSON($title, $jsons){
 
 // check for path information
 if (count($argv) <= 1)
-  exit("Need output path for json result\n");
+  exit(-1);
 // MAIN
 $allPages = getAllPages();
 $indexs = array();
@@ -570,6 +570,7 @@ fclose($file);
 echo "Detected namespaces:".PHP_EOL;
 var_dump($nss);
 echo "ALL DONE".PHP_EOL;
+exit(0);
 
 
 
