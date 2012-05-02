@@ -26,6 +26,7 @@ dot: $(addprefix make_,$(DOT_FILES))
 	
 copy_png:
 	mkdir -p ${webdir}/igraphs
+	cp $(DOT_DIR)/*.dot ${webdir}/igraphs
 	cp $(DOT_DIR)/*.png ${webdir}/igraphs	
 
         

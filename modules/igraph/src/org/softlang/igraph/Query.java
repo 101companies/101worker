@@ -28,7 +28,7 @@ public abstract class Query {
 		return _filter.trim().replace(" ", "-") + ".dot";
 	}
 	
-	abstract DirectedGraph<Vertex, DefaultEdge> Execute();
+	public abstract DirectedGraph<Vertex, DefaultEdge> Execute();
 	
 	protected ListF<Statement> GetImplementations(){
 		//get all implementations

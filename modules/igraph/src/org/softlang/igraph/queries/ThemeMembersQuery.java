@@ -1,4 +1,4 @@
-package org.softlang.igraph;
+package org.softlang.igraph.queries;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,6 +7,11 @@ import java.util.List;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.softlang.igraph.ImplementatinoVertex;
+import org.softlang.igraph.Model;
+import org.softlang.igraph.Query;
+import org.softlang.igraph.ThemeVertex;
+import org.softlang.igraph.Vertex;
 
 import ru.yandex.bolts.collection.Cf;
 import ru.yandex.bolts.collection.ListF;
@@ -18,7 +23,7 @@ import com.hp.hpl.jena.rdf.model.Statement;
 
 public class ThemeMembersQuery extends Query {
 
-	protected ThemeMembersQuery(String filter) {
+	public ThemeMembersQuery(String filter) {
 		super(filter);	//filter -- name of the theme
 	}
 
@@ -46,7 +51,7 @@ public class ThemeMembersQuery extends Query {
 		}
 		
 		final DirectedGraph<Vertex, DefaultEdge> g = new DefaultDirectedGraph<Vertex, DefaultEdge> (DefaultEdge.class);
-		final Vertex t = new Vertex(_filter);
+		final Vertex t = new ThemeVertex(_filter);
 		g.addVertex(t);
 		
 		ListF<String> res = Cf.list(result);
@@ -54,7 +59,7 @@ public class ThemeMembersQuery extends Query {
 		res.forEach(new Function1V<String>(){
 			@Override
 			public void apply(String arg0) {
-				Vertex v = new Vertex(arg0);
+				Vertex v = new ImplementatinoVertex(arg0);
 				g.addVertex(v);
 				g.addEdge(t, v);
 			}});

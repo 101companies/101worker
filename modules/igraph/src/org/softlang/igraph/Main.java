@@ -12,6 +12,8 @@ import org.jgrapht.ext.DOTExporter;
 import org.jgrapht.ext.StringNameProvider;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.softlang.igraph.queries.ImplementationsUseLanguageQuery;
+import org.softlang.igraph.queries.ThemeMembersQuery;
 
 import ru.yandex.bolts.collection.Cf;
 import ru.yandex.bolts.collection.ListF;
