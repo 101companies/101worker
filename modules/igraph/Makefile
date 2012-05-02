@@ -14,4 +14,4 @@ execute:
 
 dot:
 	mkdir ${webdir}/igraphs
-    cp dist/*dot ${webdir}/igraphs
+	cp dist/*.dot ${webdir}/igraphs
