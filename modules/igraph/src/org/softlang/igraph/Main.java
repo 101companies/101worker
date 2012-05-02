@@ -1,62 +1,154 @@
 package org.softlang.igraph;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.ext.DOTExporter;
+import org.jgrapht.ext.StringNameProvider;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+
+import ru.yandex.bolts.collection.Cf;
+import ru.yandex.bolts.collection.ListF;
+import ru.yandex.bolts.collection.Tuple3;
+import ru.yandex.bolts.function.Function;
+import ru.yandex.bolts.function.Function1B;
+import ru.yandex.bolts.function.Function1V;
 
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.VCARD;
 
+// We use the following library which adds some functional programming primitives to Java: https://bitbucket.org/stepancheg/bolts/wiki/Home
 
 public class Main {
 
+	public static Function<Statement, String> getSubjName() {
+	    return new Function<Statement, String>() {
+	      public String apply(Statement s) { 
+	        return s.getSubject().toString();
+	      }
+	    };
+	  }
+	
 	/**
 	 * @param args
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		// create an empty model
-		OntModel model = Model.Get();
+		System.out.println("hi there");
 		
-		String finalUrlString = "http://black42.uni-koblenz.de/production/101worker/dumps/Wiki101Full.rdf";
+		List<Query> queries = new ArrayList<Query>();
+		queries.add(new ThemeMembersQuery("Haskell_theme"));
+		queries.add(new ImplementationsUseLanguageQuery("Haskell"));
 		
-		URL url = new URL(finalUrlString);
-        URLConnection connection = url.openConnection(); 
-		InputStream in = connection.getInputStream();
-		if (in == null) {
-			throw new IllegalArgumentException(
-					"URL: " + finalUrlString + " not found");
-		}
+		Cf.list(queries).forEach(new Function1V<Query>() {
+			public void apply(Query q) {
+				DOTExporter dot = new DOTExporter(
+		        		new NameProvider101(), 
+		        		new StringNameProvider<Vertex>(), 
+		        		//new StringEdgeNameProvider<String>());
+		        		null);
+				
+				// PrintWriter out = new java.io.PrintWriter(System.out);
+				PrintWriter out;
+				try {
+					out = new PrintWriter(new FileWriter(q.getFileName()));
+				    dot.export(out, q.Execute());
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.exit(-1);
+				}   
+			}
+		});
 
-		// read the RDF/XML file
-		model.read(in, null);
-		String HASKELL_THEME = "http://data101companies.org/data/Category/Haskell_theme";
-		Resource r = model.getResource(HASKELL_THEME) ;
-		System.out.print(r.toString());
-		StmtIterator props = r.listProperties(Model.IMPLEMENTATION_MEMBERS);
+		//Resource r = model.getResource("http://data101companies.org/data/Implementation/haskell");
+		//DumpResourceProperties(r);
+		
+		//GetAllImplementationsUseLanguage(model, "Haskell");
+	}
+
+	private static List<String> GetAllImplementationsUseLanguage(final OntModel model, final String languageName){
+		// http://data101companies.org/data/Implementation/haskell : http://data101companies.org/data//schema#type : Implementation
+		//http://data101companies.org/data/Implementation/haskell : http://data101companies.org/data//schema#languages : http://data101companies.org/data/Language/Haskell_98
+		
+		//get all implementations
+		StmtIterator implementations = model.listStatements(
+		    new SimpleSelector(null, Model.TYPE, (RDFNode) null) {
+		        public boolean selects(Statement s) {
+		        	 return s.getObject().toString().contentEquals("Implementation");
+		        }
+		    });
+		
+		ListF<Statement> impls = Cf.list(implementations.toList());
+		
+		//filter them by haskell/haskell_98 usage
+		ListF<Statement> haskellImpls = impls.filter(new Function1B<Statement>() {
+			public boolean apply(Statement stm) {
+				String name = stm.getSubject().toString();
+				Resource r = model.getResource(name);
+				
+				if(r.hasProperty(Model.LANGUAGE)){
+					String lang = r.getPropertyResourceValue(Model.LANGUAGE).toString();
+					if(lang.contentEquals("http://data101companies.org/data/Language/" + languageName)){
+						return true;
+					}
+					else return false;
+				}
+				else return false;
+			}
+		});
+		
+		List<String> res = haskellImpls.map(getSubjName());
+		
+		DumpResourceProperties(model.getResource(res.get(0)));
+		return res;
+	}
+	
+	private static ListF<String> GetThemeMembers(OntModel model, String themeName){
+		//All implementations being members of a theme.
+		String theme = "http://data101companies.org/data/Category/" + themeName;
+		Resource r = model.getResource(theme) ;
+		Iterator<Statement> implIter = r.listProperties(Model.IMPLEMENTATION_MEMBERS).toList().iterator();
+		
+		final List<String> result = new ArrayList<String>();
+		
+		while (implIter.hasNext()) {
+			Statement impl      = implIter.next();  // get next statement
+			RDFNode   object    = impl.getObject(); // get the object
+			
+			if (object instanceof Resource) {
+				String name = Lookup((Resource)object, Model.NAME).get3();
+				//ystem.out.println(name);
+				result.add(name);
+			} else {
+				// object is a literal
+				System.out.print(" \"" + object.toString() + "\"");
+			}
+		}
+		
+		return Cf.list(result);
+	}
+	
+	private static Tuple3<String, String, String> Lookup(Resource resource, Property prop) {
+		return new Tuple3<String, String, String>(resource.getProperty(prop).getSubject().toString(),
+				resource.getProperty(prop).getPredicate().toString(),resource.getProperty(prop).getObject().toString());
+	}
+	
+	private static void DumpResourceProperties(Resource resource){
+		StmtIterator props = resource.listProperties();
 		
 		while (props.hasNext()) {
-		    Statement stmt      = props.nextStatement();  // get next statement
-		    Resource  subject   = stmt.getSubject();     // get the subject
-		    Property  predicate = stmt.getPredicate();   // get the predicate
-		    RDFNode   object    = stmt.getObject();      // get the object
-
-		    	   System.out.print(subject.toString());
-				    System.out.print(" " + predicate.toString() + " ");
-				    if (object instanceof Resource) {
-				       System.out.print(object.toString());
-				    } else {
-				        // object is a literal
-				        System.out.print(" \"" + object.toString() + "\"");
-				    }
-
-				    System.out.println(" .");
+			Statement stmt      = props.nextStatement();  // get next statement
+			Resource  subject   = stmt.getSubject();     // get the subject
+			Property  predicate = stmt.getPredicate();   // get the predicate
+			RDFNode   object    = stmt.getObject();      // get the object
+			System.out.println(subject.toString() + " : " + predicate.toString() + " : " + object.toString());
 		}
-
-		// write it to standard out
-		//model.write(System.out);
 	}
 
 }

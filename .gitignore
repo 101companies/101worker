@@ -1,2 +1,5 @@
 modules/igraph/bin
 .classpath
+modules/.metadata
+modules/igraph/build
+modules/igraph/dist

@@ -2,8 +2,6 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.softlang.igraph.WikiRepository;
 
@@ -19,7 +17,6 @@ public class SimpleQueries {
 
 	@Test
 	public void getAllLanguages() {
-		try {
 			Model model = WikiRepository.getModel();
 
 			// select all the resources with a VCARD.FN property
@@ -48,11 +45,7 @@ public class SimpleQueries {
 				}
 				iter.next();
 			}
-
-		}
-		catch(IOException ex){
 			fail("failed to get model");
-		}
 	}
 
 }
