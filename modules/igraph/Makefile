@@ -13,5 +13,5 @@ execute:
 	cd dist; java -jar igraph.jar
 
 dot:
-	mkdir ${webdir}/igraphs
+	mkdir -p ${webdir}/igraphs
 	cp dist/*.dot ${webdir}/igraphs
