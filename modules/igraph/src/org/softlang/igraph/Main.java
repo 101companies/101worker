@@ -22,6 +22,7 @@ import ru.yandex.bolts.function.Function;
 import ru.yandex.bolts.function.Function1B;
 import ru.yandex.bolts.function.Function1V;
 
+import com.hp.hpl.jena.enhanced.Implementation;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.rdf.model.*;
 
@@ -45,6 +46,7 @@ public class Main {
 		System.out.println("hi there");
 		
 		List<Query> queries = new ArrayList<Query>();
+		
 		queries.add(new ThemeMembersQuery("Haskell_theme"));
 		queries.add(new ImplementationsUseLanguageQuery("Haskell"));
 		
@@ -67,6 +69,42 @@ public class Main {
 				}   
 			}
 		});
+		
+		final OntModel model = Model.Get();
+		final DirectedGraph<Vertex, DefaultEdge> g1 = new ImplementationsUseLanguageQuery("Haskell").Execute();
+		
+		Cf.set(g1.vertexSet()).forEach(new Function1V<Vertex>(){
+			public void apply(final Vertex v) {
+				if(v instanceof ImplementationVertex){
+					Resource r = model.getResource(v.get_resource());
+					Cf.list(r.listProperties(Model.TECHNOLOGY).toList()).forEach(new Function1V<Statement>(){
+						@Override
+						public void apply(Statement st) {
+							String t = st.getObject().toString();
+							Resource techRes = model.getResource(t);
+							String  val = techRes.getProperty(Model.NAME).getObject().toString(); 
+							System.out.println(val);
+							
+							Vertex technology = new TechnologyVertex(val);
+							g1.addVertex(technology);
+							g1.addEdge(v,  technology);
+						}});	
+				}
+			}});
+		
+		DOTExporter dot = new DOTExporter(
+        		new NameProvider101(), 
+        		new StringNameProvider<Vertex>(), 
+        		//new StringEdgeNameProvider<String>());
+        		null);
+		PrintWriter out;
+		try {
+			out = new PrintWriter(new FileWriter("Full_Haskel.dot"));
+		    dot.export(out, g1);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}   
 
 		//Resource r = model.getResource("http://data101companies.org/data/Implementation/haskell");
 		//DumpResourceProperties(r);

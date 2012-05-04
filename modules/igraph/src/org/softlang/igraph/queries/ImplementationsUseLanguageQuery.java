@@ -3,7 +3,7 @@ package org.softlang.igraph.queries;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.softlang.igraph.ImplementatinoVertex;
+import org.softlang.igraph.ImplementationVertex;
 import org.softlang.igraph.LanguageVertex;
 import org.softlang.igraph.Model;
 import org.softlang.igraph.Query;
@@ -52,7 +52,8 @@ public class ImplementationsUseLanguageQuery extends Query {
 				Resource r = impl.getSubject();
 				Statement name = r.getProperty(Model.NAME);
 				
-				Vertex vImpl = new ImplementatinoVertex(name.getObject().toString());
+				Vertex vImpl = new ImplementationVertex(name.getObject().toString());
+				vImpl.set_resource(name.getSubject().toString());
 				g.addVertex(vImpl);
 				g.addEdge(l, vImpl);	
 			}

@@ -7,7 +7,7 @@ import java.util.List;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.softlang.igraph.ImplementatinoVertex;
+import org.softlang.igraph.ImplementationVertex;
 import org.softlang.igraph.Model;
 import org.softlang.igraph.Query;
 import org.softlang.igraph.ThemeVertex;
@@ -34,14 +34,14 @@ public class ThemeMembersQuery extends Query {
 		Resource r = _model.getResource(theme) ;
 		Iterator<Statement> implIter = r.listProperties(Model.IMPLEMENTATION_MEMBERS).toList().iterator();
 
-		final List<String> result = new ArrayList<String>();
+		final List<Resource> result = new ArrayList<Resource>();
 
 		while (implIter.hasNext()) {
 			Statement impl      = implIter.next();  // get next statement
 			RDFNode   object    = impl.getObject(); // get the object
 
 			if (object instanceof Resource) {
-				String name = Lookup((Resource)object, Model.NAME).get3();
+				Resource name = _model.getResource(impl.getObject().toString());
 				//System.out.println(name);
 				result.add(name);
 			} else {
@@ -54,12 +54,15 @@ public class ThemeMembersQuery extends Query {
 		final Vertex t = new ThemeVertex(_filter);
 		g.addVertex(t);
 		
-		ListF<String> res = Cf.list(result);
+		ListF<Resource> res = Cf.list(result);
 		
-		res.forEach(new Function1V<String>(){
+		res.forEach(new Function1V<Resource>(){
 			@Override
-			public void apply(String arg0) {
-				Vertex v = new ImplementatinoVertex(arg0);
+			public void apply(Resource arg) {
+				String name = Lookup((Resource)arg, Model.NAME).get3();
+				String res = Lookup((Resource)arg, Model.NAME).get1();
+				Vertex v = new ImplementationVertex(name);
+				v.set_resource(res);
 				g.addVertex(v);
 				g.addEdge(t, v);
 			}});
