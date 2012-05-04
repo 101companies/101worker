@@ -67,9 +67,9 @@ function pageJSON($title) {
   $top['headline'] = $page->intent;
   if ($page->intent == null)
     $top['headline'] = "";
-  $top['dicussion'] = $page->discussion;
-  if ($page->dicussion == null)
-      $top['dicussion'] = "";
+  $top['discussion'] = $page->discussion;
+  if ($page->discussion == null)
+      $top['discussion'] = "";
   $result = array();
     $result['json'] = '$'.json_encode($top).'$';    
   echo "DONE".PHP_EOL;
@@ -86,9 +86,9 @@ function concJSON($title) {
   $top['headline'] = $page->intent;
   if ($page->intent == null)
   	$top['headline'] = "";
-	$top['dicussion'] = $page->discussion;
-	if ($page->dicussion == null)
-  		$top['dicussion'] = "";
+	$top['discussion'] = $page->discussion;
+	if ($page->discussion == null)
+  		$top['discussion'] = "";
 	$result = array();
   	$result['json'] = '$'.json_encode($top).'$';    
  	echo "DONE".PHP_EOL;
@@ -111,9 +111,9 @@ function catJSON($title, $subcs, $members) {
   $top['headline'] = $page->intent;
   if ($page->intent == null)
   		$top['headline'] = "";
-	$top['dicussion'] = $page->discussion;
-	if ($page->dicussion == null)
-  		$top['dicussion'] = "";
+	$top['discussion'] = $page->discussion;
+	if ($page->discussion == null)
+  		$top['discussion'] = "";
   $subs = array();
   foreach($subcs as $sub){
   	$subo = array();
@@ -351,6 +351,7 @@ function saveJSON($title, $jsons){
   $replacement = array(",\n\t\"", "{\n\t", "\n}","},\n\t\t{"); 
   $texts = array();
   foreach($jsons as $name => $json){
+    //echo $name." ";
     array_push($texts, '"'.escape101($name).'" : '.str_replace($pattern, $replacement, $json));
   }
   #fwrite($file, '['.PHP_EOL.implode(','.PHP_EOL, $texts).PHP_EOL.']');
@@ -365,13 +366,14 @@ if (count($argv) <= 1)
   exit(-1);
 // MAIN
 $allPages = getAllPages();
+echo count($allPages);
 $indexs = array();
 for($i = 0; $i < count($allPages); $i++){
  $page = $allPages[$i];
  $title = $page['title'];
  $indexs[$title] = $i;
 }
-var_dump($indexs);
+//var_dump($indexs);
 //sleep(5);
 $all = "{";
 $nss = array();
@@ -410,7 +412,8 @@ foreach($allPages as $page) {
     case "Language":                                                                                                                                                                             
       array_push($langtitles, $title);
       break;
-    case "Technology":                                                                                                                                                                             
+    case "Technology":                
+            echo $title;                                                                                                                                                             
       array_push($techtitles, $title);
       break;  
     default:
@@ -544,6 +547,7 @@ foreach($techtitles as $techtitle){
   #array_push($techj, $result['json']);
   $techj[$techtitle] = $result['json'];
   array_push($ftt, $techtitle);
+  echo $techtitle."\n";
 }
 #$all .= '"TechnologyMembers":'. json_encode($ftt).PHP_EOL.','.PHP_EOL;
 $all .= '"Technology":'. saveJSON('technology', $techj).PHP_EOL.PHP_EOL.'}'.PHP_EOL;

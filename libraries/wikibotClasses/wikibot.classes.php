@@ -596,7 +596,11 @@
 			$x = $this->http->get( $this->apiurl . '?action=query&list=allpages&apprefix=' . urlencode( $prefix ) . '&format=php&aplimit=' . $count . $append );
 			$x = unserialize( $x );
 			$continue = $x['query-continue']['allpages']['apfrom'];
-			return $x['query']['allpages'];
+			if ($continue != null) {
+				return array_merge($x['query']['allpages'], $this->listprefix($prefix, $namespace, $count, $continue));
+			} else {
+				return $x['query']['allpages'];
+			}
 		}
 
 		/**

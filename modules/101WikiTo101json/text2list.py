@@ -20,7 +20,7 @@ def text2Links(text):
 	links = []
 	for textm in re.finditer("\[\[\:?([^\[\|]+)(\|([^\[]+))?\]\]",text):
 		linkm = re.match("(([^\:]+):)?(.+)", textm.group(1))
-		if linkm.group(2) in prefix2type:
+		if linkm.group(2) and (linkm.group(2) in prefix2type):
 			ltype = prefix2type[linkm.group(2)]
 		else:
 			ltype = "Page"
@@ -45,5 +45,5 @@ else:
 	json101 = json.load(open(sys.argv[1]))
 	print len(json101['Implementation'])		
 	listify(json101,['discussion', 'dicussion', 'architecture', 'intent', 'motivation', 'issues', 'usage', 'description', 'summary', 'illustration', 'headline'])
-	outf = open(sys.argv[2], "write")
+	outf = open(sys.argv[2], "w")
 	outf.write(json.dumps(json101))
