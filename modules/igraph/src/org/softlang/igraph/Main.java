@@ -92,10 +92,35 @@ public class Main {
 				}
 			}});
 		
+		Cf.set(g1.vertexSet()).forEach(new Function1V<Vertex>(){
+			public void apply(final Vertex v) {
+				if(v instanceof ImplementationVertex){
+					Resource r = model.getResource(v.get_resource());
+					Cf.list(r.listProperties(Model.MOTIVATION_LINK).toList()).forEach(new Function1V<Statement>(){
+						@Override
+						public void apply(Statement st) {
+							String t = st.getObject().toString();
+							Resource res = model.getResource(t);
+							
+							if(res.getProperty(Model.TYPE).getObject().toString().contentEquals("Concept")){
+								String val = res.getProperty(Model.NAME).getObject().toString();
+								System.out.println(val);
+								
+								Vertex concept = new ConceptVertex(val);
+								g1.addVertex(concept);
+								g1.addEdge(v,  concept);
+							}
+
+						}});	
+				}
+			}});
+		
 		DOTExporter dot = new DOTExporter(
         		new NameProvider101(), 
         		new StringNameProvider<Vertex>(), 
         		//new StringEdgeNameProvider<String>());
+        		null,
+        		new VertexAttributeProvider101(),
         		null);
 		PrintWriter out;
 		try {
