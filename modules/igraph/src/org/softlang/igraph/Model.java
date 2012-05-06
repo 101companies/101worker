@@ -34,5 +34,7 @@ public final class Model {
 	
 	public final static Property MOTIVATION_LINK = model.createProperty(SCHEMA + "motivation_links"); 
 	
+	public final static Property HEADLINE_LINK = model.createProperty(SCHEMA + "headline_links");
+	
 	public final static Property PAGE = model.createProperty(SCHEMA + "page");
 }

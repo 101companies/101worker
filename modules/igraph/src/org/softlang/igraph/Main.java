@@ -96,7 +96,10 @@ public class Main {
 			public void apply(final Vertex v) {
 				if(v instanceof ImplementationVertex){
 					Resource r = model.getResource(v.get_resource());
-					Cf.list(r.listProperties(Model.MOTIVATION_LINK).toList()).forEach(new Function1V<Statement>(){
+					List<Statement> links = r.listProperties(Model.MOTIVATION_LINK).toList();
+					links.addAll(r.listProperties(Model.HEADLINE_LINK).toList());
+					
+					Cf.list(links).forEach(new Function1V<Statement>(){
 						@Override
 						public void apply(Statement st) {
 							String t = st.getObject().toString();
