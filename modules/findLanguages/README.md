@@ -2,6 +2,10 @@
 
 a module to associate contributions with language-related information
 
+# Background
+
+See the LaTaLa language: http://101companies.org/index.php/Language:LaTaLa
+
 # Input/output behavior
 
 The module reads LaTaLa files for all languages from
