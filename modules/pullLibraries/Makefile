@@ -5,3 +5,6 @@ run: ${pulledLibrariesDir}
 	
 ${pulledLibrariesDir}:
 	mkdir ${pulledLibrariesDir}
+
+clean:
+	rm -r ${pulledLibrariesDir}
