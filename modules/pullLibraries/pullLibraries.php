@@ -42,9 +42,9 @@ function pullLibrary($libraryName,$info) {
 
 function pullGithub($githubRepository,$targetDirectory) {
   global $thisScript ;
-  $cmd="pullgithub.sh" 
+  $cmd=getcwd()."/pullgithub.sh" 
        ." ".escapeshellarg($githubRepository)
-       ." ".escapeshellarg($targetDirectory)." 2>/dev/null";
+       ." ".escapeshellarg($targetDirectory)." ";
   $output="" ;
   if (system($cmd,$exitcode)===false) {
     die("$thisScript: failed: $cmd");
