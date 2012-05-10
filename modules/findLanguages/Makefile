@@ -1,2 +1,2 @@
 run:
-	php findLanguages.php -qs
+	@php findLanguages.php -qs
