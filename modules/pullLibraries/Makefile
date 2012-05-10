@@ -7,4 +7,4 @@ ${pulledLibrariesDir}:
 	mkdir ${pulledLibrariesDir}
 
 clean:
-	rm -r ${pulledLibrariesDir}
+	rm -f -r ${pulledLibrariesDir}
