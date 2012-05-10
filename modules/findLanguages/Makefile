@@ -1,2 +1,2 @@
 run:
-	@# no-op	
+	php findLanguages.php -qs
