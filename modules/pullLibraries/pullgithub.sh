@@ -7,11 +7,11 @@ echo "  pullgithub.sh $1 $2"
 
 
 #----- clone the repository in target dir if not already present
-if [ -d "${TARGET_DIRECTORY?}" ]
+if [ -d "${TARGET_DIRECTORY?}/.git" ]
 then
-  echo "    Directory ${TARGET_DIRECTORY?} exist. Fine."
+  echo "    Directory ${TARGET_DIRECTORY?}/.git exist. "
 else
-  echo "    Directory ${TARGET_DIRECTORY?} does not exist."
+  echo "    Directory ${TARGET_DIRECTORY?}/.git does not exist."
   BASEDIR=`dirname ${TARGET_DIRECTORY}` 
   echo "    Cloning ${GITHUB_REPOSITORY?} into ${BASEDIR?}"
   cd ${BASEDIR?} 
