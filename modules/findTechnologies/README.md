@@ -9,7 +9,7 @@ See the TeTaLa language: http://101companies.org/index.php/Language:TeTaLa
 # Input/output behavior
 
 The module reads TeTaLa files for all technologies from
-"101results/101repo/technologies/*". The module writes
+"101results/101repo/technologies/*/.tetala". The module writes
 "technologies.json" files for all contributions to
 "101results/contributions/*". The generated json files associate
 technology names as keys with file names and additional metadata as

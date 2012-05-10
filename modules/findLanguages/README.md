@@ -9,9 +9,9 @@ See the LaTaLa language: http://101companies.org/index.php/Language:LaTaLa
 # Input/output behavior
 
 The module reads LaTaLa files for all languages from
-"101results/101repo/languages/*".  (In this manner, geshi ids and file
-extensions are looked up for all languages.)  The module writes
-"languages.json" files for all contributions to
+"101results/101repo/languages/*/.latala".  (In this manner, geshi ids
+and file extensions are looked up for all languages.)  The module
+writes "languages.json" files for all contributions to
 "101results/contributions/*". The generated json files associate
 language names as keys with file names and additional metadata as
 values.
