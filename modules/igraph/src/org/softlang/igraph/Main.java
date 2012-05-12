@@ -124,7 +124,7 @@ public class Main {
         		//new StringEdgeNameProvider<String>());
         		null,
         		new VertexAttributeProvider101(),
-        		null);
+        		new EdgeAttributeProvider101());
 		PrintWriter out;
 		try {
 			out = new PrintWriter(new FileWriter("Full_Haskel.dot"));
