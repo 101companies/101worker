@@ -13,4 +13,4 @@ prepare:
 
 
 deploy:
-	@cp ${pulled101RepoDir}/sandbox/m12/show.html ${webdir}/MegaLExplorer/
+	@cp ${pulled101DevDir}/sandbox/m12/show.html ${webdir}/MegaLExplorer/
