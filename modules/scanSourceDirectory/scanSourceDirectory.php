@@ -9,5 +9,5 @@ require_once '../../configs/main.config.local.php' ;
 echo "Using megalib from ".ABSPATH_MEGALIB ;
 require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 
-$srcdir = new SourceDirectory($baseDirectory,$directoryToScan) ;
+$srcdir = new SourceTopDirectory($baseDirectory,$directoryToScan) ;
 $srcdir->generate($targetDirectory) ;
