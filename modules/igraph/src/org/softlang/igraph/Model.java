@@ -14,6 +14,7 @@ public final class Model {
 	final private static String SCHEMA = "http://data101companies.org/data//schema#";
 	
 	public final static Property IMPLEMENTATION_MEMBERS =  model.createProperty(SCHEMA + "implementationmembers");
+	
 	public final static Property NAME = model.createProperty(SCHEMA + "name");
 	
 	// http://data101companies.org/data//schema#implementation
@@ -30,4 +31,10 @@ public final class Model {
 	
 	// http://data101companies.org/data//schema#features
 	public final static Property FEATURE = model.createProperty(SCHEMA + "features");
+	
+	public final static Property MOTIVATION_LINK = model.createProperty(SCHEMA + "motivation_links"); 
+	
+	public final static Property HEADLINE_LINK = model.createProperty(SCHEMA + "headline_links");
+	
+	public final static Property PAGE = model.createProperty(SCHEMA + "page");
 }

@@ -4,6 +4,11 @@ $librariesConfigFile=$argv[1];
 $librariesTargetDirectory=$argv[2];
 $baseDirectory=$argv[3];
 
+echo "Starting pullLibraries\n" ;
+echo "  config file = $librariesConfigFile\n" ;
+echo "  target dir  = $librariesTargetDirectory\n" ;
+echo "  base dir    = $baseDirectory\n" ;
+
 $jsonString=file_get_contents($librariesConfigFile) ;
 if ($jsonString===false) {
   die("$thisScript: file $librariesConfigFile not found") ;
@@ -42,9 +47,9 @@ function pullLibrary($libraryName,$info) {
 
 function pullGithub($githubRepository,$targetDirectory) {
   global $thisScript ;
-  $cmd="pullgithub.sh" 
+  $cmd=getcwd()."/pullgithub.sh" 
        ." ".escapeshellarg($githubRepository)
-       ." ".escapeshellarg($targetDirectory)." 2>/dev/null";
+       ." ".escapeshellarg($targetDirectory)." ";
   $output="" ;
   if (system($cmd,$exitcode)===false) {
     die("$thisScript: failed: $cmd");

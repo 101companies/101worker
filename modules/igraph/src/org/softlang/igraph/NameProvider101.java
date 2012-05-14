@@ -7,7 +7,7 @@ public class NameProvider101 implements VertexNameProvider<Vertex> {
 	@Override
 	public String getVertexName(Vertex v) {
 		//return MD5(v.getName());
-		return v.getClass().getSimpleName() + v.getName().replace(" ", "_");
+		return v.getClass().getSimpleName() + v.getName().replace(" ", "_").replace("/", "_");
 	}
 
 	public String MD5(String md5) {

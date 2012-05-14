@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.ext.DOTExporter;
+import org.jgrapht.ext.StringEdgeNameProvider;
 import org.jgrapht.ext.StringNameProvider;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -55,8 +56,10 @@ public class Main {
 				DOTExporter dot = new DOTExporter(
 		        		new NameProvider101(), 
 		        		new StringNameProvider<Vertex>(), 
-		        		//new StringEdgeNameProvider<String>());
-		        		null);
+		        		//new StringEdgeNameProvider<String>(),
+		        		null,
+		        		new VertexAttributeProvider101(),
+		        		new EdgeAttributeProvider101<DefaultEdge>());
 				
 				// PrintWriter out = new java.io.PrintWriter(System.out);
 				PrintWriter out;
@@ -92,11 +95,39 @@ public class Main {
 				}
 			}});
 		
+		Cf.set(g1.vertexSet()).forEach(new Function1V<Vertex>(){
+			public void apply(final Vertex v) {
+				if(v instanceof ImplementationVertex){
+					Resource r = model.getResource(v.get_resource());
+					List<Statement> links = r.listProperties(Model.MOTIVATION_LINK).toList();
+					links.addAll(r.listProperties(Model.HEADLINE_LINK).toList());
+					
+					Cf.list(links).forEach(new Function1V<Statement>(){
+						@Override
+						public void apply(Statement st) {
+							String t = st.getObject().toString();
+							Resource res = model.getResource(t);
+							
+							if(res.getProperty(Model.TYPE).getObject().toString().contentEquals("Concept")){
+								String val = res.getProperty(Model.NAME).getObject().toString();
+								System.out.println(val);
+								
+								Vertex concept = new ConceptVertex(val);
+								g1.addVertex(concept);
+								g1.addEdge(v,  concept);
+							}
+
+						}});	
+				}
+			}});
+		
 		DOTExporter dot = new DOTExporter(
         		new NameProvider101(), 
         		new StringNameProvider<Vertex>(), 
-        		//new StringEdgeNameProvider<String>());
-        		null);
+        		//new StringEdgeNameProvider<String>(),
+        		null,
+        		new VertexAttributeProvider101(),
+        		new EdgeAttributeProvider101<DefaultEdge>());
 		PrintWriter out;
 		try {
 			out = new PrintWriter(new FileWriter("Full_Haskel.dot"));
