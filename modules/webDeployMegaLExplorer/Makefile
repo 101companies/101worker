@@ -5,6 +5,7 @@ run:
 
 
 prepare:
-	@mkdir -rf ${webdir}/MegaLExplorer
+	@rm -rf ${webdir}/MegaLExplorer
+	@mkdir ${webdir}/MegaLExplorer
 	@mkdir ${webdir}/MegaLExplorer/css
 	@mkdir ${webdir}/MegaLExplorer/js
