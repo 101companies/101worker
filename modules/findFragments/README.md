@@ -34,22 +34,6 @@ Consider the following input "101results/101repo/contributions/haskell/.fratala"
   "fragment" : {
    "function" : "cut"
   }
- },
- {
-  "tag" : "deserialize",
-  "file" : "Company.hs",
-  "fragment" : {
-   "data" : "Company",
-   "deriving" : "Read"
-  }
- },
- {
-  "tag" : "serialize",
-  "file" : "Company.hs",
-  "fragment" : {
-   "data" : "Company",
-   "deriving" : "Show"
-  }
  }
 ]
 </pre>
@@ -69,18 +53,6 @@ The module derives the following output "101results/contributions/haskell/fragme
   "file" : "Cut.hs",
   "from" : "5",
   "to" : "14"
- }
- {
-  "tag" : "deserialize",
-  "file" : "Company.hs",
-  "from" : "4",
-  "to" : "4"
- }
- {
-  "tag" : "serialize",
-  "file" : "Company.hs",
-  "from" : "4",
-  "to" : "4"
  }
 }
 </pre>
