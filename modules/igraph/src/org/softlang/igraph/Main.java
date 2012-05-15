@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.ext.DOTExporter;
+import org.jgrapht.ext.StringEdgeNameProvider;
 import org.jgrapht.ext.StringNameProvider;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -55,8 +56,10 @@ public class Main {
 				DOTExporter dot = new DOTExporter(
 		        		new NameProvider101(), 
 		        		new StringNameProvider<Vertex>(), 
-		        		//new StringEdgeNameProvider<String>());
-		        		null);
+		        		//new StringEdgeNameProvider<String>(),
+		        		null,
+		        		new VertexAttributeProvider101(),
+		        		new EdgeAttributeProvider101<DefaultEdge>());
 				
 				// PrintWriter out = new java.io.PrintWriter(System.out);
 				PrintWriter out;
@@ -121,10 +124,10 @@ public class Main {
 		DOTExporter dot = new DOTExporter(
         		new NameProvider101(), 
         		new StringNameProvider<Vertex>(), 
-        		//new StringEdgeNameProvider<String>());
+        		//new StringEdgeNameProvider<String>(),
         		null,
         		new VertexAttributeProvider101(),
-        		null);
+        		new EdgeAttributeProvider101<DefaultEdge>());
 		PrintWriter out;
 		try {
 			out = new PrintWriter(new FileWriter("Full_Haskel.dot"));

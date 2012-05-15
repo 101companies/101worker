@@ -9,11 +9,17 @@ public class VertexAttributeProvider101 implements ComponentAttributeProvider<Ve
 
 	@Override
 	public Map getComponentAttributes(Vertex v) {
+		Map<String,String> attr = new HashMap<String, String>();
+		
 		if(v instanceof ConceptVertex){
-			Map<String,String> attr = new HashMap<String, String>();
-			attr.put("color", "blue");
+			//attr.put("color", "blue");
+			attr.put("style", "filled");
+			attr.put("shape", "ellipse");
 			return attr;
-			
+		}
+		else if(v instanceof ImplementationVertex){
+			attr.put("shape", "box");
+			return attr;
 		}
 		return null;
 	}
