@@ -1,7 +1,7 @@
 include ../Makefile.vars
 
 run: ${web101RepoDir}
-	php scanSourceDirectory.php ${pulled101RepoDir} ${web101RepoDir} contributions
+	php scanAllSourceSubDirectories.php ${pulled101RepoDir} ${web101RepoDir} contributions
 	
 ${web101RepoDir}:
 	mkdir ${web101RepoDir}
