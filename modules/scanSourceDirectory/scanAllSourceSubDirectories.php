@@ -12,7 +12,7 @@ require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 require_once ABSPATH_MEGALIB.'Files.php' ;
 
 ini_set('memory_limit', '2048M');
-$subdirectories = listAllFileNames(addToPath($baseDirectory,$mainDirectory),'dir') ;
+$subdirectories = listFileNames(addToPath($baseDirectory,$mainDirectory),'dir') ;
 foreach ($subdirectories as $subdirectory) {
   $directoryToScan = addToPath($mainDirectory,basename($subdirectory)) ;
   echo "\n\n====== scanning $directoryToScan ================\n" ;
