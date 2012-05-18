@@ -5,14 +5,13 @@ $rulesFile=$argv[$n++];
 $baseDirectory=$argv[$n++];
 $targetDirectory=$argv[$n++];
 $mainDirectory=$argv[$n++] ;
-$rulesFile=$argv[$n++] ;
 
 require_once '../../configs/main.config.local.php' ;
 echo "Using megalib from ".ABSPATH_MEGALIB ;
 require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 
 echo "Loading the rules from $rulesFile\n" ; ;
-$json = file_get_content($rulesFile) ;
+$json = file_get_contents($rulesFile) ;
 if ($json === false) {
   die("cannot open $rulesFile") ;
 }
