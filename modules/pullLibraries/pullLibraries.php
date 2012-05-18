@@ -28,10 +28,10 @@ foreach($libraries as $libraryName => $info ) {
 function processLibraryDeclaration($libraryName,$info) {
   global $workerTimeLibrariesDir ;
   global $webTimeLibrariesDir ;
-  if ($info['workertime']==='yes') {
+  if (isset($info['workertime']) && $info['workertime']==='yes') {
     pullLibrary($libraryName,$info,$workerTimeLibrariesDir.'/'.$libraryName) ;
   } ;
-  if ($info['webtime']==='yes') {
+  if (isset($info['webtime']) && $info['webtime']==='yes') {
     pullLibrary($libraryName,$info,$webTimeLibrariesDir.'/'.$libraryName) ;
   } ;  
 }
