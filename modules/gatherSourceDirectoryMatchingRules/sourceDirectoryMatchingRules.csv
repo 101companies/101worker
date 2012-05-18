@@ -1,4 +1,4 @@
-patternCondition,patternType,pattern,kind,processor,humanReadable,geshiLanguage,language,locator,technology,role
+patternRestriction,patternType,pattern,kind,processor,humanReadable,geshiLanguage,language,locator,technology,role
 file,regexpr,#^antlr-(.*)\.jar$#,archive,,,,,,ANTLR,support
 file,suffix,.gz,archive,,,,,,,
 file,suffix,.jar,archive,,,    ,,,,
