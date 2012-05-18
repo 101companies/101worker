@@ -9,7 +9,7 @@ $targetDirectory=$argv[$n++];
 $mainDirectory=$argv[$n++] ;
 
 require_once '../../configs/main.config.local.php' ;
-echo "Using megalib from ".ABSPATH_MEGALIB ;
+echo "Using megalib from ".ABSPATH_MEGALIB."\n" ;
 require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 require_once ABSPATH_MEGALIB.'Structures.php' ;
 
