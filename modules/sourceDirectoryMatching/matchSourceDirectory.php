@@ -1,5 +1,7 @@
 <?php
 $n=0 ;
+error_reporting(E_ALL);
+
 $thisScript=$argv[$n++];
 $rulesFile=$argv[$n++];
 $baseDirectory=$argv[$n++];
@@ -9,13 +11,15 @@ $mainDirectory=$argv[$n++] ;
 require_once '../../configs/main.config.local.php' ;
 echo "Using megalib from ".ABSPATH_MEGALIB ;
 require_once ABSPATH_MEGALIB.'SourceCode.php' ;
+require_once ABSPATH_MEGALIB.'Structures.php' ;
+
 
 echo "Loading the rules from $rulesFile\n" ; ;
 $json = file_get_contents($rulesFile) ;
 if ($json === false) {
   die("cannot open $rulesFile") ;
 }
-$rules = json_decode($json) ;
+$rules = jsonDecodeAsMap($json) ;
 echo "they are ".count($rules)." rules\n" ;
 
 $matcher = new FileSystemPatternMatcher($rules) ;
