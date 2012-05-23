@@ -24,7 +24,7 @@ $nbErrors = count($reader->getErrors()) ;
 if ($nbErrors!==0) {
   echo "--> $nbErrors error(s) found\n" ;
   echo $reader->getErrorsAsJson(true) ;
-  echo "\n"
+  echo "\n" ;
 }
 
 if (DEBUG>10) echo htmlAsIs($taggedFragmentSet->asJson(true)) ;
@@ -35,7 +35,7 @@ $locatorIterator->addLocationToAllFragments($taggedFragmentSet,true) ;
 
 echo "=== Computing derived informationn\n" ;
 $taggedFragmentSet->computeDerivedInformation() ;
-if (DEBUG>10) echo htmlAsIs($taggedFragmentSet->asJson(true)) ;
+if (DEBUG>10) echo $taggedFragmentSet->asJson(true) ;
 
 
 
