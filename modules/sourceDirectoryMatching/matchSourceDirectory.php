@@ -12,6 +12,7 @@ require_once '../../configs/main.config.local.php' ;
 echo "Using megalib from ".ABSPATH_MEGALIB."\n" ;
 require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 require_once ABSPATH_MEGALIB.'Structures.php' ;
+require_once ABSPATH_MEGALIB.'FileSystemMatcher.php' ;
 
 
 echo "Loading the rules from $rulesFile\n" ; ;
@@ -22,7 +23,7 @@ if ($json === false) {
 $rules = jsonDecodeAsMap($json) ;
 echo "they are ".count($rules)." rules\n" ;
 
-$matcher = new FileSystemPatternMatcher($rules) ;
+$matcher = new RuleBasedFileSystemPatternMatcher($rules) ;
 $matchedFilesGrouping=array(
     'languages' => 
        array(
