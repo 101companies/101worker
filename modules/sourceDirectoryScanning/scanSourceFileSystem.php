@@ -2,12 +2,12 @@
 $n=0 ;
 $thisScript=$argv[$n++];
 $baseDirectory=$argv[$n++];
-$targetDirectory=$argv[$n++];
+$targetBaseDirectory=$argv[$n++];
 $mainDirectory=$argv[$n++] ;
 $sourceDirectoryMatchingRules=$argv[$n++] ;
 $sourceDirectoryScanningMethod=$argv[$n++] ;
 
-echo "Starting $thisScript $baseDirectory $targetDirectory $mainDirectory\n" ;
+echo "Starting $thisScript $baseDirectory $targetBaseDirectory $mainDirectory $sourceDirectoryMatchingRules $sourceDirectoryScanningMethod\n" ;
 require_once '../../configs/main.config.local.php' ;
 echo "Using megalib from ".ABSPATH_MEGALIB ;
 require_once ABSPATH_MEGALIB.'Files.php' ;
@@ -30,15 +30,21 @@ echo $matcher->getRulesNumber()." rules where found." ;
 echo "In this module rules are particularily important to define the 'elementKind' and 'geshiLanguage' properties " ;
 if ($sourceDirectoryScanningMethod==='full') {
   echo "Scanning the whole directory $mainDirectory at once.\n" ;
-  echo "this has the benefit of generating top level summary in $mainDirectory\n" ;
+  $actualTargetDirectory = addToPath($targetBaseDirectory,$mainDirectory ;
+  echo "this has the benefit of generating top level summary in $actualTargetDirectory\n" ;
   $srcdir = new SourceTopDirectory($baseDirectory,$mainDirectory,array(),$matcher) ;
-  $srcdir->generate($targetDirectory) ;
+  echo "generating the result in $actualTargetDirectory\n" ;
+  $srcdir->generate($actualTargetDirectory)) ;
 } else {
   $subdirectories = listFileNames(addToPath($baseDirectory,$mainDirectory),'dir') ;
+  echo "Scanning all ".count($subdirectories)." subdirectories one by one.\n" ;  
   foreach ($subdirectories as $subdirectory) {
     $directoryToScan = addToPath($mainDirectory,basename($subdirectory)) ;
-    echo "\n\n====== scanning $directoryToScan ================\n" ;
+    $actualTargetDirectory = addToPath($targetBaseDirectory,$directoryToScan ;
+    echo "\n\n====== scanning subdirectory $directoryToScan ================\n" ;
     $srcdir = new SourceTopDirectory($baseDirectory,$directoryToScan,array(),$matcher) ;
-    $srcdir->generate($targetDirectory) ;
+    echo "generating the result in $actualTargetDirectory\n" ;
+    $srcdir->generate($actualTargetDirectory) ;
   }
 } 
+echo "generation was successfull\n" ;

@@ -1,7 +1,11 @@
 include ../Makefile.vars
 
 run: ${web101RepoDir}
-	php scanSourceFileSystem.php ${pulled101RepoDir} ${web101RepoDir} contributions ${sourceDirectoryMatchingRules} ${sourceDirectoryScanningMethod}
+	touch ${web101RepoDir}\contributions\.sourceDirectoryScanning.started ; \
+	rm -f ${web101RepoDir}\contributions\.sourceDirectoryScanning.end ; \
+	php scanSourceFileSystem.php ${pulled101RepoDir} ${web101RepoDir} contributions ${sourceDirectoryMatchingRules} ${sourceDirectoryScanningMethod} ;\
+	touch ${web101RepoDir}\contributions\.sourceDirectoryScanning.end ;
+		
 	
 ${web101RepoDir}:
 	mkdir ${web101RepoDir}
