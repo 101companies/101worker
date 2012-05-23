@@ -21,7 +21,7 @@ if ($json === false) {
   die("cannot open $rulesFile") ;
 }
 $rules = jsonDecodeAsMap($json) ;
-echo "they are ".count($rules)." rules\n" ;
+echo "They are ".count($rules)." rules\n" ;
 
 $matcher = new RuleBasedFileSystemPatternMatcher($rules) ;
 $matchedFilesGrouping=array(
@@ -39,7 +39,7 @@ $matchedFilesGrouping=array(
 $sourceDir = addToPath($baseDirectory,$mainDirectory) ;
 $resultDir = addToPath(addToPath($targetDirectory,$mainDirectory),'.rulesMatches') ;
 
-echo "match directory $sourceDir and generate results in $resultDir\n" ;
+echo "Match directory $sourceDir. The results are generated in $resultDir\n" ;
 $matcher->generate($sourceDir,$resultDir,$matchedFilesGrouping,array('language','technology')) ;
 echo "done" ;
 
