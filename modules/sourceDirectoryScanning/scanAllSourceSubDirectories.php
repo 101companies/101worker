@@ -12,7 +12,7 @@ require_once ABSPATH_MEGALIB.'Files.php' ;
 require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 require_once ABSPATH_MEGALIB.'SourceFileSystem.php' ;
 
-echo "WARNING: this script generates all source codes.\n"
+echo "WARNING: this script generates all source codes.\n" ;
 echo "         Because of php poor memory managment, out of memory might occur.\n" ;
 echo "         In this case change the value of $scanPerSubdirectories in ".__FILE__."\n" ;
 
