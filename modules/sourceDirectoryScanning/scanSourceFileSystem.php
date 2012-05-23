@@ -29,21 +29,19 @@ echo $matcher->getRulesNumber()." rules where found." ;
 echo "In this module rules are particularily important to define the 'elementKind' and 'geshiLanguage' properties " ;
 if ($sourceDirectoryScanningMethod==='full') {
   echo "Scanning the whole directory $mainDirectory at once.\n" ;
-  $actualTargetDirectory = addToPath($targetBaseDirectory,$mainDirectory) ;
-  echo "this has the benefit of generating top level summary in $actualTargetDirectory\n" ;
+  echo "this has the benefit of generating top level summary in $targetBaseDirectory\n" ;
   $srcdir = new SourceTopDirectory($baseDirectory,$mainDirectory,array(),$matcher) ;
-  echo "generating the result in $actualTargetDirectory\n" ;
-  $srcdir->generate($actualTargetDirectory) ;
+  echo "generating the result in $targetBaseDirectory\n" ;
+  $srcdir->generate($targetBaseDirectory) ;
 } else {
   $subdirectories = listFileNames(addToPath($baseDirectory,$mainDirectory),'dir') ;
   echo "Scanning all ".count($subdirectories)." subdirectories one by one.\n" ;  
   foreach ($subdirectories as $subdirectory) {
     $directoryToScan = addToPath($mainDirectory,basename($subdirectory)) ;
-    $actualTargetDirectory = addToPath($targetBaseDirectory,$directoryToScan) ;
     echo "\n\n====== scanning subdirectory $directoryToScan ================\n" ;
     $srcdir = new SourceTopDirectory($baseDirectory,$directoryToScan,array(),$matcher) ;
-    echo "generating the result in $actualTargetDirectory\n" ;
-    $srcdir->generate($actualTargetDirectory) ;
+    echo "generating the result in $mainDirectory\n" ;
+    $srcdir->generate($mainDirectory) ;
   }
 } 
 echo "generation was successfull\n" ;
