@@ -11,6 +11,7 @@ $commandsBaseDirectory==$argv[$n++] ;
 
 require_once '../../configs/main.config.local.php' ;
 echo "Using megalib from ".ABSPATH_MEGALIB ;
+require_once ABSPATH_MEGALIB.'HTML.php' ;
 require_once ABSPATH_MEGALIB.'Fragments.php' ;
 
 echo "=== Creating the reader with rules from $sourceDirectoryMatchingRules\n" ;
