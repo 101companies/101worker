@@ -11,7 +11,6 @@ $commandsBaseDirectory==$argv[$n++] ;
 
 require_once '../../configs/main.config.local.php' ;
 echo "Using megalib from ".ABSPATH_MEGALIB ;
-require_once ABSPATH_MEGALIB.'HTML.php' ;
 require_once ABSPATH_MEGALIB.'Fragments.php' ;
 
 echo "=== Creating the reader with rules from $sourceDirectoryMatchingRules\n" ;
@@ -23,14 +22,15 @@ echo "=== Reading tagged fragment definitions from $sourceDirectory\n" ;
 $taggedFragmentSet = $reader->read($sourceDirectory) ;
 $nbErrors = count($reader->getErrors()) ;
 if ($nbErrors!==0) {
-  echo "$nbErrors error(s) found\n" ;
-  echo htmlAsIs($reader->getErrorsAsJson(true)) ;
+  echo "--> $nbErrors error(s) found\n" ;
+  echo $reader->getErrorsAsJson(true) ;
+  echo "\n"
 }
 
 if (DEBUG>10) echo htmlAsIs($taggedFragmentSet->asJson(true)) ;
 
 echo "=== Applying locators to find fragment location\n" ;
-$locatorIterator = new FragmentLocatorIterator($tmpDir,$commandsBaseDirectory) ;
+$locatorIterator = new FragmentLocatorIterator($tmpDirectory,$commandsBaseDirectory) ;
 $locatorIterator->addLocationToAllFragments($taggedFragmentSet,true) ;
 
 echo "=== Computing derived informationn\n" ;
