@@ -36,7 +36,7 @@ $matchedFilesGrouping=array(
        )
  ) ;
 $sourceDir = addToPath($baseDirectory,$mainDirectory) ;
-$resultDir = addToPath($targetDirectory,$mainDirectory) ;
+$resultDir = addToPath(addToPath($targetDirectory,$mainDirectory),'.rulesMatches') ;
 
 echo "match directory $sourceDir and generate results in $resultDir\n" ;
 $matcher->generate($sourceDir,$resultDir,$matchedFilesGrouping,array('language','technology')) ;
