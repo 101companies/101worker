@@ -30,7 +30,7 @@ echo $matcher->getRulesNumber()." rules where found." ;
 echo "In this module rules are particularily important to define the 'elementKind' and 'geshiLanguage' properties " ;
 if ($sourceDirectoryScanningMethod==='full') {
   echo "Scanning the whole directory $mainDirectory at once.\n" ;
-  $actualTargetDirectory = addToPath($targetBaseDirectory,$mainDirectory ;
+  $actualTargetDirectory = addToPath($targetBaseDirectory,$mainDirectory) ;
   echo "this has the benefit of generating top level summary in $actualTargetDirectory\n" ;
   $srcdir = new SourceTopDirectory($baseDirectory,$mainDirectory,array(),$matcher) ;
   echo "generating the result in $actualTargetDirectory\n" ;
