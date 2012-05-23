@@ -34,7 +34,7 @@ if ($sourceDirectoryScanningMethod==='full') {
   echo "this has the benefit of generating top level summary in $actualTargetDirectory\n" ;
   $srcdir = new SourceTopDirectory($baseDirectory,$mainDirectory,array(),$matcher) ;
   echo "generating the result in $actualTargetDirectory\n" ;
-  $srcdir->generate($actualTargetDirectory)) ;
+  $srcdir->generate($actualTargetDirectory) ;
 } else {
   $subdirectories = listFileNames(addToPath($baseDirectory,$mainDirectory),'dir') ;
   echo "Scanning all ".count($subdirectories)." subdirectories one by one.\n" ;  
