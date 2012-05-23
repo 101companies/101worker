@@ -7,7 +7,7 @@ $mainDirectory=$argv[$n++] ;
 $sourceDirectoryMatchingRules=$argv[$n++] ;
 $tmpDirectory=$argv[$n++] ;
 $commandsBaseDirectory==$argv[$n++] ;
-
+ 
 
 require_once '../../configs/main.config.local.php' ;
 echo "Using megalib from ".ABSPATH_MEGALIB ;

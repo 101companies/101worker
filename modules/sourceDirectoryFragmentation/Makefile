@@ -1,7 +1,7 @@
 include ../Makefile.vars
 
 run: ${web101RepoDir} 
-	php generateSourceDirectoryMatchingRules.php sourceDirectoryMatchingRules.csv ${sourceDirectoryMatchingRules}
+	php locateFragments.php ${pulled101RepoDir} ${web101RepoDir} contributions ${sourceDirectoryMatchingRules} /tmp ${pulled101RepoDir} 
 	
 ${web101RepoDir}:
 	mkdir ${web101RepoDir}
