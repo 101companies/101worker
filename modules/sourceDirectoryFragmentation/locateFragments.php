@@ -40,6 +40,6 @@ if (DEBUG>10) echo htmlAsIs($taggedFragmentSet->asJson(true)) ;
 
 
 echo "=== Saving taggedFragments to json files\n" ;
-echo "TODO" ; //$taggedFragmentSet->saveInJsonSummaryFiles(true) ;
+$taggedFragmentSet->saveInJsonSummaryFiles($sourceBaseDirectory,$targetBaseDirectory,true) ;
 
 echo "done" ;
