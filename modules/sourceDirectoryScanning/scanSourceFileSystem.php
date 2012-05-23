@@ -15,7 +15,6 @@ require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 require_once ABSPATH_MEGALIB.'SourceFileSystem.php' ;
 require_once ABSPATH_MEGALIB.'FileSystemMatcher.php' ;
 
-$sourceDirectoryScanningMethod = false ;
 ini_set('memory_limit', '2048M');
 
 echo "WARNING: this script is eager in term of memory.\n" ;
