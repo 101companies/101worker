@@ -15,7 +15,7 @@ require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 require_once ABSPATH_MEGALIB.'SourceFileSystem.php' ;
 require_once ABSPATH_MEGALIB.'FileSystemMatcher.php' ;
 
-ini_set('memory_limit', '2048M');
+ini_set('memory_limit', '4096M');
 
 echo "WARNING: this script is eager in term of memory.\n" ;
 echo "         Because of php poor memory managment, out of memory errors might occur.\n" ;
