@@ -6,7 +6,7 @@ $targetBaseDirectory=$argv[$n++];
 $mainDirectory=$argv[$n++] ;
 $sourceDirectoryMatchingRules=$argv[$n++] ;
 $tmpDirectory=$argv[$n++] ;
-$commandsBaseDirectory==$argv[$n++] ;
+$commandsBaseDirectory=$argv[$n++] ;
  
 
 require_once '../../configs/main.config.local.php' ;
