@@ -30,6 +30,7 @@ if ($nbErrors!==0) {
 if (DEBUG>10) echo htmlAsIs($taggedFragmentSet->asJson(true)) ;
 
 echo "=== Applying locators to find fragment location\n" ;
+echo "    using $tmpDirectory as a temporary directory and $commandsBaseDirectory\n" ;
 $locatorIterator = new FragmentLocatorIterator($tmpDirectory,$commandsBaseDirectory) ;
 $locatorIterator->addLocationToAllFragments($taggedFragmentSet,true) ;
 
