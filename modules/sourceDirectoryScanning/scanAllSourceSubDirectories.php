@@ -11,13 +11,16 @@ echo "Using megalib from ".ABSPATH_MEGALIB ;
 require_once ABSPATH_MEGALIB.'Files.php' ;
 require_once ABSPATH_MEGALIB.'SourceCode.php' ;
 require_once ABSPATH_MEGALIB.'SourceFileSystem.php' ;
+require_once ABSPATH_MEGALIB.'FileSystemMatcher.php' ;
+
+
+$scanPerSubdirectories = false ;
+ini_set('memory_limit', '2048M');
 
 echo "WARNING: this script generates all source codes.\n" ;
 echo "         Because of php poor memory managment, out of memory might occur.\n" ;
 echo "         In this case change the value of $scanPerSubdirectories in ".__FILE__."\n" ;
 
-$scanPerSubdirectories = false ;
-ini_set('memory_limit', '2048M');
 
 if ($scanPerSubdirectories) {
   $subdirectories = listFileNames(addToPath($baseDirectory,$mainDirectory),'dir') ;
