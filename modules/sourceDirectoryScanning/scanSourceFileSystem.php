@@ -40,8 +40,8 @@ if ($sourceDirectoryScanningMethod==='full') {
     $directoryToScan = addToPath($mainDirectory,basename($subdirectory)) ;
     echo "\n\n====== scanning subdirectory $directoryToScan ================\n" ;
     $srcdir = new SourceTopDirectory($baseDirectory,$directoryToScan,array(),$matcher) ;
-    echo "generating the result in $mainDirectory\n" ;
-    $srcdir->generate($mainDirectory) ;
+    echo "generating the result in $targetBaseDirectory\n" ;
+    $srcdir->generate($targetBaseDirectory) ;
   }
 } 
 echo "generation was successfull\n" ;
