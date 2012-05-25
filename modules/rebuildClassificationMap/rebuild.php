@@ -16,7 +16,7 @@ foreach($pages as $page) {
 	$title = $page['title'];
 	array_push($pagetitles, $title);
 	if (strstr(getPageContent($title), "<classify/>") !== FALSE)
-		$map[$title] = array("classify" => TRUE);
+		$map[str_replace(" ", "_", $title)] = array("classify" => TRUE);
 }	
 
 echo "Requesting categories...\n";
@@ -25,9 +25,9 @@ $classifycats = array();
 foreach($categories as $category){
 	if (strstr($category, "<pageheadline/>") !== FALSE) {
 		if (!array_key_exists($category, $map)) {
-			$map[$category] = array("pageheadline" => TRUE);
+			$map[str_replace(" ", "_", $category)] = array("pageheadline" => TRUE);
 		} else {
-			$map[$category]["pageheadline"] = TRUE;
+			$map[str_replace(" ", "_", $category)]["pageheadline"] = TRUE;
 		}
 		
 	}
