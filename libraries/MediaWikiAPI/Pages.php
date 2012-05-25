@@ -55,6 +55,10 @@ function extractIntent($content) {
         $inIntent= true;
         continue;
       }
+      if (startsWith("==Headline==",str_replace(' ','',trim($line)) )) {
+        $inIntent= true;
+        continue;
+      }
       if (startsWith("==",trim($line))) {
          $inIntent = false;
          continue;
