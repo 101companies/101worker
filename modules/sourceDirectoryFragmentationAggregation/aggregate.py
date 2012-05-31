@@ -14,5 +14,5 @@ for contribdir in filter(lambda x: os.path.exists(os.path.join(rootdir, x, "inde
 			fragments[os.sep.join(fullpath.split(os.sep)[5:])] = json.loads(open(fullpath).read())
 	print len(fragments), "fragments found."
 	#os.remove(os.path.join(rootdir,contribdir, "index.fragments.json"))
-	f = open(os.path.join(rootdir,contribdir, "index.fragments.json"), "r+")
+	f = open(os.path.join(rootdir,contribdir, "index.fragments.json"), "w+")
 	f.write(json.dumps(fragments))
