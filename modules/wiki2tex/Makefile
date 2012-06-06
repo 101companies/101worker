@@ -17,6 +17,7 @@ content:
 	make content-only
 
 content-only:
+	mkdir -p tex/content/latex
 	php texgenerator.php --mode=content
 	cd tex/content/latex; make
 
