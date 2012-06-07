@@ -23,7 +23,7 @@ class Wiki{
         foreach($pages101 as $p){
 	     	$page = new Page($content = $p['title']);
             array_push($allPages, $page);
-			ECHO "101companies page found: " .  $page->getFullTitle() . PHP_EOL;	
+			   ECHO "101companies page found: " .  $page->getFullTitle() . PHP_EOL;	
         } 
         return $allPages;
        // var_dump($allPages);

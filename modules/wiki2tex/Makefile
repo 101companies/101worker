@@ -63,8 +63,10 @@ dump-only:
 	cd tex/dump/latex; make
 
 publish:
+	tar -cvvf tex.tar tex
 	mkdir -p ${webdir}/texgen
 	cp -r -f tex ${webdir}/texgen
+	cp tex.tar ${webdir}/texgen
 	
 clean:
 	rm -f tex/files/*.ext
