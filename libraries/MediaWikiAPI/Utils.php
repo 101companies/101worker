@@ -133,7 +133,7 @@ function getTexCommandName($txt){
   $txt = str_replace("ö", "oe", $txt);
   $txt = str_replace("è", "e", $txt);
   $txt = str_replace(":", "", $txt);
-  $res = str_replace(' ', '',$txt);
+  $res = str_replace(' ', '_',$txt);
   return $res;
 }
 
