@@ -1,0 +1,55 @@
+% --------------------------------------------------
+
+\newcommand{\wikiuqref}[1]{\wikiref{#1}{#1}}
+\newcommand{\wikitref}[1]{\wikiref{Technology:#1}{\textsf{#1}}}
+\newcommand{\wikilref}[1]{\wikiref{Language:#1}{\textsf{#1}}}
+\newcommand{\wikifref}[1]{\wikiref{101feature:#1}{\emph{101feature} \textsf{#1}}}
+\newcommand{\wikiiref}[1]{\wikiref{101implementation:#1}{\emph{101implementation} \textsf{#1}}}
+\newcommand{\wikicref}[1]{\wikiref{101companies:#1}{\emph{101companies} #1}}
+\newcommand{\wikicontribref}[1]{\wikiref{101contributor:#1}{#1}}
+
+% --------------------------------------------------
+
+
+\lstdefinelanguage{antlr}{%
+  morekeywords={new,returns},
+  sensitive=true,
+  morecomment=[l]{//},
+  morestring=[b]',
+  morestring=[b]",
+}
+
+\lstdefinelanguage{aspectj}{%
+  morekeywords={target,pointcut,declare,aspect,proceed,call,around,abstract,static,double,foreach,for,in,protected,extends,implements,class,null,int,if,where,partial,public,return,new,interface,private,void,from,select,this,throws},
+  sensitive=true,
+  morecomment=[l]{//},
+  morestring=[b]",
+}
+
+\lstdefinelanguage{java}{%
+  morekeywords={abstract,static,double,foreach,for,in,protected,extends,implements,class,null,int,if,where,partial,public,return,new,interface,private,void,from,select,this,throws},
+  sensitive=true,
+  morecomment=[l]{//},
+  morestring=[b]",
+}
+
+\lstdefinelanguage{csharp}{%
+  morekeywords={abstract,override,var,delegate,static,double,foreach,in,protected,extends,implements,class,null,int,if,where,partial,public,return,new,interface,private,void,from,select,get,set,this},
+  sensitive=true,
+  morecomment=[l]{//},
+  morestring=[b]",
+}
+
+\lstdefinelanguage{sql}{%
+  morekeywords={SELECT, FROM, SUM},
+  sensitive=true,
+  morecomment=[l]{--},
+  morestring=[b]",
+}
+
+\lstdefinelanguage{company}{%
+  morekeywords={employee, manager,department,company,salary,address,name},
+  sensitive=true,
+}
+
+%-----------------------------------------------------------------------------------------------

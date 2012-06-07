@@ -27,6 +27,7 @@ onto:
 	make onto-only
 
 onto-only:
+	mkdir -p tex/ontology/latex
 	php texgenerator.php --mode=ontology
 	cd tex/ontology/latex; make
 
@@ -50,6 +51,8 @@ dump:
 	make dump-only
 
 dump-only:
+	mkdir -p tex/dump/latex
+	mkdir -p tex/dump/data	
 	php texgenerator.php --mode=dump
 	cd tex/dump/latex; make
 	

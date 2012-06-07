@@ -18,8 +18,6 @@ $filesFolder = BASE_PATH . "wiki2tex/tex/files/";
 $implsFolder = BASE_PATH. "wiki2tex/tex/impl/data/";
 $ttcsFolder = BASE_PATH. "wiki2tex/tex/ttc/data/";
 
-$hs101Folder = BASE_PATH.'../../101nonpublic/papers/waf101/';
-
 require_once(BASE_PATH . '../libraries/MediaWikiAPI/ApiWrapper2.php');
 require_once(BASE_PATH . '../libraries/MediaWikiAPI/Utils.php');
 require_once("commandLine.php");
@@ -97,6 +95,7 @@ $args = CommandLine::parseArgs($_SERVER['argv']);
 if($args['mode'] == 'dump'){
    echo "Entering dump mode, please wait..." . PHP_EOL;
    $wiki = new Wiki();
+   print($texFolderDump . PHP_EOL);
    $f = fopen($texFolderDump . "macros.tex", "w+");
    $allPages = $wiki->getAllPages();
    //echo "DUMP: " . PHP_EOL;
@@ -111,7 +110,7 @@ if($args['mode'] == 'dump'){
    $content = "";
    $i = 0;
    foreach($pages as $page){
-	ECHO $page->getTitle() . PHP_EOL;
+	  ECHO $page->getTitle() . PHP_EOL;
     $tex = $page->dumpToTex();
     if(strstr($tex, "CategorymetaTitle") == FALSE){
       var_dump($tex);
@@ -119,7 +118,7 @@ if($args['mode'] == 'dump'){
     }
    }
    foreach($catPages as $page){
-	ECHO $page->getTitle() . PHP_EOL;
+	  ECHO $page->getTitle() . PHP_EOL;
     $tex = $page->dumpToTex();
     if(strstr($tex, "CategorymetaTitle") == FALSE){
       $content .= $tex;
