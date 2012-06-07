@@ -1,3 +1,9 @@
+include ../Makefile.vars
+
+run:
+	make up
+	make dump
+	publish	
 all:
 	make up
 	make local
@@ -55,6 +61,10 @@ dump-only:
 	mkdir -p tex/dump/data	
 	php texgenerator.php --mode=dump
 	cd tex/dump/latex; make
+
+publish:
+	mkdir -p ${webdir}/texgen
+	cp -r -f tex ${webdir}/texgen
 	
 clean:
 	rm -f tex/files/*.ext

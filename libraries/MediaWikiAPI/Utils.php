@@ -104,6 +104,7 @@ function getItemizedTex($markup){
 function handleUmlauts($txt){
  $txt = str_replace("ä", "\\\"{a}", $txt);
  $txt = str_replace("ö", "\\\"{o}", $txt);
+ $txt = str_replace("è", "e", $txt);
  $t = str_replace("ü", "\\\"{u}", $txt);
  return $t;
 }
