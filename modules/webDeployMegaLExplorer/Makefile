@@ -11,7 +11,8 @@ prepare:
 	@mkdir ${webdir}/MegaLExplorer/css
 	@mkdir ${webdir}/MegaLExplorer/js
 	@mkdir ${webdir}/MegaLExplorer/js/_lib
-	@mkdir ${webdir}/MegaLExplorer/js/themes/default/style.css
+	@mkdir ${webdir}/MegaLExplorer/js/themes/
+	@mkdir ${webdir}/MegaLExplorer/js/themes/default/
 	@mkdir ${webdir}/MegaLExplorer/imgs
 
 
