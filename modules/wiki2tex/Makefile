@@ -2,8 +2,9 @@ include ../Makefile.vars
 
 run:
 	make up
+	make content
 	make dump
-	publish	
+	make publish	
 all:
 	make up
 	make local
