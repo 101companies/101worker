@@ -92,7 +92,18 @@ $args = CommandLine::parseArgs($_SERVER['argv']);
 //$args['ilist'] = "../lists/pppjImpls.lst";
 //$args['output'] = "pppjif";
 
-if($args['mode'] == 'dump'){
+
+if($args['mode'] == 'singlePage'){
+  $title = $args['title'];
+  if (startsWith("101implementation:",$title)) {
+    echo $title;
+    $page = new ImplementationPage($title);
+    var_dump(formatter::toTex($page->illustration));
+  }
+
+
+}
+else if($args['mode'] == 'dump'){
    echo "Entering dump mode, please wait..." . PHP_EOL;
    $wiki = new Wiki();
    print($texFolderDump . PHP_EOL);
@@ -505,7 +516,7 @@ else if(($args['mode'] == 'matrixif') || ($args['mode'] == 'matrixis') || ($args
  }
 }
 else{
-  die('the following params are supported: --mode=ontology|content|matrixif|matrixis|matrixts' . PHP_EOL);
+  die('the following params are supported: --mode=ontology|content|matrixif|matrixis|matrixts|singlePage' . PHP_EOL);
 }
 
 function getBy($catImpl, $val){

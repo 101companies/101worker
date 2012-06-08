@@ -404,20 +404,21 @@ class formatter{
      $text = str_replace('lang="haskell" enclose="none">','lang="haskell">', $text);
      $text = str_replace('lang="haskell"  enclose="none">','lang="haskell">', $text);
      */
-     $pattern = '/<syntaxhighlight lang=\"([a-zA-Z]*)\" enclose=\"none\">((\s*|.|:|=|>|<|\s|\(|\)|\[|\]|\{|\})*)<\/syntaxhighlight>/'; 
+
+     $pattern = '/(<syntaxhighlight lang=\"([a-zA-Z]*)\" enclose=\"none\">)((\s*|.|:|=|>|<|\s|\(|\)|\[|\]|\{|\})*)(<\/syntaxhighlight>)/'; 
      preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
      foreach($matches as $match){
-        $pattern = '<syntaxhighlight lang="' . $match[1] .'" enclose="none">' . $match[2] .'</syntaxhighlight>';   
-        $replacement = '\begin{ttfamily}'.$match[2].'\end{ttfamily}';    
-        $text = str_replace($pattern, $replacement, $text);
-	}
-     
+        //var_dump($match);
+        $replacement = '\begin{ttfamily}'.$match[3].'\end{ttfamily}';    
+        $text = str_replace($match[0], $replacement, $text);
+	   } 
      $text = str_replace('&','\&',$text);
            
      $text = str_replace('<nowiki>','',str_replace('</nowiki>','',$text)); 
      $text = str_replace('$','\$',$text);
+
      $text = formatter::handleCites($text); 
-     $text = formatter::handleBoldAndItalicSpecialCase($text); //we need this because regex cannot handle -> '''                     
+     $text = formatter::handleBoldAndItalicSpecialCase($text); //we need this because regex cannot handle -> '''                          
      $text = formatter::italic2Textit($text); 
      $text = formatter::handleBold($text); 
 	 
@@ -430,8 +431,7 @@ class formatter{
      
      $text = str_replace("<references>", "", $text);
      $text = str_replace("<references/>", "", $text);
-     $text = str_replace('^','\^', $text);
-          
+     $text = str_replace('^','\^', $text);     
      $text = formatter::nestedList($text);
      $text = formatter::subsubsubsections($text);                                                
      $text = formatter::subsubsections($text);
@@ -445,7 +445,7 @@ class formatter{
    }
    
     function handleBoldAndItalicSpecialCase($tex){
-	 $pattern =  '/\'\'\'((\w*|\W*|\d*|\s*|\-*|\:*|\[*|\]|\|*|\}*|\{*|\\*)*)\'\'\'/'; //'/\'\'(.*)\'\'/';
+	 $pattern =  '/\'\'\'(^[\'])*\'\'\'/'; //'/\'\'(.*)\'\'/';
 	 $replacement = '\\textit{\textbf{\1}}';
 	 return preg_replace($pattern, $replacement, $tex);
     }
