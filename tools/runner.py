@@ -25,7 +25,7 @@ if (len(sys.argv) == 2):
 
    #if file exists -- the process is already running, report to the log and skip it
    if os.path.isfile(pidFileName):
-      write2log('Module %s is already running; processId: %s' % module % p.pid)
+      write2log('Module %s is already running; processId: %s' % module, p.pid)
       sys.exit(-1)
 
    pid_file = open(pidFileName, "w")
