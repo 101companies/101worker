@@ -23,6 +23,7 @@ if (len(sys.argv) == 2):
    #creating a PID file is the module subdir indicating the the module is running.
    pidFileName = module + "/pid"; 
 
+   print os.getcwd()
    #if file exists -- the process is already running, report to the log and skip it
    if os.path.isfile(pidFileName):
       write2log('Module %s is already running; processId: %s' %(module,str(p.pid)))
