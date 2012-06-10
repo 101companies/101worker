@@ -397,7 +397,7 @@ class formatter{
         // removed style attribute from the line below: , style=' . $match[1] . '
         // we need javascript support for the 101explorer paper
         if($match[1] == "javascript"){
-          $replacement = '\lstinputlisting[xleftmargin=20pt language=javascript' . $sourceText . ']{\texgen/files/' . $fname . "}"; //, language=' . $match[1] .$sourceText. //../../files/
+          $replacement = '\lstinputlisting[xleftmargin=20pt language=javascript ' . $sourceText . ']{\texgen/files/' . $fname . "}"; //, language=' . $match[1] .$sourceText. //../../files/
 
         }
         else{
