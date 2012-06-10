@@ -1,7 +1,6 @@
 # Main target; run all modules
 
 run:
-	@echo Make PID: $$PPID
 	@echo Performing all modules.
 	@make before-run -s
 	@cd modules; make run -s
