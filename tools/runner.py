@@ -23,11 +23,10 @@ if (len(sys.argv) == 2):
    #creating a PID file is the module subdir indicating the the module is running.
    pidFileName = module + "/pid"; 
 
-   print os.getcwd()
    #if file exists -- the process is already running, report to the log and skip it
    if os.path.isfile(os.getcwd() + '/' + pidFileName):
       write2log('Module %s is already running; processId: %s' %(module,str(p.pid)))
-      sys.exit(-1)
+      sys.exit(0)
 
    pid_file = open(os.getcwd() + '/' + pidFileName, "w")
    print "Creating PID file: %s" % str(os.getcwd() + '/' + pidFileName)
@@ -39,9 +38,10 @@ if (len(sys.argv) == 2):
    retval = p.wait()
 
    write2log('Finished at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-   write2log("Retval %s" % retval)
+   #write2log("Retval %s" % retval)
 
    #remove PID file when the process finished
+   write2log("Removing PID file: %s" % str(os.getcwd() + '/' + pidFileName))
    os.remove(pidFileName)
 
    if (retval == 0):
