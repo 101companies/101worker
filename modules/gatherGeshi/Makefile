@@ -7,3 +7,6 @@ run: ${repo} ${orig}
 	@make clean
 	@cp -r ${orig} ${resultsdir}
 	@python program.py ${repo} ${result}
+
+clean:	
+	@#no-op
