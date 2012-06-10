@@ -25,11 +25,12 @@ if (len(sys.argv) == 2):
 
    print os.getcwd()
    #if file exists -- the process is already running, report to the log and skip it
-   if os.path.isfile(pidFileName):
+   if os.path.isfile(os.getcwd() + '/' + pidFileName):
       write2log('Module %s is already running; processId: %s' %(module,str(p.pid)))
       sys.exit(-1)
 
-   pid_file = open(pidFileName, "w")
+   pid_file = open(os.getcwd() + '/' + pidFileName, "w")
+   print "Creating PID file: %s" % str(os.getcwd() + '/' + pidFileName)
    pid_file.write(str(p.pid))
    pid_file.close()
 
