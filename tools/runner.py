@@ -9,7 +9,8 @@ log = open('../../101logs/runner.log', 'a')
 
 def write2log(msg):
    global log
-   print msg
+   #print msg
+   log.write(msg)
 
 
 if (len(sys.argv) == 2):
