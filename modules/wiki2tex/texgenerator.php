@@ -95,10 +95,12 @@ $args = CommandLine::parseArgs($_SERVER['argv']);
 
 if($args['mode'] == 'singlePage'){
   $title = $args['title'];
-  if (startsWith("101implementation:",$title)) {
+  if (startsWith("Language:",$title)) {
     echo $title;
-    $page = new ImplementationPage($title);
-    var_dump(formatter::toTex($page->illustration));
+    $page = new LanguagePage($title);
+    #var_dump($page);
+    echo $page->dumpToTex();
+    #var_dump(formatter::toTex($page->illustration));
   }
 
 

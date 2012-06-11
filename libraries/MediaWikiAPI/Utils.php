@@ -389,11 +389,13 @@ class formatter{
         $fname = uniqid("f") . ".ext";
         global $filesFolder; 
         $sourceText = '';
-        if ($match[4] != null && $match[4]!= ''){
-          $link = $sfURL.$match[4];
-          $name = end(explode('/',$match[4]));
-          $sourceText = ', caption={\\href{'.$link.'}{'.$name.'}}';
-        }             
+
+        #if ($match[4] != null && $match[4]!= ''){
+        #  $link = $sfURL.$match[4];
+        #  $name = end(explode('/',$match[4]));
+        #  $sourceText = ', caption={\\href{'.$link.'}{'.$name.'}}';
+        #}    
+                 
         $f = fopen($filesFolder . $fname, "w+");
         fwrite($f, trim($match[5]));
         fclose($f);
