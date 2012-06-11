@@ -365,13 +365,13 @@ class formatter{
         fclose($f);
         
         $pattern =  '/<pre>((\s*|.|\s)*)<\/pre>/';
-        #$replacement = '\lstinputlisting[xleftmargin=20pt]{\texgen/files/' . $fname . "}";
+        $replacement = '\lstinputlisting[xleftmargin=20pt]{\texgen/files/' . $fname . "}";
         /*
         \begin{lstlisting}
           put your code here
         \end{lstlisting}
-        */
-        $replacement = "\begin{lstlisting}" + trim($out[1]) + "end{lstlisting}";
+        
+        $replacement = "\begin{lstlisting}" + trim($out[1]) + "end{lstlisting}"; */
         $text = preg_replace($pattern, $replacement, $text);
      }
      
@@ -407,8 +407,8 @@ class formatter{
 
         }
         else{
-          #$replacement = '\lstinputlisting[xleftmargin=20pt ' . $sourceText . ']{\texgen/files/' . $fname . "}"; //, language=' . $match[1] .$sourceText. //../../files/
-          $replacement = "\begin{lstlisting}" + trim($match[5]) + "end{lstlisting}";
+          $replacement = '\lstinputlisting[xleftmargin=20pt ' . $sourceText . ']{\texgen/files/' . $fname . "}"; //, language=' . $match[1] .$sourceText. //../../files/
+          #$replacement = "\begin{lstlisting}" + trim($match[5]) + "end{lstlisting}";
         }
 
         $text = str_replace($pattern, $replacement, $text);
