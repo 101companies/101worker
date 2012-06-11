@@ -9,7 +9,7 @@ emailTo = "dotnetby@gmail.com" # for testing
 emailServer = "deliver.uni-koblenz.de"
 
 # Send the email
-logfile = open('../101logs/runner.log', 'r')
+logfile = open('../../101logs/runner.log', 'r')
 log = logfile.read()
 if (string.find(log, 'FAIL (')>=0):
 	msg = MIMEText(log.encode('utf-8'), 'plain', 'utf-8')
