@@ -65,8 +65,9 @@ dump-only:
 
 publish:
 	tar -cvvf tex.tar tex
+	rm -r ${webdir}/texgen
 	mkdir -p ${webdir}/texgen
-	cp -r -f tex ${webdir}/texgen
+	#cp -r -f tex ${webdir}/texgen
 	cp tex.tar ${webdir}/texgen
 	
 clean:
