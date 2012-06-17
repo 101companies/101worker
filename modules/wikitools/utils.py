@@ -21,6 +21,7 @@ def toTex(txt):
   txt = txt.replace("<references>", "")
   txt = txt.replace("<references/>", "")
   txt = txt.replace('^','\^')
+  txt = txt.replace('\"','\\"')
 
   return handleUmlauts(txt) 
 
