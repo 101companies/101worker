@@ -94,9 +94,9 @@ def main():
 	pileline.addStep(Step(extractSourceFragments, "Extract source fragments from the sections into separate files"))
 	pileline.addStep(Step(page2tex, "Generate final tex for the page"))
 
-	doc = pileline.execute(toTex(wikidata))
+	doc = pileline.execute(wikidata)
 	f = open(OUTPUT_BASE+'macros.tex', 'w')
-	f.write(doc)
+	f.write(toTex(doc))
 	f.close()
 
 if __name__ == "__main__":
