@@ -82,7 +82,7 @@ def page2tex(page):
 		tex += section.content + '}\n'
 		if(len(section.subsections) > 0):
 			for section in section.subsections:
-				tex += '\n\\newcommand{' + section.title +'}{'
+				tex += '\n\\newcommand{' + cmd_prefix + getTexCommandName(section.title) +'}{'
 				tex += section.content + '}\n'		
 	return tex			
 
