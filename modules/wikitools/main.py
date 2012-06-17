@@ -78,12 +78,12 @@ def page2tex(page):
 	cmd_prefix = 'LanguageMeta'
 	for section in page:
 		#tex += '\n\\section{' + section.title +'}' + '\n';
-		tex += '\\newcommand{'+ cmd_prefix + getTexCommandName(section.title) +'}{'
-		tex += section.content + '}' + '\n'
+		tex += '\\newcommand{\\'+ cmd_prefix + getTexCommandName(section.title) +'}{'
+		tex += section.content + '}\n'
 		if(len(section.subsections) > 0):
 			for section in section.subsections:
-				tex += '\n\\subsection{' + section.title +'}' + '\n'
-				tex += section.content			
+				tex += '\n\\newcommand{' + section.title +'}{'
+				tex += section.content + '}\n'		
 	return tex			
 
 def main():
