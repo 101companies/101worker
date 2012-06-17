@@ -2,6 +2,7 @@ include ../Makefile.vars
 
 run:
 	make up	
+	mkdir -p tex/sources
 	python main.py
 up:
 	git pull
@@ -9,4 +10,4 @@ up:
 publish:
 	@no-op
 clean:
-	@no-op
+	rm -r tex/sources/*.src
