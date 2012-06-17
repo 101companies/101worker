@@ -7,6 +7,22 @@ def handleUmlauts(txt):
   txt = txt.encode('utf-8').replace("ü", "\\\"{u}")
   return txt
 
+def toTex(txt):
+  txt = txt.replace('&','\&')
+  txt = txt.replace('<nowiki>','')
+  txt = txt.replace('</nowiki>','') 
+  txt = txt.replace('$','\$')
+  txt = txt.replace('->','$\rightarrow$')
+  txt = txt.replace('=>','$\Rightarrow$')
+  txt = txt.replace('<','$<$')
+  txt = txt.replace('>','$>$')
+  txt = txt.replace('%','\%')   
+       
+  txt = txt.replace("<references>", "")
+  txt = txt.replace("<references/>", "")
+  txt = txt.replace('^','\^')
+
+  return handleUmlauts(txt) 
 
 def getTexCommandName(txt):
   txt = txt.encode('utf-8').replace(".", "dot")
