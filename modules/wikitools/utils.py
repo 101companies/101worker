@@ -22,7 +22,7 @@ def toTex(txt):
   txt = txt.replace("<references/>", "")
   txt = txt.replace('^','\^')
   txt = txt.replace('#','\#')
-  txt = txt.replace('_','\_')
+  txt = txt.replace('_','\\_')
 
   return handleUmlauts(txt) 
 
