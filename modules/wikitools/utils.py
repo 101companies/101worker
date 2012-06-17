@@ -11,7 +11,7 @@ def toTex(txt):
   txt = txt.replace('&','\&')
   txt = txt.replace('<nowiki>','')
   txt = txt.replace('</nowiki>','') 
-  txt = txt.replace('$','\$')
+  txt = txt.replace('$','\\textdollar{}')
   txt = txt.replace('->','$\rightarrow$')
   txt = txt.replace('=>','$\Rightarrow$')
   txt = txt.replace('<','$<$')
