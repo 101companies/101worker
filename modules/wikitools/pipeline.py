@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 class Step:
 	def __init__(self, action, name):
 		self.action = action
@@ -12,7 +14,9 @@ class Pipeline:
 
 	def execute(self, page, idx = 0):
 		# The output of the previous step serves as an input to the next step
-		if idx < len(self.steps):
-			print "Executing step: " + self.steps[idx].name
-			res = self.steps[idx].action(page)
+		print "Executing step: " + self.steps[idx].name
+		res = self.steps[idx].action(page)
+		if idx < (len(self.steps) - 1):
 			return self.execute(res, idx+1)
+		else:
+			return res

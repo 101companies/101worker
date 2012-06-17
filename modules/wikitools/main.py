@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+
 import pprint # Used for formatting the output for viewing, not necessary for most code
 from wikitools import wiki, api, page
 import re
 import random, string
 from document import Section
 from pipeline import Pipeline, Step
+from utils import *
 
 site = wiki.Wiki('http://101companies.org/api.php')
 params = {'action':'query',
@@ -38,7 +41,7 @@ def page2sections(page):
 	 	content  = s[1].strip()
 	 	if title.startswith('='):
 	 		sec = doc[-1]
-	 		sec.addSubsection(Section(title.replace('= ',''), content))
+	 		sec.addSubsection(Section(title.replace('=','').strip(), content))
 	 	else:
 	 		doc.append(Section(title, content))
 
@@ -51,6 +54,7 @@ def extractSourceFragments(page):
 		#for every section extract the source code fragments into a separate file
 		pattern = '<syntaxhighlight\slang=(".*?")>(.*?)<\/syntaxhighlight>'; 
 		rg = re.compile(pattern,re.IGNORECASE|re.DOTALL|re.MULTILINE)
+		print section.title
 		for source in rg.findall(section.content):
 			#print str(source[1])
 			fname = rand_string() + '.src'
@@ -58,14 +62,29 @@ def extractSourceFragments(page):
 			f = open(OUTPUT_BASE+'/sources/' + fname, 'w')
 			f.write(sourceText)
 			f.close()
-			replacement = '\lstinputlisting[xleftmargin=20pt]{\\texgen/files/' + fname + '}' 
+			replacement = '\lstinputlisting[xleftmargin=20pt]{\\texgen/sources/' + fname + '}' 
 			#print "TO REPLACE: " + rg.search(section.content).group(0)
 			section.content = section.content.replace(rg.search(section.content).group(0),replacement)
 			#print "NEW: " + section.content
 
 		if(len(section.subsections) > 0):	
 			print "Processing subsections..."
-			return extractSourceFragments(section.subsections)
+			extractSourceFragments(section.subsections)
+
+	return page	
+
+def page2tex(page):
+	tex = ''
+	cmd_prefix = 'LanguageMeta'
+	for section in page:
+		#tex += '\n\\section{' + section.title +'}' + '\n';
+		tex += '\\newcommand{'+ cmd_prefix + getTexCommandName(section.title) +'}' + '\n'
+		tex += section.content
+		if(len(section.subsections) > 0):
+			for section in section.subsections:
+				tex += '\n\\subsection{' + section.title +'}' + '\n'
+				tex += section.content			
+	return tex			
 
 def main():
 	pileline = Pipeline()
@@ -73,9 +92,12 @@ def main():
 	pileline.addStep(step1)
 
 	pileline.addStep(Step(extractSourceFragments, "Extract source fragments from the sections into separate files"))
+	pileline.addStep(Step(page2tex, "Generate final tex for the page"))
 
-	doc = pileline.execute(wikidata)
-	pprint.pprint(doc)
+	doc = pileline.execute(handleUmlauts(wikidata))
+	f = open(OUTPUT_BASE+'macros.tex', 'w')
+	f.write(doc)
+	f.close()
 
 if __name__ == "__main__":
 	main()
