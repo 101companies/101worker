@@ -52,7 +52,7 @@ def extractSourceFragments(page):
 		#print section.title
 		#print section.content
 		#for every section extract the source code fragments into a separate file
-		pattern = '<syntaxhighlight\slang=(".*?")>(.*?)<\/syntaxhighlight>'; 
+		pattern = '<syntaxhighlight\slang="(.*?)">(.*?)<\/syntaxhighlight>'; 
 		rg = re.compile(pattern,re.IGNORECASE|re.DOTALL|re.MULTILINE)
 		print section.title
 		for source in rg.findall(section.content):
