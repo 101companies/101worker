@@ -62,7 +62,7 @@ def extractSourceFragments(page):
 			f = open(OUTPUT_BASE+'/sources/' + fname, 'w')
 			f.write(sourceText)
 			f.close()
-			replacement = '\lstinputlisting[xleftmargin=20pt language=' + str(source[0]) +']{\\texgen/sources/' + fname + '}' 
+			replacement = '\lstinputlisting[xleftmargin=20pt, language=' + str(source[0]) +']{\\texgen/sources/' + fname + '}' 
 			#print "TO REPLACE: " + rg.search(section.content).group(0)
 			section.content = section.content.replace(rg.search(section.content).group(0),replacement)
 			#print "NEW: " + section.content
