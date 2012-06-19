@@ -41,7 +41,7 @@ def page2sections(page):
 	 	content  = s[1].strip()
 	 	if title.startswith('='):
 	 		sec = doc[-1]
-	 		sec.addSubsection(Section(title.replace('=','').strip(), content))
+	 		sec.addSubsection(Section(title.strip().replace('=','').strip(), content))
 	 	else:
 	 		doc.append(Section(title, content))
 
@@ -77,7 +77,6 @@ def page2tex(page):
 	tex = ''
 	cmd_prefix = 'LanguageMeta'
 	for section in page:
-		#tex += '\n\\section{' + section.title +'}' + '\n';
 		tex += '\\newcommand{\\'+ cmd_prefix + getTexCommandName(section.title) +'}{'
 		tex += section.content + '}\n'
 		if(len(section.subsections) > 0):
@@ -90,7 +89,6 @@ def main():
 	pileline = Pipeline()
 	step1 = Step(page2sections, "Extract sections from the page")
 	pileline.addStep(step1)
-
 	pileline.addStep(Step(extractSourceFragments, "Extract source fragments from the sections into separate files"))
 	pileline.addStep(Step(page2tex, "Generate final tex for the page"))
 

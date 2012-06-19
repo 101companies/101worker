@@ -4,6 +4,7 @@ class Step:
 	def __init__(self, action, name):
 		self.action = action
 		self.name   = name
+		self.cacheResult = False
 
 class Pipeline:
 	def __init__(self):	
