@@ -29,7 +29,7 @@ secondlist = list() # other rules
 
 # Find and process all ".101meta" files
 for root, dirs, files in os.walk(repo):
-   for basename in fnmatch.filter(files, ".101meta"):
+   for basename in fnmatch.filter(files, "*.101meta"):
       filename = os.path.join(root, basename)
       filelistFile.write(filename + ": ")
 
