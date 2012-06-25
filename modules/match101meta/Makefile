@@ -6,8 +6,5 @@ run: ${repo} ${result}
 	@make clean
 	@python program.py ${repo} ${result}
 
-${result}:
-	mkdir ${result}
-
 clean:	
 	@#no-op

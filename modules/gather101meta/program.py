@@ -7,10 +7,9 @@ import simplejson as json
 # Qualify rule with origin information.
 # Enforce priorities for rules.
 #
-def handleRule(firstlist, secondlist, rule):
+def handleRule(rule):
    entry = dict()
-   entry['dirname'] = root
-   entry['basename'] = basename
+   entry['filename'] = rFilename
    entry['rule'] = rule
    if ("predicate" in rule or "fragment" in rule):
       secondlist.append(entry)
@@ -30,23 +29,24 @@ secondlist = list() # other rules
 for root, dirs, files in os.walk(repo):
    for basename in fnmatch.filter(files, "*.101meta"):
       filename = os.path.join(root, basename)
+      rFilename = filename[len(repo)+1:] # relative file name
 
       # Shield against JSON encoding errors
       try:        
          jsonfile = open(filename, "r")
          data = json.load(jsonfile)
-         print filename + ": OK"
+         print rFilename + ": OK"
 
          # Handle lists of rules
          if isinstance(data, list):
             for rule in data:
-               handleRule(firstlist, secondlist, rule)
+               handleRule(rule)
          else:
-            handleRule(firstlist, secondlist, data)
+            handleRule(data)
          break
          
       except json.decoder.JSONDecodeError:
-         print filename + ": FAIL (JSONDecodeError)"
+         print rFilename + ": FAIL (JSONDecodeError)"
 
 # Store sorted list of rules
 rulesFile = open(os.path.join(result, "rules.json"), 'w')

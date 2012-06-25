@@ -1,5 +1,4 @@
 import os
-import fnmatch
 import sys
 import simplejson as json
 
@@ -32,6 +31,7 @@ def handleFile(rules, matches, basename, ifilename, efilename):
       id += 1
       
    # Add entry to matches if any matches for file at hand
+   print efilename + " : " + str(len(units)) + " units"
    if len(units) > 0:
       entry = dict()
       entry["filename"] = efilename
@@ -42,6 +42,8 @@ def handleFile(rules, matches, basename, ifilename, efilename):
 if (len(sys.argv) != 3): sys.exit(-1)
 repo = sys.argv[1]
 result = sys.argv[2]
+
+# Load 101meta rules as prepared by module gather101meta
 rules = json.load(open(os.path.join(result, "rules.json"), 'r'))
 
 # Find and process (almost) all files
