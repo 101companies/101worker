@@ -26,6 +26,8 @@ firstlist = list() # rules without "predicate" and "fragment"
 secondlist = list() # other rules
 
 # Find and process all ".101meta" files
+oks = 0
+fails = 0
 for root, dirs, files in os.walk(repo):
    for basename in fnmatch.filter(files, "*.101meta"):
       filename = os.path.join(root, basename)
@@ -36,6 +38,7 @@ for root, dirs, files in os.walk(repo):
          jsonfile = open(filename, "r")
          data = json.load(jsonfile)
          print rFilename + ": OK"
+         oks += 1
 
          # Handle lists of rules
          if isinstance(data, list):
@@ -47,9 +50,15 @@ for root, dirs, files in os.walk(repo):
          
       except json.decoder.JSONDecodeError:
          print rFilename + ": FAIL (JSONDecodeError)"
+         raise
+         fails += 1
 
 # Store sorted list of rules
 rulesFile = open(os.path.join(result, "rules.json"), 'w')
-rulesFile.write(json.dumps(firstlist + secondlist))
+rules = firstlist + secondlist
+rulesFile.write(json.dumps(rules))
 rulesFile.write("\n")
-sys.exit(0)
+print str(oks) + " 101meta files read with success."
+print str(fails) + " 101meta files read with failure."
+print str(len(rules)) + " 101meta rules gathered."
+sys.exit(fails)

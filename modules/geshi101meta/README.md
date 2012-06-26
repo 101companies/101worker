@@ -8,7 +8,7 @@ See the [Language:101meta specification](http://101companies.org/index.php/Langu
 
 # Dependencies
 
-This module assumes that files have been matched 101meta rulesas performed by the module "match101meta".
+This module assumes that files have been matched by the module "match101meta".
 
 # Issues 
 

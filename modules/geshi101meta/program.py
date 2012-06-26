@@ -5,16 +5,14 @@ import commands
 import time
 
 # Get directories from argument list
-if (len(sys.argv) != 4): sys.exit(-1)
+if (len(sys.argv) != 5): sys.exit(-1)
 repo = sys.argv[1]
 geshi = sys.argv[2]
-result = sys.argv[3]
+matches = json.load(open(sys.argv[3], 'r')) # load 101meta matches
+result = sys.argv[4]
 
 # Accumulate non-successful exit codes
 exitcode = 0
-
-# Load 101meta matches as prepared by module match101meta
-matches = json.load(open(os.path.join(result, "matches.json"), 'r'))
 
 # Go over matches to find opportunities for geshi
 skipped = 0

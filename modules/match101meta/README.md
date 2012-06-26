@@ -12,6 +12,5 @@ This module assumes that rules have been gathered by module "gather101meta".
 
 # Issues 
 
-* This implementation is highly incomplete.
-* The "suffix" form constraint is handled only.
-* See JM's code for a much more complete implementation.
+* This is a prototype implementation.
+* See JM's code for another implementation.
