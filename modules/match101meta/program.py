@@ -3,6 +3,8 @@ import sys
 import simplejson as json
 import commands
 import re
+sys.path.append('../../libraries/101meta')
+import tools101
 
 #
 # Build metadata unit
@@ -166,8 +168,7 @@ noContFilesOk = 0
 for root, dirs, files in os.walk(os.path.join(repo, "contributions")):
    if not root.startswith(os.path.join(repo, ".git")+os.sep):
       for basename in files:
-         sys.stdout.write('.')
-         sys.stdout.flush()
+         tools101.tick()
          if not basename in [".gitignore"]:
             # INTERNAL file name, as used by this program
             iFilename = os.path.join(root, basename)
@@ -181,11 +182,11 @@ matchesFile = open(os.path.join(result, "matches.json"), 'w')
 matchesFile.write(json.dumps(matches))
 matchesFile.write("\n")
 print str(noFiles) + " files affected."
-print str(noPattFiles) + " files checked with filename pattern constraint."
-print str(noPattFilesOk) + " files selected with filename pattern constraint."
-print str(noPredFiles) + " files checked with predicate constraint."
-print str(noPredFilesOk) + " files selected with predicate constraint."
-print str(noContFiles) + " files checked with content constraint."
-print str(noContFilesOk) + " files selected with content constraint."
+print str(noPattFiles) + " filename-pattern constraints checked."
+print str(noPattFilesOk) + " files selected with filename-pattern constraints."
+print str(noPredFiles) + " predicate constraints checked."
+print str(noPredFilesOk) + " files selected with predicate constraints."
+print str(noContFiles) + " content constraints checked."
+print str(noContFilesOk) + " files selected with content constraints."
 print str(noUnits) + " metadata units attached."
 sys.exit(0)

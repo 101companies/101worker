@@ -3,12 +3,8 @@ import sys
 import simplejson as json
 import commands
 import time
-
-# Look up all metadata values, if any, for a certain metadata key
-def valuesByKey(entry, key):
-   return [ x[key]
-                 for x in map(lambda u: u["metadata"], entry["units"])
-                 if key in x ]
+sys.path.append('../../libraries/101meta')
+import matches101
 
 # Map some keys of a dictionary to the filename of an entry
 def mapFileToKey(entry, dict, keys):
@@ -28,14 +24,14 @@ bytech = dict()
 for entry in matches:
 
    # Summarize languages
-   langs = valuesByKey(entry, "language")
+   langs = matches101.valuesByKey(entry, "language")
    mapFileToKey(entry, bylang, langs)
 
    # Summarize technologies
-   techs = valuesByKey(entry, "partOf") \
-           + valuesByKey(entry, "inputOf") \
-           + valuesByKey(entry, "outputOf") \
-           + valuesByKey(entry, "dependsOn")
+   techs = matches101.valuesByKey(entry, "partOf") \
+           + matches101.valuesByKey(entry, "inputOf") \
+           + matches101.valuesByKey(entry, "outputOf") \
+           + matches101.valuesByKey(entry, "dependsOn")
    mapFileToKey(entry, bytech, techs)
 
 # Store summary
