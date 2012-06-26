@@ -13,3 +13,8 @@ ${web}:
 # Remove local temporary files if any
 clean:  
 	@#no-op
+
+# Complete local run by presupposed runs
+run-all:
+	cd ../aggregate101meta; make run-all
+	make run
