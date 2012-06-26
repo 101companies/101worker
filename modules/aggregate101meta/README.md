@@ -12,6 +12,7 @@ This module assumes that files have been matched by the module "match101meta".
 
 # Issues 
 
-* Performance problems
-* Others to be identified
-
+* Tags other than languages, technologies to be served!
+* Performance problems; mainly due to matching?!
+* Top-level summaries only; per-directory summaries needed?
+* Other issues to be identified!
