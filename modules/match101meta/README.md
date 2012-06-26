@@ -1,6 +1,6 @@
 # Headline
 
-A module to match 101meta rules with 101repo
+A module to match 101meta rules against 101repo
 
 # Details
 

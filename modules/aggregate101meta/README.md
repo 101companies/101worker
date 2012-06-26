@@ -1,6 +1,6 @@
 # Headline
 
-A module to aggregate 101meta metadata
+A module to aggregate 101meta metadata over 101repo
 
 # Details
 

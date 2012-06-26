@@ -1,6 +1,6 @@
 # Headline
 
-A module to apply GeSHi to 101repo using 101meta metadata
+A module to generate GeSHi files for all of 101repo
 
 # Details
 
