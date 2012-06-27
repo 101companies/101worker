@@ -12,7 +12,7 @@ def write2log(msg):
    #print msg
    log.write(msg)
 
-def write2moduleLog(msg, module)
+def write2moduleLog(msg, module):
    log = open(module+'/module.log', 'a')
    loq.write(msg)
 
