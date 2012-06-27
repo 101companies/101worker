@@ -12,6 +12,9 @@ def write2log(msg):
    #print msg
    log.write(msg)
 
+def write2moduleLog(msg, module)
+   log = open(module+'/module.log', 'a')
+   loq.write(msg)
 
 if (len(sys.argv) == 2):
    module = sys.argv[1]
@@ -35,7 +38,7 @@ if (len(sys.argv) == 2):
    pid_file.close()
 
    for line in p.stdout.readlines():
-      write2log(line)
+      write2moduleLog(line, module)
    retval = p.wait()
 
    write2log('Finished at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
