@@ -14,7 +14,7 @@ def write2log(msg):
 
 def write2moduleLog(msg, module):
    log = open(module+'/module.log', 'a')
-   loq.write(msg)
+   log.write(msg)
 
 if (len(sys.argv) == 2):
    module = sys.argv[1]
