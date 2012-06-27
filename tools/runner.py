@@ -49,9 +49,9 @@ if (len(sys.argv) == 2):
    os.remove(pidFileName)
 
    if (retval == 0):
-      msg = 'OK'
+      msg = '\nOK'
    else:
-      msg = 'FAIL ('+str(retval)+')'
+      msg = '\nFAIL ('+str(retval)+')'
    
    write2log(msg)
    #status, output = commands.getstatusoutput('cd '+module+'; make')
