@@ -43,7 +43,6 @@ reset:
 # Comprehensive clean target; remove temporary files
 
 clean:
-	@python tools/cleaner.py
 	@cd modules; make clean -s
 
 # Internal target: things to be done before a run
