@@ -38,9 +38,7 @@ if (len(sys.argv) == 2):
    pid_file.close()
 
    for line in p.stdout.readlines():
-      write2moduleLog(line, module)
-   for line in p.stderr.readlines(): 
-      write2moduleLog(line, module)  
+      write2moduleLog(line, module) 
    retval = p.wait()
 
    write2log('\nFinished at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
