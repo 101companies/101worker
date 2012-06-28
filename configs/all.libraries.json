@@ -5,49 +5,61 @@
       "language":"php",
       "workertime":"yes",
       "webtime":"yes",
-      "update":"automatic"
+      "updates":"automatic"
     },
   "php-github-api" : {
       "summary":"github API in php", 
       "github":"ornicar/php-github-api",
       "language":"php",      
       "workertime":"yes",
-      "update":"automatic"
+      "updates":"automatic"
     },
   "geshi" : {
       "summary":"source code highlighting based on simple lexical language definitions",
       "dir" : "101results/101repo/technologies/geshi/src",
+      "comment" : "copied from the technologies directory because there is no way to easily get the last version", 
       "language":"php",
       "workertime":"yes",
-      "update":"automatic"
+      "updates":"automatic"
     },
+  "geshizip" : {
+      "summary":"Just a test. The last version of geshi",
+      "urls":{
+        "http://sourceforge.net/projects/geshi/files/geshi/GeSHi%201.0.8.10/GeSHi-1.0.8.10.zip/download" : "GeSHi-1.0.8.10.zip"
+        },
+      "language":"zip",
+      "workertime":"yes",
+      "updates":"onlyOnce"
+    },    
   "megalib" : { 
       "summary":"php library containing various helper class to deal with rdf, graphs, files, html, etc",
       "github":"megaplanet/megalib",
       "language":"php",      
       "workertime":"yes",
       "webtime":"yes",
-      "update":"automatic"      
+      "updates":"automatic"      
     },
   "humanNameParser" : {
       "summary":"php library to parse human names",
       "github":"jasonpriem/HumanNameParser.php",
       "language":"php",
       "webtime":"yes",
-      "update":"automatic"
+      "updates":"automatic"
     },
   "snorql" : {
       "summary":"AJAXy front-end for exploring RDF SPARQL endpoints",
       "github":"kurtjx/SNORQL",
       "language":"javascript",
       "webtime":"yes",
-      "update":"automatic"      
+      "updates":"automatic"      
     },
   "sigmajs" : {
       "summary":"JavaScript library to draw graphs",
-      "urls":["http://sigmajs.org/js/sigma.min.js"],
+      "urls":{
+        "http://sigmajs.org/js/sigma.min.js" : "sigma.min.js" 
+      },
       "language":"javascript",
       "webtime":"yes",
-      "update":"manual"
+      "updates":"onlyOnce"
     }
 }

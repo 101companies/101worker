@@ -1,10 +1,13 @@
 include ../Makefile.vars
 
-run: ${pulledLibrariesDir}
-	php pullLibraries.php ${pulledLibrariesConfig} `cd ${workerTimeLibrariesDir};pwd` `cd ${webTimeLibrariesDir};pwd` `cd ${basedir};pwd`
+run: ${workerTimeLibrariesDir} ${webTimeLibrariesDir}
+	php pullLibraries.php ${pulledLibrariesConfig} ${workerTimeLibrariesDir} ${webTimeLibrariesDir} ${basedir}
 	
-${pulledLibrariesDir}:
-	mkdir ${pulledLibrariesDir}
+${workerTimeLibrariesDir}:
+	@ mkdir ${workerTimeLibrariesDir}
+	
+${webTimeLibrariesDir}:
+	@ mkdir ${webTimeLibrariesDir}
 
 clean:
-	rm -f -r ${pulledLibrariesDir}
+	rm -f -r ${workerTimeLibrariesDir} ${webTimeLibrariesDir}
