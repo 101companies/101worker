@@ -40,10 +40,10 @@ reset:
 	@rm -rf ../101results
 
 
-# Comprehensive clean target; remove temporary files; never needed really.
+# Comprehensive clean target; remove temporary files
 
 clean:
-	@make prepare -s
+	@python tools/cleaner.py
 	@cd modules; make clean -s
 
 # Internal target: things to be done before a run
