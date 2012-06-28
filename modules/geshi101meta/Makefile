@@ -1,7 +1,7 @@
 include ../Makefile.defs
 
 run: ${repoDir} ${geshiDir} ${matchesDump} ${contrDir}
-	@./program.py ${geshi}/run.php
+	@./program.py ${geshiDir}/run.php
 	@test -e ${geshiDump}
 
 # Remove local temporary files, if any
