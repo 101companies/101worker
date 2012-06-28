@@ -39,4 +39,4 @@ ${resultsdir}/101repo/${oxMapping}/report.pdf:
 	@cd ${resultsdir}/101repo/${oxMapping}; make
 
 clean:
-	@cd ${oxMapping}; make clean
+	if test -d ${oxMapping}; then cd ${oxMapping}; make clean; else echo 'nothing to clean'; fi

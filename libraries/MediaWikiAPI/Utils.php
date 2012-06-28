@@ -104,6 +104,7 @@ function getItemizedTex($markup){
 function handleUmlauts($txt){
  $txt = str_replace("ä", "\\\"{a}", $txt);
  $txt = str_replace("ö", "\\\"{o}", $txt);
+ $txt = str_replace("è", "e", $txt);
  $t = str_replace("ü", "\\\"{u}", $txt);
  return $t;
 }
@@ -130,6 +131,7 @@ function getTexCommandName($txt){
   $txt = str_replace("ä", "ae", $txt);
   $txt = str_replace("ü", "ou", $txt);
   $txt = str_replace("ö", "oe", $txt);
+  $txt = str_replace("è", "e", $txt);
   $txt = str_replace(":", "", $txt);
   $res = str_replace(' ', '',$txt);
   return $res;
@@ -364,6 +366,12 @@ class formatter{
         
         $pattern =  '/<pre>((\s*|.|\s)*)<\/pre>/';
         $replacement = '\lstinputlisting[xleftmargin=20pt]{\texgen/files/' . $fname . "}";
+        /*
+        \begin{lstlisting}
+          put your code here
+        \end{lstlisting}
+        
+        $replacement = "\begin{lstlisting}" + trim($out[1]) + "end{lstlisting}"; */
         $text = preg_replace($pattern, $replacement, $text);
      }
      
@@ -381,11 +389,13 @@ class formatter{
         $fname = uniqid("f") . ".ext";
         global $filesFolder; 
         $sourceText = '';
-        if ($match[4] != null && $match[4]!= ''){
-          $link = $sfURL.$match[4];
-          $name = end(explode('/',$match[4]));
-          $sourceText = ', caption={\\href{'.$link.'}{'.$name.'}}';
-        }             
+
+        #if ($match[4] != null && $match[4]!= ''){
+        #  $link = $sfURL.$match[4];
+        #  $name = end(explode('/',$match[4]));
+        #  $sourceText = ', caption={\\href{'.$link.'}{'.$name.'}}';
+        #}    
+                 
         $f = fopen($filesFolder . $fname, "w+");
         fwrite($f, trim($match[5]));
         fclose($f);
@@ -393,7 +403,15 @@ class formatter{
         $pattern = '<syntaxhighlight lang="' . $match[1] .'"'.$match[2].'>' . $match[5] .'</syntaxhighlight>';
 
         // removed style attribute from the line below: , style=' . $match[1] . '
-        $replacement = '\lstinputlisting[xleftmargin=20pt ' . $sourceText . ']{\texgen/files/' . $fname . "}"; //, language=' . $match[1] .$sourceText. //../../files/
+        // we need javascript support for the 101explorer paper
+        if($match[1] == "javascript"){
+          $replacement = '\lstinputlisting[xleftmargin=20pt language=javascript ' . $sourceText . ']{\texgen/files/' . $fname . "}"; //, language=' . $match[1] .$sourceText. //../../files/
+
+        }
+        else{
+          $replacement = '\lstinputlisting[xleftmargin=20pt ' . $sourceText . ']{\texgen/files/' . $fname . "}"; //, language=' . $match[1] .$sourceText. //../../files/
+          #$replacement = "\begin{lstlisting}" + trim($match[5]) + "end{lstlisting}";
+        }
 
         $text = str_replace($pattern, $replacement, $text);
      }
@@ -402,20 +420,21 @@ class formatter{
      $text = str_replace('lang="haskell" enclose="none">','lang="haskell">', $text);
      $text = str_replace('lang="haskell"  enclose="none">','lang="haskell">', $text);
      */
-     $pattern = '/<syntaxhighlight lang=\"([a-zA-Z]*)\" enclose=\"none\">((\s*|.|:|=|>|<|\s|\(|\)|\[|\]|\{|\})*)<\/syntaxhighlight>/'; 
+
+     $pattern = '/(<syntaxhighlight lang=\"([a-zA-Z]*)\" enclose=\"none\">)((\s*|.|:|=|>|<|\s|\(|\)|\[|\]|\{|\})*)(<\/syntaxhighlight>)/'; 
      preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
      foreach($matches as $match){
-        $pattern = '<syntaxhighlight lang="' . $match[1] .'" enclose="none">' . $match[2] .'</syntaxhighlight>';   
-        $replacement = '\begin{ttfamily}'.$match[2].'\end{ttfamily}';    
-        $text = str_replace($pattern, $replacement, $text);
-	}
-     
+        //var_dump($match);
+        $replacement = '\begin{ttfamily}'.$match[3].'\end{ttfamily}';    
+        $text = str_replace($match[0], $replacement, $text);
+	   } 
      $text = str_replace('&','\&',$text);
            
      $text = str_replace('<nowiki>','',str_replace('</nowiki>','',$text)); 
      $text = str_replace('$','\$',$text);
+
      $text = formatter::handleCites($text); 
-     $text = formatter::handleBoldAndItalicSpecialCase($text); //we need this because regex cannot handle -> '''                     
+     $text = formatter::handleBoldAndItalicSpecialCase($text); //we need this because regex cannot handle -> '''                          
      $text = formatter::italic2Textit($text); 
      $text = formatter::handleBold($text); 
 	 
@@ -428,8 +447,7 @@ class formatter{
      
      $text = str_replace("<references>", "", $text);
      $text = str_replace("<references/>", "", $text);
-     $text = str_replace('^','\^', $text);
-          
+     $text = str_replace('^','\^', $text);     
      $text = formatter::nestedList($text);
      $text = formatter::subsubsubsections($text);                                                
      $text = formatter::subsubsections($text);
@@ -443,7 +461,7 @@ class formatter{
    }
    
     function handleBoldAndItalicSpecialCase($tex){
-	 $pattern =  '/\'\'\'((\w*|\W*|\d*|\s*|\-*|\:*|\[*|\]|\|*|\}*|\{*|\\*)*)\'\'\'/'; //'/\'\'(.*)\'\'/';
+	 $pattern =  '/\'\'\'(^[\'])*\'\'\'/'; //'/\'\'(.*)\'\'/';
 	 $replacement = '\\textit{\textbf{\1}}';
 	 return preg_replace($pattern, $replacement, $tex);
     }

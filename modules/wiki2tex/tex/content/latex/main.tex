@@ -1,0 +1,216 @@
+\documentclass{article}
+
+\usepackage{a4wide}
+\usepackage{latexsym}
+\usepackage{listings}
+\usepackage{rotating}
+\usepackage{comment}
+\usepackage{boxedminipage}
+\usepackage{url}
+\usepackage{hyperref}
+
+\input{../data/macros.tex}
+\input{../../shared/macros.tex}
+% http://en.literateprograms.org/Turing_machine_simulator_(LaTeX)
+
+\newcommand{\baseuri}{http://101companies.uni-koblenz.de/index.php}
+\newcommand{\wikimacro}[3]{\csname#1#2#3\endcsname}
+\newcommand{\wikittref}[1]{\wikiref{Technology:#1}{\emph{Technology} #1}}
+\newcommand{\wikiref}[2]{\href{\baseuri/#1}{#2}}
+\newcommand{\texgen}{../..}
+% --------------------------------------------------
+
+\newcommand{\lwiki}[1]{
+
+\subsection{\wikimacro{#1}{Language}{Title}}
+
+\subsubsection{Intent}
+
+\begin{center}\bfseries\itshape
+\wikimacro{#1}{Language}{Intent}
+\end{center}
+
+\subsubsection{Description}
+
+\wikimacro{#1}{Language}{Description}
+
+}
+
+% --------------------------------------------------
+
+\newcommand{\twiki}[1]{
+
+\subsection{\wikimacro{#1}{Technology}{Title}}
+
+\subsubsection{Intent}
+
+\begin{center}\bfseries\itshape
+\wikimacro{#1}{Technology}{Intent}
+\end{center}
+
+\subsubsection{Description}
+
+\wikimacro{#1}{Technology}{Description}
+
+}
+
+% --------------------------------------------------
+
+\newcommand{\iwiki}[1]{
+
+\subsection{\wikimacro{#1}{Implementation}{Title}}
+
+\subsubsection{Intent}
+
+\begin{center}\bfseries\itshape
+\wikimacro{#1}{Implementation}{Intent}
+\end{center}
+
+\subsubsection{Languages}
+
+\wikimacro{#1}{Implementation}{Languages}
+
+\subsubsection{Technologies}
+
+\wikimacro{#1}{Implementation}{Technologies}
+
+\subsubsection{Description}
+
+\wikimacro{#1}{Implementation}{Description}
+
+\subsubsection{Features}
+
+\wikimacro{#1}{Implementation}{Features}
+
+\subsubsection{Illustration}
+
+\wikimacro{#1}{Implementation}{Illustration}
+
+
+}
+
+% -----------------------------------------------
+\newcommand{\pwiki}[1]{
+ \subsection{\wikimacro{#1}{Page}{Title}}
+ 
+ \begin{center}\bfseries\itshape
+ \wikimacro{#1}{Page}{Intent}
+ \end{center}
+ 
+ \paragraph{Description}
+ \wikimacro{#1}{Page}{Description}
+}
+
+%--------------------------------------------------
+\newcommand{\fcwiki}[1]{
+  \subsection{\wikimacro{#1}{Feature}{Category}}
+}
+% --------------------------------------------------
+
+\newcommand{\cwiki}[1]{
+ \subsection{\wikimacro{#1}{Category}{Title}}
+ 
+\begin{center}\bfseries\itshape
+ \wikimacro{#1}{Category}{Intent}
+ \end{center}
+
+\paragraph{Description}
+\wikimacro{#1}{Category}{Description}
+
+}
+% -------------------------------------------------
+\newcommand{\fwiki}[1]{
+
+%\subsection{\wikimacro{#1}{Feature}{Category}}
+
+\subsubsection{\wikimacro{#1}{Feature}{Title}}
+
+\paragraph{Intent}
+
+\begin{center}\bfseries\itshape
+\wikimacro{#1}{Feature}{Intent}
+\end{center}
+
+\paragraph{Description}
+
+\wikimacro{#1}{Feature}{Description}
+
+\paragraph {Illustration}
+
+\wikimacro{#1}{Feature}{Illustration}  
+}
+
+%-------------------------------------------------
+
+\newenvironment{itemizei}{%
+\begin{list}{\labelitemi}{\leftmargin=1em}%
+}{%
+\end{list}%
+}
+\newenvironment{itemizeii}{%
+\begin{list}{\labelitemii}{\leftmargin=1em}%
+}{%
+\end{list}%
+}
+\newenvironment{itemizeiii}{%
+\begin{list}{\labelitemiii}{\leftmargin=1em}%
+}{%
+\end{list}%
+}
+
+% -------------------------------------------------
+
+\pagebreak
+
+\begin{document}
+
+\tableofcontents
+
+\pagebreak
+
+% -------------------------------------------------
+\section{Features}
+
+\input {../data/features.tex}
+
+\pagebreak
+
+% --------------------------------------------------
+
+\section{Languages}
+
+\input{../data/languages.tex}
+
+\pagebreak
+
+% --------------------------------------------------
+
+\section{Technologies}
+
+\input{../data/technologies.tex}
+
+\pagebreak
+
+% --------------------------------------------------
+
+\section{Implementations}
+
+\input{../data/implementations.tex}
+
+\pagebreak
+% --------------------------------------------------
+
+\section{Categories}
+
+\input{../data/categories.tex}
+
+\pagebreak
+
+% -------------------------------------------------
+
+\section{Pages}
+
+\input{../data/pages.tex}
+
+\end{document}
+% -------------------------------------------------
