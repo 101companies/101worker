@@ -2,11 +2,13 @@
 
 run:
 	@echo Performing all modules.
+	@make clean
 	@make before-run -s
 	@cd modules; make run -s
-	@python tools/mailer.py
 	@make after-run -s
 
+report:
+	@python tools/mailer.py
 
 # Test target; run a few modules without logging
 
