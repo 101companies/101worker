@@ -16,4 +16,5 @@ clean:
 	@python ../tools/runner.py $*
 
 %.clean:
+	echo 'Cleaning ' $*
 	@python ../tools/cleaner.py $*
