@@ -1,14 +1,8 @@
-include ../Makefile.vars
-repo = ${resultsdir}/101repo
-matches = ${resultsdir}/101meta/matches.json
-geshi = ${resultsdir}/geshi
-contributions = ${webdir}/contributions
+include ../Makefile.defs
 
-run: ${repo} ${matches} ${geshi} ${contributions}
+run: ${repoDir} ${geshiDir} ${matchesDump} ${contrDir}
 	@./program.py ${geshi}/run.php
-
-${contributions}:
-	mkdir -p ${contributions}
+	@test -e ${geshiDump}
 
 # Remove local temporary files, if any
 clean:	
@@ -16,7 +10,7 @@ clean:
 
 # Remove files created by this module
 reset:
-	@find ${contributions} -name "*.geshi.html" -exec rm -f {} \;
+	@find ${contrDir} -name "*.geshi.html" -exec rm -f {} \;
 
 # Complete local run by presupposed runs
 run-all:

@@ -5,6 +5,9 @@
 # The 101companies:Repository in the 101worker workspace
 repoDir = ../../../101results/101repo
 
+# GeSHi in the 101worker workspace
+geshiDir = ../../../101results/geshi
+
 # The web space filled by the 101worker modules
 webDir = ../../../101web
 
@@ -18,6 +21,7 @@ contrDir = ${webDir}/contributions
 
 rulesDump = ${dumpsDir}/rules.json
 matchesDump = ${dumpsDir}/matches.json
+geshiDump = ${dumpsDir}/geshi.json
 validatorDump = ${dumpsDir}/validator.json
 extractorDump = ${dumpsDir}/extractor.json
 summaryDump = ${dumpsDir}/summary.json
