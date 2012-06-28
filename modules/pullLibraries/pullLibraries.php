@@ -91,7 +91,7 @@ function pullLibrary($libraryName,$info,$baseDirectory,$targetDirectory) {
 
 function pullGithub($githubRepository,$targetDirectory) {
   
-  $cmd="pullgithub.sh" 
+  $cmd="./pullgithub.sh" 
        ." ".escapeshellarg($githubRepository)
        ." ".escapeshellarg($targetDirectory)
        ." 2>&1";
