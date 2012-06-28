@@ -1,53 +1,21 @@
+#! /usr/bin/env python
+
 import os
 import sys
 import simplejson as json
-import commands
 sys.path.append('../../libraries/101meta')
-import matches101
+import const101
 import tools101
 
-# Get directories from argument list
-if (len(sys.argv) != 4): sys.exit(-1)
-repo = sys.argv[1]
-matches = json.load(open(sys.argv[2], 'r')) # load 101meta matches
-result = sys.argv[3]
-
-# Accumulate non-successful exit codes
-exitcode = 0
-
-# Go over matches to find opportunities for geshi
-skipped = 0
-for entry in matches:
-
-   # Look up extractor
-   extractor = matches101.valuesByKey(entry, "extractor")
-
-   # Continue if extractor is missing or ambiguous
-   if len(extractor) != 1: continue   
-   extractor = extractor[0]
-
-   # RELATIVE dirname and filename
-   rFilename = entry["filename"]
-   rDirname = os.path.dirname(rFilename)
-   basename = os.path.basename(rFilename)
-
-   # SOURCE dirname and filename
-   sDirname = os.path.join(repo, rDirname)
-   sFilename = os.path.join(sDirname, basename)
-
-   # TARGET dirname and filename
-   tDirname = os.path.join(result, "facts", rDirname)
-   tFilename = os.path.join(tDirname, basename + ".json")
-
-   # Run extractor, if needed, and report problems, if any
-   tools101.makedirs(tDirname)
-   if not tools101.build(sFilename, tFilename):
-      skipped += 1
-      continue
+# Per-file functinonality
+def fun(extractor, rFilename, sFilename, tFilename):
    print "Extract facts from " + rFilename + " with " + extractor + "."
-   cmd = os.path.join(repo, extractor) + " \"" + sFilename + "\" \"" + tFilename + "\" "
-   status = tools101.run(cmd)
-   if exitcode == 0: exitcode = status
+   cmd = os.path.join(const101.sRoot, extractor) + " \"" + sFilename + "\" \"" + tFilename + "\" "
+   (status, output) = tools101.run(cmd)
+   return status
 
-print "Skipped " + str(skipped) + " up-to-date files."
-sys.exit(exitcode)
+print "Extracting facts from 101repo."
+dump = tools101.mapMatchesWithKey("extractor", ".json", fun)
+extractorFile = open(const101.extractorDump, 'w')
+extractorFile.write(json.dumps(dump))
+sys.exit(dump["noProblems"])

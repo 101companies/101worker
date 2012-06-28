@@ -1,0 +1,23 @@
+#
+# Important directories
+#
+
+# The 101companies:Repository in the 101worker workspace
+repoDir = ../../../101results/101repo
+
+# The web space filled by the 101worker modules
+webDir = ../../../101web
+
+# The dumps directory filled by the 101worker modules
+dumpsDir = ${webDir}/dumps
+
+# The directory for annotating contributions
+contrDir = ${webDir}/contributions
+
+# Dumps
+
+rulesDump = ${dumpsDir}/rules.json
+matchesDump = ${dumpsDir}/matches.json
+validatorDump = ${dumpsDir}/validator.json
+extractorDump = ${dumpsDir}/extractor.json
+summaryDump = ${dumpsDir}/summary.json

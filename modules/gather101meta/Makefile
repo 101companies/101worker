@@ -1,19 +1,19 @@
-include ../Makefile.vars
-repo = ${resultsdir}/101repo
-result = ${resultsdir}/101meta
+include ../Makefile.defs
 
-run: ${repo} ${result}
-	@make clean
-	@python program.py ${repo} ${result}
+run: ${repoDir} ${dumpsDir}
+	@./program.py
+	@test -e ${rulesDump}
 
-${result}:
-	mkdir ${result}
-
-# Remove local temporary files if any
+# Remove local temporary files, if any
 clean:	
 	@#no-op
 
+# Remove files created by this module
+reset:
+	@rm -f ${rulesDump}
+
 # Complete local run by presupposed runs
 run-all:
+	@cd ../..; make before-run
 	@cd ../pull101repo; make
 	make run

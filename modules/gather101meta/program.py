@@ -1,7 +1,12 @@
+#! /usr/bin/env python
+
 import os
 import fnmatch
 import sys
 import simplejson as json
+sys.path.append('../../libraries/101meta')
+import const101
+import tools101
 
 #
 # Qualify rule with origin information.
@@ -16,11 +21,6 @@ def handleRule(rule):
    else:
       firstlist.append(entry)
 
-# Get directories from argument list
-if (len(sys.argv) != 3): sys.exit(-1)
-repo = sys.argv[1]
-result = sys.argv[2]
-
 # Prepare lists of rules
 firstlist = list() # rules without "predicate" and "fragment"
 secondlist = list() # other rules
@@ -28,10 +28,10 @@ secondlist = list() # other rules
 # Find and process all ".101meta" files
 oks = 0
 fails = 0
-for root, dirs, files in os.walk(repo):
+for root, dirs, files in os.walk(const101.sRoot):
    for basename in fnmatch.filter(files, "*.101meta"):
       filename = os.path.join(root, basename)
-      rFilename = filename[len(repo)+1:] # relative file name
+      rFilename = filename[len(const101.sRoot)+1:] # relative file name
 
       # Shield against JSON encoding errors
       try:        
@@ -54,7 +54,7 @@ for root, dirs, files in os.walk(repo):
          fails += 1
 
 # Store sorted list of rules
-rulesFile = open(os.path.join(result, "rules.json"), 'w')
+rulesFile = open(const101.rulesDump, 'w')
 rules = firstlist + secondlist
 rulesFile.write(json.dumps(rules))
 rulesFile.write("\n")
