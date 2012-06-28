@@ -1,21 +1,19 @@
-include ../Makefile.vars
-repo = ${resultsdir}/101repo
-matches = ${resultsdir}/101meta/matches.json
-result = ${resultsdir}/101meta
+include ../Makefile.defs
 
-run: ${repo} ${matches} ${result}
-	@make clean
-	@python program.py ${repo} ${matches} ${result}
+run: ${repoDir} ${dumpsDir} ${contrDir} ${matchesDump}
+	@./program.py
+	@test -e ${extractorDump}
 
-# Remove local temporary files if any
+# Remove local temporary files, if any
 clean:	
 	@#no-op
 
-# Remove 101results files created by this module
+# Remove files created by this module
 reset:
-	@rm -rf ${result}/facts
+	@rm -f ${extractorDump}
+	@find ${contrDir} -name "*.extractor.json" -exec rm -f {} \;
 
 # Complete local run by presupposed runs
 run-all:
-	cd ../match101meta; make run-all
+	cd ../validate101meta; make run-all
 	make run

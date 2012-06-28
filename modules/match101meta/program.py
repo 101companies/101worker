@@ -1,9 +1,12 @@
+#! /usr/bin/env python
+
 import os
 import sys
 import simplejson as json
 import commands
 import re
 sys.path.append('../../libraries/101meta')
+import const101
 import tools101
 
 #
@@ -52,7 +55,7 @@ def matchFile(rule):
    #
    # Check filename constraint
    #
-   if not checkFileConstraint(rule, "filename", eFilename):
+   if not checkFileConstraint(rule, "filename", filename):
       return False
    
    #
@@ -83,7 +86,7 @@ def matchFile(rule):
       pattern = rule["content"]
       if pattern[0]=="#" and pattern[len(pattern)-1]=="#":
          pattern = pattern[1:len(pattern)-2]
-      content = open(iFilename, 'r').read()
+      content = open(sFilename, 'r').read()
       result = re.search(pattern, content)
       if result is None:
          return False
@@ -103,10 +106,10 @@ def matchFile(rule):
          if not isinstance(args, list): args = [ args ]
       else:
          args = []
-      cmd = os.path.join(repo, predicate)
+      cmd = os.path.join(const101.sRoot, predicate)
       for arg in args:
          cmd += " \"" + arg + "\""
-      cmd += " \"" + iFilename + "\""
+      cmd += " \"" + sFilename + "\""
       (status, output) = commands.getstatusoutput(cmd)
       if status == 0:
          global noPredFilesOk
@@ -139,23 +142,19 @@ def handleFile():
       id += 1
       
    # Add entry to matches if any matches for file at hand
+   tools101.makedirs(tDirname)
+   matchesFile = open(tFilename, 'w')
+   matchesFile.write(json.dumps(units))
    if len(units) > 0:
       global noFiles
       noFiles += 1
       entry = dict()
-      entry["filename"] = eFilename
+      entry["filename"] = filename
       entry["units"] = units
       matches.append(entry)
 
-# Get directories from argument list
-if (len(sys.argv) != 3): sys.exit(-1)
-repo = sys.argv[1]
-result = sys.argv[2]
 
-# Load 101meta rules as prepared by module gather101meta
-rules = json.load(open(os.path.join(result, "rules.json"), 'r'))
-
-# Find and process (almost) all files
+rules = json.load(open(const101.rulesDump, 'r')) # Load rules as prepared by module gather101meta
 matches = list()
 noFiles = 0
 noUnits = 0
@@ -164,21 +163,27 @@ noPattFilesOk = 0
 noPredFiles = 0
 noPredFilesOk = 0 
 noContFiles = 0
-noContFilesOk = 0 
-for root, dirs, files in os.walk(os.path.join(repo, "contributions")):
-   if not root.startswith(os.path.join(repo, ".git")+os.sep):
+noContFilesOk = 0
+print "Matching 101meta metadata on 101repo."
+for root, dirs, files in os.walk(os.path.join(const101.sRoot, "contributions")):
+   if not root.startswith(os.path.join(const101.sRoot, ".git")+os.sep):
       for basename in files:
          tools101.tick()
          if not basename in [".gitignore"]:
-            # INTERNAL file name, as used by this program
-            iFilename = os.path.join(root, basename)
-            # EXTERNAL file name, as assumed by the rules
-            eFilename = iFilename[len(repo)+1:]
+            # Source file name
+            sFilename = os.path.join(root, basename)
+            # More relative file name
+            filename = sFilename[len(const101.sRoot)+1:]
+            dirname = os.path.dirname(filename)
+            basename = os.path.basename(filename) 
+            # Target file name, as used by this program
+            tDirname = os.path.join(const101.tRoot, dirname)
+            tFilename = os.path.join(tDirname, basename + ".matches.json")
             handleFile()
 sys.stdout.write('\n')
 
 # Store matches
-matchesFile = open(os.path.join(result, "matches.json"), 'w')
+matchesFile = open(const101.matchesDump, 'w')
 matchesFile.write(json.dumps(matches))
 matchesFile.write("\n")
 print str(noFiles) + " files affected."

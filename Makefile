@@ -50,7 +50,7 @@ clean:
 
 before-run:
 	@make configs/current.config -s
-	@make ../101web -s
+	@make mkWeb -s
 	@make ../101logs -s
 	@make ../101temps -s
 	@make ../101results -s
@@ -72,11 +72,12 @@ push:
 configs/current.config: configs/production.config
 	make production.reconfigure -s
 
-# Internal target: make sure 101web directory exists.
+# Internal target: make sure 101web directories exists.
 
-../101web:
-	@mkdir ../101web
-	@mkdir ../101web/dumps
+mkWeb:
+	@mkdir -p ../101web
+	@mkdir -p ../101web/dumps
+	@mkdir -p ../101web/contributions
 
 # Internal target: make sure 101logs directory exists.
 
