@@ -1,0 +1,17 @@
+{
+  "name" : "pullLibraries",
+  "heading" : "download/copy/pull the 101 libraries shared by 101 modules",
+  "authors" : [ "jeanmariefavre" ],
+  "languages" : [ "make", "php", "bash" ],
+  "systems" : [ "windows", "linux" ],
+  "inputs" : {
+    "101worker/config/libraries.all.json" : "list of libraries specification",
+    "*" : "any directory in the file system can be read if specified in list of libraries",
+    "http:*" : "any file from the web can be download if specified in the list of libraries",
+    "http://github.com" : "github project can be pulled if specified in the list of libraries" 
+  }
+  "outputs" : {
+     "101results/libraries/*" : "pulled libraries used at worker time", 
+     "101web/libraries/*" : "pulled libraries used at web time"    
+  }
+}
