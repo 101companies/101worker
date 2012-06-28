@@ -90,8 +90,9 @@ function pullLibrary($libraryName,$info,$baseDirectory,$targetDirectory) {
 }
 
 function pullGithub($githubRepository,$targetDirectory) {
-  
-  $cmd="./pullgithub.sh" 
+  // using pullgithub.sh is not enough as . may not be in the path
+  // similarily ./pullgithub.sh is not interpreted correctly on windows
+  $cmd=getcwd()."/pullgithub.sh" 
        ." ".escapeshellarg($githubRepository)
        ." ".escapeshellarg($targetDirectory)
        ." 2>&1";
