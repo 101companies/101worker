@@ -4,12 +4,12 @@ from email.mime.text import MIMEText
 
 # Configure addresses and server
 emailFrom = "softlang@uni-koblenz.de"
-emailTo = "dotnetby@gmail.com" # for testing
-#emailTo = "gatekeepers@101companies.org"
+#emailTo = "dotnetby@gmail.com" # for testing
+emailTo = "gatekeepers@101companies.org"
 emailServer = "deliver.uni-koblenz.de"
 
 # Send the email
-logfile = open('../../101logs/runner.log', 'r')
+logfile = open('../101logs/runner.log', 'r')
 log = logfile.read()
 if (string.find(log, 'FAIL (')>=0):
 	msg = MIMEText(log.encode('utf-8'), 'plain', 'utf-8')
