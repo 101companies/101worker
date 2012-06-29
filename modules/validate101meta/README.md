@@ -8,7 +8,7 @@ See the [Language:101meta specification](http://101companies.org/index.php/Langu
 
 # Dependencies
 
-This module assumes that the module "match101meta" was applied earlier.
+This module assumes that the module "matches101meta" was applied earlier.
 
 # Issues
 

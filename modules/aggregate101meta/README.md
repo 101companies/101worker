@@ -8,7 +8,7 @@ All languages and all technologies exercised are represented by the summary such
 
 # Dependencies
 
-This module assumes that files have been matched by the module "match101meta".
+This module assumes that files have been matched by the module "matches101meta".
 
 # Issues 
 

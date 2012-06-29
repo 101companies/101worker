@@ -8,8 +8,8 @@ See the [Language:101meta specification](http://101companies.org/index.php/Langu
 
 # Dependencies
 
-This module assumes that the module "match101meta" was applied earlier.
+This module assumes that the module "matches101meta" was applied earlier.
 
 # Issues 
 
-As priorities (dominators) will be supported by the module "match101meta", this module will start to generate less HTML. As of now, this does not appear to be a problem though.
+As priorities (dominators) will be supported by the module "matches101meta", this module will start to generate less HTML. As of now, this does not appear to be a problem though.

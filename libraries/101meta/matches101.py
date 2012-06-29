@@ -52,10 +52,15 @@ def matchFile(phase, dirname, basename, rule):
    # Check whether there is a predicate constraint
    #      
    if "predicate" in rule:
-       if phase==1:
-           return False
-       else:
+      # We must not care about predicates in PHASE 1
+      if phase==1:
+         return False
+      else:
            predicate = rule["predicate"]
+   else:
+      # We only care about predicates in PHASE 2
+      if phase==2:
+         return False
 
 
    #
@@ -131,7 +136,7 @@ def matchFile(phase, dirname, basename, rule):
 #
 # Try all rules for the given file and build metadata units
 #
-def handleFile(phase, dirname, basename):
+def handleFile(phase, dirname, basename, suffix):
    units = list() # metadata units for the file at hand
    id = 0 # current rule number
    for r in rules:
@@ -147,9 +152,10 @@ def handleFile(phase, dirname, basename):
       id += 1
       
    # Add entry to matches if any matches for file at hand
-#   tools101.makedirs(os.path.join(tRoot, dirname))
-#   matchesFile = open(os.path.join(tRoot, dirname, basename), 'w')
-#   matchesFile.write(json.dumps(units))
+   tools101.makedirs(os.path.join(const101.tRoot, dirname))
+   filename = os.path.join(const101.tRoot, dirname, basename + suffix)
+   matchesFile = open(filename, 'w')
+   matchesFile.write(json.dumps(units))
    if len(units) > 0:
       global noUnits
       global noFiles
@@ -164,7 +170,7 @@ def handleFile(phase, dirname, basename):
 #
 # Process all rules and files
 #
-def matchAll(phase):
+def matchAll(phase, suffix):
     global rules
     global matches
     global noFiles
@@ -192,7 +198,7 @@ def matchAll(phase):
                 tools101.tick()
                 if not basename in [".gitignore"]:
                     dirname = root[len(const101.sRoot)+1:]
-                    handleFile(phase, dirname, basename)
+                    handleFile(phase, dirname, basename, suffix)
     sys.stdout.write('\n')
     mr = dict()
     mr["matches"] = matches
