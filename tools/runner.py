@@ -3,18 +3,33 @@ import subprocess
 import sys
 import commands
 
+from threading import Timer
 from time import gmtime, strftime
 
 log = open('../../101logs/runner.log', 'a')
 
 def write2log(msg):
    global log
-   #print msg
-   log.write(msg)
+   print msg
+   #log.write(msg)
 
 def write2moduleLog(msg, module):
-   log = open(module+'/module.log', 'a')
-   log.write(msg)
+   #log = open(module+'/module.log', 'a')
+   #log.write(msg)
+   print msg
+
+def kill_proc(proc, timeout):
+   timeout["value"] = True
+   write2log("TIMEOUT " + str(proc.pid))
+   proc.kill()
+
+def run(proc, timeout_sec):
+   timeout = {"value": False}
+   timer = Timer(timeout_sec, kill_proc, [proc, timeout])
+   timer.start()
+   stdout, stderr = proc.communicate()
+   timer.cancel()
+   return proc.returncode, stdout, timeout["value"]   
 
 if (len(sys.argv) == 2):
    module = sys.argv[1]
@@ -33,20 +48,17 @@ if (len(sys.argv) == 2):
       sys.exit(0)
 
    pid_file = open(os.getcwd() + '/' + pidFileName, "w")
-   print "\nCreating PID file: %s" % str(os.getcwd() + '/' + pidFileName)
+   write2log("\nCreating PID file: %s" % str(os.getcwd() + '/' + pidFileName))
    pid_file.write(str(p.pid))
    pid_file.close()
 
-   for line in p.stdout.readlines():
-      write2moduleLog(line, module) 
-   retval = p.wait()
+   write2log("Waiting for completion...")
+   retval, stdout, timeout = run(p, 60*30)
+   #for line in stdout.readlines():
+   write2moduleLog(stdout, module) 
 
    write2log('\nFinished at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
    #write2log("Retval %s" % retval)
-
-   #remove PID file when the process finished
-   write2log("\nRemoving PID file: %s" % str(os.getcwd() + '/' + pidFileName))
-   os.remove(pidFileName)
 
    if (retval == 0):
       msg = '\nOK'
@@ -54,6 +66,9 @@ if (len(sys.argv) == 2):
       msg = '\nFAIL ('+str(retval)+')'
    
    write2log(msg)
+   #remove PID file when the process finished
+   write2log("\nRemoving PID file: %s" % str(os.getcwd() + '/' + pidFileName))
+   os.remove(pidFileName)
    #status, output = commands.getstatusoutput('cd '+module+'; make')
    #log.write('BEGIN '+module+'\n')
    #if (status == 0):
