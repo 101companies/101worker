@@ -3,3 +3,4 @@ modules/igraph/bin
 modules/.metadata
 modules/igraph/build
 modules/igraph/dist
+*.log
