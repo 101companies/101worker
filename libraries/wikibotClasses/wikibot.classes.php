@@ -11,8 +11,9 @@
 	
 	// 101companies: configuration file not commited.
 	// [begin]
-    define('BASE_PATH_CFG',str_replace('libraries/wikibotClasses','',dirname(__FILE__)));
-	require_once(BASE_PATH_CFG . 'configs/wikibot.config.php');
+    // define('BASE_PATH_CFG',str_replace('libraries/wikibotClasses','',dirname(__FILE__)));
+    define('BASE_PATH_CFG',dirname(dirname(dirname(__FILE__))));
+	require_once(BASE_PATH_CFG . '/configs/wikibot.config.php');
 	#print(BASE_PATH_CFG);
 	// [end]
 
