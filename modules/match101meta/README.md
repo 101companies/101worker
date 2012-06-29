@@ -8,9 +8,5 @@ See the [Language:101meta specification](http://101companies.org/index.php/Langu
 
 # Dependencies
 
-This module assumes that rules have been gathered by module "gather101meta".
+This module assumes that rules have been gathered by module "gather101meta". This module only deals with constraint forms other than predicate. See the module "predicates101meta" for the matches related to the predicate form of constraints.
 
-# Issues 
-
-* This is a prototype implementation.
-* See JM's code for another implementation.

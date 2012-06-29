@@ -16,16 +16,10 @@ def handleRule(rule):
    entry = dict()
    entry['filename'] = rFilename
    entry['rule'] = rule
-   if ("predicate" in rule or "fragment" in rule):
-      secondlist.append(entry)
-   else:
-      firstlist.append(entry)
+   rules.append(entry)
 
-# Prepare lists of rules
-firstlist = list() # rules without "predicate" and "fragment"
-secondlist = list() # other rules
 
-# Find and process all ".101meta" files
+rules = list()
 oks = 0
 fails = 0
 for root, dirs, files in os.walk(const101.sRoot):
@@ -55,7 +49,6 @@ for root, dirs, files in os.walk(const101.sRoot):
 
 # Store sorted list of rules
 rulesFile = open(const101.rulesDump, 'w')
-rules = firstlist + secondlist
 rulesFile.write(json.dumps(rules))
 rulesFile.write("\n")
 print str(oks) + " 101meta files read with success."

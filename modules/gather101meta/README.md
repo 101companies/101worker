@@ -8,4 +8,4 @@ See the [Language:101meta specification](http://101companies.org/index.php/Langu
 
 # Issues 
 
-* No conversion from relative to absolute filenames performed.
+None
