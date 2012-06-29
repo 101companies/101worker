@@ -1,6 +1,6 @@
-include ../Makefile.defs
+include ../Makefile.vars
 
-run: ${repoDir} ${dumpsDir}
+run: ${pulled101RepoDir} ${dumpsDir}
 	@./program.py
 	@test -e ${rulesDump}
 

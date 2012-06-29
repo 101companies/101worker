@@ -1,6 +1,6 @@
-include ../Makefile.defs
+include ../Makefile.vars
 
-run: ${repoDir} ${dumpsDir} ${contrDir} ${matchesDump}
+run: ${pulled101RepoDir} ${dumpsDir} ${contrDir} ${matchesDump}
 	@./program.py
 	@test -e ${validatorDump}
 
@@ -12,8 +12,3 @@ clean:
 reset:
 	@rm -f ${validatorDump}
 	@find ${contrDir} -name "*.validator.json" -exec rm -f {} \;
-
-# Complete local run by presupposed runs
-run-all:
-	cd ../match101meta; make run-all
-	make run

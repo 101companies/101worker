@@ -1,6 +1,6 @@
-include ../Makefile.defs
+include ../Makefile.vars
 
-run: ${repoDir} ${dumpsDir} ${contrDir} ${rulesDump}
+run: ${pulled101RepoDir} ${dumpsDir} ${contrDir} ${rulesDump}
 	@./program.py
 	@test -e ${matchesDump}
 
@@ -11,8 +11,3 @@ clean:
 # Remove files created by this module
 reset:
 	@rm -f ${matchesDump}
-
-# Complete local run by presupposed runs
-run-all:
-	cd ../gather101meta; make run-all
-	make run

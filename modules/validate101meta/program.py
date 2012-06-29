@@ -21,7 +21,6 @@ def fun(validator, rFilename, sFilename, tFilename):
 
    # Save validation result
    result = dict()
-   result["filename"] = rFilename
    result["validator"] = validator
    result["status"] = status
    result["output"] = output

@@ -1,7 +1,7 @@
-include ../Makefile.defs
+include ../Makefile.vars
 
-run: ${repoDir} ${geshiDir} ${matchesDump} ${contrDir}
-	@./program.py ${geshiDir}/run.php
+run: ${pulled101RepoDir} ${gatheredGeshiDir} ${matchesDump} ${contrDir}
+	@./program.py ${gatheredGeshiDir}/run.php
 	@test -e ${geshiDump}
 
 # Remove local temporary files, if any
@@ -12,7 +12,3 @@ clean:
 reset:
 	@find ${contrDir} -name "*.geshi.html" -exec rm -f {} \;
 
-# Complete local run by presupposed runs
-run-all:
-	cd ../match101meta; make run-all
-	make run
