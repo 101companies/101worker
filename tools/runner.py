@@ -10,13 +10,13 @@ log = open('../../101logs/runner.log', 'a')
 
 def write2log(msg):
    global log
-   print msg
-   #log.write(msg)
+   #print msg
+   log.write(msg)
 
 def write2moduleLog(msg, module):
-   #log = open(module+'/module.log', 'a')
-   #log.write(msg)
-   print msg
+   log = open(module+'/module.log', 'a')
+   log.write(msg)
+   #print msg
 
 def kill_proc(proc, timeout):
    timeout["value"] = True
