@@ -68,7 +68,7 @@ push:
 
 # Internal target: use production configuration by default.
 
-configs/current.config: configs/production.config
+configs/current.config:
 	make production.reconfigure -s
 
 # Internal target: make sure 101web directories exists.
