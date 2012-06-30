@@ -1,0 +1,31 @@
+{
+  "name" : "geshi101meta",
+  "heading" : "A module applying 'geshi' to files in 101repo according to 101meta matches",
+  "comment" : "see the 'geshi' metadata in http://101companies.org/index.php/Language:101meta#Metadata_collection",
+  "issues" : {
+    "getstatusoutput" : "Does not work on windows (and may be some *nix) because of the use of getstatusoutput that seems to be non portable. See http://stackoverflow.com/questions/1535672/how-to-interpret-status-code-in-python-commands-getstatusoutput for instance, or https://github.com/victorporof/Sublime-HTMLPrettify/issues/12"}
+  }
+  "authors" : [ "ralflaemmel" ],
+  "timeout" : 30,
+  "languages" : [ "make", "python", "php" ],
+  "technologies" : [ "101repo/technologies/geshi" ],
+  "os" : ["*nix"],
+  "libraries" : [ "101worker/libraries/101meta" ],
+  "modules" : [ "matches101meta", "pull101repo" ],
+  "inputs" : {
+    "matchesDump" : {
+       "_from" : "match101meta.matchesDump"
+    },
+    "worker101repoContributionFiles[*]" : {
+       "101results/101repo/contributions//*" : "the contribution file ${2}"
+    },
+  },
+  "outputs" : {
+    "geshiDump" : {
+      "101web/dumps/geshi.json" : "summary of geshi executions"
+    },
+    "geshiOutputFiles[*]" : {
+      "101web/contributions//*.geshi.html" : "source file ${2} highlighted with GeSHi" 
+    }
+  }
+}	

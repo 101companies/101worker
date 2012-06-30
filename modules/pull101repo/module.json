@@ -1,0 +1,21 @@
+{
+  "name" : "pull101repo",
+  "heading" : "clone/pull 101repo repository into 101results",
+  "authors" : [ "ralflaemmel" ],
+  "timeout" : "15", 
+  "languages" : [ "make" ],
+  "os" : ["*nix","windows"],
+  "components" : [ "git" ],
+  "libraries" : [ ],
+  "modules" : [ ],
+  "inputs" : {
+    "101repo" : {
+      "https://github.com/101companies/101repo" : "101repo github repository" 
+    }
+  }
+  "outputs" : {
+    "worker101repo" : {
+      "101results/101repo/" : "clone of the 101repo github repository"
+    } 
+  }
+}

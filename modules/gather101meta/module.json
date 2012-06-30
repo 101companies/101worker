@@ -1,0 +1,23 @@
+{
+  "name" : "gather101meta",
+  "heading" : "A module to gather 101meta rules from 101repo",
+  "comment" : "see http://101companies.org/index.php/Language:101meta#Metadata_collection",
+  "authors" : [ "ralflaemmel" ],
+  "timeout" : 5,
+  "languages" : [ "make", "python" ],
+  "os" : ["*nix", "windows" ],
+  "libraries" : [ "101worker/libraries/101meta" ],
+  "modules" : [ "pull101repo" ],
+  "inputs" : {
+    "101metaFiles[*]" : {
+      "101worker/101repo/technologies/*/.101meta" : "101 meta description of the ${1} technology",
+      "101worker/101repo/languages/*/.101meta" : "101 meta description of the ${1} language",
+      "101worker/101repo/contributions/*/.101meta" : "101 meta description of the ${1} contribution"
+    }
+  },
+  "outputs" : {
+     "rulesDump" : {
+       "101web/dumps/rules.json" : "pulled libraries used at worker time"
+     } 
+  }
+}
