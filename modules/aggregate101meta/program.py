@@ -16,7 +16,7 @@ def mapFileToKey(entry, dict, keys):
       dict[key].append(entry["filename"])
 
 # Go over matches and gather files by language
-matches = json.load(open(const101.matchesDump, 'r'))
+matches = json.load(open(const101.matchesDump, 'r'))["matches"]
 bylang = dict()
 bytech = dict()
 for entry in matches:

@@ -59,7 +59,7 @@ def mapMatches(
     noProblems = 0 # Aggregated exit code
     noSources = 0 # Number of source files
     noTargets = 0 # Number of (generated) target files
-    matches = json.load(open(const101.matchesDump, 'r'))
+    matches = json.load(open(const101.matchesDump, 'r'))["matches"]
 
     for entry in matches:
 
