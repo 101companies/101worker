@@ -72,3 +72,8 @@ publish:
 	
 clean:
 	rm -f tex/files/*.ext
+	cd tex/content/latex; make clean
+	cd tex/content/data; make clean
+	cd tex/dump/latex; make clean
+	cd tex/dump/data; make clean
+	rm tex.tar

@@ -12,3 +12,4 @@ modules/wiki2tex/tex/content/data/languages.tex
 modules/wiki2tex/tex/content/data/pages.tex
 modules/wiki2tex/tex/content/data/technologies.tex
 utils.pyc
+pipeline.pyc
