@@ -17,7 +17,6 @@ define('RDF_SCHEMA_101_PREFIX_URL',RDF_DATA_101_URL.'/schema#') ;
 define('RDF_WIKI_101_NAMED_GRAPH',RDF_DATA_101_URL.'dumps/Wiki101Full.rdf') ;
 define('RDF_CODE_101_NAMED_GRAPH',RDF_DATA_101_URL.'dumps/Repo101Full.rdf') ;
 
-define ('RDF_STORE_END_POINT_CODE',ABSPATH_DATA_GENERATED.'sparql.php') ;
  
 require_once ABSPATH_MEGALIB.'RDF.php' ;
 
