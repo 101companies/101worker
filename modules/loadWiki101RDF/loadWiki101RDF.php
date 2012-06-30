@@ -26,4 +26,4 @@ echo "$n tuples read\n" ;
  
 echo "======= Loading the triples into the RDF store ========\n" ;
 $store101 = get101Store() ;
-$store101->loadTripleSet($tripleSet,RDF_WIKI_101_NAMED_GRAPH) ;
+$store101->loadTripleSet($tripleset,RDF_WIKI_101_NAMED_GRAPH) ;
