@@ -4,9 +4,6 @@ require_once '../../configs/RDF101.config.php' ;
 require_once ABSPATH_MEGALIB.'JsonGraphAsERGraph.php' ;
 require_once ABSPATH_MEGALIB.'ERGraphAsRDF.php' ;
 require_once ABSPATH_MEGALIB.'HTML.php' ;
-//echo 'ABSPATH_BASE='.ABSPATH_BASE.'  ' ;
-//echo 'ABSPATH_WORKER_WEB_DIR='.ABSPATH_WORKER_WEB_DIR.'  ' ;
-//echo URL_WIKI_101_JSON_URL.' toto' ;
 
 $corefilename=$argv[1] ;
 $schemafile=$argv[2] ;
