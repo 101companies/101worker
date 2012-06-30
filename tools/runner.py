@@ -52,7 +52,7 @@ if (len(sys.argv) == 2):
    pid_file.write(str(p.pid))
    pid_file.close()
 
-   write2log("Waiting for completion...")
+   write2log("\nWaiting for completion...")
    retval, stdout, timeout = run(p, 60*30)
    #for line in stdout.readlines():
    write2moduleLog(stdout, module) 
