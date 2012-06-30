@@ -14,3 +14,4 @@ modules/wiki2tex/tex/content/data/technologies.tex
 utils.pyc
 pipeline.pyc
 document.pyc
+modules/wikitools/tex/sources
