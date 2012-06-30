@@ -14,3 +14,4 @@ publish:
 	cp tex.tar ${webdir}/texgen
 clean:
 	rm -r tex/sources/*.src
+	rm tex.tar
