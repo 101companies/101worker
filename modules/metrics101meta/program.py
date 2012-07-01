@@ -7,9 +7,10 @@ import const101
 import tools101
 
 # Per-file functinonality
-def fun(geshicode, rFilename, sFilename, tFilename):
+def fun(geshicode, rFilename, sFilename, tFilename1):
+   tFilename2 = tFilename1[:-len(".metrics.json")]+".tokens.json"
    print "Process " + rFilename + " for GeSHi code " + geshicode + "."
-   cmd = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename + "\" " + geshicode
+   cmd = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" "+ geshicode
    (status, output) = tools101.run(cmd)
    return status
 

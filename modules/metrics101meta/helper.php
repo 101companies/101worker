@@ -1,8 +1,9 @@
 <?php
 
 $ifilename = $argv[1];
-$ofilename = $argv[2];
-$language = $argv[3];
+$ofilename1 = $argv[2];
+$ofilename2 = $argv[3];
+$language = $argv[4];
 
 define('_MEGALIB','true');
 define('DEBUG',10);
@@ -20,5 +21,6 @@ $metrics = array(
       'size'   => $summary['size'],
       'loc'    => $summary['nloc'],
       'ncloc'  => $summary['ncloc'] );
-file_put_contents($ofilename, jsonEncode($metrics));
+file_put_contents($ofilename1, jsonEncode($metrics));
+file_put_contents($ofilename2, $sc->getTokensAsJson());
 ?>
