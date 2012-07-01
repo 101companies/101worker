@@ -113,4 +113,4 @@ def mapMatchesWithKey(
    def testFiles(sFilename, tFilename):
       return build(sFilename, tFilename)
        
-   return mapMatches(testEntry, testFiles, "." + key + suffix, fun)
+   return mapMatches(testEntry, testFiles, suffix, fun)

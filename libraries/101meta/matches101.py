@@ -17,9 +17,9 @@ def buildUnit(units, id, metadata):
    units.append(unit)
 
 #
-# Handle filename and basename constraints alike
+# Handle filename, basename, and dirname constraints alike
 #
-def checkFileConstraint(rule, key, value):
+def checkFilename(rule, key, value):
    if not key in rule:
       return True
    else:
@@ -31,11 +31,18 @@ def checkFileConstraint(rule, key, value):
             if value == pattern:
                either = True
                break
+            if key=="dirname":
+               if value.startswith(pattern+"/"):
+                  either = True
+                  break
          else:
             global noPattFiles
             noPattFiles += 1
             pattern = pattern[1:len(pattern)-2]
             result = re.search(pattern, value)
+            if key=="dirname":
+               if value[result.end()+1] != '/':
+                  result = None
             if not result is None:
                either = True
                global noPattFilesOk
@@ -62,17 +69,22 @@ def matchFile(phase, dirname, basename, rule):
       if phase==2:
          return False
 
-
    #
-   # Check filename constraint
-   #
-   if not checkFileConstraint(rule, "filename", os.path.join(dirname, basename)):
+   # Check dirname constraint
+   #      
+   if not checkFilename(rule, "dirname", dirname):
       return False
    
    #
    # Check basename constraint
    #
-   if not checkFileConstraint(rule, "basename", basename):
+   if not checkFilename(rule, "basename", basename):
+      return False
+
+   #
+   # Check filename constraint
+   #
+   if not checkFilename(rule, "filename", os.path.join(dirname, basename)):
       return False
 
    #
@@ -150,7 +162,27 @@ def handleFile(phase, dirname, basename, suffix):
             else:
                buildUnit(units, id, metadata)
       id += 1
-      
+
+   # Contract units to pay attention to dominators
+   keys = list()
+   removals = list()
+   for unit in units:
+      metadata = unit["metadata"]
+      if "dominator" in metadata:
+         keys.append(metadata["dominator"])
+   for key in keys:      
+      for unit in units:
+         metadata = unit["metadata"]
+         if key in metadata \
+         and (not "dominator" in metadata
+              or not metadata["dominator"] == key):
+            removals.append(unit)
+   survivals = list()
+   for unit in units:
+      if not unit in removals:
+         survivals.append(unit)
+   units = survivals
+            
    # Add entry to matches if any matches for file at hand
    tools101.makedirs(os.path.join(const101.tRoot, dirname))
    filename = os.path.join(const101.tRoot, dirname, basename + suffix)
@@ -181,7 +213,7 @@ def matchAll(phase, suffix):
     global noPredFilesOk
     global noContFiles
     global noContFilesOk
-    rules = json.load(open(const101.rulesDump, 'r'))
+    rules = json.load(open(const101.rulesDump, 'r'))["rules"]
     matches = list()
     noFiles = 0
     noUnits = 0
@@ -195,7 +227,7 @@ def matchAll(phase, suffix):
     for root, dirs, files in os.walk(os.path.join(const101.sRoot, "contributions")):
         if not root.startswith(os.path.join(const101.sRoot, ".git")+os.sep):
             for basename in files:
-                tools101.tick()
+#                tools101.tick()
                 if not basename in [".gitignore"]:
                     dirname = root[len(const101.sRoot)+1:]
                     handleFile(phase, dirname, basename, suffix)

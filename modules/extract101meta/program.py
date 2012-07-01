@@ -15,7 +15,7 @@ def fun(extractor, rFilename, sFilename, tFilename):
    return status
 
 print "Extracting facts from 101repo."
-dump = tools101.mapMatchesWithKey("extractor", ".json", fun)
+dump = tools101.mapMatchesWithKey("extractor", ".extractor.json", fun)
 extractorFile = open(const101.extractorDump, 'w')
 extractorFile.write(json.dumps(dump))
 sys.exit(dump["noProblems"])

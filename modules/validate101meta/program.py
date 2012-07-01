@@ -37,7 +37,7 @@ def fun(validator, rFilename, sFilename, tFilename):
 validators = set()
 failures = list()
 print "Validating 101repo."
-dump = tools101.mapMatchesWithKey("validator", ".json", fun)
+dump = tools101.mapMatchesWithKey("validator", ".validator.json", fun)
 print "Applied " + str(len(validators)) + " validator(s)."
 print str(len(failures)) + " files failed to validate."
 dump["validators"] = list(validators)

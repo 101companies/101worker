@@ -13,9 +13,10 @@ def fun(geshicode, rFilename, sFilename, tFilename):
    (status, output) = tools101.run(cmd)
    return status
 
+print "Generating GeSHi-based HTML for 101repo."
 if (len(sys.argv) != 2): sys.exit(-1)
 geshi = sys.argv[1] # GeSHi in the workspace
-dump = tools101.mapMatchesWithKey("geshi", ".html", fun)
+dump = tools101.mapMatchesWithKey("geshi", ".geshi.html", fun)
 geshiFile = open(const101.geshiDump, 'w')
 geshiFile.write(json.dumps(dump))
 sys.exit(dump["noProblems"])

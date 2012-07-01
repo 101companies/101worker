@@ -13,27 +13,32 @@ import tools101
 # Enforce priorities for rules.
 #
 def handleRule(rule):
-   entry = dict()
-   entry['filename'] = rFilename
-   entry['rule'] = rule
-   rules.append(entry)
-
+   if not "filename" in rule \
+      and not "basename" in rule \
+      and not "dirname" in rule \
+      and not "suffix" in rule:
+      invalids.append(rFilename)
+   else:
+      entry = dict()
+      entry['filename'] = rFilename
+      entry['rule'] = rule
+      rules.append(entry)
 
 rules = list()
-oks = 0
-fails = 0
+noFiles = 0
+unreadables = list()
+invalids = list()
 for root, dirs, files in os.walk(const101.sRoot):
    for basename in fnmatch.filter(files, "*.101meta"):
       filename = os.path.join(root, basename)
       rFilename = filename[len(const101.sRoot)+1:] # relative file name
+      noFiles += 1
 
       # Shield against JSON encoding errors
       try:        
          jsonfile = open(filename, "r")
          data = json.load(jsonfile)
-         print rFilename + ": OK"
-         oks += 1
-
+ 
          # Handle lists of rules
          if isinstance(data, list):
             for rule in data:
@@ -43,15 +48,20 @@ for root, dirs, files in os.walk(const101.sRoot):
          break
          
       except json.decoder.JSONDecodeError:
-         print rFilename + ": FAIL (JSONDecodeError)"
-         raise
-         fails += 1
+         print "Unreadable file: " + rFilename + " (JSONDecodeError)"
+         unreadables.append(rFilename)
 
 # Store sorted list of rules
+dump = dict()
+dump["rules"] = rules
+dump["noFiles"] = noFiles
+dump["unreadables"] = unreadables
+dump["invalids"] = invalids
 rulesFile = open(const101.rulesDump, 'w')
-rulesFile.write(json.dumps(rules))
-rulesFile.write("\n")
-print str(oks) + " 101meta files read with success."
-print str(fails) + " 101meta files read with failure."
+rulesFile.write(json.dumps(dump))
+print str(noFiles) + " 101meta files read."
+print str(len(unreadables)) + " unreadable 101meta files encountered."
+print str(len(invalids)) + " invalid 101meta files encountered."
 print str(len(rules)) + " 101meta rules gathered."
-sys.exit(fails)
+#sys.exit(len(unreadables)+len(invalids))
+sys.exit(len(unreadables))
