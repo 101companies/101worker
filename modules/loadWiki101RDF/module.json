@@ -1,0 +1,23 @@
+{
+  "name" : "loadWiki101RDF",
+  "heading" : "load the wiki 101 rdf tuples into the 101 RDF store",
+  "comment" : "This module assume that the database is properly configured",
+  "timeout" : 10,
+  "authors" : [ "jeanmariefavre" ],
+  "languages" : [ "make", "php" ],
+  "os" : [ "*nix", "windows" ],
+  "libraries" : [ "101worker/101repo/libraries/megalib",
+                  "101worker/101repo/libraries/arc2" ],
+  "modules" : [ "wiki101JsonToWiki101RDF" ],
+  "inputs" : {
+    "Wiki101RDFDump" : {
+      "101web/dumps/Wiki101Full.rdf" : "full dump of the wiki represented in RDF/XML" 
+    }
+  },
+  "outputs" : {
+    "101Store" : {
+      "rdfstore:s101" : "RDF store of the 101 project"
+    } 
+  }
+}
+

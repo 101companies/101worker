@@ -1,17 +1,31 @@
 {
   "name" : "pullLibraries",
-  "heading" : "download/copy/pull the 101 libraries shared by 101 modules",
+  "heading" : "download/copy/pull external libraries shared by 101 modules",
+  "comment" : "libraries that are 101 specific can be found in 101worker/libraries. Here we refer to libraries that are not part of the 101 project",
   "authors" : [ "jeanmariefavre" ],
   "languages" : [ "make", "php", "bash" ],
-  "systems" : [ "windows", "linux" ],
+  "libraries" : [ ],
+  "modules" : [ ],
   "inputs" : {
-    "101worker/config/libraries.all.json" : "list of libraries specification",
-    "*" : "any directory in the file system can be read if specified in list of libraries",
-    "http:*" : "any file from the web can be download if specified in the list of libraries",
-    "http://github.com" : "github project can be pulled if specified in the list of libraries" 
-  }
+    "libraries" : {
+      "101worker/config/libraries.all.json" : "list of libraries specification"
+    },
+    "filesystem" : {
+      "*" : "any directory in the file system can be read if specified in list of libraries"
+    } ,
+    "web" : {
+      "http:*" : "any file from the web can be download if specified in the list of libraries",
+    }
+    "github" : {
+      "http://github.com" : "github project can be pulled if specified in the list of libraries"
+    } 
+  },
   "outputs" : {
-     "101results/libraries/*" : "pulled libraries used at worker time", 
-     "101web/libraries/*" : "pulled libraries used at web time"    
+     "101results/libraries" : {
+       "101results/libraries/*" : "pulled libraries used at worker time"
+     },
+     "101web/libraries" : {
+       "101web/libraries/*" : "pulled libraries used at web time"   
+     } 
   }
 }

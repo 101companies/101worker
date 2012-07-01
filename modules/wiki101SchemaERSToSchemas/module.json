@@ -1,0 +1,21 @@
+{
+  "name" : "wiki101SchemaERSToSchemas",
+  "heading" : "copy the schema of the wiki to 101 web",
+  "comment" : "Currently only the .ers format is provide but more schema languages will be added in the future",
+  "timeout" : 1,
+  "authors" : [ "jeanmariefavre" ],
+  "languages" : [ "make" ],
+  "os" : [ "*nix", "windows" ],
+  "libraries" : [ ],
+  "modules" : [ ],
+  "inputs" : {
+    "Wiki101ERSSchema" {
+      "101worker/configs/Wiki101Schema.ers" : "The schema of the wiki expressed in the Entity Relationship Schema" 
+    },
+  }
+  "outputs" : {
+    "Wiki101ERSSchemas[*]" : {
+      "101web/dumps/Wiki101Schema.ers" : "The schema of the wiki expressed in the Entity Relationship Schema"
+    } 
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name" : "wiki101ToWiki101Json",
+  "heading" : "download and convert the content of the 101 wiki into json",
+  "comment" : "This module fetches each pages from the wiki so its execution could take 5 to 20mn",
+  "timeout" : 30,
+  "authors" : [ "thomasschmorleizas" ],
+  "languages" : [ "make", "php", "bash", "python" ],
+  "os" : [ "*nix", "windows" ],
+  "libraries" : [ "101worker/libraries/wikibotClasses"
+                  "101worker/libraries/MediaWikiAPI" ],
+  "modules" : [ ],
+  "inputs" : {
+    "config" : {
+      "101worker/configs/wikibot.config.php" : "configuration related to the 101 wiki settings" 
+    },
+    "101wiki" : {
+      "http://101companies.org" : "mostly all content pages of the wiki are read"
+    }
+  }
+  "outputs" : {
+    "Wiki101JsonDump" : {
+      "101web/dumps/Wiki101Full.json" : "full dump of the wiki represented in json"
+    } 
+  }
+}
+
