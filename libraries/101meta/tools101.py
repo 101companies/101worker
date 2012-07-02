@@ -10,10 +10,19 @@ def valuesByKey(entry, key):
                  for x in map(lambda u: u["metadata"], entry["units"])
                  if key in x ]
 
+
+# Unambigious variation on valuesByKey
+def valueByKey(entry, key):
+   values = valuesByKey(entry, key)
+   if len(values) != 1: return None
+   return values[0]
+
+
 # Dot-wise progress information
 def tick():
     sys.stdout.write('.')
     sys.stdout.flush()
+
 
 # Create target directory, if necessary
 def makedirs(d):
@@ -38,6 +47,7 @@ def build(sFilename, tFilename):
    except:
       return True
 
+
 # Run a command
 def run(cmd):
    (status, output) = commands.getstatusoutput(cmd)
@@ -46,6 +56,14 @@ def run(cmd):
       print "Status: " + str(status)
       print "Output: " + output
    return (status, output)
+
+
+def getBasics():
+   matches = json.load(open(const101.matchesDump, 'r'))["matches"]
+   result = dict()
+   for match in matches:
+      result[match["filename"]] = match
+   return result
 
 
 # Loop over matches
@@ -106,9 +124,7 @@ def mapMatchesWithKey(
     ):
 
    def testEntry(entry):
-      values = valuesByKey(entry, key)
-      if len(values) != 1: return None
-      return values[0]
+      return valueByKey(entry, key)
 
    def testFiles(sFilename, tFilename):
       return build(sFilename, tFilename)

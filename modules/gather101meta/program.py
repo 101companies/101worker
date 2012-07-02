@@ -13,16 +13,20 @@ import tools101
 # Enforce priorities for rules.
 #
 def handleRule(rule):
-   if not "filename" in rule \
-      and not "basename" in rule \
-      and not "dirname" in rule \
-      and not "suffix" in rule:
-      invalids.append(rFilename)
-   else:
+   if \
+      ("filename" in rule \
+      or "basename" in rule \
+      or "dirname" in rule \
+      or "suffix" in rule) \
+      and \
+      (not "predicate" in rule \
+       or not "fragment" in rule):
       entry = dict()
       entry['filename'] = rFilename
       entry['rule'] = rule
       rules.append(entry)
+   else:
+      invalids.append(rFilename)
 
 rules = list()
 noFiles = 0
