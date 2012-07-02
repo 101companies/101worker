@@ -10,6 +10,7 @@ import const101
 import tools101
 
 def fun(dirname, dirs, files):
+    print dirname
     indexFile = open(os.path.join(const101.tRoot, dirname, "index.json"), 'w')
     index = dict()
     index["dirs"] = dirs
@@ -17,5 +18,5 @@ def fun(dirname, dirs, files):
     indexFile.write(json.dumps(index))
     indexFile.close()
 
-tools101.loopOverFiles(fun)
+tools101.loopOverFiles(fun, False)
 exit(0)
