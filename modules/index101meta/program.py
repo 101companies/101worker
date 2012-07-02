@@ -20,12 +20,20 @@ def initializeKey(d,key):
         d[key]["files"] = dict()
         d[key]["metrics"] = const101.noMetrics()
 
-def addFile(r, d, val2key, values, basename, summary):           
-    for value in values:
-        key = val2key(value)
-        initializeKey(r[d],key)
-        r[d][key]["files"][basename] = []
-        addMetrics(r[d][key],summary) 
+def addFile(result, rkey, mkey, val2key, basename, summary):           
+    for unit in summary["units"]:
+        if mkey in unit["metadata"]:
+            val = unit["metadata"][mkey]
+            key = val2key(val)
+            initializeKey(result[rkey],key)
+            result[rkey][key]["relationship"] = mkey
+            if key!=val: result[rkey][key]["value"] = val
+            if "lines" in unit:
+                regions = [unit["lines"]]
+            else:
+                regions = []
+            result[rkey][key]["files"][basename] = regions
+            addMetrics(result[rkey][key],summary) 
 
 def addDir(r, d, subdirname, index):
     for key in index[d]:
@@ -58,31 +66,25 @@ def fun(dirname, dirs, files):
         summaryFile.close()
 
         # Deal with languages for file
-        values = tools101.valuesByKey(summary, "language")
-        addFile(result, "languages", lambda x: x, values, basename, summary)
-        
+        addFile(result, "languages", "language", lambda x: x, basename, summary)
+
         # Deal with technologies for file
-        values = tools101.valuesByKey(summary, "partOf")
-        values += tools101.valuesByKey(summary, "inputOf")
-        values += tools101.valuesByKey(summary, "outputOf")
-        values += tools101.valuesByKey(summary, "dependsOn")
-        addFile(result, "technologies", lambda x: x, values, basename, summary)
+        addFile(result, "technologies", "partOf", lambda x: x, basename, summary)
+        addFile(result, "technologies", "inputOf", lambda x: x, basename, summary)
+        addFile(result, "technologies", "outputOf", lambda x: x, basename, summary)
+        addFile(result, "technologies", "dependsOn", lambda x: x, basename, summary)
 
         # Deal with features for file
-        values = tools101.valuesByKey(summary, "feature")
-        addFile(result, "features", lambda x: x, values, basename, summary)
+        addFile(result, "features", "feature", lambda x: x, basename, summary)
 
         # Deal with concepts for file
-        values = tools101.valuesByKey(summary, "concept")
-        addFile(result, "concepts", lambda x: x, values, basename, summary)
+        addFile(result, "concepts", "concept", lambda x: x, basename, summary)
 
         # Deal with terms for file
-        values = tools101.valuesByKey(summary, "term")
-        addFile(result, "terms", lambda x: x, values, basename, summary)
+        addFile(result, "terms", "term", lambda x: x, basename, summary)
 
         # Deal with phases for file
-        values = tools101.valuesByKey(summary, "phrase")
-        addFile(result, "phrases", phrase2str, values, basename, summary)
+        addFile(result, "phrases", "phrase", phrase2str, basename, summary)
 
 
     #
@@ -94,7 +96,6 @@ def fun(dirname, dirs, files):
         subdirFile.close()
         for key in result:
             addDir(result, key, subdirname, index)
-
 
     # Dumping the index
     result["dirs"] = dirs
