@@ -20,10 +20,26 @@ def initializeKey(d,key):
         d[key]["files"] = dict()
         d[key]["metrics"] = const101.noMetrics()
 
+def addFile(d, values, basename, summary):           
+    for key in values:
+        initializeKey(d,key)
+        d[key]["files"][basename] = []
+        addMetrics(d[key],summary) 
+
+def addDir(p, d, subdirname, index):
+    for key in index[p]:
+        initializeKey(d,key)
+        for filename in index[p][key]["files"]:
+           d[key]["files"][os.path.join(subdirname, filename)] = []              
+        addMetrics(d[key],index[p][key])
+
 def fun(dirname, dirs, files):
     tools101.tick()
     languages = dict()
     technologies = dict()
+    features = dict()
+    concepts = dict()
+    terms = dict()
     indexFile = open(os.path.join(const101.tRoot, dirname, "index.json"), 'w')
 
     #
@@ -36,20 +52,27 @@ def fun(dirname, dirs, files):
 
         # Deal with languages for file
         values = tools101.valuesByKey(summary, "language")
-        for key in values:
-            initializeKey(languages,key)
-            languages[key]["files"][basename] = []
-            addMetrics(languages[key],summary)
-
+        addFile(languages, values, basename, summary)
+        
         # Deal with technologies for file
         values = tools101.valuesByKey(summary, "partOf")
         values += tools101.valuesByKey(summary, "inputOf")
         values += tools101.valuesByKey(summary, "outputOf")
         values += tools101.valuesByKey(summary, "dependsOn")
-        for key in values:
-            initializeKey(technologies,key)
-            technologies[key]["files"][basename] = []
-            addMetrics(technologies[key],summary)
+        addFile(technologies, values, basename, summary)
+
+        # Deal with features for file
+        values = tools101.valuesByKey(summary, "feature")
+        addFile(features, values, basename, summary)
+
+        # Deal with concepts for file
+        values = tools101.valuesByKey(summary, "feature")
+        addFile(concepts, values, basename, summary)
+
+        # Deal with terms for file
+        values = tools101.valuesByKey(summary, "term")
+        addFile(terms, values, basename, summary)
+
 
     #
     # Aggregation of subdirectory indexes
@@ -60,18 +83,20 @@ def fun(dirname, dirs, files):
         subdirFile.close()
 
         # Deal with languages for directory
-        for key in index["languages"]:
-            initializeKey(languages,key)
-            for filename in index["languages"][key]["files"]:
-                languages[key]["files"][os.path.join(subdirname, filename)] = []              
-            addMetrics(languages[key],index["languages"][key])
+        addDir("technologies", languages, subdirname, index)
 
         # Deal with technologies for directory
-        for key in index["technologies"]:
-            initializeKey(technologies,key)
-            for filename in index["technologies"][key]["files"]:
-                technologies[key]["files"][os.path.join(subdirname, filename)] = []       
-            addMetrics(technologies[key],index["technologies"][key])
+        addDir("technologies", technologies, subdirname, index)
+
+        # Deal with features for directory
+        addDir("features", features, subdirname, index)
+
+        # Deal with concepts for directory
+        addDir("concepts", concepts, subdirname, index)
+
+        # Deal with terms for directory
+        addDir("terms", terms, subdirname, index)
+
 
     # Dumping the index
     index = dict()
@@ -79,6 +104,9 @@ def fun(dirname, dirs, files):
     index["files"] = files
     index["languages"] = languages
     index["technologies"] = technologies
+    index["features"] = features
+    index["concepts"] = concepts
+    index["terms"] = terms
     indexFile.write(json.dumps(index))
     indexFile.close()
 
