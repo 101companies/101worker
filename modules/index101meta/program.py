@@ -44,8 +44,9 @@ def fun(dirname, dirs, files):
         values += tools101.valuesByKey(summary, "outputOf")
         values += tools101.valuesByKey(summary, "dependsOn")
         for key in values:
-            if not key in technologies: technologies[key] = set()
-            technologies[key].add(basename)
+            initializeKey(technologies,key)
+            technologies[key]["files"].add(basename)
+            addMetrics(technologies[key],summary)
 
     for subdirname in dirs:
         subdirFile = open(os.path.join(const101.tRoot, dirname, subdirname, "index.json"), 'r')
@@ -61,14 +62,15 @@ def fun(dirname, dirs, files):
 
         # Deal with technologies for directory
         for key in index["technologies"]:
+            initializeKey(technologies,key)
             for filename in index["technologies"][key]:
-                if not key in technologies: technologies[key] = set()
-                technologies[key].add(os.path.join(subdirname, filename))                
+                technologies[key]["files"].add(os.path.join(subdirname, filename))                
+            addMetrics(technologies[key],index["technologies"][key])
 
     for key in languages:
         languages[key]["files"] = list(languages[key]["files"])
     for key in technologies:
-        technologies[key] = list(technologies[key])
+        technologies[key]["files"] = list(technologies[key]["files"])
     index = dict()
     index["dirs"] = dirs
     index["files"] = files
