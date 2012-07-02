@@ -336,5 +336,6 @@ def matchAll(phase, suffix):
        print str(noPredicateConstraints) + " predicate constraints checked."
        print str(noPredicateConstraintsOk) + " predicate constraints succeeded."
     if phase=="fragments":
+       print str(len(locators)) + " fragment locators exercised."
        print str(noFragments) + " fragment descriptions checked."
     return mr
