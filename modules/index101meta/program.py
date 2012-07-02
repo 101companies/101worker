@@ -56,14 +56,14 @@ def fun(dirname, dirs, files):
         # Deal with languages for directory
         for key in index["languages"]:
             initializeKey(languages,key)
-            for filename in index["languages"][key]:
+            for filename in index["languages"][key]["files"]:
                 languages[key]["files"].add(os.path.join(subdirname, filename))                
             addMetrics(languages[key],index["languages"][key])
 
         # Deal with technologies for directory
         for key in index["technologies"]:
             initializeKey(technologies,key)
-            for filename in index["technologies"][key]:
+            for filename in index["technologies"][key]["files"]:
                 technologies[key]["files"].add(os.path.join(subdirname, filename))                
             addMetrics(technologies[key],index["technologies"][key])
 
