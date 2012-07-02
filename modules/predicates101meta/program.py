@@ -8,6 +8,4 @@ import matches101
 mr = matches101.matchAll("predicates", ".predicates.json")
 mrFile = open(const101.predicatesDump, 'w')
 mrFile.write(json.dumps(mr))
-print str(matches101.noPredicateConstraints) + " predicate constraints checked."
-print str(matches101.noPredicateConstraintsOk) + " predicate constraints succeeded."
 sys.exit(0)

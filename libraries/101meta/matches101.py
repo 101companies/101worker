@@ -15,7 +15,8 @@ def buildUnit(units, id, metadata, result):
    unit["id"] = id
    unit["metadata"] = metadata
    if len(result)>0:
-      unit["result"] = result
+      for key in result:
+         unit[key] = result[key]
    units.append(unit)
 
 
@@ -123,6 +124,8 @@ def matchFile(phase, dirname, basename, rule):
    #
    if "predicate" in rule:
       predicate = rule["predicate"]
+      global predicates
+      predicates.add(predicate)
       global noPredicateConstraints
       noPredicateConstraints += 1
       if "args" in rule:
@@ -162,6 +165,8 @@ def matchFile(phase, dirname, basename, rule):
          failure["rule"] = rule
          failures.append(failure)
          return None
+      global locators
+      locators.add(locator)
       cmd = os.path.join(const101.sRoot, locator)
       tmpIn = os.path.join(const101.tRoot, filename + ".tmpIn")
       tmpOut = os.path.join(const101.tRoot, filename + ".tmpOut")
@@ -185,7 +190,7 @@ def matchFile(phase, dirname, basename, rule):
             pass
          try:
             tmpOutFile = open(tmpOut, 'r')
-            result = json.load(open(tmpOut, 'r'))
+            result["lines"] = json.load(open(tmpOut, 'r'))
          except:
             failure = dict()
             failure["locator"] = locator
@@ -278,6 +283,8 @@ def matchAll(phase, suffix):
     global rules
     global matches
     global failures
+    global predicates
+    global locators
     global noFiles
     global noUnits
     global noPatternConstraints
@@ -291,6 +298,8 @@ def matchAll(phase, suffix):
     rules = json.load(open(const101.rulesDump, 'r'))["rules"]
     matches = list()
     failures = list()
+    predicates = set()
+    locators = set()
     noFiles = 0
     noUnits = 0
     noPatternConstraints = 0
@@ -312,6 +321,10 @@ def matchAll(phase, suffix):
     mr["matches"] = matches
     mr["failures"] = failures
     mr["rules"] = rules
+    if phase=="predicates":
+       mr["predicates"] = list(predicates)
+    if phase=="fragments":
+       mr["locators"] = list(locators)
     print str(noFiles) + " files affected."
     print str(len(failures)) + " failured encountered."
     print str(noUnits) + " metadata units attached."
@@ -319,4 +332,9 @@ def matchAll(phase, suffix):
     print str(noContentConstraintsOk) + " content constraints succeeded."
     print str(noPatternConstraints) + " filename-pattern constraints checked."
     print str(noPatternConstraintsOk) + " filename-pattern constraints succeeded."
+    if phase=="predicates":
+       print str(noPredicateConstraints) + " predicate constraints checked."
+       print str(noPredicateConstraintsOk) + " predicate constraints succeeded."
+    if phase=="fragments":
+       print str(noFragments) + " fragment descriptions checked."
     return mr

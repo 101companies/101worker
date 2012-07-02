@@ -11,9 +11,3 @@ clean:
 # Remove files created by this module
 reset:
 	@rm -f ${rulesDump}
-
-# Complete local run by presupposed runs
-run-all:
-	@cd ../..; make before-run
-	@cd ../pull101repo; make
-	make run

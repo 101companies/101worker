@@ -8,4 +8,4 @@ A ".fragments.json" file is created within "101web/contributions" for each 101re
 
 # Dependencies
 
-This module assumes that the module "matches101meta" was applied earlier.
+This module assumes that the modules "gather101meta" and "matches101meta" were applied earlier. Also, matching is performed on the pulled 101repo, as available in "101results/101repo", as performed by the module "pull101repo".

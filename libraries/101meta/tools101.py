@@ -130,3 +130,13 @@ def mapMatchesWithKey(
       return build(sFilename, tFilename)
        
    return mapMatches(testEntry, testFiles, suffix, fun)
+
+
+# Loop over all 101repo files
+def loopOverFiles(fun):
+    for root, dirs, files in os.walk(os.path.join(const101.sRoot, "contributions")):
+        if not root.startswith(os.path.join(const101.sRoot, ".git")+os.sep):
+           dirname = root[len(const101.sRoot)+1:]
+           less = [ f for f in files if not f in [".gitignore"] ]
+           for subdirname in dirs:
+              fun(dirname, subdirname, less)
