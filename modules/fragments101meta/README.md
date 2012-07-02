@@ -8,4 +8,10 @@ A ".fragments.json" file is created within "101web/contributions" for each 101re
 
 # Dependencies
 
-This module assumes that the modules "gather101meta" and "matches101meta" were applied earlier. Also, matching is performed on the pulled 101repo, as available in "101results/101repo", as performed by the module "pull101repo".
+* Module "pull101repo": fragment location is performed on pulled 101repo.
+* Module "gather101meta": fragment location uses gathered rules.
+* Module "matches101meta": fragment locators are determined by basic matching.
+
+# Related modules
+
+* Module "predicates101meta": predicate-based matching not needed here.
