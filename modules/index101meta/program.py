@@ -26,13 +26,9 @@ def addFile(result, rkey, mkey, val2key, basename, summary):
             val = unit["metadata"][mkey]
             key = val2key(val)
             initializeKey(result[rkey],key)
-            result[rkey][key]["relationship"] = mkey
-            if key!=val: result[rkey][key]["value"] = val
-            if "lines" in unit:
-                regions = [unit["lines"]]
-            else:
-                regions = []
-            result[rkey][key]["files"][basename] = regions
+            if not basename in result[rkey][key]["files"]:
+                result[rkey][key]["files"][basename] = list()
+            result[rkey][key]["files"][basename].append(unit)
             addMetrics(result[rkey][key],summary) 
 
 def addDir(r, d, subdirname, index):
