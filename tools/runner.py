@@ -20,8 +20,15 @@ def write2moduleLog(msg, module):
 
 def kill_proc(proc, timeout):
    timeout["value"] = True
-   write2log("TIMEOUT " + str(proc.pid))
-   proc.kill()
+   write2log("FAIL : TIMEOUT " + str(proc.pid))
+   write2log("KILLING PROCESS TREE")
+   currentDir = os.path.dirname(os.path.abspath(__file__))
+   killCmd = currentDir + '/killtree.sh ' + str(proc.pid) +' TERM'
+   write2log(killCmd)
+   p = subprocess.Popen(killCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+   stdout, stderr = p.communicate()
+   write2log(stdout)
+   write2log(stderr)
 
 def run(proc, timeout_sec):
    timeout = {"value": False}
@@ -53,7 +60,7 @@ if (len(sys.argv) == 2):
    pid_file.close()
 
    write2log("\nWaiting for completion...")
-   retval, stdout, timeout = run(p, 60*30)
+   retval, stdout, timeout = run(p, 30*60)
    #for line in stdout.readlines():
    write2moduleLog(stdout, module) 
 
@@ -69,15 +76,6 @@ if (len(sys.argv) == 2):
    #remove PID file when the process finished
    write2log("\nRemoving PID file: %s" % str(os.getcwd() + '/' + pidFileName))
    os.remove(pidFileName)
-   #status, output = commands.getstatusoutput('cd '+module+'; make')
-   #log.write('BEGIN '+module+'\n')
-   #if (status == 0):
-   #   msg = 'OK'
-   #else:
-   #   msg = 'FAIL ('+str(status)+')'
-   #   print msg
-   #log.write(output+'\n')
-   #log.write('END -- '+msg+'\n')
    sys.exit(0)
 else:
    sys.exit(-1)

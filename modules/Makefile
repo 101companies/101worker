@@ -13,8 +13,8 @@ clean:
 # Invoke runner and cleaner per module
 
 %.run:
-	@python ../tools/runner.py $*
+	if test -d $*; then python ../tools/runner.py $*; else echo 'No module dir found. Please check the config file'; fi
 
 %.clean:
 	echo 'Cleaning ' $*
-	@python ../tools/cleaner.py $*
+	if test -d $*; then python ../tools/cleaner.py $*; else echo 'No module dir found. Please check the config file'; fi
