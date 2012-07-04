@@ -112,8 +112,8 @@ def matchFile(phase, dirname, basename, rule):
       if pattern[0]=="#" and pattern[len(pattern)-1]=="#":
          pattern = pattern[1:len(pattern)-2]
       content = open(os.path.join(const101.sRoot, filename), 'r').read()
-      result = re.search(pattern, content)
-      if result is None:
+      searchResult = re.search(pattern, content)
+      if searchResult is None:
          return None
       else:
          global noContentConstraintsOk
@@ -326,7 +326,7 @@ def matchAll(phase, suffix):
     if phase=="fragments":
        mr["locators"] = list(locators)
     print str(noFiles) + " files affected."
-    print str(len(failures)) + " failured encountered."
+    print str(len(failures)) + " failures encountered."
     print str(noUnits) + " metadata units attached."
     print str(noContentConstraints) + " content constraints checked."
     print str(noContentConstraintsOk) + " content constraints succeeded."
