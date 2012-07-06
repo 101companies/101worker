@@ -183,6 +183,7 @@ def matchFile(phase, dirname, basename, rule):
       tmpInFile.write(tmpInContent)
       tmpInFile.close()
       (status, output) = commands.getstatusoutput(cmd)
+      print (status, output)
       if status == 0:
          try:
             pass
