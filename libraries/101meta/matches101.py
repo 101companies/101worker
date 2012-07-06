@@ -183,11 +183,9 @@ def matchFile(phase, dirname, basename, rule):
       tmpInFile.write(tmpInContent)
       tmpInFile.close()
       (status, output) = commands.getstatusoutput(cmd)
-      print (status, output)
       if status == 0:
          try:
-            pass
-#            os.remove(tmpIn)
+            os.remove(tmpIn)
          except:
             pass
          try:
@@ -202,8 +200,7 @@ def matchFile(phase, dirname, basename, rule):
             failures.append(failure)
             return None
          try:
-            pass
-#            os.remove(tmpOut)
+            os.remove(tmpOut)
          except:
             pass
       if status != 0:
