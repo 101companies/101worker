@@ -194,6 +194,7 @@ def matchFile(phase, dirname, basename, rule):
          except:
             failure = dict()
             failure["locator"] = locator
+            failure["command"] = cmd
             failure["output"] = "result of fragment location not found"
             failure["rule"] = rule
             failures.append(failure)
@@ -205,6 +206,7 @@ def matchFile(phase, dirname, basename, rule):
       if status != 0:
          failure = dict()
          failure["locator"] = locator
+         failure["command"] = cmd
          failure["status"] = status
          failure["output"] = output
          failure["rule"] = rule
