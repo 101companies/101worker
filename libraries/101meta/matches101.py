@@ -294,7 +294,8 @@ def matchAll(phase, suffix):
     global noPredicateConstraints
     global noPredicateConstraintsOk
     global noFragments
-    basics = tools101.getBasics()
+    if (phase!="basics"):
+       basics = tools101.getBasics()
     rules = json.load(open(const101.rulesDump, 'r'))["rules"]
     matches = list()
     failures = list()
