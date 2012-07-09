@@ -52,24 +52,25 @@ def handleRule(rule):
 # Prepare dump
 results = dict()
 rules = list()
+suffixes = list()
+predicates = list()
 results["rules"] = rules
+results["suffixes"] = suffixes
+results["predicates"] = predicates
+
 errors = dict()
 unreadableFiles = list()
 invalidFiles = list()
 errors["unreadableFiles"] = unreadableFiles
 errors["invalidFiles"] = invalidFiles
+
 numbers = dict()
 numberOfFiles = 0
-details = dict()
-suffixes = list()
-details["suffixes"] = suffixes
-predicates = list()
-details["predicates"] = predicates
+
 dump = dict()
-dump["results"] = rules
+dump["results"] = results
 dump["errors"] = errors
 dump["numbers"] = numbers
-dump["details"] = details
 
 # Main loop
 for root, dirs, files in os.walk(const101.sRoot):
@@ -97,6 +98,7 @@ for root, dirs, files in os.walk(const101.sRoot):
 
 # Completion of dump
 numbers["numberOfRules"] = len(rules)
+numbers["numberOfErrors"] = len(unreadableFiles) + len(invalidFiles)
 numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 

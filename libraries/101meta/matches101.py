@@ -298,7 +298,7 @@ def matchAll(phase, suffix):
     global noFragments
     if (phase!="basics"):
        basics = tools101.getBasics()
-    rules = json.load(open(const101.rulesDump, 'r'))["rules"]
+    rules = json.load(open(const101.rulesDump, 'r'))["results"]["rules"]
     matches = list()
     failures = list()
     predicates = set()
