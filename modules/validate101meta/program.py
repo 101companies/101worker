@@ -44,4 +44,4 @@ dump["validators"] = list(validators)
 dump["failures"] = failures
 validatorFile = open(const101.validatorDump, 'w')
 validatorFile.write(json.dumps(dump))
-sys.exit(dump["noProblems"])
+sys.exit(0)

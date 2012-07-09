@@ -141,3 +141,8 @@ def loopOverFiles(fun, topdown):
            dirname = root[len(const101.sRoot)+1:]
            files = [ f for f in files1 if not f in [".gitignore"] ]
            fun(dirname, dirs, files)
+
+# Report to stdout
+def dump(dump):
+   print "\nERRORS:\n\t" + json.dumps(dump["errors"])
+   print "\nNUMBERS:\n\t" + json.dumps(dump["numbers"])
