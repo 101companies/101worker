@@ -26,7 +26,7 @@ def fun(dirname, dirs, files):
                filesByPackage[package] = []
             filesByPackage[package].append(filename)
             for imp in facts["imports"]:
-               imported.add(package)
+               imported.add(imp)
                if not imp in filesByImport:
                   filesByImport[imp] = []
                filesByImport[imp].append(filename)
