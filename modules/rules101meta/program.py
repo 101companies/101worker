@@ -32,7 +32,17 @@ def countRule(rule):
    if "predicate" in rule:
       predicate = rule["predicate"]
       if not predicate in predicates:
-         predicates += [predicate]
+         predicates[predicate] = []
+      if not "args" in rule:
+         args = []
+      else:
+         args = rule["args"]
+         if not isinstance(args, list):
+            args = [args]
+      for arg in args:
+         if not arg in predicates[predicate]:
+            predicates[predicate] += [arg]
+
 
 #
 # Gather metrics.
@@ -55,7 +65,7 @@ print "Gathering 101meta rules from 101repo."
 results = dict()
 rules = list()
 suffixes = list()
-predicates = list()
+predicates = dict()
 results["rules"] = rules
 results["suffixes"] = suffixes
 results["predicates"] = predicates
