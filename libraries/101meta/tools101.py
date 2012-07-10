@@ -147,3 +147,11 @@ def dump(dump, special=None):
       print "\nnumbers:\n\t" + json.dumps(dump["numbers"])
    if "problems" in dump:
       print "\nproblems:\n\t" + json.dumps(dump["problems"])
+
+# Turn a list of length two into a singleton JSON
+def singleton(x):
+   assert len(x)==2
+   result = dict()
+   result[x[0]] = x[1]
+   return result
+   

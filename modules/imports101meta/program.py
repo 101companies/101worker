@@ -30,7 +30,7 @@ def fun(dirname, dirs, files):
                filesByImport[lang][imp].append(filename)
          except:
             global problems
-            problems += filename
+            problems.append(filename)
 
 #      if suffix in filesBySuffix:
 #         filesBySuffix[suffix] += [filename]
@@ -47,8 +47,10 @@ dump["problems"] = problems
 dump["filesByImport"] = dict()
 filesByImport = dict()
 tools101.loopOverFiles(fun, True)
-#filesByImport = filesByImport.items()
-#filesByImport = sorted(filesByImport, reverse=True, key=lambda (ext, list): len(list))
+for lang in filesByImport:
+   filesByImport[lang] = filesByImport[lang].items()
+   filesByImport[lang] = sorted(filesByImport[lang], reverse=True, key=lambda (pkg, list): len(list))
+   filesByImport[lang] = [ tools101.singleton(x) for x in filesByImport[lang] ]
 dump["filesByImport"]["all"] = filesByImport
 dump["filesByImport"]["matched"] = []
 dump["filesByImport"]["unmatched"] = []
