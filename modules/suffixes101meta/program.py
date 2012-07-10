@@ -8,12 +8,6 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
-def readOrDefault(filename, default):
-   try:
-      return json.load(open(filename, 'r'))
-   except IOError:
-      return default
-
 def fun(dirname, dirs, files):
    for basename in files:
       filename = os.path.join(dirname, basename)
