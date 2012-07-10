@@ -24,6 +24,10 @@ filesBySuffix = dict()
 tools101.loopOverFiles(fun, True)
 filesBySuffix = filesBySuffix.items()
 filesBySuffix = sorted(filesBySuffix, reverse=True, key=lambda (ext, list): len(list))
+dump["suffixes"] = dict()
+dump["suffixes"]["all"] = [ x[0] for x in filesBySuffix ]
+dump["suffixes"]["matched"] = [ x[0] for x in filesBySuffix if x[0] in suffixes ]
+dump["suffixes"]["unmatched"] = [ x[0] for x in filesBySuffix if not x[0] in suffixes ]
 dump["filesBySuffix"] = dict()
 dump["filesBySuffix"]["all"] = [ tools101.pair2json(x) for x in filesBySuffix ]
 dump["filesBySuffix"]["matched"] = [ tools101.pair2json(x) for x in filesBySuffix if x[0] in suffixes ]
