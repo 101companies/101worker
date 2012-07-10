@@ -140,8 +140,10 @@ def loopOverFiles(fun, topdown):
            fun(dirname, dirs, files)
 
 # Report to stdout
-def dump(dump):
+def dump(dump, special=None):
+   if special in dump:
+      print "\n"+special+":\n\t" + json.dumps(dump[special])
    if "numbers" in dump:
-      print "\nNUMBERS:\n\t" + json.dumps(dump["numbers"])
+      print "\nnumbers:\n\t" + json.dumps(dump["numbers"])
    if "problems" in dump:
-      print "\nPROBLEMS:\n\t" + json.dumps(dump["problems"])
+      print "\nproblems:\n\t" + json.dumps(dump["problems"])

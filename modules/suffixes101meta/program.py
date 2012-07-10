@@ -30,15 +30,19 @@ filesBySuffix = dict()
 tools101.loopOverFiles(fun, True)
 filesBySuffix = filesBySuffix.items()
 filesBySuffix = sorted(filesBySuffix, reverse=True, key=lambda (ext, list): len(list))
-dump["files"] = dict()
-dump["files"]["all"] = filesBySuffix
-dump["files"]["matched"] = [ x for x in filesBySuffix if x[0] in suffixes ]
-dump["files"]["unmatched"] = [ x for x in filesBySuffix if not x[0] in suffixes ]
-dump["numbers"] = dict()
-dump["numbers"]["all"] = len(dump["files"]["all"])
-dump["numbers"]["matched"] = len(dump["files"]["matched"])
-dump["numbers"]["unmatched"] = len(dump["files"]["unmatched"])
-tools101.dump(dump)
+dump["filesBySuffix"] = dict()
+dump["filesBySuffix"]["all"] = filesBySuffix
+dump["filesBySuffix"]["matched"] = [ x for x in filesBySuffix if x[0] in suffixes ]
+dump["filesBySuffix"]["unmatched"] = [ x for x in filesBySuffix if not x[0] in suffixes ]
+dump["numbersBySuffix"] = dict()
+dump["numbersBySuffix"]["all"] = [ (x, len(y)) for (x, y) in filesBySuffix ]
+dump["numbersBySuffix"]["matched"] = [ (x, len(y)) for (x, y) in filesBySuffix if x in suffixes ]
+dump["numbersBySuffix"]["unmatched"] = [ (x, len(y)) for (x, y) in filesBySuffix if not x in suffixes ]
+dump["numberOfSuffixes"] = dict()
+dump["numberOfSuffixes"]["all"] = len(dump["filesBySuffix"]["all"])
+dump["numberOfSuffixes"]["matched"] = len(dump["filesBySuffix"]["matched"])
+dump["numberOfSuffixes"]["unmatched"] = len(dump["filesBySuffix"]["unmatched"])
+tools101.dump(dump,"numberOfSuffixes")
 suffixesFile = open(const101.suffixesDump, 'w')
 suffixesFile.write(json.dumps(dump))
 exit(0)
