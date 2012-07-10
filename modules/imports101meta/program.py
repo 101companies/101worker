@@ -42,19 +42,20 @@ filesByPackage = dict()
 filesByImport = dict()
 problems = []
 numbers = dict()
-dump["filesByPackage"] = filesByPackage
-dump["filesByImport"] = dict()
+dump["results"] = dict()
 dump["problems"] = problems
+dump["results"]["filesByPackage"] = filesByPackage
+dump["results"]["filesByImport"] = dict()
 #dump["numbers"] = numbers
 tools101.loopOverFiles(fun, True)
 filesByImport = filesByImport.items()
 filesByImport = sorted(filesByImport, reverse=True, key=lambda (pkg, list): len(list))
 filesByImport = [ tools101.pair2json(x) for x in filesByImport ]
-dump["filesByImport"]["all"] = filesByImport
-dump["filesByImport"]["matched"] = []
-dump["filesByImport"]["unmatched"] = []
-dump["packages"] = list(packages)
-dump["imports"] = list(imports)
+dump["results"]["filesByImport"]["all"] = filesByImport
+dump["results"]["filesByImport"]["matched"] = []
+dump["results"]["filesByImport"]["unmatched"] = []
+dump["results"]["packages"] = list(packages)
+dump["results"]["imports"] = list(imports)
 
 #dump["filesBySuffix"] = dict()
 #dump["filesBySuffix"]["all"] = filesBySuffix
