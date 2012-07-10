@@ -49,6 +49,8 @@ def handleRule(rule):
    else:
       invalidFiles.append(rFilename)
 
+print "Gathering 101meta rules from 101repo."
+
 # Prepare dump
 results = dict()
 rules = list()
@@ -58,18 +60,18 @@ results["rules"] = rules
 results["suffixes"] = suffixes
 results["predicates"] = predicates
 
-errors = dict()
+problems = dict()
 unreadableFiles = list()
 invalidFiles = list()
-errors["unreadableFiles"] = unreadableFiles
-errors["invalidFiles"] = invalidFiles
+problems["unreadableFiles"] = unreadableFiles
+problems["invalidFiles"] = invalidFiles
 
 numbers = dict()
 numberOfFiles = 0
 
 dump = dict()
 dump["results"] = results
-dump["errors"] = errors
+dump["problems"] = problems
 dump["numbers"] = numbers
 
 # Main loop
@@ -98,7 +100,7 @@ for root, dirs, files in os.walk(const101.sRoot):
 
 # Completion of dump
 numbers["numberOfRules"] = len(rules)
-numbers["numberOfErrors"] = len(unreadableFiles) + len(invalidFiles)
+numbers["numberOfProblems"] = len(unreadableFiles) + len(invalidFiles)
 numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 

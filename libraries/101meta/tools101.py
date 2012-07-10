@@ -75,8 +75,8 @@ def mapMatches(
     , fun       # the function to apply to each match
     ):
 
-    noProblems = 0 # Aggregated exit code
-    noSources = 0 # Number of source files
+    numberOfProblems = 0 # Number of problems
+    numberOfSources = 0 # Number of source files
     noTargets = 0 # Number of (generated) target files
     matches = json.load(open(const101.matchesDump, 'r'))["matches"]
 
@@ -84,7 +84,7 @@ def mapMatches(
 
        value = testEntry(entry)
        if value is None: continue
-       noSources += 1
+       numberOfSources += 1
 
        # RELATIVE dirname and filename
        rFilename = entry["filename"]
@@ -104,16 +104,13 @@ def mapMatches(
        if not testFiles(sFilename, tFilename): continue
        noTargets += 1
        status = fun(value, rFilename, sFilename, tFilename)
-       if status != 0: noProblems += 1 
+       if status != 0: numberOfProblems += 1 
 
     sys.stdout.write('\n')
-    print "Considered " + str(noSources) + " source files."
-    print "Written " + str(noTargets) + " target files."
-    print "Encountered " + str(noProblems) + " problems."
     dump = dict()
-    dump["noSources"] = noSources
-    dump["noTargets"] = noTargets
-    dump["noProblems"] = noProblems
+    dump["numbers"] = dict()
+    dump["numbers"]["numberOfSources"] = numberOfSources
+    dump["numbers"]["numberOfProblems"] = numberOfProblems
     return dump
 
 
@@ -144,5 +141,7 @@ def loopOverFiles(fun, topdown):
 
 # Report to stdout
 def dump(dump):
-   print "\nERRORS:\n\t" + json.dumps(dump["errors"])
-   print "\nNUMBERS:\n\t" + json.dumps(dump["numbers"])
+   if "numbers" in dump:
+      print "\nNUMBERS:\n\t" + json.dumps(dump["numbers"])
+   if "problems" in dump:
+      print "\nPROBLEMS:\n\t" + json.dumps(dump["problems"])

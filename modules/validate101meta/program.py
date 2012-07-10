@@ -29,19 +29,29 @@ def fun(validator, rFilename, sFilename, tFilename):
 
    # Record failure entries
    if status != 0:
-      failures.append(result)
+      problems.append(rFilename)
+   else:
+      successes.append(rFilename)
 
    return status
 
+try:
+   oldDump = json.load(open(const101.validatorDump, 'r'))
+except:
+   oldDump = dict()
+   oldDump["validators"] = list() 
+   oldDump["problems"] = list()
 
 validators = set()
-failures = list()
+successes = list()
+problems = list()
 print "Validating 101repo."
 dump = tools101.mapMatchesWithKey("validator", ".validator.json", fun)
-print "Applied " + str(len(validators)) + " validator(s)."
-print str(len(failures)) + " files failed to validate."
-dump["validators"] = list(validators)
-dump["failures"] = failures
+dump["validators"] = list(validators.union(oldDump["validators"]))
+dump["problems"] = list(set(problems).union(set(oldDump["problems"])).difference(successes))
+dump["numbers"]["numberOfValidators"] = len(dump["validators"])
+dump["numbers"]["numberOfProblems"] = len(dump["problems"])
 validatorFile = open(const101.validatorDump, 'w')
 validatorFile.write(json.dumps(dump))
+tools101.dump(dump)
 sys.exit(0)
