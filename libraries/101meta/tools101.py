@@ -6,15 +6,15 @@ import const101
 
 
 # Look up all metadata values, if any, for a certain metadata key
-def valuesByKey(entry, key):
+def valuesByKey(units, key):
    return [ x[key]
-                 for x in map(lambda u: u["metadata"], entry["units"])
+                 for x in map(lambda u: u["metadata"], units)
                  if key in x ]
 
 
 # Unambigious variation on valuesByKey
-def valueByKey(entry, key):
-   values = valuesByKey(entry, key)
+def valueByKey(units, key):
+   values = valuesByKey(units, key)
    if len(values) != 1: return None
    return values[0]
 
@@ -122,7 +122,7 @@ def mapMatchesWithKey(
     ):
 
    def testEntry(entry):
-      return valueByKey(entry, key)
+      return valueByKey(entry["units"], key)
 
    def testFiles(sFilename, tFilename):
       return build(sFilename, tFilename)
@@ -148,10 +148,16 @@ def dump(dump, special=None):
    if "problems" in dump:
       print "\nproblems:\n\t" + json.dumps(dump["problems"])
 
-# Turn a list of length two into a singleton JSON
-def singleton(x):
+# Turn a list of shape [x,y] into a JSON object of shape { x : y }
+def pair2json(x):
    assert len(x)==2
    result = dict()
    result[x[0]] = x[1]
    return result
-   
+
+# Turn a JSON object of shape { x : y } into one of shape { x : len(y) }
+def list2len(x):
+   assert len(keys(x))==1
+   result = dict()
+   result[x[0]] = x[1]
+   return result

@@ -8,49 +8,40 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
-mapping = dict()
-mapping['.java'] = ('Java', 'technologies/Java_platform/javaImport.sh')
-mapping['.cs'] = ('CSharp', 'technologies/.NET_platform/dotNETImport.sh')
-
 def fun(dirname, dirs, files):
    for basename in files:
       filename = os.path.join(dirname, basename)
-      _, suffix = os.path.splitext(basename)
-      if suffix in mapping:
-         (lang, pred) = mapping[suffix]
-         if not lang in filesByImport:
-            filesByImport[lang] = dict()
+      matchesFilename = os.path.join(const101.tRoot, filename + '.matches.json')
+      try:
+         matches = json.load(open(matchesFilename, 'r'))
+      except IOError:
+         matches = []
+      if tools101.valuesByKey(matches, "extractor"):
          factFilename = os.path.join(const101.tRoot, filename + '.extractor.json')
-         print factFilename
          try:
             facts = json.load(open(factFilename, 'r'))
             for imp in facts["imports"]:
-               if not imp in filesByImport[lang]:
-                  filesByImport[lang][imp] = []
-               filesByImport[lang][imp].append(filename)
-         except:
-            global problems
+               if not imp in filesByImport:
+                  filesByImport[imp] = []
+               filesByImport[imp].append(filename)
+         except IOError:
             problems.append(filename)
-
-#      if suffix in filesBySuffix:
-#         filesBySuffix[suffix] += [filename]
-#      else:
-#         filesBySuffix[suffix] = [filename]
 
 print "Analyzing imports for 101repo."
 predicates = json.load(open(const101.rulesDump, 'r'))["results"]["predicates"]
 dump = dict()
+filesByPackage = dict()
+filesByImport = dict()
 problems = []
 numbers = dict()
+dump["filesByPackage"] = filesByPackage
+dump["filesByImport"] = dict()
 dump["problems"] = problems
 #dump["numbers"] = numbers
-dump["filesByImport"] = dict()
-filesByImport = dict()
 tools101.loopOverFiles(fun, True)
-for lang in filesByImport:
-   filesByImport[lang] = filesByImport[lang].items()
-   filesByImport[lang] = sorted(filesByImport[lang], reverse=True, key=lambda (pkg, list): len(list))
-   filesByImport[lang] = [ tools101.singleton(x) for x in filesByImport[lang] ]
+filesByImport = filesByImport.items()
+filesByImport = sorted(filesByImport, reverse=True, key=lambda (pkg, list): len(list))
+filesByImport = [ tools101.pair2json(x) for x in filesByImport ]
 dump["filesByImport"]["all"] = filesByImport
 dump["filesByImport"]["matched"] = []
 dump["filesByImport"]["unmatched"] = []

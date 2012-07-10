@@ -25,13 +25,13 @@ tools101.loopOverFiles(fun, True)
 filesBySuffix = filesBySuffix.items()
 filesBySuffix = sorted(filesBySuffix, reverse=True, key=lambda (ext, list): len(list))
 dump["filesBySuffix"] = dict()
-dump["filesBySuffix"]["all"] = filesBySuffix
-dump["filesBySuffix"]["matched"] = [ x for x in filesBySuffix if x[0] in suffixes ]
-dump["filesBySuffix"]["unmatched"] = [ x for x in filesBySuffix if not x[0] in suffixes ]
+dump["filesBySuffix"]["all"] = [ tools101.pair2json(x) for x in filesBySuffix ]
+dump["filesBySuffix"]["matched"] = [ tools101.pair2json(x) for x in filesBySuffix if x[0] in suffixes ]
+dump["filesBySuffix"]["unmatched"] = [ tools101.pair2json(x) for x in filesBySuffix if not x[0] in suffixes ]
 dump["numbersBySuffix"] = dict()
-dump["numbersBySuffix"]["all"] = [ (x, len(y)) for (x, y) in filesBySuffix ]
-dump["numbersBySuffix"]["matched"] = [ (x, len(y)) for (x, y) in filesBySuffix if x in suffixes ]
-dump["numbersBySuffix"]["unmatched"] = [ (x, len(y)) for (x, y) in filesBySuffix if not x in suffixes ]
+dump["numbersBySuffix"]["all"] = [ tools101.pair2json((x, len(y))) for (x, y) in filesBySuffix ]
+dump["numbersBySuffix"]["matched"] = [ tools101.pair2json((x, len(y))) for (x, y) in filesBySuffix if x in suffixes ]
+dump["numbersBySuffix"]["unmatched"] = [ tools101.pair2json((x, len(y))) for (x, y) in filesBySuffix if not x in suffixes ]
 dump["numbersOfSuffixes"] = dict()
 dump["numbersOfSuffixes"]["all"] = len(dump["filesBySuffix"]["all"])
 dump["numbersOfSuffixes"]["matched"] = len(dump["filesBySuffix"]["matched"])
