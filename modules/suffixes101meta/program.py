@@ -38,10 +38,10 @@ dump["numbersBySuffix"] = dict()
 dump["numbersBySuffix"]["all"] = [ (x, len(y)) for (x, y) in filesBySuffix ]
 dump["numbersBySuffix"]["matched"] = [ (x, len(y)) for (x, y) in filesBySuffix if x in suffixes ]
 dump["numbersBySuffix"]["unmatched"] = [ (x, len(y)) for (x, y) in filesBySuffix if not x in suffixes ]
-dump["numberOfSuffixes"] = dict()
-dump["numberOfSuffixes"]["all"] = len(dump["filesBySuffix"]["all"])
-dump["numberOfSuffixes"]["matched"] = len(dump["filesBySuffix"]["matched"])
-dump["numberOfSuffixes"]["unmatched"] = len(dump["filesBySuffix"]["unmatched"])
+dump["numbersOfSuffixes"] = dict()
+dump["numbersOfSuffixes"]["all"] = len(dump["filesBySuffix"]["all"])
+dump["numbersOfSuffixes"]["matched"] = len(dump["filesBySuffix"]["matched"])
+dump["numbersOfSuffixes"]["unmatched"] = len(dump["filesBySuffix"]["unmatched"])
 tools101.dump(dump,"numberOfSuffixes")
 suffixesFile = open(const101.suffixesDump, 'w')
 suffixesFile.write(json.dumps(dump))
