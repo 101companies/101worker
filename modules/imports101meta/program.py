@@ -27,7 +27,7 @@ def fun(dirname, dirs, files):
             for imp in facts["imports"]:
                if not imp in filesByImport[lang]:
                   filesByImport[lang][imp] = []
-               filesByImport[lang][imp] += [filename]
+               filesByImport[lang][imp].append(filename)
          except:
             global problems
             problems += filename
