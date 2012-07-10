@@ -18,4 +18,4 @@ print "Extracting facts from 101repo."
 dump = tools101.mapMatchesWithKey("extractor", ".extractor.json", fun)
 extractorFile = open(const101.extractorDump, 'w')
 extractorFile.write(json.dumps(dump))
-sys.exit(dump["noProblems"])
+sys.exit(0)

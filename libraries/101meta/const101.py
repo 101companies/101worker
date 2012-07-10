@@ -13,6 +13,7 @@ extractorDump = os.path.join(dumps, "extractor.json")
 metricsDump = os.path.join(dumps, "metrics.json")
 summaryDump = os.path.join(dumps, "summary.json")
 suffixesDump = os.path.join(dumps, "suffixes.json")
+importsDump = os.path.join(dumps, "imports.json")
 
 def noMetrics():
     result = dict()
