@@ -20,7 +20,13 @@ def fun(dirname, dirs, files):
          factFilename = os.path.join(const101.tRoot, filename + '.extractor.json')
          try:
             facts = json.load(open(factFilename, 'r'))
+            package = facts["package"]
+            packages.add(package)
+            if not package in filesByPackage:
+               filesByPackage[package] = []
+            filesByPackage[package].append(filename)
             for imp in facts["imports"]:
+               imports.add(imp)
                if not imp in filesByImport:
                   filesByImport[imp] = []
                filesByImport[imp].append(filename)
@@ -28,6 +34,8 @@ def fun(dirname, dirs, files):
             problems.append(filename)
 
 print "Analyzing imports for 101repo."
+packages = set()
+imports = set()
 predicates = json.load(open(const101.rulesDump, 'r'))["results"]["predicates"]
 dump = dict()
 filesByPackage = dict()
@@ -45,6 +53,8 @@ filesByImport = [ tools101.pair2json(x) for x in filesByImport ]
 dump["filesByImport"]["all"] = filesByImport
 dump["filesByImport"]["matched"] = []
 dump["filesByImport"]["unmatched"] = []
+dump["packages"] = list(packages)
+dump["imports"] = list(imports)
 
 #dump["filesBySuffix"] = dict()
 #dump["filesBySuffix"]["all"] = filesBySuffix
