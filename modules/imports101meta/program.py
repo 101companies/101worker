@@ -58,6 +58,13 @@ tools101.loopOverFiles(fun, True)
 
 unmatched = imported.difference(defined).difference(matched)
 
+dump["results"]["packages"] = dict()
+dump["results"]["packages"]["all"] = sorted(list(defined.union(imported)))
+dump["results"]["packages"]["defined"] = sorted(list(defined))
+dump["results"]["packages"]["used"] = sorted(list(imported))
+dump["results"]["packages"]["matched"] = sorted(list(matched))
+dump["results"]["packages"]["unmatched"] = sorted(list(unmatched))
+
 filesByDef = filesByDef.items()
 filesByDef = sorted(filesByDef, reverse=True, key=lambda (pkg, list): len(list))
 dump["results"]["filesByDef"]["all"] = [ tools101.pair2json(x) for x in filesByDef ]
@@ -69,13 +76,6 @@ filesByUse = sorted(filesByUse, reverse=True, key=lambda (pkg, list): len(list))
 dump["results"]["filesByUse"]["all"] = [ tools101.pair2json(x) for x in filesByUse ]
 dump["results"]["filesByUse"]["matched"] = [ tools101.pair2json(x) for x in filesByUse if x[0] in matched ]
 dump["results"]["filesByUse"]["unmatched"] = [ tools101.pair2json(x) for x in filesByUse if x[0] in unmatched ]
-
-dump["results"]["packages"] = dict()
-dump["results"]["packages"]["all"] = sorted(list(defined.union(imported)))
-dump["results"]["packages"]["defined"] = sorted(list(defined))
-dump["results"]["packages"]["used"] = sorted(list(imported))
-dump["results"]["packages"]["matched"] = sorted(list(matched))
-dump["results"]["packages"]["unmatched"] = sorted(list(unmatched))
 
 importsFile = open(const101.importsDump, 'w')
 importsFile.write(json.dumps(dump))
