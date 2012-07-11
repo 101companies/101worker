@@ -78,7 +78,7 @@ dump["results"]["filesByUse"]["allFiles"] = [ tools101.pair2json(x) for x in fil
 dump["results"]["filesByUse"]["matchedFiles"] = [ tools101.pair2json(x) for x in filesByUse if x[0] in matched ]
 dump["results"]["filesByUse"]["unmatchedFiles"] = [ tools101.pair2json(x) for x in filesByUse if x[0] in unmatched ]
 
-dump["numbers"]["numberOfPackages"] = len(both)
+dump["numbers"]["numberOfAllPackages"] = len(both)
 dump["numbers"]["numberOfDefinedPackages"] = len(defined)
 dump["numbers"]["numberOfUsedPackages"] = len(used)
 dump["numbers"]["numberOfMatchedPackages"] = len(matched)
