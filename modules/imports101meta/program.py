@@ -22,14 +22,14 @@ def fun(dirname, dirs, files):
             facts = json.load(open(factFilename, 'r'))
             package = facts["package"]
             defined.add(package)
-            if not package in filesByPackage:
-               filesByPackage[package] = []
-            filesByPackage[package].append(filename)
+            if not package in filesByDef:
+               filesByDef[package] = []
+            filesByDef[package].append(filename)
             for imp in facts["imports"]:
                imported.add(imp)
-               if not imp in filesByImport:
-                  filesByImport[imp] = []
-               filesByImport[imp].append(filename)
+               if not imp in filesByUse:
+                  filesByUse[imp] = []
+               filesByUse[imp].append(filename)
          except IOError:
             problems.append(filename)
 
@@ -37,7 +37,6 @@ print "Analyzing imports for 101repo."
 defined = set()
 imported = set()
 matched = set()
-unmatched = set()
 predicates = json.load(open(const101.rulesDump, 'r'))["results"]["predicates"]
 matched = set()
 for p in predicates:
@@ -45,37 +44,38 @@ for p in predicates:
       for x in predicates[p]:
          matched.add(x)
 dump = dict()
-filesByPackage = dict()
-filesByImport = dict()
+filesByDef = dict()
+filesByUse = dict()
 problems = []
 numbers = dict()
 dump["results"] = dict()
 dump["problems"] = problems
-dump["results"]["filesByPackage"] = filesByPackage
-dump["results"]["filesByImport"] = dict()
+dump["results"]["filesByDef"] = filesByDef
+dump["results"]["filesByUse"] = dict()
 #dump["numbers"] = numbers
 
 tools101.loopOverFiles(fun, True)
 
-filesByPackage = filesByPackage.items()
-filesByPackage = sorted(filesByPackage, reverse=True, key=lambda (pkg, list): len(list))
-filesByPackage = [ tools101.pair2json(x) for x in filesByPackage ]
-dump["results"]["filesByPackage"]["all"] = filesByPackage
-dump["results"]["filesByPackage"]["matched"] = []
-dump["results"]["filesByPackage"]["unmatched"] = []
+unmatched = imported.difference(defined).difference(matched)
 
-filesByImport = filesByImport.items()
-filesByImport = sorted(filesByImport, reverse=True, key=lambda (pkg, list): len(list))
-dump["results"]["filesByImport"]["all"] = [ tools101.pair2json(x) for x in filesByImport ]
-dump["results"]["filesByImport"]["matched"] = []
-dump["results"]["filesByImport"]["unmatched"] = []
+filesByDef = filesByDef.items()
+filesByDef = sorted(filesByDef, reverse=True, key=lambda (pkg, list): len(list))
+dump["results"]["filesByDef"]["all"] = [ tools101.pair2json(x) for x in filesByDef ]
+dump["results"]["filesByDef"]["matched"] = [ tools101.pair2json(x) for x in filesByDef if x[0] in matched ]
+dump["results"]["filesByDef"]["unmatched"] = [ tools101.pair2json(x) for x in filesByDef if x[0] in unmatched ]
+
+filesByUse = filesByUse.items()
+filesByUse = sorted(filesByUse, reverse=True, key=lambda (pkg, list): len(list))
+dump["results"]["filesByUse"]["all"] = [ tools101.pair2json(x) for x in filesByUse ]
+dump["results"]["filesByUse"]["matched"] = [ tools101.pair2json(x) for x in filesByUse if x[0] in matched ]
+dump["results"]["filesByUse"]["unmatched"] = [ tools101.pair2json(x) for x in filesByUse if x[0] in unmatched ]
 
 dump["results"]["packages"] = dict()
 dump["results"]["packages"]["all"] = sorted(list(defined.union(imported)))
 dump["results"]["packages"]["defined"] = sorted(list(defined))
-dump["results"]["packages"]["imported"] = sorted(list(imported))
+dump["results"]["packages"]["used"] = sorted(list(imported))
 dump["results"]["packages"]["matched"] = sorted(list(matched))
-dump["results"]["packages"]["unmatched"] = sorted(list(imported.difference(defined).difference(matched)))
+dump["results"]["packages"]["unmatched"] = sorted(list(unmatched))
 
 importsFile = open(const101.importsDump, 'w')
 importsFile.write(json.dumps(dump))
