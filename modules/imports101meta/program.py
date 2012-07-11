@@ -50,7 +50,7 @@ problems = []
 numbers = dict()
 dump["results"] = dict()
 dump["problems"] = problems
-dump["results"]["filesByDef"] = filesByDef
+dump["results"]["filesByDef"] = dict()
 dump["results"]["filesByUse"] = dict()
 #dump["numbers"] = numbers
 
