@@ -54,6 +54,9 @@ def main(config, is_verbose):
    modules = config_file.readlines()
    for module in modules:
       module = module.strip()
+      if module == '':
+         continue
+         
       write2log('\nPerforming module %s.' % module)
       write2log('\nStarted at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
 
