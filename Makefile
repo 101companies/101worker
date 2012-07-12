@@ -19,36 +19,29 @@ test:
 
 # Run a specific module in sandbox mode
 
-%.run: modules/%/Makefile
-	cd modules/$*; make
+%.run:
+	make $*.clean
+	cd modules; make $*.run
 
-# Reconfiguration for a module lists
-
-%.reconfigure: configs/%.config
-	@cd configs; \
-	rm -f current.config; \
-	cp $*.config current.config; \
-	chmod ugo-w current.config
+%.debug:
+	cd modules; make $*.debug
 
 # Comprehensive reset; essentially all derived files are brutally removed.
-
-reset:
-	@make clean
+%.reset:
+	@make $*.clean
 	@rm -rf ../101web
 	@rm -rf ../101logs
 	@rm -rf ../101temps
 	@rm -rf ../101results
 
-
 # Comprehensive clean target; remove temporary files
 
-clean:
-	@cd modules; make clean -s
+%.clean:
+	python tools/cleaner.py $*.config
 
 # Internal target: things to be done before a run
 
 before-run:
-	@make configs/current.config -s
 	@make mkWeb -s
 	@make ../101logs -s
 	@make ../101temps -s
@@ -65,11 +58,6 @@ after-run:
 push:
 	git commit -a
 	git push
-
-# Internal target: use production configuration by default.
-
-configs/current.config:
-	make production.reconfigure -s
 
 # Internal target: make sure 101web directories exists.
 

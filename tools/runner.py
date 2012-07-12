@@ -8,15 +8,23 @@ from time import gmtime, strftime
 
 log = open('../../101logs/runner.log', 'a')
 
+VERBOSE = False
+
 def write2log(msg):
    global log
-   #print msg
-   log.write(msg)
+   global VERBOSE
+   if VERBOSE == True:
+      print msg
+   else:
+      log.write(msg)
 
 def write2moduleLog(msg, module):
-   log = open(module+'/module.log', 'a')
-   log.write(msg)
-   #print msg
+   global VERBOSE
+   if VERBOSE == True:
+      print msg
+   else:
+      log = open(module+'/module.log', 'a')
+      log.write(msg)
 
 def kill_proc(proc, timeout):
    timeout["value"] = True
@@ -38,44 +46,57 @@ def run(proc, timeout_sec):
    timer.cancel()
    return proc.returncode, stdout, timeout["value"]   
 
-if (len(sys.argv) == 2):
-   module = sys.argv[1]
-   write2log('\nPerforming module %s.' % module)
-   write2log('\nStarted at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+def main(config, is_verbose):
+   global VERBOSE
+   VERBOSE = is_verbose
 
-   p = subprocess.Popen('cd '+module+'; make', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-   write2log('\nModule PID: %s' % p.pid)
+   config_file = open(config, "r")
+   modules = config_file.readlines()
+   for module in modules:
+      module = module.strip()
+      write2log('\nPerforming module %s.' % module)
+      write2log('\nStarted at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
 
-   #creating a PID file is the module subdir indicating the the module is running.
-   pidFileName = module + "/pid"; 
+      p = subprocess.Popen('cd '+module+'; make', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+      write2log('\nModule PID: %s' % p.pid)
 
-   #if file exists -- the process is already running, report to the log and skip it
-   if os.path.isfile(os.getcwd() + '/' + pidFileName):
-      write2log('\nModule %s is already running; processId: %s' %(module,str(p.pid)))
-      sys.exit(0)
+      #creating a PID file is the module subdir indicating the the module is running.
+      pidFileName = module + "/pid"; 
 
-   pid_file = open(os.getcwd() + '/' + pidFileName, "w")
-   write2log("\nCreating PID file: %s" % str(os.getcwd() + '/' + pidFileName))
-   pid_file.write(str(p.pid))
-   pid_file.close()
+      #if file exists -- the process is already running, report to the log and skip it
+      if os.path.isfile(os.getcwd() + '/' + pidFileName):
+         write2log('\nModule %s is already running; processId: %s' %(module,str(p.pid)))
 
-   write2log("\nWaiting for completion...")
-   retval, stdout, timeout = run(p, 30*60)
-   #for line in stdout.readlines():
-   write2moduleLog(stdout, module) 
+      pid_file = open(os.getcwd() + '/' + pidFileName, "w")
+      #write2log("\nCreating PID file: %s" % str(os.getcwd() + '/' + pidFileName))
+      pid_file.write(str(p.pid))
+      pid_file.close()
 
-   write2log('\nFinished at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-   #write2log("Retval %s" % retval)
+      write2log("\nWaiting for completion...")
+      retval, stdout, timeout = run(p, 30*60)
+      #for line in stdout.readlines():
+      write2moduleLog(stdout, module) 
 
-   if (retval == 0):
-      msg = '\nOK'
-   else:
-      msg = '\nFAIL ('+str(retval)+')'
+      write2log('\nFinished at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+      if (retval == 0):
+         msg = '\nOK'
+      else:
+         msg = '\nFAIL ('+str(retval)+')'
+      
+      write2log(msg)
+      #remove PID file when the process finished
+      #write2log("\nRemoving PID file: %s" % str(os.getcwd() + '/' + pidFileName))
+      os.remove(pidFileName)
    
-   write2log(msg)
-   #remove PID file when the process finished
-   write2log("\nRemoving PID file: %s" % str(os.getcwd() + '/' + pidFileName))
-   os.remove(pidFileName)
    sys.exit(0)
-else:
-   sys.exit(-1)
+
+if __name__ == "__main__":
+   if (len(sys.argv) > 1):
+      #check if the config file exists
+      if os.path.isfile('../configs/%s' % sys.argv[1]) == False:
+         write2log('Config file does not exist: %s' % sys.argv[1])
+         sys.exit(-1)
+      else:
+         if(len(sys.argv) == 3):
+            if(sys.argv[2] == 'verbose'): main('../configs/%s' % sys.argv[1], True) 
+         else: main('../configs/%s' % sys.argv[1], False) 

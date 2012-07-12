@@ -1,20 +1,7 @@
-include ../configs/current.config
-
-# Main target; run all modules
-
-run:
-	@make $(patsubst %, %.run, ${modules}) -s
-
-# Comprehensive clean target
-
-clean:
-	@make $(patsubst %, %.clean, ${modules}) -s
-
 # Invoke runner and cleaner per module
 
 %.run:
-	if test -d $*; then python ../tools/runner.py $*; else echo 'No module dir found. Please check the config file'; fi
+	python ../tools/runner.py $*.config; 
 
-%.clean:
-	echo 'Cleaning ' $*
-	if test -d $*; then python ../tools/cleaner.py $*; else echo 'No module dir found. Please check the config file'; fi
+%.debug:
+	python ../tools/runner.py $*.config verbose; 
