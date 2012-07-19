@@ -14,6 +14,7 @@ prepare:
 	@mkdir ${webdir}/101explorer/js/themes/
 	@mkdir ${webdir}/101explorer/js/themes/default/
 	@mkdir ${webdir}/101explorer/imgs
+	@mkdir ${webdir}/101explorer/images
 
 
 deploy:
@@ -24,3 +25,4 @@ deploy:
 	@cp ${pulled101DevDir}/sandbox/m12/js/themes/default/d.png ${webdir}/101explorer/js/themes/default/d.png
 	@cp ${pulled101DevDir}/sandbox/m12/css/*.css ${webdir}/101explorer/css/
 	@cp ${pulled101DevDir}/sandbox/m12/imgs/*.* ${webdir}/101explorer/imgs/
+	@cp ${pulled101DevDir}/sandbox/m12/images/*.* ${webdir}/101explorer/images/
