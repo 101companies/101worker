@@ -26,14 +26,14 @@ technologies = dict()
 
 for entry in rules:
    for unit in entry["rule"]["metadata"]:
-      resolveEntity(unit, "concept", concepts, lambda x : const101.url101 + x)
-      resolveEntity(unit, "language", languages, lambda x : const101.url101 + "Language:" + x)
-      resolveEntity(unit, "dependsOn", technologies, lambda x : const101.url101 + "Technology:" + x)
-      resolveEntity(unit, "inputOf", technologies, lambda x : const101.url101 + "Technology:" + x)
-      resolveEntity(unit, "outputOf", technologies, lambda x : const101.url101 + "Technology:" + x)
-      resolveEntity(unit, "partOf", technologies, lambda x : const101.url101 + "Technology:" + x)
-      resolveEntity(unit, "term", terms, lambda x : const101.url101 + "101term:" + x)
-      resolveEntity(unit, "feature", features, lambda x : const101.url101 + "101feature:" + x)
+      resolveEntity(unit, "concept", concepts, lambda x : const101.url101 + space2underscore(x))
+      resolveEntity(unit, "language", languages, lambda x : const101.url101 + "Language:" + space2underscore(x))
+      resolveEntity(unit, "dependsOn", technologies, lambda x : const101.url101 + "Technology:" + space2underscore(x))
+      resolveEntity(unit, "inputOf", technologies, lambda x : const101.url101 + "Technology:" + space2underscore(x))
+      resolveEntity(unit, "outputOf", technologies, lambda x : const101.url101 + "Technology:" + space2underscore(x))
+      resolveEntity(unit, "partOf", technologies, lambda x : const101.url101 + "Technology:" + space2underscore(x))
+      resolveEntity(unit, "term", terms, lambda x : const101.url101 + "101term:" + space2underscore(x))
+      resolveEntity(unit, "feature", features, lambda x : const101.url101 + "101feature:" + space2underscore(x))
 
 dump = dict()
 dump["results"] = dict()
