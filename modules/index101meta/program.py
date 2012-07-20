@@ -14,18 +14,21 @@ def addMetrics(lvalue, rvalue):
     lvalue["metrics"]["loc"] += rvalue["metrics"]["loc"]
     lvalue["metrics"]["ncloc"] += rvalue["metrics"]["ncloc"]
 
-def initializeKey(d,key):
+def initializeKey(r, map, key):
+    d = r[map]
     if not key in d:
         d[key] = dict()
         d[key]["files"] = dict()
         d[key]["metrics"] = const101.noMetrics()
+        if map in resolution:
+            d[key]["url"] = resolution[map][key]
 
 def addFile(result, rkey, mkey, val2key, basename, summary):           
     for unit in summary["units"]:
         if mkey in unit["metadata"]:
             val = unit["metadata"][mkey]
             key = val2key(val)
-            initializeKey(result[rkey],key)
+            initializeKey(result, rkey, key)
             if not basename in result[rkey][key]["files"]:
                 result[rkey][key]["files"][basename] = list()
             result[rkey][key]["files"][basename].append(unit)
@@ -33,7 +36,7 @@ def addFile(result, rkey, mkey, val2key, basename, summary):
 
 def addDir(r, d, subdirname, index):
     for key in index[d]:
-        initializeKey(r[d],key)
+        initializeKey(r, d, key)
         for filename in index[d][key]["files"]:
            r[d][key]["files"][os.path.join(subdirname, filename)] = []              
         addMetrics(r[d][key],index[d][key])
@@ -100,6 +103,7 @@ def fun(dirname, dirs, files):
     resultFile.write(json.dumps(result))
     resultFile.close()
 
+resolution = json.load(open(const101.resolutionDump, 'r'))["results"]
 tools101.loopOverFiles(fun, False)
 print ""
 exit(0)
