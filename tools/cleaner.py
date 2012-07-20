@@ -13,6 +13,9 @@ modules = config_file.readlines()
 
 for module in modules:
 	module = module.strip()	
+	if module.__len__() < 2:
+		continue
+
 	commands.getstatusoutput('cd '+module+'; make clean')
 	if os.path.isfile(module+'/pid'): 
 		os.remove(module+'/pid')

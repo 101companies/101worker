@@ -24,6 +24,7 @@ test:
 	cd modules; make $*.run
 
 %.debug:
+	make $*.clean
 	cd modules; make $*.debug
 
 # Comprehensive reset; essentially all derived files are brutally removed.
