@@ -267,9 +267,9 @@ def handleFile(phase, dirname, basename, suffix):
    matchesFile.write(json.dumps(units))
    if len(units) > 0:
       global noUnits
-      global noFiles
+      global noFilesAffected
       noUnits += len(units)
-      noFiles += 1
+      noFilesAffected += 1
       entry = dict()
       entry["filename"] = filename
       entry["units"] = units
@@ -288,6 +288,7 @@ def matchAll(phase, suffix):
     global predicates
     global locators
     global noFiles
+    global noFilesAffected
     global noUnits
     global noPatternConstraints
     global noPatternConstraintsOk
@@ -305,6 +306,7 @@ def matchAll(phase, suffix):
     locators = set()
     noFiles = 0
     noUnits = 0
+    noFilesAffected = 0
     noPatternConstraints = 0
     noPatternConstraintsOk = 0 
     noContentConstraints = 0
@@ -316,6 +318,7 @@ def matchAll(phase, suffix):
     for root, dirs, files in os.walk(os.path.join(const101.sRoot, "contributions")):
         if not root.startswith(os.path.join(const101.sRoot, ".git")+os.sep):
             for basename in files:
+                noFiles += 1
                 if not basename in [".gitignore"]:
                     dirname = root[len(const101.sRoot)+1:]
                     handleFile(phase, dirname, basename, suffix)
@@ -328,7 +331,8 @@ def matchAll(phase, suffix):
        mr["predicates"] = list(predicates)
     if phase=="fragments":
        mr["locators"] = list(locators)
-    print str(noFiles) + " files affected."
+    print str(noFiles) + " files examined."
+    print str(noFilesAffected) + " files affected."
     print str(len(failures)) + " failures encountered."
     print str(noUnits) + " metadata units attached."
     print str(noContentConstraints) + " content constraints checked."

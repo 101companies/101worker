@@ -1,5 +1,6 @@
 import os
 
+url101 = "http://101companies.org/index.php/"
 sRoot = "../../../101results/101repo" # the root for source files
 tRoot = "../../../101web" # the root for target files
 dumps = os.path.join(tRoot, "dumps")
@@ -14,6 +15,7 @@ metricsDump = os.path.join(dumps, "metrics.json")
 summaryDump = os.path.join(dumps, "summary.json")
 suffixesDump = os.path.join(dumps, "suffixes.json")
 importsDump = os.path.join(dumps, "imports.json")
+resolutionDump = os.path.join(dumps, "resolution.json")
 
 def noMetrics():
     result = dict()

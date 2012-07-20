@@ -19,6 +19,11 @@ def validRule(rule):
       (not "predicate" in rule \
        or not "fragment" in rule)
 
+# Normalize rule
+def normalizeRule(rule):
+   if not isinstance(rule["metadata"], list):
+      rule["metadata"] = [ rule["metadata"] ]
+
 # Gather metrics
 def countRule(rule):
    
@@ -52,6 +57,7 @@ def countRule(rule):
 def handleRule(rule):
    countRule(rule)
    if validRule(rule):
+      normalizeRule(rule)
       entry = dict()
       entry['filename'] = rFilename
       entry['rule'] = rule
