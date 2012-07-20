@@ -13,6 +13,9 @@ def resolveEntity(unit, key, map, resolve):
       if not val in map:
          map[val] = resolve(val)
 
+def space2underscore(str):
+   return str.replace(" ", "_")
+
 print "Resolving entities of 101meta rules."
 rules = json.load(open(const101.rulesDump, 'r'))["results"]["rules"]
 terms = dict()

@@ -22,9 +22,10 @@ def initializeKey(r, map, key):
         d[key]["metrics"] = const101.noMetrics()
         d[key]["resources"] = []
         if map in resolution:
-            resource = dict()
-            resource["website"] = resolution[map][key]
-            d[key]["resources"] += [resource]
+            if key in resolution[map]:
+                resource = dict()
+                resource["website"] = resolution[map][key]
+                d[key]["resources"] += [resource]
 
 def addFile(result, rkey, mkey, val2key, basename, summary):           
     for unit in summary["units"]:
@@ -63,41 +64,48 @@ def fun(dirname, dirs, files):
     # Aggregation of file summaries
     #
     for basename in files:
-        summaryFile = open(os.path.join(const101.tRoot, dirname, basename + ".summary.json"), 'r')
-        summary = json.load(summaryFile)
-        summaryFile.close()
+        try:
+            
+            summaryFile = open(os.path.join(const101.tRoot, dirname, basename + ".summary.json"), 'r')
+            summary = json.load(summaryFile)
+            summaryFile.close()
 
-        # Deal with languages for file
-        addFile(result, "languages", "language", lambda x: x, basename, summary)
+            # Deal with languages for file
+            addFile(result, "languages", "language", lambda x: x, basename, summary)
 
-        # Deal with technologies for file
-        addFile(result, "technologies", "partOf", lambda x: x, basename, summary)
-        addFile(result, "technologies", "inputOf", lambda x: x, basename, summary)
-        addFile(result, "technologies", "outputOf", lambda x: x, basename, summary)
-        addFile(result, "technologies", "dependsOn", lambda x: x, basename, summary)
+            # Deal with technologies for file
+            addFile(result, "technologies", "partOf", lambda x: x, basename, summary)
+            addFile(result, "technologies", "inputOf", lambda x: x, basename, summary)
+            addFile(result, "technologies", "outputOf", lambda x: x, basename, summary)
+            addFile(result, "technologies", "dependsOn", lambda x: x, basename, summary)
 
-        # Deal with features for file
-        addFile(result, "features", "feature", lambda x: x, basename, summary)
+            # Deal with features for file
+            addFile(result, "features", "feature", lambda x: x, basename, summary)
 
-        # Deal with concepts for file
-        addFile(result, "concepts", "concept", lambda x: x, basename, summary)
+            # Deal with concepts for file
+            addFile(result, "concepts", "concept", lambda x: x, basename, summary)
 
-        # Deal with terms for file
-        addFile(result, "terms", "term", lambda x: x, basename, summary)
+            # Deal with terms for file
+            addFile(result, "terms", "term", lambda x: x, basename, summary)
 
-        # Deal with phases for file
-        addFile(result, "phrases", "phrase", phrase2str, basename, summary)
+            # Deal with phases for file
+            addFile(result, "phrases", "phrase", phrase2str, basename, summary)
 
+        except IOError:
+            pass
 
     #
     # Aggregation of subdirectory indexes
     #
     for subdirname in dirs:
         subdirFile = open(os.path.join(const101.tRoot, dirname, subdirname, "index.json"), 'r')
-        index = json.load(subdirFile)
-        subdirFile.close()
-        for key in result:
-            addDir(result, key, subdirname, index)
+        try:
+            index = json.load(subdirFile)
+            subdirFile.close()
+            for key in result:
+                addDir(result, key, subdirname, index)
+        except IOError:
+            pass
 
     # Dumping the index
     result["dirs"] = dirs
