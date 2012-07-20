@@ -158,7 +158,7 @@ def matchFile(phase, dirname, basename, rule):
          args = []
       locator = None
       if filename in basics:
-         locator = tools101.valueByKey(basics[filename], "locator")
+         locator = tools101.valueByKey(basics[filename]["units"], "locator")
       if locator is None:
          failure = dict()
          failure["error"] = "locator not found"

@@ -7,9 +7,7 @@ import const101
 
 # Look up all metadata values, if any, for a certain metadata key
 def valuesByKey(units, key):
-   return [ x[key]
-                 for x in map(lambda u: u["metadata"], units)
-                 if key in x ]
+   return [ x[key] for x in map(lambda u: u["metadata"], units) if key in x ]
 
 
 # Unambigious variation on valuesByKey
