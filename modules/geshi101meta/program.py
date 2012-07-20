@@ -19,4 +19,4 @@ geshi = sys.argv[1] # GeSHi in the workspace
 dump = tools101.mapMatchesWithKey("geshi", ".geshi.html", fun)
 geshiFile = open(const101.geshiDump, 'w')
 geshiFile.write(json.dumps(dump))
-sys.exit(dump["noProblems"])
+sys.exit(0)
