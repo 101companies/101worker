@@ -25,12 +25,12 @@ def initializeKey(r, map, key):
             if key in resolution[map]:
                 e = resolution[map][key]
                 d[key]["headline"] = e["headline"]
-                resource = dict()
+                resources = dict()
+                d[key]["resources"] = resources
                 if "101wiki" in e:
-                    resource["101wiki"] = e["101wiki"]
+                    resources["101wiki"] = e["101wiki"]
                 if "101repo" in e:
-                    resource["101repo"] = e["101repo"]
-                d[key]["resources"].append(resource)
+                    resources["101repo"] = e["101repo"]
 
 def addFile(result, rkey, mkey, val2key, basename, summary):           
     for unit in summary["units"]:
