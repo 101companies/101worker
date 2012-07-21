@@ -3,9 +3,27 @@
 import os
 import sys
 import simplejson as json
+import re
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
+
+def eliminate(pat, str):
+   while True:
+      c = re.compile(pat)
+      m = c.match(str)
+      if m is None:
+         break
+      str = ""
+      for x in m.groups():
+         str += x
+   return str
+
+def noMarkup(str):
+   str = eliminate('(.*)\[\[.*\|(.*)\]\](.*)', str)
+   str = eliminate('(.*)\[\[(.*)\]\](.*)', str)
+   str = eliminate('(.*):Category:(.*)', str)
+   return str
 
 def resolveEntity(unit, key, map, resolve):
    if key in unit:
@@ -34,7 +52,7 @@ for k1 in wiki:
    section = wiki[k1]
    for k2 in section:
       url = space2underscore(section[k2]["url"])
-      headline[url] = section[k2]["headline"]
+      headline[url] = noMarkup(section[k2]["headline"])
 
 terms = dict()
 concepts = dict()
