@@ -23,9 +23,10 @@ def initializeKey(r, map, key):
         d[key]["resources"] = []
         if map in resolution:
             if key in resolution[map]:
+                d[key]["headline"] = resolution[map][key]["headline"]
                 resource = dict()
-                resource["website"] = resolution[map][key]
-                d[key]["resources"] += [resource]
+                resource["website"] = resolution[map][key]["url"]
+                d[key]["resources"].append(resource)
 
 def addFile(result, rkey, mkey, val2key, basename, summary):           
     for unit in summary["units"]:
