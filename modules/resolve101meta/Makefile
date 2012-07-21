@@ -1,6 +1,6 @@
 include ../Makefile.vars
 
-run: ${pulled101RepoDir} ${dumpsDir} ${contrDir} ${rulesDump}
+run: ${pulled101RepoDir} ${dumpsDir} ${contrDir} ${rulesDump} ${wikiDump}
 	@./program.py
 	@test -e ${resolutionDump}
 
