@@ -23,6 +23,8 @@ def noMarkup(str):
    str = eliminate('(.*)\[\[.*\|(.*)\]\](.*)', str)
    str = eliminate('(.*)\[\[(.*)\]\](.*)', str)
    str = eliminate('(.*):Category:(.*)', str)
+   str = eliminate('(.*)Language:(.*)', str)
+   str = eliminate('(.*)Technology:(.*)', str)
    return str
 
 def resolveEntity(unit, key, map, resolve):
