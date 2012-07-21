@@ -41,6 +41,11 @@ def resolveEntity(val, map, uriResolve, fileResolve):
             entity["101repo"] = url101repo
       if url101wiki in headline:
          entity["headline"] = headline[url101wiki]
+         if entity["headline"] == "":
+            entity["headline"] == "empty"
+            problem = dict()
+            problem["missingWikiHeadline"] = url101wiki 
+            problems.append(problem)
       else:
          entity["headline"] = "<unresolved>"
          problem = dict()
