@@ -1,7 +1,7 @@
 import os
 
 url101wiki = "http://101companies.org/index.php/"
-url101repo = "https://github.com/101companies/101repo/"
+url101repo = "https://github.com/101companies/101repo/tree/master/"
 sRoot = "../../../101results/101repo" # the root for source files
 tRoot = "../../../101web" # the root for target files
 dumps = os.path.join(tRoot, "dumps")
