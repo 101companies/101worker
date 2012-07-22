@@ -20,4 +20,4 @@ The data can be used in these ways:
 * Popularity of suffixes is immediately defined. Popularity of suffixes may be used as a proxy, for example, for popularity of languages.
 * Unmatched suffixes may call for additional 101meta rules. It usually makes sense to prioritize the most frequently exercised, unmatched suffixes as a corresponding rule would reduce the number of unmatched files the quickest.
 * Unmatched suffixes may also be a sign of contribution-specific conventions such that certain suffixes are only used locally. Either these specific conventions should be documented as constraint combinations of dirname and suffix, or the migration to more general conventions (i.e., renaming files to use more generally established suffixes) could be considered.
-* Contributors may directly add 101meta rules or send proposals to gatekeepers@101companies.org.
+* Contributors may directly add 101meta rules or send proposals to gatekeepers@101companies.org. 101meta rules on suffixes as much as other rules could contain a "citation" element for reasons discussed in the 101meta documentation.
