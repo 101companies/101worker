@@ -8,67 +8,42 @@ import const101
 import tools101
 
 # Per-file functinonality
-def fun(extractor, rFilename, sFilename, tFilename, new):
-
-   # Global counters
-   global numberOfSuccesses
-   global numberOfFailures
+def derive(extractor, rFilename, sFilename, tFilename):
 
    # Housekeeping for extractor
    extractors.add(extractor)
    
    print "Extract facts from " + rFilename + " with " + extractor + "."
-   cmd = os.path.join(const101.sRoot, extractor) + " \"" + sFilename + "\" \"" + tFilename + "\" "
-   (status, output) = tools101.run(cmd)
+   command = os.path.join(const101.sRoot, extractor) + " \"" + sFilename + "\" \"" + tFilename + "\" "
+   (status, output) = tools101.run(command)
 
-   #
-   # Create an empty file if extraction failed to create a file.
-   # This improves the incremental experience.
-   #
-   if not os.path.exists(tFilename):
-      empty = dict()
-      tFile = open(tFilename, 'w')
-      tFile.write(json.dumps(empty))
-      if status != 0:
-         status = 1
-         output = "Empty target file written by 101worker/modules/extract101meta."
+   # Result aggregation
+   result = dict()
+   result["extractor"] = extractor
+   result["command"] = command
+   result["status"] = status
+   result["output"] = output
 
-   # Create problem record if needed
-   if status != 0:
-      result = dict()
-      result["filename"] = rFilename
-      result["extractor"] = extractor
-      result["status"] = status
-      result["output"] = output
+   return result
 
-   # Record failure entries
-   if status != 0:
-      problems.append(rFilename)
-   else:
-      successes.append(rFilename)
-
-   return status
 
 print "Extracting facts from 101repo."
 
-try:
-   oldDump = json.load(open(const101.extractorDump, 'r'))
-except:
-   oldDump = dict()
-   oldDump["extractors"] = list() 
-   oldDump["problems"] = list()
-
+# Initialize housekeeping
 extractors = set()
-successes = list()
-problems = list()
+dump = tools101.loadDumpIncrementally(const101.extractorDump)
+if "extractors" in dump:
+   extractors = set(dump["extractors"])
 
-dump = tools101.mapMatchesWithKey("extractor", ".extractor.json", fun)
+# Loop over matches
+dump = tools101.deriveByKey("extractor", ".extractor.json", derive)
 
-dump["extractors"] = list(extractors.union(oldDump["extractors"]))
-dump["problems"] = list(set(problems).union(set(oldDump["problems"])).difference(successes))
-dump["numbers"]["numberOfExtractors"] = len(dump["extractors"])
-dump["numbers"]["numberOfProblems"] = len(dump["problems"])
-extractorFile = open(const101.extractorDump, 'w')
-extractorFile.write(json.dumps(dump))
-tools101.dump(dump)
-sys.exit(0)
+# Convert set to list before dumping JSON
+extractors = list(extractors)
+
+# Assemble dump, save it, and exit
+dump = dict()
+dump["extractors"] = extractors
+dump["numbers"] = dict()
+dump["numbers"]["numberOfExtractors"] = len(extractors)
+tools101.saveDumpAndExit(const101.extractorDump, dump)

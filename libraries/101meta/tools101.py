@@ -78,13 +78,15 @@ def mapMatches(
    # Prepare house keeping
    global problems
    global numberOfFiles
-   global numberOfSuccesses
-   global numberOfFailures # to be initialized by module for incrementality
-   global numberOfInserts # to be initialized by module for incrementality
+   global numberOfSuccesses # to be initialized elsewhere for incrementality
+   global numberOfFailures # to be initialized elsewhere for incrementality
+   global numberOfInserts
    global numberOfUpdates
+   global numberOfDeletes
    numberOfFiles = 0
    numberOfInserts = 0
    numberOfUpdates = 0
+   numberOfDeletes = 0
    
    matches = json.load(open(const101.matchesDump, 'r'))["matches"]
 
@@ -122,19 +124,27 @@ def mapMatches(
              break
           else:
              idx += 1
-       if not failure:
+       exists = os.path.exists(tFilename)
+       if not failure and exists:
           numberOfSuccesses -= 1
 
        # Generate target
        tick()
        result = fun(value, rFilename, sFilename, tFilename)
 
-       # Housekeeping for result
+       # Housekeeping
+       result["filename"] = rFilename
        if result["status"] != 0:
           numberOfFailures += 1
           problems.append(result)
        else:
           numberOfSuccesses += 1
+       if not exists and os.path.exists(tFilename):
+          numberOfInserts += 1
+       elif exists and os.path.exists(tFilename):
+          numberOfUpdates += 1
+       elif exists and not os.path.exists(tFilename):
+          numberOfDeletes += 1
 
    # Terminate ticking
    sys.stdout.write('\n')
@@ -181,14 +191,52 @@ def loopOverFiles(fun, topdown):
            files = [ f for f in files1 if not f in [".gitignore"] ]
            fun(dirname, dirs, files)
 
-# Report to stdout
-def dump(dump, special=None):
+
+def loadDumpIncrementally(filename):
+   global problems
+   global numberOfSuccesses
+   global numberOfFailures
+   dump = dict()
+   problems = list()
+   numberOfSuccesses = 0
+   numberOfFailures = 0
+
+   # Incorporate previous dump, if any, into housekeeping
+   try:
+      dump = json.load(open(filename, 'r'))
+      problems = dump["problems"]
+      numberOfSuccesses = dump["numbers"]["numberOfSuccesses"]
+      numberOfFailures = dump["numbers"]["numberOfFailures"]
+   except IOError:
+      pass
+
+   return dump
+
+
+def saveDumpAndExit(filename, dump, special=None):
+
+   # Extend dump by generic information
+   dump["numbers"]["numberOfFiles"] = numberOfFiles
+   dump["numbers"]["numberOfInserts"] = numberOfInserts
+   dump["numbers"]["numberOfUpdates"] = numberOfUpdates
+   dump["numbers"]["numberOfDeletes"] = numberOfDeletes
+   dump["numbers"]["numberOfSuccesses"] = numberOfSuccesses
+   dump["numbers"]["numberOfFailures"] = numberOfFailures
+   dump["problems"] = problems
+
+   # Print part of dump to stdout for the user's convenience
    if special in dump:
       print "\n"+special+":\n\t" + json.dumps(dump[special])
    if "numbers" in dump:
       print "\nnumbers:\n\t" + json.dumps(dump["numbers"])
    if "problems" in dump:
       print "\nproblems:\n\t" + json.dumps(dump["problems"])
+      
+   # Write dump to file and exit
+   dumpFile = open(filename, 'w')
+   dumpFile.write(json.dumps(dump))
+   sys.exit(0)
+
 
 # Turn a list of shape [x,y] into a JSON object of shape { x : y }
 def pair2json(x):

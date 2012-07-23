@@ -20,11 +20,11 @@ def check(validator, rFilename, sFilename):
 
    # Result aggregation
    result = dict()
-   result["filename"] = rFilename
    result["validator"] = validator
    result["command"] = command
    result["status"] = status
    result["output"] = output
+
    return result
 
 
@@ -32,36 +32,19 @@ print "Validating 101repo."
 
 # Initialize housekeeping
 validators = set()
-tools101.problems = list()
-tools101.numberOfSuccesses = 0
-tools101.numberOfFailures = 0
-
-# Incorporate previous dump, if any, into housekeeping
-try:
-   dump = json.load(open(const101.validatorDump, 'r'))
+dump = tools101.loadDumpIncrementally(const101.validatorDump)
+if "validators" in dump:
    validators = set(dump["validators"])
-   tools101.problems = dump["problems"]
-   tools101.numberOfSuccesses = dump["numbers"]["numberOfSuccesses"]
-   tools101.numberOfFailures = dump["numbers"]["numberOfFailures"]
-except IOError:
-   pass
 
+# Loop over matches
 tools101.checkByKey("validator", ".validator.json", check)
 
 # Convert set to list before dumping JSON
 validators = list(validators)
 
-# Assemble dump
+# Assemble dump, save it, and exit
 dump = dict()
 dump["validators"] = validators
-dump["problems"] = tools101.problems
 dump["numbers"] = dict()
 dump["numbers"]["numberOfValidators"] = len(validators)
-dump["numbers"]["numberOfSuccesses"] = tools101.numberOfSuccesses
-dump["numbers"]["numberOfFailures"] = tools101.numberOfFailures
-
-# Write dump with preview to stdout and exit
-validatorFile = open(const101.validatorDump, 'w')
-validatorFile.write(json.dumps(dump))
-tools101.dump(dump)
-sys.exit(0)
+tools101.saveDumpAndExit(const101.validatorDump, dump)
