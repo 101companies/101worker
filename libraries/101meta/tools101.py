@@ -76,6 +76,7 @@ def mapMatches(
     ):
 
    # Prepare house keeping
+   global problems
    global numberOfFiles
    global numberOfSuccesses
    global numberOfFailures # to be initialized by module for incrementality
@@ -166,6 +167,7 @@ def checkByKey(
       result = check(value, rFilename, sFilename)
       tFile = open(tFilename, 'w')
       tFile.write(json.dumps(result))
+      return result
        
    return deriveByKey(key, suffix, derive)
 

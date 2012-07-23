@@ -30,20 +30,21 @@ def check(validator, rFilename, sFilename):
 
 print "Validating 101repo."
 
-# Set up old dump as starting point for incremental operation
+# Initialize housekeeping
+validators = set()
+tools101.problems = list()
+tools101.numberOfSuccesses = 0
+tools101.numberOfFailures = 0
+
+# Incorporate previous dump, if any, into housekeeping
 try:
    dump = json.load(open(const101.validatorDump, 'r'))
    validators = set(dump["validators"])
-   problems = dump["problems"]
-   numberOfSuccesses = dump["numbers"]["numberOfSuccesses"]
-   numberOfFailures = dump["numbers"]["numberOfFailures"]
-
-# Start from initial state if old dump is missing 
+   tools101.problems = dump["problems"]
+   tools101.numberOfSuccesses = dump["numbers"]["numberOfSuccesses"]
+   tools101.numberOfFailures = dump["numbers"]["numberOfFailures"]
 except IOError:
-   validators = set()
-   problems = list()
-   numberOfSuccesses = 0
-   numberOfFailures = 0
+   pass
 
 tools101.checkByKey("validator", ".validator.json", check)
 
@@ -53,11 +54,11 @@ validators = list(validators)
 # Assemble dump
 dump = dict()
 dump["validators"] = validators
-dump["problems"] = problems
+dump["problems"] = tools101.problems
 dump["numbers"] = dict()
 dump["numbers"]["numberOfValidators"] = len(validators)
-dump["numbers"]["numberOfSuccesses"] = numberOfSuccesses
-dump["numbers"]["numberOfFailures"] = numberOfFailures
+dump["numbers"]["numberOfSuccesses"] = tools101.numberOfSuccesses
+dump["numbers"]["numberOfFailures"] = tools101.numberOfFailures
 
 # Write dump with preview to stdout and exit
 validatorFile = open(const101.validatorDump, 'w')
