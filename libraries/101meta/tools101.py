@@ -134,9 +134,7 @@ def mapMatches(
 
        # Housekeeping
        result["filename"] = rFilename
-       if result["status"] != 0 \
-          or (not os.path.exists(tFilename) \
-              and result["status"] != 0):
+       if result["status"] != 0 or not os.path.exists(tFilename):
           numberOfFailures += 1
           problems.append(result)
        else:
