@@ -134,7 +134,9 @@ def mapMatches(
 
        # Housekeeping
        result["filename"] = rFilename
-       if result["status"] != 0:
+       if result["status"] != 0 \
+          or (not os.path.exists(tFilename) \
+              and result["status"] != 0):
           numberOfFailures += 1
           problems.append(result)
        else:
@@ -216,6 +218,8 @@ def loadDumpIncrementally(filename):
 def saveDumpAndExit(filename, dump, special=None):
 
    # Extend dump by generic information
+   if not "numbers" in dump:
+      dump["numbers"] = dict()
    dump["numbers"]["numberOfFiles"] = numberOfFiles
    dump["numbers"]["numberOfInserts"] = numberOfInserts
    dump["numbers"]["numberOfUpdates"] = numberOfUpdates
