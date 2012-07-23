@@ -48,15 +48,17 @@ def build(sFilename, tFilename):
 
 
 # Run a command
-def run(cmd):
-   (status, output) = commands.getstatusoutput(cmd)
+def run(command):
+   (status, output) = commands.getstatusoutput(command)
    if status != 0:
-      print "Command failed: " + cmd
+      print "Command failed: " + command
       print "Status: " + str(status)
       print "Output: " + output
    return (status, output)
 
 
+# Look up matches and build map from filenames to matches
+# TODO: Is this really needed (conceptually)?
 def getBasics():
    matches = json.load(open(const101.matchesDump, 'r'))["matches"]
    result = dict()
@@ -73,16 +75,23 @@ def mapMatches(
     , fun       # the function to apply to each match
     ):
 
-    numberOfProblems = 0 # Number of problems
-    numberOfSources = 0 # Number of source files
-    noTargets = 0 # Number of (generated) target files
-    matches = json.load(open(const101.matchesDump, 'r'))["matches"]
+   # Prepare house keeping
+   global numberOfFiles
+   global numberOfSuccesses
+   global numberOfFailures # to be initialized by module for incrementality
+   global numberOfInserts # to be initialized by module for incrementality
+   global numberOfUpdates
+   numberOfFiles = 0
+   numberOfInserts = 0
+   numberOfUpdates = 0
+   
+   matches = json.load(open(const101.matchesDump, 'r'))["matches"]
 
-    for entry in matches:
+   for entry in matches:
 
        value = testEntry(entry)
        if value is None: continue
-       numberOfSources += 1
+       numberOfFiles += 1
 
        # RELATIVE dirname and filename
        rFilename = entry["filename"]
@@ -97,23 +106,41 @@ def mapMatches(
        tDirname = os.path.join(const101.tRoot, rDirname)
        tFilename = os.path.join(tDirname, basename + suffix)
 
-       # Generate file, if needed, and report problems, if any
+       # Skip file, if possible
        makedirs(tDirname)
        if not testFiles(sFilename, tFilename): continue
-       noTargets += 1
-       status = fun(value, rFilename, sFilename, tFilename)
-       if status != 0: numberOfProblems += 1 
 
-    sys.stdout.write('\n')
-    dump = dict()
-    dump["numbers"] = dict()
-    dump["numbers"]["numberOfSources"] = numberOfSources
-    dump["numbers"]["numberOfProblems"] = numberOfProblems
-    return dump
+       # Find and remove related problem
+       failure = False
+       idx = 0
+       for p in problems:
+          if p["filename"] == rFilename:
+             del problems[idx]
+             failure = True
+             numberOfFailures -= 1
+             break
+          else:
+             idx += 1
+       if not failure:
+          numberOfSuccesses -= 1
+
+       # Generate target
+       tick()
+       result = fun(value, rFilename, sFilename, tFilename)
+
+       # Housekeeping for result
+       if result["status"] != 0:
+          numberOfFailures += 1
+          problems.append(result)
+       else:
+          numberOfSuccesses += 1
+
+   # Terminate ticking
+   sys.stdout.write('\n')
 
 
-# Loop over matches to handle specific metadata
-def mapMatchesWithKey(
+# Derive targets by key
+def deriveByKey(
       key     # the key for metadata lookup
     , suffix  # the extra suffix for target files
     , fun     # the function to apply to each match
@@ -126,6 +153,21 @@ def mapMatchesWithKey(
       return build(sFilename, tFilename)
        
    return mapMatches(testEntry, testFiles, suffix, fun)
+
+
+# Check sources by key
+def checkByKey(
+      key     # the key for metadata lookup
+    , suffix  # the extra suffix for target files
+    , check   # the function to apply to each match
+    ):
+
+   def derive(value, rFilename, sFilename, tFilename):
+      result = check(value, rFilename, sFilename)
+      tFile = open(tFilename, 'w')
+      tFile.write(json.dumps(result))
+       
+   return deriveByKey(key, suffix, derive)
 
 
 # Loop over all 101repo files

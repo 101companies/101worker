@@ -8,49 +8,58 @@ import const101
 import tools101
 
 # Per-file functinonality
-def fun(validator, rFilename, sFilename, tFilename):
+def check(validator, rFilename, sFilename):
 
-   # Housekeeping
-   global validators
-   validators.add(validator) # account for validator
+   # Housekeeping for validator
+   validators.add(validator)
 
    # Command execution
    print "Validate " + rFilename + " with " + validator + "."
-   cmd = os.path.join(const101.sRoot, validator) + " \"" + sFilename + "\""
-   (status, output) = tools101.run(cmd)
+   command = os.path.join(const101.sRoot, validator) + " \"" + sFilename + "\""
+   (status, output) = tools101.run(command)
 
-   # Save validation result
+   # Result aggregation
    result = dict()
+   result["filename"] = rFilename
    result["validator"] = validator
+   result["command"] = command
    result["status"] = status
    result["output"] = output
-   tFile = open(tFilename, 'w')
-   tFile.write(json.dumps(result))
+   return result
 
-   # Record failure entries
-   if status != 0:
-      problems.append(rFilename)
-   else:
-      successes.append(rFilename)
 
-   return status
-
-try:
-   oldDump = json.load(open(const101.validatorDump, 'r'))
-except:
-   oldDump = dict()
-   oldDump["validators"] = list() 
-   oldDump["problems"] = list()
-
-validators = set()
-successes = list()
-problems = list()
 print "Validating 101repo."
-dump = tools101.mapMatchesWithKey("validator", ".validator.json", fun)
-dump["validators"] = list(validators.union(oldDump["validators"]))
-dump["problems"] = list(set(problems).union(set(oldDump["problems"])).difference(successes))
-dump["numbers"]["numberOfValidators"] = len(dump["validators"])
-dump["numbers"]["numberOfProblems"] = len(dump["problems"])
+
+# Set up old dump as starting point for incremental operation
+try:
+   dump = json.load(open(const101.validatorDump, 'r'))
+   validators = set(dump["validators"])
+   problems = dump["problems"]
+   numberOfSuccesses = dump["numbers"]["numberOfSuccesses"]
+   numberOfFailures = dump["numbers"]["numberOfFailures"]
+
+# Start from initial state if old dump is missing 
+except IOError:
+   validators = set()
+   problems = list()
+   numberOfSuccesses = 0
+   numberOfFailures = 0
+
+tools101.checkByKey("validator", ".validator.json", check)
+
+# Convert set to list before dumping JSON
+validators = list(validators)
+
+# Assemble dump
+dump = dict()
+dump["validators"] = validators
+dump["problems"] = problems
+dump["numbers"] = dict()
+dump["numbers"]["numberOfValidators"] = len(validators)
+dump["numbers"]["numberOfSuccesses"] = numberOfSuccesses
+dump["numbers"]["numberOfFailures"] = numberOfFailures
+
+# Write dump with preview to stdout and exit
 validatorFile = open(const101.validatorDump, 'w')
 validatorFile.write(json.dumps(dump))
 tools101.dump(dump)
