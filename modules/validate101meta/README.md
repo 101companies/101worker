@@ -2,14 +2,29 @@
 
 A module to validate files in the 101repo
 
-# Details
+# Input
 
-See the [Language:101meta specification](http://101companies.org/index.php/Language:101meta) for details on the "validator" form of metadata. The module generates ".validator.json" files in the directory "101web/contributions". That is, a ".validator.json" file is generated for every 101repo file with associated 101meta metadata for a validator. The suffix ".validator.json" is simply appended to the original file name. The actual file summarize the status of validation. The file generation is incremental in that only files will be generated, if they are actually missing or if their modification date is outdated compared to the underlying source file in 101repo. A summary of an extraction pass is dumped to the file "101web/dumps/validator.json".
+* 101results/101repo via module pull101repo
+* 101web/dumps/rules.json via module rules101meta
+* 101web/dumps/matches.json via module match101meta
 
-# Dependencies
+# Output
 
-This module assumes that the module "matches101meta" was applied earlier.
+[dumps/validator.json](http://black42.uni-koblenz.de/production/101worker/dumps/validator.json)
 
-# Issues
+# Description
 
-None.
+Validators are assigned to files with the "validator" key of 101meta metadata. Validation is performed incrementally by the module such that only new files or modified files are validated (when compared to the previous run of the module). The dump contains the following data:
+
+* numbers
+** numberOfFiles: files with assigned validator
+** numberOfSuccesses: successful validations 
+** numberOfFailures: successful validations 
+** numberOfInserts: validations added since previous run 
+** numberOfUpdates: validations re-performed since previous run 
+* validators: the filenames of all validators encountered
+* problems: logging data of failed validator executions or validator executions
+
+# Methodology
+
+Ideally, _all_ files are validated and _all_ validations succeed. Realistically, validators may not be readily available for all files, but more validators can be added over time. Also, validations may fail for various reasons: incorrect association between file and validator, incorrect validator, too strict validator, invalid file. The goal shall be to eliminate failing validations by changing files, changing validators, adding validators, or changing associations between files and validators.
