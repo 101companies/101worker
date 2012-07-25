@@ -9,8 +9,8 @@ emailTo = "dotnetby@gmail.com" # for testing
 #emailTo = "gatekeepers@101companies.org"
 emailServer = "deliver.uni-koblenz.de"
 
-tmpl = "<!DOCTYPE html><html><body><table><tr><td>Module</td><td>Status</td><td>Log</td></tr>"
-tmpl_end = "</table></body></html>"
+tmpl = "<table><tr><td>Module</td><td>Status</td><td>Log</td></tr>"
+tmpl_end = "</table>"
 
 def buildMailContent():
 	logfile = open('../101logs/runner.log', 'r')
