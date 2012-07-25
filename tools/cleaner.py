@@ -19,6 +19,7 @@ for module in modules:
 		continue
 
 	commands.getstatusoutput('cd '+module+'; make clean')
+	print "cleaning " + module
 	if os.path.isfile(module+'/pid'): 
 		os.remove(module+'/pid')
 		print 'Removing PID...'
