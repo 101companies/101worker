@@ -6,7 +6,7 @@ if os.path.isfile('configs/%s' % sys.argv[1]) == False:
 	print "config file not found"
 	sys.exit(-1)
 
-if os.path.isfile('../../101logs/runner.log'):
+if os.path.isfile('../101logs/runner.log'):
 	print "removind an old runner.log"
 	os.remove('../../101logs/runner.log')
    
