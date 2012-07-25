@@ -8,7 +8,7 @@ if os.path.isfile('../configs/%s' % sys.argv[1]) == False:
 	sys.exit(-1)
 
 try:
-    os.makedirs('../101web/logs')
+    os.makedirs('../../101web/logs')
 except OSError:
 	print "error"
 	pass
@@ -22,6 +22,6 @@ for module in modules:
 		continue
 
 	if os.path.isfile(module+'/module.log'):
-		shutil.copy2(module+'/module.log', '../101web/logs/'+module+".log")
+		shutil.copy2(module+'/module.log', '../../101web/logs/'+module+".log")
 
 sys.exit(0)
