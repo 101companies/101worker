@@ -18,6 +18,7 @@ def write2log(msg):
    if VERBOSE == True:
       print msg
    else:
+      print msg
       log.write(msg)
 
 def write2moduleLog(msg, module):
