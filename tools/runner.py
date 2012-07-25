@@ -7,6 +7,8 @@ from threading import Timer
 from time import gmtime, strftime
 
 VERBOSE = False
+log = open('../../101logs/runner.log', 'a+')
+log.write("MODULE;START;FINISH;STATUS;COMMENT")
 
 def write2log(msg):
    log = open('../../101logs/runner.log', 'a+')
@@ -59,18 +61,19 @@ def main(config, is_verbose):
       if module.__len__() < 2:
          continue
 
-      write2log('\nPerforming module %s.' % module)
-      write2log('\nStarted at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+      write2log('\n'+module)
+      write2log(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
 
       p = subprocess.Popen('cd '+module+'; make', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-      write2log('\nModule PID: %s' % p.pid)
+      #write2log('\nModule PID: %s' % p.pid)
 
       #creating a PID file is the module subdir indicating the the module is running.
       pidFileName = module + "/pid"; 
 
       #if file exists -- the process is already running, report to the log and skip it
       if os.path.isfile(os.getcwd() + '/' + pidFileName):
-         write2log('\nModule %s is already running; processId: %s' %(module,str(p.pid)))
+         #write2log('\nModule %s is already running; processId: %s' %(module,str(p.pid)))
+         continue
 
       pid_file = open(os.getcwd() + '/' + pidFileName, "w")
       #write2log("\nCreating PID file: %s" % str(os.getcwd() + '/' + pidFileName))
@@ -82,11 +85,11 @@ def main(config, is_verbose):
       #for line in stdout.readlines():
       write2moduleLog(stdout, module) 
 
-      write2log('\nFinished at % s' % strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+      write2log(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
       if (retval == 0):
-         msg = '\nOK'
+         msg = 'OK'
       else:
-         msg = '\nFAIL ('+str(retval)+')'
+         msg = 'FAIL ('+str(retval)+')'
       
       write2log(msg)
       #remove PID file when the process finished
