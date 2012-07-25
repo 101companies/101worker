@@ -7,6 +7,7 @@ from threading import Timer
 from time import gmtime, strftime
 
 log = open('../../101logs/runner.log', 'a')
+print log
 
 VERBOSE = False
 
