@@ -3,6 +3,9 @@ import string
 import smtplib
 from email.mime.text import MIMEText
 
+from mailer import Mailer
+from mailer import Message
+
 # Configure addresses and server
 emailFrom = "softlang@uni-koblenz.de"
 emailTo = "dotnetby@gmail.com" # for testing
@@ -36,3 +39,9 @@ if (string.find(log, 'FAIL')>=0):
 	smtp = smtplib.SMTP()
 	smtp.connect(emailServer)
 	smtp.sendmail(emailFrom, msg["To"], msg.as_string())
+
+	message = Message(From=emailFrom,To=emailTo)
+	message.Subject = "An HTML Email"
+	message.Html = log
+	sender = Mailer('deliver.uni-koblenz.de')
+	sender.send(message)
