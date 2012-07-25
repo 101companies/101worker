@@ -9,6 +9,7 @@ from time import gmtime, strftime
 VERBOSE = False
 log = open('../../101logs/runner.log', 'a+')
 log.write("MODULE;START;FINISH;STATUS;COMMENT")
+log.close()
 
 def write2log(msg):
    log = open('../../101logs/runner.log', 'a+')
@@ -16,7 +17,7 @@ def write2log(msg):
    if VERBOSE == True:
       print msg
    else:
-      log.write(msg)
+      log.write(msg+";")
       log.close()
 
 def write2moduleLog(msg, module):
