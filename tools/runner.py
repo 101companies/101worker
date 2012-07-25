@@ -49,7 +49,7 @@ def run(proc, timeout_sec):
    timer.start()
    stdout, stderr = proc.communicate()
    timer.cancel()
-   return proc.returncode, stdout, timeout["value"]   
+   return proc.returncode, stdout + stderr, timeout["value"]   
 
 def main(config, is_verbose):
    global VERBOSE
