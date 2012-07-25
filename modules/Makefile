@@ -7,4 +7,4 @@
 	python ../tools/runner.py $*.config verbose; 
 
 %.archive:
-	python ../tools/archiver.py *.config	
+	python ../tools/archiver.py $*.config	
