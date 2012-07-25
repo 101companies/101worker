@@ -1,17 +1,25 @@
+import csv
 import string
 import smtplib
 from email.mime.text import MIMEText
 
 # Configure addresses and server
 emailFrom = "softlang@uni-koblenz.de"
-#emailTo = "dotnetby@gmail.com" # for testing
-emailTo = "gatekeepers@101companies.org"
+emailTo = "dotnetby@gmail.com" # for testing
+#emailTo = "gatekeepers@101companies.org"
 emailServer = "deliver.uni-koblenz.de"
 
+def buildMailContent():
+	logfile = open('../101logs/runner.log', 'r')
+	lastArchive = open('../101web/logs/lastArchive', 'r')
+	time = lastArchive.read()
+	log = csv.reader(open('../101logs/runner.log', 'r'), delimiter=';', quotechar='|')
+	for row in log:
+		print ', '.join(row)+time
+	return log
+
 # Send the email
-logfile = open('../101logs/runner.log', 'r')
-log = logfile.read()
-if (string.find(log, 'FAIL')>=0):
+if (string.find(buildMailContent(), 'FAIL')>=0):
 	msg = MIMEText(log.encode('utf-8'), 'plain', 'utf-8')
 	msg["To"] = emailTo
 	msg["From"] = emailFrom

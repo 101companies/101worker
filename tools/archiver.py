@@ -11,6 +11,10 @@ if os.path.isfile('../configs/%s' % sys.argv[1]) == False:
 today = str(datetime.date.today())
 now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")
 
+lastArchive = open('../../101web/logs/lastArchive', "w")
+lastArchive.write(now)
+lastArchive.close()
+
 try:
 	print now
 	os.makedirs('../../101web/logs/'+now)
