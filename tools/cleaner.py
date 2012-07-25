@@ -21,10 +21,10 @@ for module in modules:
 	commands.getstatusoutput('cd '+module+'; make clean')
 	print "cleaning " + module
 	if os.path.isfile("modules/"+module+'/pid'): 
-		os.remove(module+'/pid')
+		os.remove("modules/"+module+'/pid')
 		print 'Removing PID...'
 	if os.path.isfile("modules/"+module+'/module.log'):
-		os.remove(module+'/module.log')	
+		os.remove("modules/"+module+'/module.log')	
 		print 'Removing log...'
 
 sys.exit(0)
