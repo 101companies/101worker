@@ -95,12 +95,21 @@ def main(config, is_verbose):
    sys.exit(0)
 
 if __name__ == "__main__":
-   if (len(sys.argv) > 1):
-      #check if the config file exists
-      if os.path.isfile('../configs/%s' % sys.argv[1]) == False:
-         print 'Config file does not exist: %s' % sys.argv[1]
-         sys.exit(-1)
-      else:
-         if(len(sys.argv) == 3):
-            if(sys.argv[2] == 'verbose'): main('../configs/%s' % sys.argv[1], True) 
-         else: main('../configs/%s' % sys.argv[1], False) 
+   try:
+      if (len(sys.argv) > 1):
+         #check if the config file exists
+         if os.path.isfile('../configs/%s' % sys.argv[1]) == False:
+            print 'Config file does not exist: %s' % sys.argv[1]
+            sys.exit(-1)
+         else:
+          if(len(sys.argv) == 3):
+               if(sys.argv[2] == 'verbose'): main('../configs/%s' % sys.argv[1], True) 
+          else: main('../configs/%s' % sys.argv[1], False) 
+         main()
+   except KeyboardInterrupt:
+      print "Received CTRL+C...Killing process tree NOW"
+      currentDir = os.path.dirname(os.path.abspath(__file__))
+      killCmd = currentDir + '/killtree.sh ' + str(os.getpid()) +' TERM'
+      p = subprocess.Popen(killCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+      stdout, stderr = p.communicate()
+      pass          
