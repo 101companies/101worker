@@ -15,7 +15,7 @@ def write2log(msg):
       print msg
    else:
       log.write(msg)
-      close(log)
+      log.close()
 
 def write2moduleLog(msg, module):
    global VERBOSE
