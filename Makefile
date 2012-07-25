@@ -1,12 +1,3 @@
-# Main target; run all modules
-
-run:
-	@echo Performing all modules.
-	@make clean
-	@make before-run -s
-	@cd modules; make run -s
-	@make after-run -s
-
 report:
 	@python tools/mailer.py
 
@@ -23,6 +14,7 @@ test:
 	make $*.clean
 	cd modules; make $*.run
 	make $*.archive
+	make after-run
 
 %.archive:
 	cd modules; make $*.archive

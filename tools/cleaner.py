@@ -3,10 +3,12 @@ import commands
 import os
 
 if os.path.isfile('configs/%s' % sys.argv[1]) == False:
+	print "config file not found"
 	sys.exit(-1)
 
 if os.path.isfile('../../101logs/runner.log'):
-   os.remove('../../101logs/runner.log')
+	print "removind an old runner.log"
+	os.remove('../../101logs/runner.log')
    
 config_file = open('configs/%s' % sys.argv[1], "r")
 modules = config_file.readlines()
