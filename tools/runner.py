@@ -98,7 +98,7 @@ if __name__ == "__main__":
    if (len(sys.argv) > 1):
       #check if the config file exists
       if os.path.isfile('../configs/%s' % sys.argv[1]) == False:
-         write2log('Config file does not exist: %s' % sys.argv[1])
+         print 'Config file does not exist: %s' % sys.argv[1]
          sys.exit(-1)
       else:
          if(len(sys.argv) == 3):
