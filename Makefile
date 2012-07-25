@@ -22,6 +22,7 @@ test:
 %.run:
 	make $*.clean
 	cd modules; make $*.run
+	make $*.archive
 
 %.archive:
 	cd modules; make $*.archive
