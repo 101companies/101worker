@@ -1,5 +1,5 @@
 report:
-	@python tools/mailer.py
+	@python tools/reporter.py
 
 # Test target; run a few modules without logging
 
