@@ -15,8 +15,8 @@ def buildMailContent():
 	time = lastArchive.read()
 	log = csv.reader(open('../101logs/runner.log', 'r'), delimiter=';', quotechar='|')
 	for row in log:
-		print row
-		print "http://data.101companies.org/logs/"+time+row[0]+".log"
+		if len(row):
+			print "http://data.101companies.org/logs/"+time+row[0]+".log"
 	return log
 
 # Send the email
