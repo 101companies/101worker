@@ -7,9 +7,9 @@ from threading import Timer
 from time import gmtime, strftime
 
 VERBOSE = False
-log = open('../../101logs/runner.log', 'a+')
-log.write("MODULE;START;FINISH;STATUS;COMMENT")
-log.close()
+#log = open('../../101logs/runner.log', 'a+')
+#log.write("MODULE;START;FINISH;STATUS;COMMENT")
+#log.close()
 
 def write2log(msg):
    log = open('../../101logs/runner.log', 'a+')
