@@ -9,18 +9,24 @@ emailTo = "dotnetby@gmail.com" # for testing
 #emailTo = "gatekeepers@101companies.org"
 emailServer = "deliver.uni-koblenz.de"
 
+tmpl = "<!DOCTYPE html><html><body><table><tr><td>Module</td><td>Status</td><td>Log</td></tr>"
+
+<p>My first paragraph.</p>
+
+tmpl_end = "</table></body></html>"
+
 def buildMailContent():
 	logfile = open('../101logs/runner.log', 'r')
 	lastArchive = open('../101web/logs/lastArchive', 'r')
 	time = lastArchive.read()
 	log = csv.reader(open('../101logs/runner.log', 'r'), delimiter=';', quotechar='|')
-	content = ""
+	content = tmpl
 	for row in log:
 		if len(row) > 2:
-			l = row[0]+"\t"+row[3]+"\thttp://data.101companies.org/logs/"+time+"/"+row[0]+".log"
+			l = "<tr><td>"row[0]+"</td><td>"+row[3]+"</td><td>http://data.101companies.org/logs/"+time+"/"+row[0]+".log</td><tr>"
 			print l
 			content += l
-	return content
+	return content + tmpl_end
 
 # Send the email
 log = buildMailContent()
