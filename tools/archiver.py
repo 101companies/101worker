@@ -1,3 +1,4 @@
+import datetime
 import sys
 import shutil
 import commands
@@ -7,10 +8,13 @@ if os.path.isfile('../configs/%s' % sys.argv[1]) == False:
 	print "Config file not found"
 	sys.exit(-1)
 
+today = str(datetime.date.today())
+now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")
+
 try:
-    os.makedirs('../../101web/logs')
+	print now
+    os.makedirs('../../101web/logs/'+now)
 except OSError:
-	print "error"
 	pass
 
 config_file = open('../configs/%s' % sys.argv[1], "r")
@@ -22,6 +26,6 @@ for module in modules:
 		continue
 
 	if os.path.isfile(module+'/module.log'):
-		shutil.copy2(module+'/module.log', '../../101web/logs/'+module+".log")
+		shutil.copy2(module+'/module.log', '../../101web/logs/'+now+"/"+module+".log")
 
 sys.exit(0)
