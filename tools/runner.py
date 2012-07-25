@@ -30,12 +30,15 @@ def write2moduleLog(msg, module):
 def kill_proc(proc, timeout):
    timeout["value"] = True
    write2log("FAIL : TIMEOUT " + str(proc.pid))
-   write2log("KILLING PROCESS TREE")
+   print "KILLING PROCESS TREE"
    currentDir = os.path.dirname(os.path.abspath(__file__))
    killCmd = currentDir + '/killtree.sh ' + str(proc.pid) +' TERM'
    write2log(killCmd)
    p = subprocess.Popen(killCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
    stdout, stderr = p.communicate()
+   print "writing to log"
+   print stdout
+   print stderr
    write2log(stdout)
    write2log(stderr)
 
