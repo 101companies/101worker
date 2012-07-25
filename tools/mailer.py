@@ -10,9 +10,6 @@ emailTo = "dotnetby@gmail.com" # for testing
 emailServer = "deliver.uni-koblenz.de"
 
 tmpl = "<!DOCTYPE html><html><body><table><tr><td>Module</td><td>Status</td><td>Log</td></tr>"
-
-<p>My first paragraph.</p>
-
 tmpl_end = "</table></body></html>"
 
 def buildMailContent():
