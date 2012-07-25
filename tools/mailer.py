@@ -16,8 +16,8 @@ def buildMailContent():
 	log = csv.reader(open('../101logs/runner.log', 'r'), delimiter=';', quotechar='|')
 	content = ""
 	for row in log:
-		if len(row):
-			l = row[3]+"\thttp://data.101companies.org/logs/"+time+"/"+row[0]+".log"
+		if len(row) > 2:
+			l = row[0]+"\t"+row[3]+"\thttp://data.101companies.org/logs/"+time+"/"+row[0]+".log"
 			print l
 			content += l
 	return content
