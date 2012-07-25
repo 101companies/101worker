@@ -20,7 +20,7 @@ def buildMailContent():
 	content = tmpl
 	for row in log:
 		if len(row) > 2:
-			l = "<tr><td>"+row[0]+"</td><td>"+row[3]+"</td><td>http://data.101companies.org/logs/"+time+"/"+row[0]+".log</td><tr>"
+			l = "<tr><td>"+row[0]+"</td><td>"+row[3]+"</td><td>http://data.101companies.org/logs/"+time+"/"+row[0]+".log</td></tr>"
 			#print l
 			content += l
 	content += tmpl_end		
