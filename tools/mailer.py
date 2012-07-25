@@ -23,8 +23,9 @@ def buildMailContent():
 	return content
 
 # Send the email
-if (string.find(buildMailContent(), 'FAIL')>=0):
-	msg = MIMEText(log.encode('utf-8'), 'plain', 'utf-8')
+log = buildMailContent()
+if (string.find(log, 'FAIL')>=0):
+	msg = MIMEText(log.encode('utf-8'), 'text/html', 'utf-8')
 	msg["To"] = emailTo
 	msg["From"] = emailFrom
 	msg["Subject"] = "[101worker] 101logs/runner.log"
