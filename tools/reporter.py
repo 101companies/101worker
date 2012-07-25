@@ -32,16 +32,16 @@ def buildMailContent():
 # Send the email
 log = buildMailContent()
 if (string.find(log, 'FAIL')>=0):
-	msg = MIMEText(log.encode('utf-8'), 'text/html', 'utf-8')
-	msg["To"] = emailTo
-	msg["From"] = emailFrom
-	msg["Subject"] = "[101worker] 101logs/runner.log"
-	smtp = smtplib.SMTP()
-	smtp.connect(emailServer)
-	smtp.sendmail(emailFrom, msg["To"], msg.as_string())
+	#msg = MIMEText(log.encode('utf-8'), 'text/html', 'utf-8')
+	#msg["To"] = emailTo
+	#msg["From"] = emailFrom
+	#msg["Subject"] = "[101worker] 101logs/runner.log"
+	#smtp = smtplib.SMTP()
+	#smtp.connect(emailServer)
+	#smtp.sendmail(emailFrom, msg["To"], msg.as_string())
 
 	message = Message(From=emailFrom,To=emailTo)
-	message.Subject = "An HTML Email"
+	message.Subject = "[101worker] Execution Status Report"
 	message.Html = log
 	sender = Mailer('deliver.uni-koblenz.de')
 	sender.send(message)
