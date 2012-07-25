@@ -89,8 +89,8 @@ def main(config, is_verbose):
       
       write2log(msg)
       #remove PID file when the process finished
-      #write2log("\nRemoving PID file: %s" % str(os.getcwd() + '/' + pidFileName))
-      os.remove(os.getcwd() + '/' + pidFileName)
+      if os.path.isfile(os.getcwd() + '/' + pidFileName):
+         os.remove(os.getcwd() + '/' + pidFileName)
    
    sys.exit(0)
 
