@@ -14,10 +14,13 @@ def buildMailContent():
 	lastArchive = open('../101web/logs/lastArchive', 'r')
 	time = lastArchive.read()
 	log = csv.reader(open('../101logs/runner.log', 'r'), delimiter=';', quotechar='|')
+	content = ""
 	for row in log:
 		if len(row):
-			print "http://data.101companies.org/logs/"+time+row[0]+".log"
-	return log
+			l = row[3]+"\thttp://data.101companies.org/logs/"+time+"/"+row[0]+".log"
+			print l
+			content += l
+	return content
 
 # Send the email
 if (string.find(buildMailContent(), 'FAIL')>=0):
