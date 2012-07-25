@@ -6,20 +6,16 @@ import commands
 from threading import Timer
 from time import gmtime, strftime
 
-log = open('../../101logs/runner.log', 'a+')
-print log
-
 VERBOSE = False
 
 def write2log(msg):
-   global log
+   log = open('../../101logs/runner.log', 'a+')
    global VERBOSE
-   print os.path.isfile("../../101logs/runner.log")
    if VERBOSE == True:
       print msg
    else:
-      print msg
       log.write(msg)
+      close(log)
 
 def write2moduleLog(msg, module):
    global VERBOSE
