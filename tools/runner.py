@@ -14,8 +14,7 @@ VERBOSE = False
 def write2log(msg):
    global log
    global VERBOSE
-   print VERBOSE
-   print log
+   print os.path.isfile("../../101logs/runner.log")
    if VERBOSE == True:
       print msg
    else:
