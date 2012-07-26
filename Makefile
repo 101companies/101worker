@@ -23,14 +23,6 @@ test:
 	make $*.clean
 	cd modules; make $*.debug
 
-# Comprehensive reset; essentially all derived files are brutally removed.
-%.reset:
-	@make $*.clean
-	@rm -rf ../101web
-	@rm -rf ../101logs
-	@rm -rf ../101temps
-	@rm -rf ../101results
-
 # Comprehensive clean target; remove temporary files
 
 %.clean:
@@ -81,3 +73,10 @@ mkWeb:
 
 ../101results:
 	@mkdir ../101results
+
+# Full reset; essentially ALL derived files are brutally removed.
+full-reset:
+	@rm -rf ../101web
+	@rm -rf ../101logs
+	@rm -rf ../101temps
+	@rm -rf ../101results
