@@ -8,8 +8,8 @@ from mailer import Message
 
 # Configure addresses and server
 emailFrom = "softlang@uni-koblenz.de"
-emailTo = "dotnetby@gmail.com" # for testing
-#emailTo = "gatekeepers@101companies.org"
+#emailTo = "dotnetby@gmail.com" # for testing
+emailTo = "gatekeepers@101companies.org"
 emailServer = "deliver.uni-koblenz.de"
 
 tmpl = "<table><tr><td>Status</td><td>Module</td></tr>"
