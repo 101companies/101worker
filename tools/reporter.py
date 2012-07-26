@@ -12,7 +12,7 @@ emailTo = "dotnetby@gmail.com" # for testing
 #emailTo = "gatekeepers@101companies.org"
 emailServer = "deliver.uni-koblenz.de"
 
-tmpl = "<table><tr><td>Module</td><td>Status</td><td>Log</td></tr>"
+tmpl = "<table><tr><td>Status</td><td>Module</td></tr>"
 tmpl_end = "</table>"
 
 def buildMailContent():
@@ -23,7 +23,7 @@ def buildMailContent():
 	content = tmpl
 	for row in log:
 		if len(row) > 2:
-			l = "<tr><td>"+row[0]+"</td><td>"+row[3]+"</td><td><a href='http://data.101companies.org/logs/"+time+"/"+row[0]+".log'>"+row[0]+"</a></td></tr>"
+			l = "<tr><td>"+row[3]+"</td><td><a href='http://data.101companies.org/logs/"+time+"/"+row[0]+".log'>"+row[0]+"</a></td></tr>"
 			#print l
 			content += l
 	content += tmpl_end		
