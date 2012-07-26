@@ -7,15 +7,39 @@ import const101
 import tools101
 
 # Per-file functinonality
-def fun(geshicode, rFilename, sFilename, tFilename1):
+def derive(geshicode, rFilename, sFilename, tFilename1):
    tFilename2 = tFilename1[:-len(".metrics.json")]+".tokens.json"
    print "Process " + rFilename + " for GeSHi code " + geshicode + "."
-   cmd = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" "+ geshicode
-   (status, output) = tools101.run(cmd)
-   return status
+   command = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" "+ geshicode
+   (status, output) = tools101.run(command)
+
+   # Result aggregation
+   result = dict()
+   result["geshicode"] = geshicode
+   result["command"] = command
+   result["status"] = status
+   result["output"] = output
+
+   return result
+
 
 print "Generating GeSHi-based metrics for 101repo."
-dump = tools101.mapMatchesWithKey("geshi", ".metrics.json", fun)
-geshiFile = open(const101.metricsDump, 'w')
-geshiFile.write(json.dumps(dump))
-sys.exit(dump["noProblems"])
+
+# Initialize housekeeping
+geshicodes = set()
+dump = tools101.loadDumpIncrementally(const101.metricsDump)
+if "geshicodes" in dump:
+   geshicodes = set(dump["geshicodes"])
+
+# Loop over matches
+dump = tools101.deriveByKey("geshi", ".metrics.json.html", derive)
+
+# Convert set to list before dumping JSON
+geshicodes = list(geshicodes)
+
+# Assemble dump, save it, and exit
+dump = dict()
+dump["geshicodes"] = geshicodes
+dump["numbers"] = dict()
+dump["numbers"]["numberOfGeshicodes"] = len(geshicodes)
+tools101.saveDumpAndExit(const101.metricsDump, dump)
