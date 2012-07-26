@@ -1,56 +1,39 @@
+# TODO: What is this?
 report:
 	@python tools/reporter.py
 
-# Test target; run a few modules without logging
-
-test:
-	make testOkNoOp.run
-	make testOkWrite.run
-	make testOkReadWrite.run
-
-# Run a specific module in sandbox mode
-
+# Run modules of a .config file
 %.run:
 	make $*.clean
 	cd modules; make $*.run
 	make $*.archive
-	make after-run
+	@git pull -q # upgrade past every run
 
-%.archive:
-	cd modules; make $*.archive
-
+# Like %.run but without logging, with stdout
 %.debug:
 	make $*.clean
 	cd modules; make $*.debug
 
-# Comprehensive clean target; remove temporary files
+# TODO: What is this?
+%.archive:
+	cd modules; make $*.archive
 
+# What is this?
 %.clean:
 	python tools/cleaner.py $*.config
 
-# Internal target: things to be done before a run
+# Remove ALL derived files
+full-reset:
+	@rm -rf ../101web
+	@rm -rf ../101logs
+	@rm -rf ../101temps
+	@rm -rf ../101results
 
-before-run:
-	@make mkWeb -s
-	@make ../101logs -s
-	@make ../101temps -s
-	@make ../101results -s
-	@rm -f ../101logs/runner.log
-
-# Internal target: things to be done after a run
-
-after-run:
-	@git pull -q # upgrade past every run
-
-# Target for git-related convenience
-
-push:
-	git commit -a
-	git push
-
-# Internal target: make sure 101web directories exists.
-
-mkWeb:
+# Initialize output directories
+init:
+	@mkdir -p ../101logs
+	@mkdir -p ../101temps
+	@mkdir -p ../101results
 	@mkdir -p ../101web
 	@mkdir -p ../101web/data
 	@mkdir -p ../101web/data/dumps
@@ -59,24 +42,7 @@ mkWeb:
 	@mkdir -p ../101web/data/resources/languages
 	@mkdir -p ../101web/data/resources/technologies
 
-# Internal target: make sure 101logs directory exists.
-
-../101logs:
-	@mkdir ../101logs
-
-# Internal target: make sure 101temps directory exists.
-
-../101temps:
-	@mkdir ../101temps
-
-# Internal target: make sure 101results directory exists.
-
-../101results:
-	@mkdir ../101results
-
-# Full reset; essentially ALL derived files are brutally removed.
-full-reset:
-	@rm -rf ../101web
-	@rm -rf ../101logs
-	@rm -rf ../101temps
-	@rm -rf ../101results
+# Git-related convenience
+push:
+	git commit -a
+	git push

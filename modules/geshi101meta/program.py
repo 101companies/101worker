@@ -7,7 +7,7 @@ import const101
 import tools101
 
 # Per-file functinonality
-def fun(geshicode, rFilename, sFilename, tFilename):
+def derive(geshicode, rFilename, sFilename, tFilename):
 
    # Housekeeping for geshicode
    geshicodes.add(geshicode)
