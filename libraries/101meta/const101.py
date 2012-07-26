@@ -3,8 +3,8 @@ import os
 url101wiki = "http://101companies.org/index.php/"
 url101repo = "https://github.com/101companies/101repo/tree/master/"
 sRoot = "../../../101results/101repo" # the root for source files
-tRoot = "../../../101web" # the root for target files
-dumps = os.path.join(tRoot, "dumps")
+tRoot = "../../../101web/data/resources" # the root for target files
+dumps = "../../../101web/data/dumps" # the root for dumps
 rulesDump = os.path.join(dumps, "rules.json")
 matchesDump = os.path.join(dumps, "matches.json")
 predicatesDump = os.path.join(dumps, "predicates.json")
