@@ -1,4 +1,4 @@
-# TODO: What is this?
+# Creates a report with the last execution results and sends an email
 report:
 	@python tools/reporter.py
 
@@ -14,8 +14,9 @@ report:
 	make $*.clean
 	cd modules; make $*.debug
 
-# TODO: What is this?
+# Arcives the log files from the last execution
 %.archive:
+	mkdir p ~/101web/logs
 	cd modules; make $*.archive
 
 # What is this?

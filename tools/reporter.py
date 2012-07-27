@@ -43,5 +43,5 @@ if (string.find(log, 'FAIL')>=0):
 	message = Message(From=emailFrom,To=emailTo)
 	message.Subject = "[101worker] Execution Status Report"
 	message.Html = log
-	sender = Mailer('deliver.uni-koblenz.de')
+	sender = Mailer(emailServer)
 	sender.send(message)
