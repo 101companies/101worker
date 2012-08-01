@@ -123,4 +123,4 @@ dump["numbers"]["numbersOfLanguages"] = len(languages)
 dump["numbers"]["numbersOfTechnologies"] = len(technologies)
 dump["numbers"]["numbersOfContributions"] = len(contributions)
 dump["problems"] = problems
-tools101.releaseDump(dump)
+tools101.releaseDump(dump, const101.resolutionDump)
