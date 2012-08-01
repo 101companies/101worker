@@ -19,7 +19,7 @@ prepare:
 
 linkdata: 
 
-	ln -s  ${webdir}/data/ ${webdir}/101explorer/data
+	ln -s ~/101web/data/ ~/101web/101explorer/data
 
 
 deploy:
