@@ -2,6 +2,7 @@ include ../Makefile.vars
 
 run:
 	@make prepare
+	@make linkdata
 	@make deploy
 
 
@@ -15,6 +16,10 @@ prepare:
 	@mkdir ${webdir}/101explorer/js/themes/default/
 	@mkdir ${webdir}/101explorer/imgs
 	@mkdir ${webdir}/101explorer/images
+
+linkdata: 
+
+	ln -s ${webdir}/data/ ${webdir}/101explorer/data
 
 
 deploy:
