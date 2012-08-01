@@ -30,6 +30,8 @@ def fun(dirname, dirs, files):
                if not imp in filesByUse:
                   filesByUse[imp] = []
                filesByUse[imp].append(filename)
+         except ValueError:
+            problems.append(filename)
          except IOError:
             problems.append(filename)
 
@@ -84,6 +86,4 @@ dump["numbers"]["numberOfUsedPackages"] = len(used)
 dump["numbers"]["numberOfMatchedPackages"] = len(matched)
 dump["numbers"]["numberOfUnmatchedPackages"] = len(unmatched)
 
-importsFile = open(const101.importsDump, 'w')
-importsFile.write(json.dumps(dump))
-exit(0)
+tools101.releaseDump(dump, const101.importsDump)

@@ -32,7 +32,7 @@ print "Extracting facts from 101repo."
 
 # Initialize housekeeping
 extractors = set()
-dump = tools101.loadDumpIncrementally(const101.extractorDump)
+dump = tools101.beforeMapMatches(const101.extractorDump)
 if "extractors" in dump:
    extractors = set(dump["extractors"])
 
@@ -47,4 +47,4 @@ dump = dict()
 dump["extractors"] = extractors
 dump["numbers"] = dict()
 dump["numbers"]["numberOfExtractors"] = len(extractors)
-tools101.saveDumpAndExit(const101.extractorDump, dump)
+tools101.afterMapMatches(dump, const101.extractorDump)

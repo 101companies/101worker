@@ -123,7 +123,4 @@ dump["numbers"]["numbersOfLanguages"] = len(languages)
 dump["numbers"]["numbersOfTechnologies"] = len(technologies)
 dump["numbers"]["numbersOfContributions"] = len(contributions)
 dump["problems"] = problems
-resolutionFile = open(const101.resolutionDump, 'w')
-resolutionFile.write(json.dumps(dump))
-tools101.dump(dump)
-sys.exit(0)
+tools101.releaseDump(dump)

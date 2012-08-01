@@ -33,7 +33,7 @@ geshi = sys.argv[1] # GeSHi in the workspace
 
 # Initialize housekeeping
 geshicodes = set()
-dump = tools101.loadDumpIncrementally(const101.geshiDump)
+dump = tools101.beforeMapMatches(const101.geshiDump)
 if "geshicodes" in dump:
    geshicodes = set(dump["geshicodes"])
 
@@ -48,4 +48,4 @@ dump = dict()
 dump["geshicodes"] = geshicodes
 dump["numbers"] = dict()
 dump["numbers"]["numberOfGeshicodes"] = len(geshicodes)
-tools101.saveDumpAndExit(const101.geshiDump, dump)
+tools101.afterMapMatches(dump, const101.geshiDump)

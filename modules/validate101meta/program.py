@@ -33,7 +33,7 @@ print "Validating 101repo."
 
 # Initialize housekeeping
 validators = set()
-dump = tools101.loadDumpIncrementally(const101.validatorDump)
+dump = tools101.beforeMapMatches(const101.validatorDump)
 if "validators" in dump:
    validators = set(dump["validators"])
 
@@ -48,4 +48,4 @@ dump = dict()
 dump["validators"] = validators
 dump["numbers"] = dict()
 dump["numbers"]["numberOfValidators"] = len(validators)
-tools101.saveDumpAndExit(const101.validatorDump, dump)
+tools101.afterMapMatches(dump, const101.validatorDump)

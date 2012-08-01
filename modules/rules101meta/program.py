@@ -123,5 +123,5 @@ numbers["numberOfPredicates"] = len(predicates)
 # Write to files and stdout
 rulesFile = open(const101.rulesDump, 'w')
 rulesFile.write(json.dumps(dump))
-tools101.dump(dump)
+tools101.releaseDump(dump)
 sys.exit(0)

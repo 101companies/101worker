@@ -192,7 +192,7 @@ def loopOverFiles(fun, topdown):
            fun(dirname, dirs, files)
 
 
-def loadDumpIncrementally(filename):
+def beforeMapMatches(filename):
    global problems
    global numberOfSuccesses
    global numberOfFailures
@@ -213,7 +213,7 @@ def loadDumpIncrementally(filename):
    return dump
 
 
-def saveDumpAndExit(filename, dump, special=None):
+def afterMapMatches(dump, filename=None):
 
    # Extend dump by generic information
    if not "numbers" in dump:
@@ -221,22 +221,25 @@ def saveDumpAndExit(filename, dump, special=None):
    dump["numbers"]["numberOfFiles"] = numberOfFiles
    dump["numbers"]["numberOfInserts"] = numberOfInserts
    dump["numbers"]["numberOfUpdates"] = numberOfUpdates
-#   dump["numbers"]["numberOfDeletes"] = numberOfDeletes
+   dump["numbers"]["numberOfDeletes"] = numberOfDeletes
    dump["numbers"]["numberOfSuccesses"] = numberOfSuccesses
    dump["numbers"]["numberOfFailures"] = numberOfFailures
    dump["problems"] = problems
 
+   releaseDump(dump, filename)
+
+def releaseDump(dump, filename=None):
    # Print part of dump to stdout for the user's convenience
-   if special in dump:
-      print "\n"+special+":\n\t" + json.dumps(dump[special])
    if "numbers" in dump:
       print "\nnumbers:\n\t" + json.dumps(dump["numbers"])
    if "problems" in dump:
       print "\nproblems:\n\t" + json.dumps(dump["problems"])
-      
+
    # Write dump to file and exit
-   dumpFile = open(filename, 'w')
-   dumpFile.write(json.dumps(dump))
+   if not filename is None:
+      dumpFile = open(filename, 'w')
+      dumpFile.write(json.dumps(dump))
+
    sys.exit(0)
 
 
