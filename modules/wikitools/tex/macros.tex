@@ -1,166 +1,38 @@
-\newcommand{LanguageMetaHeadline}
-A simple metadata language for matching files in a file system\newcommand{LanguageMetaSummary}
-Overall, [[Language:101meta]] is a rule-based language for associating metadata with files and fragments thereof. The constraints of a rule say what files to match. Metadata consists of key-value pairs. Overall, [[Language:101meta]] is JSON-based. Hence, the metadata values can be arbitrary JSON expressions. Conceptually, the language not tied to [[101companies:Project]]. Actually, the language's motivation and usage scenarios directly relate to key notions of the project. That is, project-specific forms of metadata are of interest, e.g., tags for languages, technologies, and features or terms of the [[101companies:System]]. Also, the use of metadata for the purpose of exploration, as with the [[101companies:Explorer]], are of primary interest.\newcommand{LanguageMetaMetadataconcepts}
-We present the metadata concepts of [[Language:101meta]] by a series of examples.
-\subsection{Language-related metadata}
-=
-
-The first example concerns matching of files with ''suffix'' ".java" to be associated with the language "Java".
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/BPKKYCEWAI.src}
-
-The ''suffix'' constrains the suffix (the extension) of files to be matched.  Metadata takes the form of a key-value pair with "language" as key and "Java" as value. We assume that a 101companies-specific interpreter links the key-value pair to the resource [[Language:Java]] as it is manifest on the [[101companies:Wiki]]. 
-
-The example specifies a single rule. In general, an [[Language:101meta]] specification is a list of rules. This is demonstrated by rewriting the example to use array notation instead:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/6H6LU9F15N.src}
-
-Here is a specification that matches both [[Language:JavaScript]] and [[Language:Java]] files:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/SPEKK8FAWG.src}
-
-Until now, we have been concerned with the language names on the [[101companies:Wiki]]. Languages may be named differently in other contexts. If this is the case, then metadata can be used to establish effective name mappings. For instance, the [[101companies:Explorer]] uses the generic syntax highlighter [[Technology:GeSHi]] for rendering code. This technology uses indeed language names that are often different from the names on the [[101companies:Wiki]]. In fact, [[Technology:GeSHi]]'s language names are effectively rather language ''codes''. For instance, the rule for Java is revised as follows:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/COL5SX8ZSX.src}
-
-The names only differ with regard to upper and lower case here.
-We assume that a 101companies-specific interpreter may look up the value for key "geshi" when [[Technology:GeSHi]] should be utilized.
-\subsection{Technology-related metadata}
-=
-
-We will be concerned now with technologies as opposed to languages. We define rules related to the parser generator [[Technology:ANTLR]] for illustration. In the case of using ANTLR with Java, the technology is packaged as a ".jar" archive. Concretely, let us match (version-specific) file "antlr-3.2.jar" to be associated with the technology "ANTLR".
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/IOREYRLJDE.src}
-
-The ''basename'' constraint implies that we do not care about the directory of matched files here. Otherwise, we would be using a ''filename'' constraint for the full filename. Metadata takes the form of a key-value pair with "technology" as key and "ANTLR" as value. We assume that a 101companies-specific interpreter links the key-value pair to [[Technology:ANTLR]].
-
-Let us cover two versions of ANTLR:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/7QXLKA3OZ5.src}
-
-The example applies the same metadata to two different files. For conciseness' sake, the constraint keys for file matching (i.e., ''suffix'' and ''basename'') may also be associated with lists of alternatives for matching. Thus, the two rules may be factored into one as follows:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/EMYZ9R5SOM.src}
-
-We may also use [[regular expression]] matching on file names. In this manner, we can even match all possible versions of ANTLR. To this end, we allow for any substring between "antlr-" and ".jar". Thus:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/CQQWEN5X3R.src}
-
-Here, "^" marks the beginning of the string, "$" marks the end of the string, "(" and ")" are used for grouping, and "\" escapes a metasymbol (because "." is metasymbol for any character). The regular expression is enclosed by "#...#" thereby expressing unambiguously that regular expression matching is to be applied.
-
-The ".jar" file for ANTLR is by no means the only way how files could be associated with ANTLR. In general, technologies deal with various kinds of files: input, output, configuration files, or others. Consider ".g" files, which are an indicator of ANTLR usage because ANTLR's grammar files use this extension. Thus:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/T8IN24CDV5.src}
-
-This time, the metadata does not just declare the technology for the files at hand; it also assigns a ''role'' to the file in question. That is, the ''role'' "input" is assigned to ".g". We assume that a 101companies-specific interpreter, e.g., [[101companies:Explorer]] for the exploration of contributions, prioritizes "input" files as opposed to, for example, archives like the ".jar" file before.
-
-The use of ANTLR may also be inferred on the grounds of generated files. When ANTLR is used in a common manner, then generated code parser and lexer are to be found in files with specific names as follows:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/7VUAVL0QYK.src}
-
-(As an exercise, one may attempt a simplification of the patterns. Hint: the beginning of the file does not need to be matched explicitly.) This time, the files are associated with the ''role'' "output". We assume that a 101companies-specific interpreter, e.g., [[101companies:Explorer]] for the exploration of contributions, de-prioritizes "output" files as opposed to "input" files.
-
-There is a major problem with the rule for generated files: the rule relies on insufficiently distinctive filename patterns. The use of "Parser" or "Lexer" in naming source files for parsers and lexers does not reasonably imply usage of ANTLR. Thus, we need to further constrain the rule.
-\subsection{Programmable matching constraints}
-=
-
-The previous example motivates a mechanism that may take into account the content of files to ultimately decide on matching. Looking at files actually generated by ANTLR, a simple signature stands out. Consider, for example, the parser of [[101implementation:antlrObjects]], which is a simple ANTLR-based implementation of the [[101companies:System]]; it parses textual syntax for companies into objects for companies:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/WNFKF9C1LC.src}
-
-We ony show the first line because the first line is indeed enough here to help with decision making. We would like to "grep" for the pattern "// \$ANTLR.*\.g" to search both for "$ANTLR" and the distinguished extension ".g" in the same line. We may place such a grep-based decision procedure in an executable shell script, say "grepAntlrOutput.sh" as follows:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/66DD6IMR3S.src}
-
-We assume here that the file for examination is passed as an argument; see "$1". The way we invoke the grep tool here, we obtain a return code 0 to mean that the string pattern was matched, and non-zero otherwise. We revise the previous rule to incoporate a constraint for the use of the script.
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/9VROR1KEX6.src}
-
-Thus, the ''basename'' constraint is only sufficient to determine candidates for matching while the execution of the ''predicate'' constraint must "succeed" for the rule to match.
-
-There is yet another form of "ANTLR" evidence. That is, let as also identify files that reference ANTLR in the sense of importing its runtime API "org.antlr.runtime". Such reference/import detection entirely relies on the use of predicates. We may investigate different kinds of files in different kinds of ways to identify imports. A very simple approach is again to use grep in a certain way.
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/EOXR91CPUO.src}
-
-Thus, the grep pattern searches for the token "import" followed by the string "org.antlr.runtime.". For what it matters, we enforce that "import" appears in the beginning of a line and matching is liberal in terms of whitespace. We add the following rule for detecting ANTLR in the sense of an "import" role.
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/X2TMY5SBL0.src}
-
-Clearly, such import matching could be useful for many other technologies, in fact, APIs. Thus, the notion should be properly generalized by parametrizing in the package name in question. Consider the following script with an extra argument:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/13M2VECHUW.src}
-
-Rules may pre-instantiate arguments always leaving the last argument position for the file to be examined; see the "args" key below. Accordingly, we revise the earlier rule to make use of the generalized script:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/GTRFG6UAO3.src}
-
-We assume that the file with this rule resides in the "101repo/technologies/ANTLR" and hence the script needs to be addressed by a relative path reaching into "101repo/technologies/Java_platform".
-\subsection{Feature-related metadata}
-=
-
-We may want to "tag" files with features of the [[101companies:System]]. The following example deals with [[101implementation:javaStatic]], which is a simple and modular Java-based implementation of the [[101companies:System]]:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/D07SKV1E5Y.src}
-
-We assume that the [[Language:101meta]] file is located within the directory for said implementation. Hence, the exercised ''filename''s are to be interpreted relative to the root directory of the implementation.
-\subsection{Term-related metadata}
-=
-
-We may also want to "tag" files with [[:Category:101term|101companies-specific terms]]. This may be an alternative to tagging files with features. For instance, we may want to express that certain modules define the 101companies-specific operations [[101term:Cut]] and [[101term:Total]]:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/V18KC4SQQ2.src}
-
-One may think of these 101companies-specific tags as being more concise than the feature-oriented tags that we used earlier. That is, term [[101term:Total]] is a proxy for feature [[101feature:Type-driven query]] and term [[101term:Cut]] is a proxy for feature  [[101feature:Type-driven transformation]]. As a guideline, such concise terms are to be preferred over features for tagging, whenever applicable.
-
-We continue the previous example, by tagging also structure-related modules. That is, we associate the tags for the terms [[101term:Company]], [[101term:Department]], and [[101term:Employee]] with the appropriate ".java" files. Incidentally, such tagging is more precise than the earlier tagging with the feature [[101feature:Tree structure]], which did not distinguish the different domain concepts for companies, departments, and employees.
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/QXVK2NBNRZ.src}
-\subsection{Fragment scope of metadata}
-=
-
-In the examples so far, we really meant to tag complete files. This was fabricated simplicity. It may be necessary to tag ''fragments'' of files. Consider, for example, the data model for companies in [[101implementation:haskell]], which is a trivial Haskell-based implementation of the [[101companies:System]]. One file contains all the data types for companies, departments, and employees:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/4SUHSZOXDQ.src}
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/P7NV8L3Z1E.src}
-
-(The actual Haskell code was slightly edited for simplicity of the present discussion.) We would like to tag the file with the appropriate terms for companies, departments, and employees. With the existing [[Language:101meta]] expressiveness, such tagging would take the following form:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/WOE9JC6INJ.src}
-
-Such a specification may be sufficient for some purposes, but it does not scope these terms very well. We would like to specify the fragments that define the data types in question.  To this end, [[Language:101meta]] provides an extra kind of constraint; see the "fragment" key below. That is, we can constrain the scope of metadata to a specific fragment, subject to some linguistic support for fragment selection:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/ZK4H5RUFZ2.src}
-
-In general, fragments are specified by the JSON value that is associated with the "fragment" key. In the example, we use Haskell-specific notation for fragment location. That is, we use the "data" key with a data type name as value to select indeed the corresponding top-level declaration for the data type in the given file. In a similar manner, we could select top-level function definitions. There is also a more lexical and generic approach to fragment selection based on [[Technology:GeFLo]], a 101companies-specific technology for generic fragment location.
-
-We assume that a 101companies-specific interpreter checks the feasibility of fragment selection. In fact, the [[101companies:Explorer]] for the exploration of contributions even locates the selected fragments and renders them in the view for the user. To this end, the explorer invokes fragment locators; these are technologies for applying a fragment specification on a given file and returning the actual fragment, if selection succeeds. The association between files and fragment locators is again expressed with metadata. The following rule associates language-related metadata with Haskell source files; there is the "locator" key specifically:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/2362T28Z0O.src}
-
-We assume that the rule resides in file at the root of the repository. Thus, the reference to the locator program is also relative to the root. The expected I/O behavior of a locator program is that it takes a fragment specification (via a file), an input file, and returns the line range for the selected fragment (via file), if selection succeeded.
-\subsection{Comments on metadata rules}
-= 
-
-Suppose we would like to enrich technology tagging so that metadata includes extra explanatory information about the match. For instance, in an earlier example for matching with an archive for ANTLR, it may be helpful to note that the match is about "The ANTLR library". Here is variation of the earlier rule which incorporate a key-value pair for such a "comment" into the metadata:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/MR55Z9TGH1.src}
-
-We assume that a 101companies-specific interpreter may leverage such a comment for giving feedback about rule application to a user, e.g., in the [[101companies:Explorer]]. We can make such reporting more useful by picking up substrings from the match. To this end, we apply the common covention for regular expressions that substrings can be bound to variables by enclosing subexpresssions into parentheses, giving rise to variables "$1", "$2", ... We revise the rule one more time:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/TKZDUX08RT.src}
-
-Hence, if this rules matches with a basename "antlr-3.2.jar", then the metadata contains the comment "The ANTLR library, Version 3.2". Any key-value pairs of metadata with a string-typed value may pick up matched substrings in this manner.\newcommand{LanguageMetaMetadataorganization}
-In the interest of metadata management and collaborative authoring of metadata in the [[101companies:Project]], metadata should be directly associated with languages, technologies, and contributions in the appropriate directory of the repository. For instance, language-related metadata for language ''L'' should be directly saved in the corresponding subdirectory ''L'' of "101repo/languages". For instance:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/BQX1BVT0SA.src}
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/X1UEV4D6PQ.src}
-
-It should be noted that the key-value pair "language" : "Haskell" is missing. It is implied by a convention to take into account the location of the file within "101repo/languages/Haskell". Such a convention also exists for technologies. The following file collects all rules for ANTLR technology, as they were discussed earlier. The key-value pair "technology" : "ANTLR" is consistently omitted. Appropriate comments are added:
-
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/0RYXNQSS7U.src}
-\lstinputlisting[xleftmargin=20pt]{\texgen/sources/C2GHTMR4GF.src}\newcommand{LanguageMetaContributors}
-* [[101contributor:Jean-Marie Favre|Jean-Marie Favre]] ([[:Category:101influencer|''influencer'']])
-* [[101contributor:Ralf L\"{a}mmel|Ralf L\"{a}mmel]] ([[:Category:101author|''author'']])
-
-[[Category:101language]]
-[[Category:Metadata language]]
+\newcommand{\LanguageMetaHeadline}{[[Generic programming]] in [[Language:Haskell]] with [[SYB]]}
+\newcommand{\LanguageMetaLanguages}{* [[Language:Haskell]] including [[SYB]]-related extensions}
+\newcommand{\LanguageMetaTechnologies}{* [[Technology:GHCi]]}
+\newcommand{\LanguageMetaFeatures}{* [[101feature:Tree structure]]
+* [[101feature:Type hierarchy]]
+* [[101feature:Graph structure]]
+* [[101feature:Type-driven query]]
+* [[101feature:Type-driven transformation]]
+* [[101feature:Structure-driven query]]
+* [[101feature:Global invariant]]
+* [[101feature:Serialization]]}
+\newcommand{\LanguageMetaMotivation}{The implementation demonstrates [[generic programming]] in [[Language:Haskell]] using [[SYB]] style. Generic programming is useful in so far that several operations of the 101companies features involve traversal over  nested data. For instance, totaling all salaries requires the location of salary subterms at all levels in a given company term. Accordingly, operations for totaling and cutting salaries are implemented as [[generic function]]s that traverse over the company structure while type-specific cases detect employees and access their salaries. (It happens that the original publication on [[SYB]] used these generic programming samples for motivation.) The resulting code is considerably more concise, when compared to a conservative style of functional programming; see [[101implementation:haskell]]. Additional operations are implemented to exercise [[SYB]] for different idioms of query or transformation and to address additional structural concerns; see the implementations of [[101feature:Structure-driven query]], [[101feature:Graph structure]], and [[101feature:Structure-driven query]].}
+\newcommand{\LanguageMetaIllustration}{The data model for companies uses a data type ''SubUnit'' to have a common base concept for departments and employees; it also uses an optional ''Mentor'' component to associate mentees with mentors "by name". In this manner some of non-basic, structure-related features can be exercised:
+
+\lstinputlisting[xleftmargin=5pt, language=haskell" source="Company.hs]{\texgen/sources/WV6F2X6ELN.src}
+
+Several of the operations on companies can be implemented in a very concise manner based on the [[SYB]] style of generic programming. For instance, the operation for totaling salaries simply extracts all floats from the given term and reduces them by addition:
+
+\lstinputlisting[xleftmargin=5pt, language=haskell" source="Total.hs]{\texgen/sources/AAJWE2BI8B.src}}
+\newcommand{\LanguageMetaArchitecture}{The implementation is highly modular in terms of the mapping of features to modules. 
+
+Structure-related features:
+* [[101feature:Tree structure]]: ''Company.hs''
+* [[101feature:Type hierarchy]]: ''Company.hs''
+* [[101feature:Graph structure]]: ''Company.hs'' and ''Mentoring.hs''
+
+Behavior-related features:
+* [[101feature:Type-driven query]]: ''Total.hs''
+* [[101feature:Type-driven transformation]]: ''Cut.hs''
+* [[101feature:Structure-driven query]]: ''Depth.hs''
+* [[101feature:Global invariant]]: ''Precedence.hs''
+
+Module "Deriving.hs" hosts "deriving" clauses for the type classes "Eq", ''Read", ''Show'', ''Typeable'', and ''Data''
+of the data types for companies. In this manner, structural equality, [[closed serialization]], and [[SYB]] style of generic programming are enabled.
+
+Module ''Main.hs'' collects a few test scenarios.}
+\newcommand{\LanguageMetaUsage}{The Haskell module ''Main'' has to be consulted with GHCi, and the ''main'' function has to be applied so that output for the test scenarios is produced. The ''expected'' output is available through the file ''baseline''. There is a ''Makefile'' with a target ''test'' for [[test automation]].}
+\newcommand{\LanguageMetaContributors}{* [[101contributor:Ralf L\"{a}mmel|Ralf L\"{a}mmel]] ([[:Category:101developer|''developer'']])}

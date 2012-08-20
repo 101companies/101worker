@@ -36,7 +36,7 @@ oxMapping:
 	@cp ${resultsdir}/101repo/${oxMapping}/report.pdf ${webdir}/MegaModels/${oxMapping}
 
 ${resultsdir}/101repo/${oxMapping}/report.pdf:
-	if test -d ${resultsdir}/101repo/${oxMapping}; then cd ${resultsdir}/101repo/${oxMapping}; make; else echo 'no input to build report.pdf; fi
+	if test -d ${resultsdir}/101repo/${oxMapping}; then cd ${resultsdir}/101repo/${oxMapping}; make; else echo 'no input to build report.pdf'; fi
 	#@cd ${resultsdir}/101repo/${oxMapping}; make
 
 clean:

@@ -10,13 +10,13 @@ from utils import *
 
 site = wiki.Wiki('http://101companies.org/api.php')
 params = {'action':'query',
-    'titles':'Language:101meta'
+    'titles':'101implementation:syb'
 }
 req = api.APIRequest(site, params)
 res = req.query(querycontinue=True)
 pprint.pprint(res)
 
-wikipage = page.Page(site, title='Language:101meta')
+wikipage = page.Page(site, title='101implementation:syb')
 wikidata = wikipage.getWikiText(True).decode('utf-8', 'replace')
 #pprint.pprint(wikidata)
 
