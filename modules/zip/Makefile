@@ -1,27 +1,16 @@
 include ../Makefile.vars
 
-run: ${webdir}/contributions.tgz
+run:
+	make ${webdir}/data/zips
 
-${webdir}/contributions.tgz: ${webdir}/contributions
-	cd ${webdir} ; pwd ; tar cf contributions.tar contributions
-	gzip -9 ${webdir}/contributions.tar 
-	rm -f ${webdir}/contributions.tgz
-	mv ${webdir}/contributions.tar.gz ${webdir}/contributions.tgz 
-	
-restart-from-zip:
-	rm -f ${webdir}/contributions.tar
-	gunzip -c ${webdir}/contributions.tgz >${webdir}/contributions.tar
-	rm -f -r ${webdir}/contributions
-	cd ${webdir} ; pwd ; tar -xf contributions.tar 
-	rm -f ${webdir}/contributions.tar
+${webdir}/data/zips:	${dumpsDir} ${webdir}/data/resources ${pulled101RepoDir}
+	./zipModule.py
+	test -e ${webdir}/data/zips
 
-restart-from-worker: download restart-from-zip
-		
-download:
-	rm -f ${webdir}/contributions.tgz
-	cd ${webdir} ; wget ${workerWebUrl}contributions.tgz
-     
 clean:
-	rm -f ${webdir}/contributions.tgz
-	rm -f ${webdir}/dumps.tgz
+	@#no-op
+
+reset:
+	rm -rf ${webdir}/data/zips
+	
 
