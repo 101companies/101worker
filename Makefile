@@ -39,6 +39,7 @@ init:
 	@mkdir -p ../101web/data
 	@mkdir -p ../101web/data/dumps
 	@mkdir -p ../101web/data/resources
+	@mkdir -p ../101web/data/views
 	@mkdir -p ../101web/data/resources/contributions
 	@mkdir -p ../101web/data/resources/languages
 	@mkdir -p ../101web/data/resources/technologies
