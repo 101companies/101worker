@@ -32,7 +32,7 @@ if "geshicodes" in dump:
    geshicodes = set(dump["geshicodes"])
 
 # Loop over matches
-dump = tools101.deriveByKey("geshi", ".metrics.json.html", derive)
+dump = tools101.deriveByKey("geshi", ".metrics.json", derive)
 
 # Convert set to list before dumping JSON
 geshicodes = list(geshicodes)

@@ -42,6 +42,7 @@ init:
 	@mkdir -p ../101web/data/resources/contributions
 	@mkdir -p ../101web/data/resources/languages
 	@mkdir -p ../101web/data/resources/technologies
+	@mkdir -p ../101web/data/resources/themes
 
 # Git-related convenience
 push:
