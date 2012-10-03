@@ -16,7 +16,7 @@ report:
 
 # Arcives the log files from the last execution
 %.archive:
-	mkdir p ~/101web/logs
+	mkdir -p ~/101web/logs
 	cd modules; make $*.archive
 
 # What is this?
