@@ -1,0 +1,34 @@
+a.size-0{
+   font-size: 5px;
+   color: red;
+}
+
+a.size-1{
+   font-size: 10px;
+   color: orange;
+}
+
+a.size-2{
+   font-size: 16px;
+   color: magnenta;
+}
+
+a.size-3{
+   font-size: 23px;
+   color: blue;
+}
+
+a.size-4{
+   font-size: 31px;
+   color: green;
+}
+
+a.size-5{
+   font-size: 40px;
+   color: brown;
+}
+
+a.size-6{
+   font-size: 50px;
+   color: black;
+}

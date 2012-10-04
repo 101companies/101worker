@@ -16,7 +16,7 @@ report:
 
 # Arcives the log files from the last execution
 %.archive:
-	mkdir p ~/101web/logs
+	mkdir -p ~/101web/logs
 	cd modules; make $*.archive
 
 # What is this?
@@ -39,9 +39,11 @@ init:
 	@mkdir -p ../101web/data
 	@mkdir -p ../101web/data/dumps
 	@mkdir -p ../101web/data/resources
+	@mkdir -p ../101web/data/views
 	@mkdir -p ../101web/data/resources/contributions
 	@mkdir -p ../101web/data/resources/languages
 	@mkdir -p ../101web/data/resources/technologies
+	@mkdir -p ../101web/data/resources/themes
 
 # Git-related convenience
 push:
