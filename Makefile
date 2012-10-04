@@ -49,3 +49,7 @@ init:
 push:
 	git commit -a
 	git push
+
+download:
+	make init
+	cd modules/zip; make download-and-extract
