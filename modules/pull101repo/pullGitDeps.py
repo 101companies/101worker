@@ -25,6 +25,7 @@ def removeContrib(dep):
 	path = os.path.join(const101.sRoot, dep['targetdir'])
 	if os.path.isdir(path):
 		print 'removing ' + name
+		copied.remove(path)
 		shutil.rmtree(path)	
 		shutil.rmtree(os.path.join(gitdepsFolder, name))
 
@@ -37,20 +38,20 @@ def removeSubdirs(dep):
 			contribPath = os.path.join(const101.sRoot, dep['targetdir'], fname)		
 			if os.path.isdir(contribPath):
 				print 'removing ' + contribPath
+				copied.remove(contribPath)
 				shutil.rmtree(contribPath)
 	path = os.path.join(gitdepsFolder, name)
 	print 'removing ' + path
 	shutil.rmtree(path)
 
 def copyContrib(dep):
-	name = getRepoName(dep['sourcerepo'])	
-	#marking this folder as "our" folder
-	open(os.path.join(gitdepsFolder, name, dep['sourcedir'][1:], '.created_by_pull101repo'), 'w')
+	name = getRepoName(dep['sourcerepo'])
 	if dep.get('needsUpdate') or not os.path.exists(os.path.join(const101.sRoot, dep['targetdir'])):
 		#if we created the folder, then we can remove it - otherwise, we are supposed to throw an exception - which copytree does, since copytree doesn't overwrite
-		if os.path.exists(os.path.join(const101.sRoot, dep['targetdir'], '.created_by_pull101repo')):
+		if os.path.exists(os.path.join(const101.sRoot, dep['targetdir'])):
 			shutil.rmtree(os.path.join(const101.sRoot, dep['targetdir']))
 		print 'copying ' + name
+		copied.append(os.path.join(const101.sRoot, dep['targetdir']))
 		shutil.copytree(os.path.join(gitdepsFolder, name, dep['sourcedir'][1:]), os.path.join(const101.sRoot, dep['targetdir']), ignore=ignoredFile)
 
 def copySubdirs(dep):
@@ -59,13 +60,12 @@ def copySubdirs(dep):
 	dirList = os.listdir(depsPath)
 	for fname in dirList:
 		if os.path.isdir(os.path.join(depsPath, fname)) and not '.git' in fname:
-			#marking this folder as "our" folder			
-			open(os.path.join(depsPath, fname, '.created_by_pull101repo'), 'w')
 			if dep.get('needsUpdate') or not os.path.exists(os.path.join(const101.sRoot, dep['targetdir'], fname)):
 				#if we created the folder, then we can remove it - otherwise, we are supposed to throw an exception - which copytree does, since copytree doesn't overwrite
-				if os.path.exists(os.path.join(const101.sRoot, dep['targetdir'], fname, '.created_by_pull101repo')):
-					shutil.rmtree(os.path.join(const101.sRoot, dep['targetdir'], fname))			
+				if os.path.exists(os.path.join(const101.sRoot, dep['targetdir'], fname)):
+						shutil.rmtree(os.path.join(const101.sRoot, dep['targetdir'], fname))			
 				print 'copying ' + fname
+				copied.append(os.path.join(const101.sRoot, dep['targetdir'], fname))
 				shutil.copytree(os.path.join(depsPath, fname), os.path.join(const101.sRoot, dep['targetdir'], fname), ignore=ignoredFile)
 
 
@@ -75,6 +75,7 @@ gitdepsFolder = os.path.join(basePath, "gitdebs")
 gitdepsFile = '../../../101results/101repo/.gitdeps'
 ensureFolder(gitdepsFolder)
 gitdepsJson = json.loads(open(gitdepsFile).read())
+copied = json.loads(open('./.copied').read())
 
 
 if os.path.isfile('./gitdeps_local'):
@@ -110,3 +111,5 @@ for dep in gitdepsJson:
 
 print "saving .gitdebs file"
 shutil.copy(gitdepsFile, './gitdeps_local')
+f = open('./.copied', 'w')
+f.write(json.dumps(copied))
