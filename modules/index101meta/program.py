@@ -119,6 +119,14 @@ def fun(dirname, dirs, files):
     resultFile.write(json.dumps(result))
     resultFile.close()
 
+    # Dumping the file index
+    fileresult = dict()
+    fileresult["dirs"] = dirs
+    fileresult["files"] = files
+    fileresultFile = open(os.path.join(const101.tRoot, dirname, "fileindex.json"), 'w')
+    fileresultFile.write(json.dumps(fileresult))
+    fileresultFile.close()
+
 resolution = json.load(open(const101.resolutionDump, 'r'))["results"]
 tools101.loopOverFiles(fun, False)
 print ""
