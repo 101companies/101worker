@@ -1,4 +1,2 @@
-# Headline
-
-A module to generate index files
+See https://github.com/101companies/101worker/wiki for the documentation.
 
