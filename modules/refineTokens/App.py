@@ -2,18 +2,39 @@
 
 import Helper
 import Tokenization
+import IndexTools
 import json
 import sys
 import os
 
-def run():
-	print 'Refining .tokens.json files'
+
+def createMap(tokenized):
+	result = dict()
+	terms = sum(tokenized, [])
+	terms = [x.lower() for x in terms]
+	for term in terms:
+		if not result.has_key(term):
+			result[term] = 0
+		result[term] += 1
+	return result
+
+def refineTokens():
+	print 'Refining...'
 	files = Helper.derivedFiles(Helper.relevantFiles(), '.tokens.json')
 	for file in files:
 		tokenized = Tokenization.tokenizeFile(file)
-		json.dump(tokenized, open(file.replace('.tokens.json', Helper.fileExt()), 'w'))
+		map = createMap(tokenized)
+		json.dump(map, open(file.replace('.tokens.json', Helper.fileExt()), 'w'))
 		Helper.incProgress()
 	print ''
+
+#def appendToIndex():
+#	print 'Appending to index...'
+#	IndexTools.appendToIndex()
+
+def run():
+	refineTokens()
+#	appendToIndex()
 	print 'Finished'
 
 
@@ -26,6 +47,7 @@ def reset():
 
 def usage():
 	print './App.py [-reset]'
+
 
 #command line parsing
 if len(sys.argv) == 1:
