@@ -25,11 +25,14 @@ def fun(dirname, dirs, files):
       matches += readOrDefault(f3, [])
       f4 = os.path.join(const101.tRoot, filename + ".metrics.json")
       metrics = readOrDefault(f4, const101.noMetrics())
+      f5 = os.path.join(const101.tRoot, filename + ".refinedTokens.json")
+      tokens = readOrDefault(f5, [])
       tFilename = os.path.join(const101.tRoot, filename + ".summary.json")
       tFile = open(tFilename, 'w')
       dump = dict()
       dump["units"] = matches
       dump["metrics"] = metrics
+      dump["refinedTokens"] = tokens
       tFile.write(json.dumps(dump))
 
 print "Summarizing 101repo."
