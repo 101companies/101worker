@@ -9,6 +9,13 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
+def addRefinedTokens(result, dirname, basename, summary):
+    if not summary['refinedTokens'] == []:
+        result['refinedTokens'][os.path.join(dirname, basename)] = summary['refinedTokens']
+
+def addRefinedTokensDir(result, index):
+    result['refinedTokens'].update(index['refinedTokens'])	
+
 def addMetrics(lvalue, rvalue):
     lvalue["metrics"]["size"] += rvalue["metrics"]["size"]
     lvalue["metrics"]["loc"] += rvalue["metrics"]["loc"]
@@ -42,13 +49,14 @@ def addFile(result, rkey, mkey, val2key, basename, summary):
                 result[rkey][key]["files"][basename] = list()
             result[rkey][key]["files"][basename].append(unit)
             addMetrics(result[rkey][key],summary) 
+            
 
 def addDir(r, d, subdirname, index):
-    for key in index[d]:
-        initializeKey(r, d, key)
-        for filename in index[d][key]["files"]:
-           r[d][key]["files"][os.path.join(subdirname, filename)] = []              
-        addMetrics(r[d][key],index[d][key])
+        for key in index[d]:
+            initializeKey(r, d, key)
+            for filename in index[d][key]["files"]:
+               r[d][key]["files"][os.path.join(subdirname, filename)] = []              
+            addMetrics(r[d][key],index[d][key])
 
 def phrase2str(phrase):
     key = phrase[0]
@@ -64,6 +72,7 @@ def fun(dirname, dirs, files):
     result["concepts"] = dict()
     result["terms"] = dict()
     result["phrases"] = dict()
+    result["refinedTokens"] = dict()
     
     #
     # Aggregation of file summaries
@@ -77,6 +86,9 @@ def fun(dirname, dirs, files):
 
             # Deal with languages for file
             addFile(result, "languages", "language", lambda x: x, basename, summary)
+
+            # Deal with refinedTokens for file
+            addRefinedTokens(result, dirname, basename, summary)
 
             # Deal with technologies for file
             addFile(result, "technologies", "partOf", lambda x: x, basename, summary)
@@ -108,7 +120,10 @@ def fun(dirname, dirs, files):
             index = json.load(subdirFile)
             subdirFile.close()
             for key in result:
-                addDir(result, key, subdirname, index)
+		if key == 'refinedTokens':
+                    addRefinedTokensDir(result, index)
+                else:
+                    addDir(result, key, subdirname, index)
         except IOError:
             pass
 
