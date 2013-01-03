@@ -16,7 +16,7 @@ def load(fileName, buffer=None):
 	file.close()
 	return buffer
 
-def oracle(term):
+def isWord(term):
 	return wordList.has_key(term.lower()) or abbrevList.has_key(term)
 
 

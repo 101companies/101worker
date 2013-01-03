@@ -20,18 +20,15 @@ def relevantFiles(relevanceValues = [ 'system' ]):
 			files.append(match['filename'])
 	return files
 
-def derivedFiles(baseFiles, derivedFileName):
+def derivedFiles(baseFiles, fileExt):
 	files = []
 	for f in baseFiles:
-		if os.path.exists(os.path.join(tRoot(), f + derivedFileName)):
-			files.append(os.path.join(tRoot(), f + derivedFileName))
+		if os.path.exists(os.path.join(tRoot(), f + fileExt)):
+			files.append(os.path.join(tRoot(), f + fileExt))
 	return files
 
 def tRoot():
 	return const101.tRoot
-
-def fileExt():
-	return '.refinedTokens.json'
 
 def incProgress():
 	tools101.tick();

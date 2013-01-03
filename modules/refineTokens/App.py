@@ -2,11 +2,13 @@
 
 import Helper
 import Tokenization
-import IndexTools
 import json
 import sys
 import os
 
+inputFileExt = '.tokens.json'
+outputFileExt = '.refinedTokens.json'
+outputDebugFileExt = '.debug.refinedTokens.json'
 
 def createMap(tokenized):
 	result = dict()
@@ -18,43 +20,45 @@ def createMap(tokenized):
 		result[term] += 1
 	return result
 
-def refineTokens():
+def refineTokens(debug = False):
 	print 'Refining...'
-	files = Helper.derivedFiles(Helper.relevantFiles(), '.tokens.json')
+	#find all .tokens.json files
+	files = Helper.derivedFiles(Helper.relevantFiles(), inputFileExt)
+
 	for file in files:
 		tokenized = Tokenization.tokenizeFile(file)
+		if (debug):
+			json.dump(tokenized, open(file.replace(inputFileExt, outputDebugFileExt), 'w'))
 		map = createMap(tokenized)
-		json.dump(map, open(file.replace('.tokens.json', Helper.fileExt()), 'w'))
+		json.dump(map, open(file.replace('.tokens.json', outputFileExt), 'w'))
 		Helper.incProgress()
 	print ''
 
-#def appendToIndex():
-#	print 'Appending to index...'
-#	IndexTools.appendToIndex()
 
-def run():
-	refineTokens()
-#	appendToIndex()
+def run(debug = False):
+	refineTokens(debug)
 	print 'Finished'
 
 
 def reset():
-	print 'removing all ' + Helper.fileExt() + ' files'
+	print 'removing all ' + outputFileExt + ' files'
 	for (path, dirs, files) in os.walk(Helper.tRoot()):
 		for file in files:
-			if file.endswith(Helper.fileExt()):
+			if file.endswith(outputFileExt) or file.endswith(outputDebugFileExt):
 				os.remove(os.path.join(path, file))
 
 def usage():
-	print './App.py [-reset]'
+	print './App.py [-debug|-reset]'
 
 
 #command line parsing
 if len(sys.argv) == 1:
 	run()
+elif sys.argv[1] == '-debug':
+	run(True)
 elif sys.argv[1] == '-reset':
 	reset()
 else:
-	print 'unrecognized parameter'
+	print 'unrecognized parameters'
 	usage()
 
