@@ -34,7 +34,10 @@ def refineUnknown(token):
 #try to split on case change - StyledEditorKit => [Styled, Editor, Kit]
 def splitOnChange(token):
 	pattern = r'([A-Z]{2,}(?=A-Z|$)|[A-Z][a-z]*)'
-	return re.findall(pattern, token)
+	found = re.findall(pattern, token)
+	if found == []:
+		return [token]
+	return found
 
 	#legacy code, since the upper code isn't fully tested
 	#boundaries = []
@@ -110,7 +113,6 @@ def tokenizeToken(word):
 			secondStep = splitOnUCLC(t2)
 			for t3 in secondStep:
 				result += refineUnknown(t3)
-
 	return result
 
 

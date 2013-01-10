@@ -2,7 +2,6 @@ run:
 	@./App.py
 
 debug:
-	@echo running in debug mode - .debug.refinedTokens.json files will be produced
 	@./App.py -debug
 
 test:

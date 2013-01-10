@@ -8,7 +8,7 @@ import os
 
 inputFileExt = '.tokens.json'
 outputFileExt = '.refinedTokens.json'
-outputDebugFileExt = '.debug.refinedTokens.json'
+outputDebugFileExt = '.refinedTokens.debug.json'
 
 def createMap(tokenized):
 	result = dict()
@@ -20,10 +20,11 @@ def createMap(tokenized):
 		result[term] += 1
 	return result
 
-def refineTokens(debug = False):
-	print 'Refining...'
+def refineTokens(debug = False, force = True):
 	#find all .tokens.json files
 	files = Helper.derivedFiles(Helper.relevantFiles(), inputFileExt)
+	if (not force):
+		files = Helper.disregardFiles(files, inputFileExt, outputFileExt)
 
 	for file in files:
 		tokenized = Tokenization.tokenizeFile(file)
@@ -35,10 +36,8 @@ def refineTokens(debug = False):
 	print ''
 
 
-def run(debug = False):
-	refineTokens(debug)
-	print 'Finished'
-
+def run(debug = False, force = False):
+	refineTokens(debug, force)
 
 def reset():
 	print 'removing all ' + outputFileExt + ' files'

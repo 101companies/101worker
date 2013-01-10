@@ -27,6 +27,26 @@ def derivedFiles(baseFiles, fileExt):
 			files.append(os.path.join(tRoot(), f + fileExt))
 	return files
 
+def build(sFilename, tFilename):
+	try:
+		sSize = os.stat(sFilename).st_size
+		if sSize == 0:
+			return False
+		else:
+			sCtime = os.path.getmtime(sFilename)
+			tCtime = os.path.getmtime(tFilename)
+			return sCtime > tCtime
+	except:
+		return True
+
+def disregardFiles(baseFiles, inputFileExt, outputFileExt):
+	files = []
+	for f in baseFiles:
+		if (build(f, f.replace(inputFileExt, outputFileExt))):
+			files.append(f)
+	return files
+
+
 def tRoot():
 	return const101.tRoot
 

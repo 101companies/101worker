@@ -1,0 +1,14 @@
+netbeans
+bool
+serializable
+throwable
+redmond
+depts
+sql
+css
+softlang
+org
+dom
+meganalysis
+haskell
+recognizer
