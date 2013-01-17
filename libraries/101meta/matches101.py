@@ -225,6 +225,11 @@ def matchFile(phase, dirname, basename, rule):
 #
 def handleFile(phase, dirname, basename, suffix):
    filename = os.path.join(dirname, basename)
+   #if the target file is older than the file this rule should be applied to, do nothing
+   #Also check the rules dump - if this one is newer, then we have to execute this stuff, otherwise do nothing
+   tFilename = os.path.join(const101.tRoot, dirname, basename + suffix)
+   if not tools101.build(filename, tFilename) or not tools101.build(const101.rulesDump, tFilename):
+      return
    units = list() # metadata units for the file at hand
    id = 0 # current rule number
    for r in rules:
@@ -262,7 +267,7 @@ def handleFile(phase, dirname, basename, suffix):
             
    # Add entry to matches if any matches for file at hand
    tools101.makedirs(os.path.join(const101.tRoot, dirname))
-   tFilename = os.path.join(const101.tRoot, dirname, basename + suffix)
+
    matchesFile = open(tFilename, 'w')
    matchesFile.write(json.dumps(units))
    if len(units) > 0:

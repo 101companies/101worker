@@ -121,7 +121,7 @@ numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 
 # Write to files and stdout if there have been changes
-if not json.load(open(const101.rulesDump, 'r')) == dump:
+if not os.path.exists(const101.rulesDump) or not json.load(open(const101.rulesDump, 'r')) == dump:
    rulesFile = open(const101.rulesDump, 'w')
    rulesFile.write(json.dumps(dump))
 else:
