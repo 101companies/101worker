@@ -229,6 +229,9 @@ def handleFile(phase, dirname, basename, suffix):
    #Also check the rules dump - if this one is newer, then we have to execute this stuff, otherwise do nothing
    tFilename = os.path.join(const101.tRoot, dirname, basename + suffix)
    if not tools101.build(filename, tFilename) or not tools101.build(const101.rulesDump, tFilename):
+      entry = {'units' : json.load(open(tFilename, 'r')), 'filename': filename}
+      if not entry['units'] == []:
+         matches.append(entry)
       return
    units = list() # metadata units for the file at hand
    id = 0 # current rule number
