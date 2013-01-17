@@ -120,8 +120,11 @@ numbers["numberOfProblems"] = len(unreadableFiles) + len(invalidFiles)
 numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 
-# Write to files and stdout
-rulesFile = open(const101.rulesDump, 'w')
-rulesFile.write(json.dumps(dump))
+# Write to files and stdout if there have been changes
+if not json.load(open(const101.rulesDump, 'r')) == dump:
+   rulesFile = open(const101.rulesDump, 'w')
+   rulesFile.write(json.dumps(dump))
+else:
+   print 'write ommited since there were no changes'
 tools101.releaseDump(dump)
 sys.exit(0)
