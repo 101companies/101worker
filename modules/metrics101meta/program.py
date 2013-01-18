@@ -6,22 +6,38 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
-# Per-file functinonality
-def derive(geshicode, rFilename, sFilename, tFilename1):
+#used for the incrementally stuff
+def testFile(sFilename, tFilename):
+	return tools101.build(sFilename, tFilename)
+
+#accept files that have  a geshi code - but also add the relevance of a file with respect to the default relevance
+def testEntry(entry):
+	meta = {"relevance" : "system"}
+	for m in entry["units"]:
+		if "relevance" in m["metadata"]:
+			meta["relevance"] = m["metadata"]["relevance"]
+		if "geshi" in m["metadata"]:
+			meta["geshi"] = m["metadata"]["geshi"]
+	if "geshi" in meta:
+		return meta
+	return None
+
+
+# Per-file functionality
+def derive(info, rFilename, sFilename, tFilename1):
    tFilename2 = tFilename1[:-len(".metrics.json")]+".tokens.json"
-   print "Process " + rFilename + " for GeSHi code " + geshicode + "."
-   command = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" "+ geshicode
+   print "Process " + rFilename + " for GeSHi code " + info["geshi"] + "."
+   command = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" \"" + info["geshi"] + "\" " + info["relevance"]
    (status, output) = tools101.run(command)
 
    # Result aggregation
    result = dict()
-   result["geshicode"] = geshicode
+   result["geshicode"] = info["geshi"]
    result["command"] = command
    result["status"] = status
    result["output"] = output
 
    return result
-
 
 print "Generating GeSHi-based metrics for 101repo."
 
@@ -32,7 +48,7 @@ if "geshicodes" in dump:
    geshicodes = set(dump["geshicodes"])
 
 # Loop over matches
-dump = tools101.deriveByKey("geshi", ".metrics.json", derive)
+dump = tools101.mapMatches(testEntry, testFile, ".metrics.json", derive)
 
 # Convert set to list before dumping JSON
 geshicodes = list(geshicodes)
