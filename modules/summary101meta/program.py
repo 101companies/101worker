@@ -7,6 +7,11 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
+def noMetrics():
+   default = const101.noMetrics()
+   default["relevance"] = "system"
+   return default
+
 def readOrDefault(filename, default):
    try:
       return json.load(open(filename, 'r'))
@@ -24,7 +29,7 @@ def fun(dirname, dirs, files):
       f3 = os.path.join(const101.tRoot, filename + ".fragments.json")
       matches += readOrDefault(f3, [])
       f4 = os.path.join(const101.tRoot, filename + ".metrics.json")
-      metrics = readOrDefault(f4, const101.noMetrics())
+      metrics = readOrDefault(f4, noMetrics())
       f5 = os.path.join(const101.tRoot, filename + ".refinedTokens.json")
       tokens = readOrDefault(f5, [])
       tFilename = os.path.join(const101.tRoot, filename + ".summary.json")

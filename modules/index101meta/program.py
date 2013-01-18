@@ -14,19 +14,29 @@ def addRefinedTokens(result, dirname, basename, summary):
         result['refinedTokens'][os.path.join(dirname, basename)] = summary['refinedTokens']
 
 def addRefinedTokensDir(result, index):
-    result['refinedTokens'].update(index['refinedTokens'])	
+    result['refinedTokens'].update(index['refinedTokens'])
 
 def addMetrics(lvalue, rvalue):
-    lvalue["metrics"]["size"] += rvalue["metrics"]["size"]
-    lvalue["metrics"]["loc"] += rvalue["metrics"]["loc"]
-    lvalue["metrics"]["ncloc"] += rvalue["metrics"]["ncloc"]
+    if "relevance" in rvalue["metrics"]:
+        relevance = rvalue["metrics"]["relevance"]
+        lvalue["metrics"][relevance]["size"] += rvalue["metrics"]["size"]
+        lvalue["metrics"][relevance]["loc"] += rvalue["metrics"]["loc"]
+        lvalue["metrics"][relevance]["ncloc"] += rvalue["metrics"]["ncloc"]
+    else:
+        for x in ["system", "reuse", "derive", "ignore"]:
+            lvalue["metrics"][x]["size"] += rvalue["metrics"][x]["size"]
+            lvalue["metrics"][x]["loc"] += rvalue["metrics"][x]["loc"]
+            lvalue["metrics"][x]["ncloc"] += rvalue["metrics"][x]["ncloc"]
 
 def initializeKey(r, map, key):
     d = r[map]
     if not key in d:
         d[key] = dict()
         d[key]["files"] = dict()
-        d[key]["metrics"] = const101.noMetrics()
+        d[key]["metrics"] = { "system":const101.noMetrics(),
+							  "reuse" : const101.noMetrics(),
+							  "derive": const101.noMetrics(),
+							  "ignore" : const101.noMetrics() }
         d[key]["resources"] = []
         if map in resolution:
             if key in resolution[map]:
@@ -39,7 +49,7 @@ def initializeKey(r, map, key):
                 if "101repo" in e:
                     resources["101repo"] = e["101repo"]
 
-def addFile(result, rkey, mkey, val2key, basename, summary):           
+def addFile(result, rkey, mkey, val2key, basename, summary):
     for unit in summary["units"]:
         if mkey in unit["metadata"]:
             val = unit["metadata"][mkey]
@@ -48,14 +58,14 @@ def addFile(result, rkey, mkey, val2key, basename, summary):
             if not basename in result[rkey][key]["files"]:
                 result[rkey][key]["files"][basename] = list()
             result[rkey][key]["files"][basename].append(unit)
-            addMetrics(result[rkey][key],summary) 
-            
+            addMetrics(result[rkey][key],summary)
+
 
 def addDir(r, d, subdirname, index):
         for key in index[d]:
             initializeKey(r, d, key)
             for filename in index[d][key]["files"]:
-               r[d][key]["files"][os.path.join(subdirname, filename)] = []              
+               r[d][key]["files"][os.path.join(subdirname, filename)] = []
             addMetrics(r[d][key],index[d][key])
 
 def phrase2str(phrase):
@@ -73,13 +83,13 @@ def fun(dirname, dirs, files):
     result["terms"] = dict()
     result["phrases"] = dict()
     result["refinedTokens"] = dict()
-    
+
     #
     # Aggregation of file summaries
     #
     for basename in files:
         try:
-            
+
             summaryFile = open(os.path.join(const101.tRoot, dirname, basename + ".summary.json"), 'r')
             summary = json.load(summaryFile)
             summaryFile.close()
