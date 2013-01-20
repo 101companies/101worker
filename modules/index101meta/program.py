@@ -9,6 +9,11 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
+def noMetrics():
+    d = const101.noMetrics()
+    d["numberOfFiles"] = 0
+    return d
+
 def addRefinedTokens(result, dirname, basename, summary):
     if not summary['refinedTokens'] == []:
         result['refinedTokens'][os.path.join(dirname, basename)] = summary['refinedTokens']
@@ -22,21 +27,23 @@ def addMetrics(lvalue, rvalue):
         lvalue["metrics"][relevance]["size"] += rvalue["metrics"]["size"]
         lvalue["metrics"][relevance]["loc"] += rvalue["metrics"]["loc"]
         lvalue["metrics"][relevance]["ncloc"] += rvalue["metrics"]["ncloc"]
+        lvalue["metrics"][relevance]["numberOfFiles"] += 1
     else:
         for x in ["system", "reuse", "derive", "ignore"]:
             lvalue["metrics"][x]["size"] += rvalue["metrics"][x]["size"]
             lvalue["metrics"][x]["loc"] += rvalue["metrics"][x]["loc"]
             lvalue["metrics"][x]["ncloc"] += rvalue["metrics"][x]["ncloc"]
+            lvalue["metrics"][x]["numberOfFiles"] += rvalue["metrics"][x]["numberOfFiles"]
 
 def initializeKey(r, map, key):
     d = r[map]
     if not key in d:
         d[key] = dict()
         d[key]["files"] = dict()
-        d[key]["metrics"] = { "system":const101.noMetrics(),
-							  "reuse" : const101.noMetrics(),
-							  "derive": const101.noMetrics(),
-							  "ignore" : const101.noMetrics() }
+        d[key]["metrics"] = { "system": noMetrics(),
+							  "reuse" : noMetrics(),
+							  "derive": noMetrics(),
+							  "ignore": noMetrics() }
         d[key]["resources"] = []
         if map in resolution:
             if key in resolution[map]:

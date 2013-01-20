@@ -18,24 +18,29 @@ def testEntry(entry):
 			meta["relevance"] = m["metadata"]["relevance"]
 		if "geshi" in m["metadata"]:
 			meta["geshi"] = m["metadata"]["geshi"]
-	if "geshi" in meta:
-		return meta
-	return None
-
+	return meta
 
 # Per-file functionality
 def derive(info, rFilename, sFilename, tFilename1):
-   tFilename2 = tFilename1[:-len(".metrics.json")]+".tokens.json"
-   print "Process " + rFilename + " for GeSHi code " + info["geshi"] + "."
-   command = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" \"" + info["geshi"] + "\" " + info["relevance"]
-   (status, output) = tools101.run(command)
+   if "geshi" in info:
+      tFilename2 = tFilename1[:-len(".metrics.json")]+".tokens.json"
+      print "Process " + rFilename + " for GeSHi code " + info["geshi"] + "."
+      command = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" \"" + info["geshi"] + "\" " + info["relevance"]
+      (status, output) = tools101.run(command)
 
-   # Result aggregation
-   result = dict()
-   result["geshicode"] = info["geshi"]
-   result["command"] = command
-   result["status"] = status
-   result["output"] = output
+      # Result aggregation
+      result = dict()
+      result["geshicode"] = info["geshi"]
+      result["command"] = command
+      result["status"] = status
+      result["output"] = output
+   else:
+	   default = const101.noMetrics()
+	   default["relevance"] = info["relevance"]
+	   json.dump(default, open(tFilename1, 'w'))
+
+	   result = dict()
+	   result["status"] = 0
 
    return result
 
