@@ -18,6 +18,7 @@ suffixesDump = os.path.join(dumps, "suffixes.json")
 importsDump = os.path.join(dumps, "imports.json")
 resolutionDump = os.path.join(dumps, "resolution.json")
 wikiDump = os.path.join(dumps, "Wiki101Full.json")
+pullRepoDump = os.path.join(dumps, "PullRepo.json")
 
 def noMetrics():
     result = dict()
