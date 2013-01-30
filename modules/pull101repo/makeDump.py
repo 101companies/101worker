@@ -48,4 +48,5 @@ for dep in local:
 
 
 json.dump(dump, open(const101.pullRepoDump, 'w'))
+json.dump("callback(" + dump + ")", open(const101.pullRepoDump + "p", 'w'))
 
