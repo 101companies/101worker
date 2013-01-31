@@ -39,8 +39,6 @@ for f in os.listdir(path):
 
 local = json.load(open('./gitdeps_local', 'r'))
 for dep in local:
-	str = ''
-	str
 	if not 'mode' in dep or not dep['mode'] == 'subdirsonly':
 		handleNormal(dump, dep)
 	else:

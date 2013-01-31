@@ -1,0 +1,38 @@
+[
+	{
+		"metricsValue"   : "loc",
+		"relevanceValues": ["system"],
+		"filename": "linesOfCode",
+		"marker"  : "o",
+		"xlabel"  :"implementations ordered by lines of code",
+		"ylabel"  : "lines of code",
+		"title"   : "lines of code in 101companies",
+		"annotations" : [
+			{
+				"type" : "median",
+				"text" : "Median = ",
+				"xytext" : [-50, 30],
+				"textcoords":"offset points",
+				"arrowprops" : {"arrowstyle":"->"}
+			}
+		]
+	},
+	{
+		"metricsValue"   : "numberOfFiles",
+		"relevanceValues": ["system"],
+		"filename": "numberOfFiles",
+		"marker"  : "o",
+		"xlabel"  :"implementations ordered by number of files",
+		"ylabel"  : "number of files",
+		"title"   : "number of files in 101companies",
+		"annotations" : [
+			{
+				"type" : "median",
+				"text" : "Median = ",
+				"xytext" : [-50, 30],
+				"textcoords":"offset points",
+				"arrowprops" : {"arrowstyle":"->"}
+			}
+		]
+	}
+]
