@@ -1,5 +1,3 @@
-__author__ = 'martin'
-
 import json
 import sys
 import os
@@ -32,6 +30,7 @@ def collect():
 	path = os.path.join(const101.tRoot, 'contributions')
 	for contrib in os.listdir(path):
 		if os.path.isdir(os.path.join(path, contrib)):
+			print 'Looking at ' + os.path.join(path, contrib)
 			index = json.load(open(os.path.join(path, contrib, 'index.json'), 'r'))
 			data = metricsDefault()
 			for lang in index['languages']:

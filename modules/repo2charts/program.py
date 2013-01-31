@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-__author__ = 'martin'
+
+print 'Collecting data...'
 
 import metrics
 import charts
