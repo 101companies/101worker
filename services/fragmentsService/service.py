@@ -1,14 +1,4 @@
-import sys
-import os
-import json
-import commands
 
-
-
-
-#
-
-#
 def noParam(environ, start_response, params):
 	status = '200 OK'
 	response_headers = [('Content-Type', 'text/plain')]
@@ -18,7 +8,6 @@ def noParam(environ, start_response, params):
 
 
 def findFragment(environ, start_response, params):
-	sys.path.append(os.getcwd())
 	import fragments
 
 	try:
@@ -26,11 +15,11 @@ def findFragment(environ, start_response, params):
 		response_headers = [('Content-Type', 'text/json')]
 		start_response(status, response_headers)
 		return fragments.findFragment(params['filePath'], params['fileName'], params['fragment'])
-	except Exception as e:
-		status = '501 Not Implemented'
+	except Exception, error:
+		status = '500 Internal Server Error'
 		response_headers = [('Content-Type', 'text/plain')]
 		start_response(status, response_headers)
-		return e.message
+		return str(error)
 
 
 def routes():

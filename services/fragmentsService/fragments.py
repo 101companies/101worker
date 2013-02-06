@@ -1,5 +1,3 @@
-__author__ = 'martin'
-
 import sys
 import os
 import json
@@ -8,13 +6,12 @@ sys.path.append('../../libraries/101meta')
 import const101
 
 def readLines(filePath, lines):
-	return [x for i, x in enumerate(filePath) if i in lines]
+	fp = open(filePath, 'r')
+	l = [x for i, x in enumerate(fp) if i in lines]
+	return ''.join(l)
 
 def readFile(filePath):
-	fp = open(filePath, 'r')
-	str = fp.read()
-	fp.close()
-	return str
+	return open(filePath, 'r').read()
 
 def extract(entry):
 	geshi, locator = None, None
@@ -28,7 +25,7 @@ def getLanguageAndLocator(filename):
 	for entry in matches:
 		if entry['filename'] == filename: return extract(entry)
 
-	return None, None
+	raise Exception('specified file not found')
 
 def getFileText(path, file):
 	fullPath = os.path.join(const101.sRoot, path, file)
@@ -38,25 +35,19 @@ def getFragmentText(path, file, fragment, locator):
 	fullPath = os.path.join(const101.sRoot, path, file)
 	fullLocator = os.path.join(const101.sRoot, locator)
 
-	f = fragment.split('/')
-	json.dump({'class':f[0], 'method':f[1]}, open('fragment.json', 'w'))
-
-	command = fullLocator + ' ' + fullPath + ' ' + os.path.abspath('./fragment.json') + ' ' + os.path.abspath('./lines.json')
+	command = fullLocator + ' ' + os.path.abspath(fullPath) + ' ' + fragment
 	status, output = commands.getstatusoutput(command)
 
 	if not status == 0:
 		raise Exception(locator + ' failed: ' + output)
 
-	lines = json.load(open('./lines.json', 'r'))
-	fp = open(fullPath, 'r')
-	str = readLines(fp, range(lines['from']-1, lines['to']))
-	fp.close()
-	return ''.join(str)
+	lines = json.loads(output)
+	return readLines(fullPath, range(lines['from']-1, lines['to']))
 
 def findFragment(path, file, fragment):
 	geshi, locator = getLanguageAndLocator(os.path.join(path, file))
 	if not geshi:
-		raise Exception('No geshi code associated - file is probably no textfile')
+		raise Exception('No geshi code associated - file is probably no text file')
 
 	data = {'geshi' : geshi}
 	if not fragment:

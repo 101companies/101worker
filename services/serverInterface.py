@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import sys
 import os
 import re
 import imp
@@ -22,10 +23,11 @@ def checkRoutes(environ, start_response, routes):
 		m = route.match(path)
 		if m:
 			os.chdir(root)
+			sys.path.append(os.getcwd())
 			return callback(environ, start_response, m.groupdict())
 
 	start_response("404 Not Found", [('Content-Type', 'text/plain')])
-	response_body = "Didn't find a service for this path " #+ msg + path
+	response_body = "Didn't find a service for this URL"
 	return response_body
 
 #entrypoint
