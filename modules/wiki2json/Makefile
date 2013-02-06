@@ -1,11 +1,12 @@
 include ../Makefile.vars
-basic = ${tempsdir}/Wiki101FullTemp.json
-linkified = ${webdir}/data/dumps/Wiki101Full.json
+output = ${dumpsDir}/Wiki101Full.json
 
 run:
-	@php jsongenerator.php ${basic}
-	@python text2list.py ${basic} ${linkified}
+	cd src 
+	mvn clean compile package
+	@java -classpath target/jsonExtractor-1.0-SNAPSHOT-jar-with-dependencies.jar Main
+	cp dump.json ${output}
 
 clean:
-	rm -f ${basic}
+	rm -f ${output}
 

@@ -15,3 +15,7 @@ utils.pyc
 pipeline.pyc
 document.pyc
 modules/wikitools/tex/sources
+modules/wiki2json/.idea
+modules/wiki2json/target
+jsonExtractor.iml
+dump.json
