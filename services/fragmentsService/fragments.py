@@ -35,14 +35,17 @@ def getFragmentText(path, file, fragment, locator):
 	fullPath = os.path.join(const101.sRoot, path, file)
 	fullLocator = os.path.join(const101.sRoot, locator)
 
-	command = fullLocator + ' ' + os.path.abspath(fullPath) + ' ' + fragment
+	command = fullLocator + ' ' + os.path.abspath(fullPath) + ' ' + fragment.replace("'", "\\'")
 	status, output = commands.getstatusoutput(command)
-
 	if not status == 0:
 		raise Exception(locator + ' failed: ' + output)
 
-	lines = json.loads(output)
+	try:
+		lines = json.loads(output)
+	except:
+		raise Exception('Output was no json: ' + output)
 	return readLines(fullPath, range(lines['from']-1, lines['to']))
+
 
 def findFragment(path, file, fragment):
 	geshi, locator = getLanguageAndLocator(os.path.join(path, file))
