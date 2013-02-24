@@ -11,3 +11,4 @@ clean:
 # Remove files created by this module
 reset:
 	@rm -f ${predicatesDump}
+	@find ${contrDir} -name "*.predicates.json" -exec rm -f {} \;

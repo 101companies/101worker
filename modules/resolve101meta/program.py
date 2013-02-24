@@ -1,81 +1,80 @@
 #! /usr/bin/env python
 
-import os
 import sys
-import simplejson as json
+import json
 import re
+
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
-def eliminate(pat, str):
-   while True:
-      c = re.compile(pat)
-      m = c.match(str)
-      if m is None:
-         break
-      str = ""
-      for x in m.groups():
-         str += x
-   return str
 
-def noMarkup(str):
-   str = eliminate('(.*)\[\[.*\|(.*)\]\](.*)', str)
-   str = eliminate('(.*)\[\[(.*)\]\](.*)', str)
-   str = eliminate('(.*):Category:(.*)', str)
-   str = eliminate('(.*)Language:(.*)', str)
-   str = eliminate('(.*)Technology:(.*)', str)
-   return str
-
-
-def resolveEntity(val, map, uriResolve, fileResolve):
-   if not val in map:
-      url101wiki = const101.url101wiki + space2underscore(uriResolve(val))
-      entity = dict()
-      entity["101wiki"] = url101wiki
-      if not fileResolve is None:
-         rDirname = space2underscore(fileResolve(val))
-         aDirname = os.path.join(const101.sRoot,rDirname)
-         if os.path.exists(aDirname):
-            url101repo = const101.url101repo + rDirname
-            entity["101repo"] = url101repo
-      if url101wiki in headline:
-         entity["headline"] = headline[url101wiki]
-         if entity["headline"] == "":
-            entity["headline"] == "empty"
-            problem = dict()
-            problem["missingWikiHeadline"] = url101wiki 
-            problems.append(problem)
-      else:
-         entity["headline"] = "<unresolved>"
-         problem = dict()
-         problem["missingWikiPage"] = url101wiki 
-         problems.append(problem)
-      map[val] = entity
-
-
-def handleMention(unit, key, map, uriResolve, fileResolve):
-   if key in unit:
-      val = unit[key]
-      resolveEntity(val, map, uriResolve, fileResolve)
-
-         
-def space2underscore(str):
-   return str.replace(" ", "_")
-
-
-print "Resolving entities of 101meta rules."
+# loading of the dumps this module depends on
+repo = json.load(open(const101.pullRepoDump, 'r'))
 rules = json.load(open(const101.rulesDump, 'r'))["results"]["rules"]
-wiki = json.load(open(const101.wikiDump, 'r'))
+wiki = json.load(open(const101.wikiDump, 'r'))["wiki"]
+wikiUrl = 'http://101companies.org/wiki/{0}'
 
-# Map URLs to headlines
-headline = dict()
-for k1 in wiki:
-   section = wiki[k1]
-   for k2 in section:
-      url = space2underscore(section[k2]["url"])
-      headline[url] = noMarkup(section[k2]["headline"])
+### HELPER FUNCTIONS
+def encodeForUrl(str):
+    return str.replace(' ', '_')
 
+
+def findWikiEntry(val, pageName, map):
+    """
+    check if the wiki has an entry with pagename, create a entry in map with the values and add it to the problems list if
+    there is any trouble (not found in the wiki)
+    :param val: they key under which the entry will be created in map
+    :param pageName: the page name, wich will be checked and appended to the wiki url
+    :param map: the map into which the results will be saved
+    """
+    for page in wiki['pages']:
+        if page['page']['page'] == pageName.replace('_', ' '):
+            map[val] = {
+                '101wiki': wikiUrl.format(encodeForUrl(pageName)),
+                'headline': '<not implemented>'
+            }
+            return
+
+    map[val] = {'101wiki': '<unresolved>', 'headline': '<not implemented>'}
+    problems.append({'missingWikiPage': wikiUrl.format(encodeForUrl(pageName))})
+
+
+def handleMention(unit, key, map, pageNameFunc):
+    """
+    checks if the unit contains the key - if yes, it will add a wiki entry to map if necessary
+    :param unit: the metadata entry that has to be inspected
+    :param key: the key to look for (e.g. language)
+    :param map: the map the results will be added to
+    :param pageNameFunc: a function that's mapping the value found under the key to it's supposed page name in the wiki
+    """
+    if key in unit:
+        val = unit[key]
+        if not val in map:
+            findWikiEntry(val, pageNameFunc(val), map)
+
+def handleContribution(name, map):
+    """
+    Looks up the repo url for the contribution and adds an entry to map for it. If the URL can't be found, it will also
+    create an entry in the problems list
+    :param name: name of the contribution
+    :param map: map in which the entry is created
+    """
+    repoUrl = '<unresolved>'
+    if name in repo:
+        repoUrl = repo[name]
+    else:
+        problems.append({'missing repo url' : name})
+
+    map[name] = {
+        '101wiki' : wikiUrl.format(page['page']['page']),
+        '101repo' : repoUrl,
+        'headline': 'not implemented'
+    }
+
+
+### MAIN PROGRAM
+# variables that will form the dump later on
 terms = dict()
 concepts = dict()
 features = dict()
@@ -88,31 +87,30 @@ results["concepts"] = concepts
 results["features"] = features
 results["languages"] = languages
 results["technologies"] = technologies
+results["languages"] = languages
 results["contributions"] = contributions
 problems = list()
 
-for entry in rules:
-   rule = entry["rule"]
-   if "filename" in rule:
-      filename = rule["filename"]
-      if not filename.startswith("#") or not filename.endswith("#"):
-         pat = re.compile('contributions/([^/]*)/.*')
-         res = re.match(pat, filename)
-         if not res is None:
-            val = res.group(1)
-            resolveEntity(val, contributions, lambda x : "101implementation:" + x, lambda x : "contributions/" + x)
-   for unit in rule["metadata"]:
-      tRes1 = lambda x : "Technology:" + x
-      tRes2 = lambda x : "technologies/" + x
-      handleMention(unit, "concept", concepts, lambda x : x, None)
-      handleMention(unit, "language", languages, lambda x : "Language:" + x, lambda x : "languages/" + x)
-      handleMention(unit, "dependsOn", technologies, tRes1, tRes2)
-      handleMention(unit, "inputOf", technologies, tRes1, tRes2)
-      handleMention(unit, "outputOf", technologies, tRes1, tRes2)
-      handleMention(unit, "partOf", technologies, tRes1, tRes2)
-      handleMention(unit, "term", terms, lambda x : "101term:" + x, None)
-      handleMention(unit, "feature", features, lambda x : "101feature:" + x, None)
+# First part - check metadata values - they are supposed to have a page in the wiki
+for rule in rules:
+    for unit in rule['rule']['metadata']:
+        handleMention(unit, "concept", concepts, lambda x: x)
+        handleMention(unit, "language", languages, lambda x: 'Language:' + x)
+        handleMention(unit, "dependsOn", technologies, lambda x: 'Technology:' + x)
+        handleMention(unit, "inputOf", technologies, lambda x: 'Technology:' + x)
+        handleMention(unit, "outputOf", technologies, lambda x: 'Technology:' + x)
+        handleMention(unit, "partOf", technologies, lambda x: 'Technology:' + x)
+        handleMention(unit, "term", terms, lambda x: '101term:' + x)
+        handleMention(unit, "feature", features, lambda x: 'Feature:' + x)
 
+# Second part - check that contributions in the wiki actually exist (have a repository link)
+regex = re.compile('Contribution:(?P<name>.+)')
+for page in wiki['pages']:
+    match = regex.match(page['page']['page'])
+    if match:
+        handleContribution(match.group('name'), contributions)
+
+# creation of the dump
 dump = dict()
 dump["results"] = results
 dump["numbers"] = dict()
