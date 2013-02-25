@@ -43,6 +43,20 @@ class Resource {
         return props
     }
 
+    private handlePageLabel(label){
+       def page =  label.split(":")
+       def props = [:]
+       if (page.size() == 1)   {
+           props["ns"] = null
+           props["title"] = page[0]
+       }
+      else{
+           props["ns"] = page[0]
+           props["title"] = page[1]
+       }
+     return props
+    }
+
     public getProperties(){
         def props = [:]
         resource.outE.each{
@@ -52,7 +66,7 @@ class Resource {
             switch (predicate){
                 case LABEL :
                     def obj = edge.getObject()
-                    props['page'] = obj.label
+                    props['page'] = handlePageLabel(obj.label)
                     break
                 /*case PAGE :
                     props['page'] = edge.getObject().getLocalName()
@@ -92,7 +106,6 @@ class Resource {
                     break
             }
         }
-
         return props
     }
 
