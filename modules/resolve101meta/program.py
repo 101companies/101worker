@@ -7,6 +7,7 @@ import re
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
+import urllib2
 
 
 # loading of the dumps this module depends on
@@ -16,42 +17,58 @@ wiki = json.load(open(const101.wikiDump, 'r'))["wiki"]
 wikiUrl = 'http://101companies.org/wiki/{0}'
 
 ### HELPER FUNCTIONS
-def encodeForUrl(str):
-    return str.replace(' ', '_')
+def encodeForUrl(ns, name):
+    if not ns: return name.replace(' ', '_')
+    return (ns + ':' + name).replace(' ', '_')
 
+def getHeadline(pageName):
+    print 'Looking for wiki data of {0}'.format(pageName)
+    url = 'http://beta.101companies.org/api/pages/{0}/sections'.format(pageName)
+    try:
+        a = urllib2.urlopen(url)
+    except urllib2.HTTPError as e:
+        if e.code == 500:
+            print 'There was an error: {0} - trying again...'.format(e)
+            return getHeadline(pageName)
 
-def findWikiEntry(val, pageName, map):
+    pageData = json.load(a)
+    for d in pageData:
+        if d['title'] == 'Headline':
+            return d['content'].replace('== Headline ==\n\n', '').replace('[[', '').replace(']]', '').replace('\n', '')
+
+def findWikiEntry(val, namespace, title, map):
     """
-    check if the wiki has an entry with pagename, create a entry in map with the values and add it to the problems list if
+    check if the wiki has an entry with namespace:title, create a entry in map with the values and add it to the problems list if
     there is any trouble (not found in the wiki)
     :param val: they key under which the entry will be created in map
-    :param pageName: the page name, wich will be checked and appended to the wiki url
+    :param namespace the namespace in which to look
+    :param title the title of the wiki entry
     :param map: the map into which the results will be saved
     """
     for page in wiki['pages']:
-        if page['page']['page'] == pageName.replace('_', ' '):
+        if page['page']['page']['ns'] == namespace and page['page']['page']['title'] == title.replace('_', ' '):
             map[val] = {
-                '101wiki': wikiUrl.format(encodeForUrl(pageName)),
-                'headline': '<not implemented>'
+                '101wiki': wikiUrl.format(encodeForUrl(namespace,title)),
+                'headline': getHeadline(encodeForUrl(namespace,title))
             }
             return
 
-    map[val] = {'101wiki': '<unresolved>', 'headline': '<not implemented>'}
-    problems.append({'missingWikiPage': wikiUrl.format(encodeForUrl(pageName))})
+    map[val] = {'101wiki': '<unresolved>', 'headline': '<unresolved>'}
+    problems.append({'missingWikiPage': wikiUrl.format(encodeForUrl(namespace, title))})
 
 
-def handleMention(unit, key, map, pageNameFunc):
+def handleMention(unit, key, map, namespace):
     """
     checks if the unit contains the key - if yes, it will add a wiki entry to map if necessary
     :param unit: the metadata entry that has to be inspected
     :param key: the key to look for (e.g. language)
     :param map: the map the results will be added to
-    :param pageNameFunc: a function that's mapping the value found under the key to it's supposed page name in the wiki
+    :param namespace: the namespace in which to search
     """
     if key in unit:
         val = unit[key]
         if not val in map:
-            findWikiEntry(val, pageNameFunc(val), map)
+            findWikiEntry(val, namespace, val, map)
 
 def handleContribution(name, map):
     """
@@ -65,11 +82,11 @@ def handleContribution(name, map):
         repoUrl = repo[name]
     else:
         problems.append({'missing repo url' : name})
-
+    pageName = page['page']['page']['ns'] + ':' + page['page']['page']['title']
     map[name] = {
-        '101wiki' : wikiUrl.format(page['page']['page']),
+        '101wiki' : wikiUrl.format(pageName),
         '101repo' : repoUrl,
-        'headline': 'not implemented'
+        'headline': getHeadline(pageName)
     }
 
 
@@ -87,28 +104,27 @@ results["concepts"] = concepts
 results["features"] = features
 results["languages"] = languages
 results["technologies"] = technologies
-results["languages"] = languages
 results["contributions"] = contributions
 problems = list()
 
 # First part - check metadata values - they are supposed to have a page in the wiki
 for rule in rules:
     for unit in rule['rule']['metadata']:
-        handleMention(unit, "concept", concepts, lambda x: x)
-        handleMention(unit, "language", languages, lambda x: 'Language:' + x)
-        handleMention(unit, "dependsOn", technologies, lambda x: 'Technology:' + x)
-        handleMention(unit, "inputOf", technologies, lambda x: 'Technology:' + x)
-        handleMention(unit, "outputOf", technologies, lambda x: 'Technology:' + x)
-        handleMention(unit, "partOf", technologies, lambda x: 'Technology:' + x)
-        handleMention(unit, "term", terms, lambda x: '101term:' + x)
-        handleMention(unit, "feature", features, lambda x: 'Feature:' + x)
+        handleMention(unit, "concept", concepts, None)
+        handleMention(unit, "language", languages,    'Language')
+        handleMention(unit, "dependsOn", technologies,'Technology')
+        handleMention(unit, "inputOf", technologies,  'Technology')
+        handleMention(unit, "outputOf", technologies, 'Technology')
+        handleMention(unit, "partOf", technologies,   'Technology')
+        handleMention(unit, "term", terms,            '101term')
+        handleMention(unit, "feature", features, None)
+
 
 # Second part - check that contributions in the wiki actually exist (have a repository link)
-regex = re.compile('Contribution:(?P<name>.+)')
+#regex = re.compile('Contribution:(?P<name>.+)')
 for page in wiki['pages']:
-    match = regex.match(page['page']['page'])
-    if match:
-        handleContribution(match.group('name'), contributions)
+    if page['page']['page']['ns'] == 'Contribution':
+        handleContribution(page['page']['page']['title'], contributions)
 
 # creation of the dump
 dump = dict()
