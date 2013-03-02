@@ -22,8 +22,13 @@ def find(fragment, query, basePath=None):
     return None, None
 
 def mapFragment(filePath, fragmentPath, fragment):
+    resource = os.path.join(base_uri, filePath, fragmentPath)
+    #TODO I guess this is more of a hack instead of a true bugfix
+    if not fragmentPath.endswith(os.path.join(fragment['classifier'], fragment['name'])):
+        resource = os.path.join(resource, fragment['classifier'], fragment['name'])
+
     return {
-        'resource' : os.path.join(base_uri, filePath, fragmentPath, fragment['classifier'], fragment['name']),
+        'resource' : resource,
         'name'     : fragment['name'],
     }
 

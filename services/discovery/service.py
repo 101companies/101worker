@@ -13,7 +13,7 @@ def serveRequest(environ, start_response, params):
         response_headers = [('Content-Type', 'text/json')]
         start_response(status, response_headers)
 
-        discovery.base_uri = environ.get('HTTP_HOST', '') + environ.get('SCRIPT_NAME', '') + '/discovery'
+        discovery.base_uri = 'http://' + environ.get('HTTP_HOST', '') + environ.get('SCRIPT_NAME', '') + '/discovery'
 
         if 'fileName' in params and 'fragment' in params:
             return discovery.discoverFragment(params['filePath'], params['fileName'], params['fragment'])
