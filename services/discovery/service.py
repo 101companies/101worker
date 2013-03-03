@@ -7,13 +7,18 @@ def noParam(environ, start_response, params):
 
 def serveRequest(environ, start_response, params):
     import discovery
+    import re
 
     try:
-        status = '200 OK'
-        response_headers = [('Content-Type', 'text/json')]
-        start_response(status, response_headers)
+        queryString = environ['QUERY_STRING']
+        if queryString:
+            discovery.url_params = dict(re.findall(r'(\S+)=(".*?"|\S+)', queryString))
 
         discovery.base_uri = 'http://' + environ.get('HTTP_HOST', '') + environ.get('SCRIPT_NAME', '') + '/discovery'
+
+        status = '200 OK'
+        response_headers = [('Content-Type', 'text/{0}'.format(discovery.url_params.get('format', 'json')))]
+        start_response(status, response_headers)
 
         if 'fileName' in params and 'fragment' in params:
             return discovery.discoverFragment(params['filePath'], params['fileName'], params['fragment'])

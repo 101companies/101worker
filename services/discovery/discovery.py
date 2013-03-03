@@ -1,9 +1,12 @@
 import os
 import json
 import re
+from string import Template
+import urlparse
 import helper101
 
 base_uri = ''
+url_params = dict()
 
 def find(fragment, query, basePath=None):
     #create recreate fragment path
@@ -23,13 +26,13 @@ def find(fragment, query, basePath=None):
 
 def mapFragment(filePath, fragmentPath, fragment):
     resource = os.path.join(base_uri, filePath, fragmentPath)
-    #TODO I guess this is more of a hack instead of a true bugfix
+    #TODO I guess this is more of a hack instead of a true bugfix, so I guess it should be changed at some point
     if not fragmentPath.endswith(os.path.join(fragment['classifier'], fragment['name'])):
         resource = os.path.join(resource, fragment['classifier'], fragment['name'])
 
     return {
-        'resource' : resource,
-        'name'     : fragment['name'],
+        'resource': resource,
+        'name'    : fragment['name'],
     }
 
 def mapFacts(filePath, facts, query=None):
@@ -64,7 +67,10 @@ def discoverFragment(path, fileName, fragment):
         extractedFacts = helper101.getFacts(filePath, extractor)
         response['fragments'] = mapFacts(filePath, extractedFacts, fragment)
 
-    return json.dumps( response )
+    if url_params.get('format', 'json') == 'json':
+        return json.dumps( response )
+
+    return wrapInHTML('fragment', response)
 
 def discoverFile(path, fileName):
     filePath = os.path.join(path, fileName)
@@ -90,11 +96,15 @@ def discoverFile(path, fileName):
     if github:
         response['github'] = os.path.join(github, match.group('githubPath'))
 
-    return json.dumps( response )
+    if url_params.get('format', 'json') == 'json':
+        return json.dumps( response )
+
+    return wrapInHTML('file', response)
 
 def discoverDir(path):
     files, dirs = helper101.getDirContent(path)
     response = { 'folders' : [], 'files': [] }
+
 
     for d in dirs:
         response['folders'].append({
@@ -108,4 +118,43 @@ def discoverDir(path):
             'name'    : f,
         })
 
-    return json.dumps( response )
+    if url_params.get('format', 'json') == 'json':
+        return json.dumps( response )
+
+    return wrapInHTML('folders', response)
+
+def wrapInHTML(discoverType, response):
+    def read(path):
+        return ''.join(open(path, 'r').readlines())
+
+    if discoverType == 'folders':
+        dirTemplate = Template(read('templates/discoverDir.html'))
+        dirs = ''
+        for d in response['folders']:
+            dirs += Template(read('templates/singledir.html')).substitute({'name':str(d['name']), 'link':str(d['resource'])})
+        files = ''
+        for f in response['files']:
+            files += Template(read('templates/singlefile.html')).substitute({'name':str(f['name']), 'link':str(f['resource'])})
+        return dirTemplate.substitute({'folderList' : dirs, 'filesList' : files})
+
+    #if it isn't a folder, then we can expect some values
+    if 'fragments' in response:
+        fragments = ''
+        for f in response['fragments']:
+            fragments += Template(read('templates/singlefragment.html')).substitute({'name':str(f['name']), 'link':str(f['resource'])})
+    else:
+        fragments = 'not extractable'
+
+    if 'content' in response:
+        content = response['content']
+    else:
+        content = 'not extractable'
+
+
+    if discoverType == 'file':
+        fileTemplate = Template(read('templates/discoverFile.html'))
+        return fileTemplate.substitute({'content':content, 'fragmentList':fragments, 'github':str(response['github'])})
+
+    if discoverType == 'fragment':
+        fragmentTemplate = Template(read('templates/discoverFragment.html'))
+        return fragmentTemplate.substitute({'content':content, 'fragmentList':fragments})
