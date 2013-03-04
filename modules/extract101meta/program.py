@@ -15,7 +15,7 @@ def derive(extractor, rFilename, sFilename, tFilename):
    extractors.add(extractor)
    
    print "Extract facts from " + rFilename + " with " + extractor + "."
-   command = os.path.join(const101.sRoot, extractor) + " \"" + sFilename + "\" \"" + tFilename + "\" "
+   command = "{0} < \"{1}\" > \"{2}\"".format(os.path.join(const101.sRoot, extractor),sFilename,tFilename)
    (status, output) = tools101.run(command)
 
    # Result aggregation
