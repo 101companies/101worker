@@ -6,7 +6,6 @@ import urlparse
 import helper101
 
 base_uri = ''
-url_params = dict()
 
 def find(fragment, query, basePath=None):
     #create recreate fragment path
@@ -51,7 +50,7 @@ def mapFacts(filePath, facts, query=None):
 
     return result
 
-def discoverFragment(path, fileName, fragment):
+def discoverFragment(path, fileName, fragment, url_params):
     filePath = os.path.join(path, fileName)
 
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
@@ -72,7 +71,7 @@ def discoverFragment(path, fileName, fragment):
 
     return wrapInHTML('fragment', response)
 
-def discoverFile(path, fileName):
+def discoverFile(path, fileName, url_params):
     filePath = os.path.join(path, fileName)
 
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
@@ -101,7 +100,7 @@ def discoverFile(path, fileName):
 
     return wrapInHTML('file', response)
 
-def discoverDir(path):
+def discoverDir(path, url_params):
     files, dirs = helper101.getDirContent(path)
     response = { 'folders' : [], 'files': [] }
 
@@ -129,12 +128,19 @@ def wrapInHTML(discoverType, response):
 
     if discoverType == 'folders':
         dirTemplate = Template(read('templates/discoverDir.html'))
+
+        response['folders'].sort()
         dirs = ''
         for d in response['folders']:
             dirs += Template(read('templates/singledir.html')).substitute({'name':str(d['name']), 'link':str(d['resource'])})
+        if dirs == '': dirs = 'None'
+
+        response['files'].sort()
         files = ''
         for f in response['files']:
             files += Template(read('templates/singlefile.html')).substitute({'name':str(f['name']), 'link':str(f['resource'])})
+        if files == '': files = 'None'
+
         return dirTemplate.substitute({'folderList' : dirs, 'filesList' : files})
 
     #if it isn't a folder, then we can expect some values
@@ -142,6 +148,7 @@ def wrapInHTML(discoverType, response):
         fragments = ''
         for f in response['fragments']:
             fragments += Template(read('templates/singlefragment.html')).substitute({'name':str(f['name']), 'link':str(f['resource'])})
+        if fragments == '': fragments = 'None'
     else:
         fragments = 'not extractable'
 
