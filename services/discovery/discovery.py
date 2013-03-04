@@ -30,25 +30,10 @@ def mapFragment(filePath, fragmentPath, fragment):
         resource = os.path.join(resource, fragment['classifier'], fragment['name'])
 
     return {
-        'resource': resource,
-        'name'    : fragment['name'],
+        'resource'  : resource,
+        'name'      : fragment['name'],
+        'classifier': fragment['classifier']
     }
-
-def mapFacts(filePath, facts, query=None):
-    result = []
-    if query:
-        for fragment in facts['fragments']:
-            frag, fragmentPath = find(fragment, query)
-            if frag:
-                for fr in frag.get('fragments',[]):
-                    result.append( mapFragment(filePath, fragmentPath, fr) )
-                return result
-
-    for fragment in facts.get('fragments', []):
-        fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
-        result.append( mapFragment(filePath, fragmentPath, fragment) )
-
-    return result
 
 def discoverFragment(path, fileName, fragment, url_params):
     filePath = os.path.join(path, fileName)
@@ -64,7 +49,14 @@ def discoverFragment(path, fileName, fragment, url_params):
 
     if extractor:
         extractedFacts = helper101.getFacts(filePath, extractor)
-        response['fragments'] = mapFacts(filePath, extractedFacts, fragment)
+        for f1 in extractedFacts['fragments']:
+            selected, fragmentPath = find(f1, fragment)
+            if selected:
+                response['classifier'] = selected['classifier']
+                response['fragments'] = []
+                for f2 in selected.get('fragments',[]):
+                    response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
+                break
 
     if url_params.get('format', 'json') == 'json':
         return json.dumps( response )
@@ -76,7 +68,7 @@ def discoverFile(path, fileName, url_params):
 
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
     locator, extractor, geshi = helper101.getMetadata(filePath)
-    response = { 'geshi' : geshi }
+    response = { 'geshi' : geshi, 'classifier': 'File' }
 
     #if there is a geshi code, we should be able to get content
     if geshi:
@@ -85,13 +77,18 @@ def discoverFile(path, fileName, url_params):
     #if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
         extractedFacts = helper101.getFacts(filePath, extractor)
-        response['fragments'] = mapFacts(filePath, extractedFacts)
+        fragments = []
+        for fragment in extractedFacts.get('fragments', []):
+            fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
+            fragments.append( mapFragment(filePath, fragmentPath, fragment) )
+
+        response['fragments'] = fragments
 
     #get repo link
     response['github'] = '<not resolved>'
     regex = re.compile('contributions/(?P<contribName>[^/]+)/(?P<githubPath>.+)')
     match = regex.match(filePath)
-    github =  helper101.getRepoLink(match.group('contribName'))
+    github = helper101.getRepoLink(match.group('contribName'))
     if github:
         response['github'] = os.path.join(github, match.group('githubPath'))
 
@@ -102,7 +99,7 @@ def discoverFile(path, fileName, url_params):
 
 def discoverDir(path, url_params):
     files, dirs = helper101.getDirContent(path)
-    response = { 'folders' : [], 'files': [] }
+    response = { 'folders' : [], 'files': [], 'classifier': 'Folder' }
 
 
     for d in dirs:
@@ -110,12 +107,14 @@ def discoverDir(path, url_params):
             'resource': os.path.join(base_uri, path, d),
             'name'    : d
         })
+    response['folders'].sort()
 
     for f in files:
         response['files'].append({
             'resource': os.path.join(base_uri, path, f),
             'name'    : f,
         })
+    response['files'].sort()
 
     if url_params.get('format', 'json') == 'json':
         return json.dumps( response )
@@ -129,13 +128,11 @@ def wrapInHTML(discoverType, response):
     if discoverType == 'folders':
         dirTemplate = Template(read('templates/discoverDir.html'))
 
-        response['folders'].sort()
         dirs = ''
         for d in response['folders']:
             dirs += Template(read('templates/singledir.html')).substitute({'name':str(d['name']), 'link':str(d['resource'])})
         if dirs == '': dirs = 'None'
 
-        response['files'].sort()
         files = ''
         for f in response['files']:
             files += Template(read('templates/singlefile.html')).substitute({'name':str(f['name']), 'link':str(f['resource'])})
@@ -160,8 +157,8 @@ def wrapInHTML(discoverType, response):
 
     if discoverType == 'file':
         fileTemplate = Template(read('templates/discoverFile.html'))
-        return fileTemplate.substitute({'content':content, 'fragmentList':fragments, 'github':str(response['github'])})
+        return fileTemplate.substitute({'content': content, 'fragmentList':fragments, 'github':str(response['github'])})
 
     if discoverType == 'fragment':
         fragmentTemplate = Template(read('templates/discoverFragment.html'))
-        return fragmentTemplate.substitute({'content':content, 'fragmentList':fragments})
+        return fragmentTemplate.substitute({'content': content, 'fragmentList': fragments, 'fragmentType': str(response['classifier'])})

@@ -45,9 +45,18 @@ def getFacts(file, extractor):
     return json.loads(output)
 
 def getDirContent(dir):
-    indexPath = os.path.join(const101.tRoot, dir, 'index.json')
-    index = json.load(open(indexPath, 'r'))
-    return index['files'], index['dirs']
+    files, dirs = [], []
+    path = os.path.join(const101.sRoot, dir)
+    for f in os.listdir(path):
+        if os.path.isdir(os.path.join(path, f)):
+            dirs.append(f)
+        else:
+            files.append(f)
+
+    return files, dirs
+    #indexPath = os.path.join(const101.tRoot, dir, 'index.json')
+    #index = json.load(open(indexPath, 'r'))
+    #return index['files'], index['dirs']
 
 def getRepoLink(contribution):
     repoDump = json.load(open(const101.pullRepoDump, 'r'))
