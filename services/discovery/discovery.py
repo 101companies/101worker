@@ -97,9 +97,9 @@ def discoverFile(path, fileName, url_params):
 
     return wrapInHTML('file', response)
 
-def discoverDir(path, url_params):
+def discoverDir(path, url_params, environ):
     files, dirs = helper101.getDirContent(path)
-    response = { 'folders' : [], 'files': [], 'classifier': 'Folder' }
+    response = { 'folders' : [], 'files': [], 'classifier': 'Folder', 'referer': environ.get('HTTP_REFERER', 'HTTP_REFERER has no value') }
 
 
     for d in dirs:

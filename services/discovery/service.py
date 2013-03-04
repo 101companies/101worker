@@ -27,7 +27,7 @@ def serveRequest(environ, start_response, params):
         if 'fileName' in params:
             return discovery.discoverFile(params['filePath'], params['fileName'], url_params)
 
-        return discovery.discoverDir(params['filePath'], url_params)
+        return discovery.discoverDir(params['filePath'], url_params, environ)
     except Exception, error:
         status = '500 Internal Server Error'
         response_headers = [('Content-Type', 'text/plain')]
