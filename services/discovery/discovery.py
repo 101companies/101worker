@@ -99,7 +99,8 @@ def discoverFile(path, fileName, url_params):
 
 def discoverDir(path, url_params, environ):
     files, dirs = helper101.getDirContent(path)
-    response = { 'folders' : [], 'files': [], 'classifier': 'Folder', 'referer': environ.get('HTTP_REFERER', 'HTTP_REFERER has no value') }
+    response = { 'folders' : [], 'files': [], 'classifier': 'Folder', 'accessible-variables': environ.keys(),
+        'REMOTE_ADDR' : environ['REMOTE_ADDR'],'SERVER_NAME':environ['SERVER_NAME'] }
 
 
     for d in dirs:
