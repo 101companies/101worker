@@ -3,9 +3,12 @@ __author__ = 'martin'
 import json
 import commands
 import os
+import re
 import sys
 sys.path.append('../../libraries/101meta')
 import const101
+
+extractContribRegex = re.compile('contributions/(?P<contribName>[^/]+)/(?P<githubPath>.*)')
 
 def getMetadata(filePath):
     locator, extractor, geshi = None, None, None
@@ -53,14 +56,24 @@ def getDirContent(dir):
         else:
             files.append(f)
 
+    files.sort()
+    dirs.sort()
+
     return files, dirs
     #indexPath = os.path.join(const101.tRoot, dir, 'index.json')
     #index = json.load(open(indexPath, 'r'))
     #return index['files'], index['dirs']
 
-def getRepoLink(contribution):
-    repoDump = json.load(open(const101.pullRepoDump, 'r'))
-    return repoDump.get(contribution, None)
+def getRepoLink(path):
+    match = extractContribRegex.match(path)
+    github = '<unresolved>'
+    if match:
+        contrib = match.group('contribName')
+        repoDump = json.load(open(const101.pullRepoDump, 'r'))
+        github = repoDump.get(contrib, '<unresolved>')
+        if not github == 'unresolved': github = os.path.join(github, match.group('githubPath'))
+
+    return github
 
 def read(filePath, lines=None):
     fullPath = os.path.join(const101.sRoot, filePath)
