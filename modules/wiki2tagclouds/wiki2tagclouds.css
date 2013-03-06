@@ -1,10 +1,10 @@
 a.size-0{
-   font-size: 5px;
+   font-size: 10px;
    color: red;
 }
 
 a.size-1{
-   font-size: 10px;
+   font-size: 15px;
    color: orange;
 }
 
@@ -14,21 +14,21 @@ a.size-2{
 }
 
 a.size-3{
-   font-size: 23px;
+   font-size: 20px;
    color: blue;
 }
 
 a.size-4{
-   font-size: 31px;
+   font-size: 35px;
    color: green;
 }
 
 a.size-5{
-   font-size: 40px;
+   font-size: 50px;
    color: brown;
 }
 
 a.size-6{
-   font-size: 50px;
+   font-size: 75px;
    color: black;
 }
