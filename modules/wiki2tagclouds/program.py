@@ -29,7 +29,7 @@ def writeFiles(counts, label, prefix):
     htmlFile.write('</head>\n')
     htmlFile.write('<body>\n')
 
-    root = 'http://101companies.org/index.php/' + prefix
+    root = 'http://101companies.org/wiki/' + prefix
     for tag, count in sorted(counts.items(), key=lambda x: x[1], reverse=True):
         css = count / step        
         htmlFile.write('<a href="%s:%s" class="size-%s">%s</a>\n' % (root, tag, css, tag),)
