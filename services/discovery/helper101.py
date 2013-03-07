@@ -8,7 +8,7 @@ import sys
 sys.path.append('../../libraries/101meta')
 import const101
 
-extractContribRegex = re.compile('contributions/(?P<contribName>[^/]+)/(?P<githubPath>.*)')
+extractContribRegex = re.compile('contributions/(?P<contribName>[^/]+)(/(?P<githubPath>.*))?')
 
 def getMetadata(filePath):
     locator, extractor, geshi = None, None, None
@@ -74,6 +74,22 @@ def getRepoLink(path):
         if not github == 'unresolved': github = os.path.join(github, match.group('githubPath'))
 
     return github
+
+def getResolutionData(path):
+    match = extractContribRegex.match(path)
+    if match:
+        contrib = match.group('contribName')
+        resolutionDump = json.load(open(const101.resolutionDump, 'r'))
+        meta = resolutionDump['results']['contributions'].get(contrib, None)
+        if meta:
+            github = meta['101repo']
+            headline = meta['headline']
+            if match.group('githubPath') and not github == '<unresolved>':
+                github = os.path.join(github, match.group('githubPath'))
+
+            return github, headline
+
+    return None, None
 
 def read(filePath, lines=None):
     fullPath = os.path.join(const101.sRoot, filePath)

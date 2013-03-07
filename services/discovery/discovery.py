@@ -29,16 +29,15 @@ def mapFragment(filePath, fragmentPath, fragment):
     if not fragmentPath.endswith(os.path.join(fragment['classifier'], fragment['name'])):
         resource = os.path.join(resource, fragment['classifier'], fragment['name'])
 
-    if 'index' in fragment:
-        resource = os.path.join(resource, str(fragment['index']))
-
     mapped = {
         'resource'  : resource,
         'name'      : fragment['name'],
         'classifier': fragment['classifier']
     }
 
-    if 'index' in fragment: mapped['index'] = fragment['index']
+    if 'index' in fragment:
+        mapped['index'] = fragment['index']
+        mapped['resource'] = os.path.join(resource, str(fragment['index']))
 
     return mapped
 
@@ -50,10 +49,16 @@ def discoverFragment(path, fileName, fragment):
     locator, extractor, geshi = helper101.getMetadata(filePath)
     response = { 'geshi' : geshi }
 
+    github, headline = helper101.getResolutionData(filePath)
+    response['github'] = github
+    response['headline'] = headline
+
     if locator:
         lines = helper101.getFragment(filePath, fragment, locator)
         fragmentText = helper101.read(filePath, range(lines['from'] - 1, lines['to']))
         response['content'] = fragmentText
+
+        response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
 
     if extractor:
         extractedFacts = helper101.getFacts(filePath, extractor)
@@ -67,6 +72,8 @@ def discoverFragment(path, fileName, fragment):
                 for f2 in selected.get('fragments',[]):
                     response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
                 break
+
+
 
     return response
 
@@ -82,6 +89,10 @@ def discoverFile(path, fileName):
     if geshi:
         response['content'] = helper101.read(filePath)
 
+    github, headline = helper101.getResolutionData(filePath)
+    response['github'] = github
+    response['headline'] = headline
+
     #if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
         extractedFacts = helper101.getFacts(filePath, extractor)
@@ -92,7 +103,7 @@ def discoverFile(path, fileName):
 
         response['fragments'] = fragments
 
-    response['github'] = helper101.getRepoLink(filePath)
+    #response['github'] = helper101.getRepoLink(filePath)
 
     return response
 
@@ -100,6 +111,11 @@ def discoverFile(path, fileName):
 def discoverDir(path):
     files, dirs = helper101.getDirContent(path)
     response = { 'folders' : [], 'files': [], 'classifier': 'Folder' }
+
+    github, headline = helper101.getResolutionData(path)
+    if github and headline:
+        response['github'] = github
+        response['headline'] = headline
 
     #add all folders to the folders list and then sort the result
     for d in dirs:
