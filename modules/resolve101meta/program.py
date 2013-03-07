@@ -8,24 +8,41 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 import urllib2
-
+import urllib
+import urlparse
 
 # loading of the dumps this module depends on
 repo = json.load(open(const101.pullRepoDump, 'r'))
 rules = json.load(open(const101.rulesDump, 'r'))["results"]["rules"]
 wiki = json.load(open(const101.wikiDump, 'r'))["wiki"]
-wikiUrl = 'http://101companies.org/wiki/{0}'
+wikiUrl = unicode('http://101companies.org/wiki/{0}')
 
 ### HELPER FUNCTIONS
+#taken from the Werkzeug library - it takes care of some rare cases
+def url_fix(s, charset='utf-8'):
+    """Sometimes you get an URL by a user that just isn't a real
+    URL because it contains unsafe characters like ' ' and so on.  This
+    function can fix some of the problems in a similar way browsers
+    handle data entered by the user:
+    :param charset: The target charset for the URL if the url was
+                    given as unicode string.
+    """
+    if isinstance(s, unicode):
+        s = s.encode(charset, 'ignore')
+    scheme, netloc, path, qs, anchor = urlparse.urlsplit(s)
+    path = urllib.quote(path, '/%')
+    qs = urllib.quote_plus(qs, ':&=')
+    return urlparse.urlunsplit((scheme, netloc, path, qs, anchor))
+
 def encodeForUrl(ns, name):
     if not ns: return name.replace(' ', '_')
-    return (ns + ':' + name).replace(' ', '_')
+    return ns.encode("utf8") + ':' + name.encode("utf8").replace(' ', '_')
 
 def getHeadline(pageName):
-    print 'Looking for wiki data of {0}'.format(pageName)
-    url = 'http://beta.101companies.org/api/pages/{0}/sections'.format(pageName)
+    url = unicode('http://beta.101companies.org/api/pages/{0}/sections').format(pageName)
+    print unicode('Using data from {0}').format(url)
     try:
-        a = urllib2.urlopen(url)
+        a = urllib2.urlopen(url_fix(url))
     except urllib2.HTTPError as e:
         if e.code == 500:
             print 'There was an error: {0} - trying again...'.format(e)
@@ -82,6 +99,7 @@ def handleContribution(name, map):
         repoUrl = repo[name]
     else:
         problems.append({'missing repo url' : name})
+
     pageName = page['page']['page']['ns'] + ':' + page['page']['page']['title']
     map[name] = {
         '101wiki' : wikiUrl.format(pageName),

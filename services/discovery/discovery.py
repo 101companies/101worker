@@ -113,9 +113,8 @@ def discoverDir(path):
     response = { 'folders' : [], 'files': [], 'classifier': 'Folder' }
 
     github, headline = helper101.getResolutionData(path)
-    if github and headline:
-        response['github'] = github
-        response['headline'] = headline
+    response['github'] = github
+    response['headline'] = headline
 
     #add all folders to the folders list and then sort the result
     for d in dirs:
