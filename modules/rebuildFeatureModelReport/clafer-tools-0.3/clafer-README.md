@@ -14,7 +14,7 @@ There are many possible applications of Clafer; however, three are prominent:
 Clafer Compiler
 ===============
 
-v0.3.0.1.12-9-2012
+v0.3.17-7-2012
 
 Clafer compiler provides a reference language implementation. It translates models in Clafer to other formats (e.g. Alloy, XML, HTML, DOT) to allow for reasoning and processing with existing tools.
 
@@ -31,12 +31,7 @@ In case these binaries do not work on your particular machine configuration, the
 * [Java Platform (JDK)](http://www.oracle.com/technetwork/java/javase/downloads/index.html) v6+, 32bit
 * [Python](http://www.python.org/download/) v2.7.*
   * Needed only by ClaferMOO
-* [Alloy4.1 and/or Alloy4.2](http://alloy.mit.edu/alloy/download.html)
-* [Alloy4MOO](http://www.stevenstewart.ca/alloy4/alloy4moo.jar)
-  * NOTE: Alloy4MOO is a pre-release experimental software. Use at own risk.
-  * Needed only by ClaferMOO
-* [GraphViz](http://graphviz.org/)
-  * `dot` is needed only in the `html` mode for SVG graph generation
+* [Alloy4.1 and/or Alloy4.2-rc](http://alloy.mit.edu/alloy/download.html)
 
 On Windows only
 
@@ -56,11 +51,8 @@ Building & Installation From Source Code
 
 * Dependencies for running
 * [The Haskell Platform](http://hackage.haskell.org/platform/) v.2012.2.0.0
-* [Alloy4.1 and/or Alloy4.2](http://alloy.mit.edu/alloy/download.html)
-  * downloaded automatically during build
-* [Alloy4MOO](http://www.stevenstewart.ca/alloy4/alloy4moo.jar)
-  * downloaded automatically during build
-  * NOTE: Alloy4MOO is a pre-release experimental software. Use at own risk.
+* [Alloy4.1 and/or Alloy4.2-rc](http://alloy.mit.edu/alloy/download.html)
+  * downloaded automatically  
 * [Git](http://git-scm.com/)
 
 On Windows only
@@ -100,14 +92,14 @@ Clafer Compiler
 (As printed by `clafer --help`)
 
 ```
-Clafer v0.3.0.1.12-9-2012
+Clafer v0.3.17-7-2012
 
 clafer [OPTIONS] [FILE]
 
 Common flags:
   -m --mode=CLAFERMODE         Generated output type. Available CLAFERMODEs are:
                                'alloy' (default, Alloy 4.1); 'alloy42' (Alloy
-                               4.2); 'xml' (intermediate representation of
+                               4.2-rc); 'xml' (intermediate representation of
                                Clafer model); 'clafer'  (analyzed and desugared
                                clafer model); 'html' (original model in HTML);
                                'graph' (graphical representation written in DOT
@@ -127,7 +119,7 @@ Common flags:
                                schema
   -v --validate                Validate output. Uses 'tools/XsdCheck.class' for
                                XML,  'tools/alloy4.jar' and
-                               'tools/alloy4.2.jar' for Alloy models, and
+                               'tools/alloy4.2-rc.jar' for Alloy models, and
                                Clafer translator for desugared Clafer models. Use
                                --tooldir to override the default location of
                                these tools.
