@@ -1,0 +1,24 @@
+abstract FeatureSpec
+
+  DataRequirements
+    xor OneOrManyCompanies ?
+      OneCompany
+      ManyCompanies
+    xor FlatOrHierachicalCompanies
+      FlatCompanies
+      HierachicalCompanies
+    ConflictOfInterests ?
+    SalaryAlignment ?
+
+  FunctionalRequirements
+    SalaryCut ?
+    SalaryTotal ?
+    SalaryDelta ?
+    CompanyDepth ?
+
+  NonFunctionalRequirement
+    SerializableCompanies ?
+    PersistentCompanies ?
+
+  [CompanyDepth => HierachicalCompanies]
+  [SalaryAlignment => HierachicalCompanies]
