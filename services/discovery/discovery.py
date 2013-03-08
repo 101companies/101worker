@@ -1,15 +1,15 @@
 import os
 import json
-import re
 from string import Template
-import urlparse
 import helper101
+
 
 base_uri = ''
 
 def find(fragment, query, basePath=None):
-    #create recreate fragment path
+    #recreate fragment path
     fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
+    if 'index' in fragment: fragmentPath = os.path.join(fragmentPath, str(fragment['index']))
     if basePath: fragmentPath = os.path.join(basePath, fragmentPath)
 
     #if we have found our fragment, return it
@@ -29,41 +29,56 @@ def mapFragment(filePath, fragmentPath, fragment):
     if not fragmentPath.endswith(os.path.join(fragment['classifier'], fragment['name'])):
         resource = os.path.join(resource, fragment['classifier'], fragment['name'])
 
-    return {
+    mapped = {
         'resource'  : resource,
         'name'      : fragment['name'],
         'classifier': fragment['classifier']
     }
 
-def discoverFragment(path, fileName, fragment, url_params):
+    if 'index' in fragment:
+        mapped['index'] = fragment['index']
+        mapped['resource'] = os.path.join(resource, str(fragment['index']))
+
+    return mapped
+
+#user has given us the path to a fragment - so we'll return infos, content of that fragment plus all sub-fragments
+def discoverFragment(path, fileName, fragment):
     filePath = os.path.join(path, fileName)
 
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
     locator, extractor, geshi = helper101.getMetadata(filePath)
     response = { 'geshi' : geshi }
 
+    github, headline = helper101.getResolutionData(filePath)
+    response['github'] = github
+    response['headline'] = headline
+
     if locator:
         lines = helper101.getFragment(filePath, fragment, locator)
         fragmentText = helper101.read(filePath, range(lines['from'] - 1, lines['to']))
         response['content'] = fragmentText
 
+        response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
+
     if extractor:
         extractedFacts = helper101.getFacts(filePath, extractor)
+        #TODO There has to be a better way to do this
         for f1 in extractedFacts['fragments']:
             selected, fragmentPath = find(f1, fragment)
             if selected:
                 response['classifier'] = selected['classifier']
+                response['name'] = selected['name']
                 response['fragments'] = []
                 for f2 in selected.get('fragments',[]):
                     response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
                 break
 
-    if url_params.get('format', 'json') == 'json':
-        return json.dumps( response )
 
-    return wrapInHTML('fragment', response)
 
-def discoverFile(path, fileName, url_params):
+    return response
+
+#user has given us path to a file - so we'll return infos about that files plus all fragments in that file and the content
+def discoverFile(path, fileName):
     filePath = os.path.join(path, fileName)
 
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
@@ -73,6 +88,10 @@ def discoverFile(path, fileName, url_params):
     #if there is a geshi code, we should be able to get content
     if geshi:
         response['content'] = helper101.read(filePath)
+
+    github, headline = helper101.getResolutionData(filePath)
+    response['github'] = github
+    response['headline'] = headline
 
     #if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
@@ -84,82 +103,31 @@ def discoverFile(path, fileName, url_params):
 
         response['fragments'] = fragments
 
-    #get repo link
-    response['github'] = '<not resolved>'
-    regex = re.compile('contributions/(?P<contribName>[^/]+)/(?P<githubPath>.+)')
-    match = regex.match(filePath)
-    github = helper101.getRepoLink(match.group('contribName'))
-    if github:
-        response['github'] = os.path.join(github, match.group('githubPath'))
+    #response['github'] = helper101.getRepoLink(filePath)
 
-    if url_params.get('format', 'json') == 'json':
-        return json.dumps( response )
+    return response
 
-    return wrapInHTML('file', response)
-
-def discoverDir(path, url_params, environ):
+#user has given us the path to a dir, so we'll return a list of all files and folders in that particular folder
+def discoverDir(path):
     files, dirs = helper101.getDirContent(path)
-    response = { 'folders' : [], 'files': [], 'classifier': 'Folder', 'accessible-variables': environ.keys(),
-        'REMOTE_ADDR' : environ['REMOTE_ADDR'],'SERVER_NAME':environ['SERVER_NAME'] }
+    response = { 'folders' : [], 'files': [], 'classifier': 'Folder' }
 
+    github, headline = helper101.getResolutionData(path)
+    response['github'] = github
+    response['headline'] = headline
 
+    #add all folders to the folders list and then sort the result
     for d in dirs:
         response['folders'].append({
             'resource': os.path.join(base_uri, path, d),
             'name'    : d
         })
-    response['folders'].sort()
 
+    #add all files to the files list and then sort the result
     for f in files:
         response['files'].append({
             'resource': os.path.join(base_uri, path, f),
             'name'    : f,
         })
-    response['files'].sort()
 
-    if url_params.get('format', 'json') == 'json':
-        return json.dumps( response )
-
-    return wrapInHTML('folders', response)
-
-def wrapInHTML(discoverType, response):
-    def read(path):
-        return ''.join(open(path, 'r').readlines())
-
-    if discoverType == 'folders':
-        dirTemplate = Template(read('templates/discoverDir.html'))
-
-        dirs = ''
-        for d in response['folders']:
-            dirs += Template(read('templates/singledir.html')).substitute({'name':str(d['name']), 'link':str(d['resource'])})
-        if dirs == '': dirs = 'None'
-
-        files = ''
-        for f in response['files']:
-            files += Template(read('templates/singlefile.html')).substitute({'name':str(f['name']), 'link':str(f['resource'])})
-        if files == '': files = 'None'
-
-        return dirTemplate.substitute({'folderList' : dirs, 'filesList' : files})
-
-    #if it isn't a folder, then we can expect some values
-    if 'fragments' in response:
-        fragments = ''
-        for f in response['fragments']:
-            fragments += Template(read('templates/singlefragment.html')).substitute({'name':str(f['name']), 'link':str(f['resource'])})
-        if fragments == '': fragments = 'None'
-    else:
-        fragments = 'not extractable'
-
-    if 'content' in response:
-        content = response['content']
-    else:
-        content = 'not extractable'
-
-
-    if discoverType == 'file':
-        fileTemplate = Template(read('templates/discoverFile.html'))
-        return fileTemplate.substitute({'content': content, 'fragmentList':fragments, 'github':str(response['github'])})
-
-    if discoverType == 'fragment':
-        fragmentTemplate = Template(read('templates/discoverFragment.html'))
-        return fragmentTemplate.substitute({'content': content, 'fragmentList': fragments, 'fragmentType': str(response['classifier'])})
+    return response

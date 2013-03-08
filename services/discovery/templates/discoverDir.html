@@ -4,15 +4,42 @@
     <title>Discovery Service</title>
 </head>
 <body>
-    <h3><a href="https://github.com/101companies/101worker/tree/master/services/discovery">101companies Discovery service</a></h3>
-    <p><b>Classifier:</b> Folder</p>
-    <p><b>Folders:</b></p>
-    <ul>
-        $folderList
-    </ul>
-    <p><b>Files:</b></p>
-    <ul>
-        $filesList
-    </ul>
+<h3><a href="https://github.com/101companies/101worker/tree/master/services/discovery">101companies Discovery Service</a></h3>
+    <p>
+        <b>Headline: </b>
+        {{headline}}
+    </p>
+    <p>
+        <b>Classifier: </b>
+        {{ classifier }}
+    </p>
+    <p>
+        <b>Github: </b>
+        <a href="{{github}}">{{github}}</a>
+    </p>
+    <p>
+        <b>Folders:</b>
+        {% if folders == [] %}
+            None
+        {% else %}
+            <ul>
+                {% for folder in folders %}
+                    <li><a href="{{folder.resource}}?format=html">{{folder.name}}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </p>
+    <p>
+        <b>Files:</b>
+        {% if files == [] %}
+            None
+        {% else %}
+            <ul>
+                {% for file in files %}
+                    <li><a href="{{file.resource}}?format=html">{{file.name}}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </p>
 </body>
 </html>

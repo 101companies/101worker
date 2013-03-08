@@ -3,15 +3,38 @@
 <head>
     <title>Discovery Service</title>
 </head>
-<body>
-    <h3><a href="https://github.com/101companies/101worker/tree/master/services/discovery">101companies Discovery Service</a></h3>
-    <p><b>Classifier:</b> File</p>
-    <p><b>Github:</b> <a href="$github">$github</a></p>
-    <p><b>Fragments:</b></b></p>
-    <ul>
-        $fragmentList
-    </ul>
-    <p><b>Content:</b></p>
-    <pre>$content</pre>
-</body>
+    <body>
+        <h3><a href="https://github.com/101companies/101worker/tree/master/services/discovery">101companies Discovery Service</a></h3>
+        <p>
+            <b>Headline: </b>
+            {{headline}}
+        </p>
+        <p>
+            <b>Classifier: </b>
+            {{classifier}}
+        </p>
+        <p>
+            <b>Github: </b>
+            <a href="{{github}}">{{github}}</a>
+        </p>
+        <p>
+            <b>Fragments:</b>
+            {% if fragments == [] %}
+                None
+            {% else %}
+                <ul>
+                    {% for fragment in fragments %}
+                        <li><a href="{{fragment.resource}}?format=html">{{fragment.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </p>
+
+        {% if content %}
+            <p>
+                <b>Content:</b>
+                <pre>{{content}}</pre>
+            </p>
+        {% endif %}
+    </body>
 </html>
