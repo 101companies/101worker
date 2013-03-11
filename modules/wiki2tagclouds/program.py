@@ -3,6 +3,7 @@
 import json
 import sys
 from collections import Counter
+from jinja2 import *
 
 # Load 101wiki into memory
 
@@ -19,24 +20,38 @@ def writeFiles(counts, label, prefix):
     # Inspired by http://stackoverflow.com/questions/3180779/html-tag-cloud-in-python
     step = max(counts.values()) / 6
 
-    # Apply scaling and write HTML
-    htmlFile = open(label + '.html', 'w')
-    htmlFile.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">\n')
-    htmlFile.write('<html>\n')
-    htmlFile.write('<head>\n')
-    htmlFile.write('  <title>' + label + '</title>\n')
-    htmlFile.write('  <link rel="stylesheet" type="text/css" href="wiki2tagclouds.css"/>\n')
-    htmlFile.write('</head>\n')
-    htmlFile.write('<body>\n')
+    counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    
+    loader = FileSystemLoader('.')
+    env = Environment(loader=loader)
+    template = env.get_template('tagcloud.html')
+    open(label + '.html', 'w').write(template.render({
+        'title': label,
+        'counts': counts,
+        'step': step,
+        'root': 'http://101companies.org/wiki/' + prefix
+    }))
+    
+    ## Apply scaling and write HTML
+    #htmlFile = open(label + '.html', 'w')
+    #htmlFile.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">\n')
+    #htmlFile.write('<html>\n')
+    #htmlFile.write('<head>\n')
+    #htmlFile.write('  <title>' + label + '</title>\n')
+    #htmlFile.write('  <link rel="stylesheet" type="text/css" href="wiki2tagclouds.css"/>\n')
+    #htmlFile.write('</head>\n')
+    #htmlFile.write('<body>\n')
 
-    root = 'http://101companies.org/wiki/' + prefix
-    for tag, count in sorted(counts.items(), key=lambda x: x[1], reverse=True):
-        css = count / step        
-        htmlFile.write('<a href="%s:%s" class="size-%s">%s</a>\n' % (root, tag, css, tag),)
+    #print counts
 
-    htmlFile.write('</body>\n')
-    htmlFile.write('</html>\n')
-    htmlFile.close()
+    
+    #for tag, count in counts:
+    #    css = count / step        
+    #    htmlFile.write('<a href="%s:%s" class="size-%s">%s</a>\n' % (root, tag, css, tag),)
+
+    #htmlFile.write('</body>\n')
+    #htmlFile.write('</html>\n')
+    #htmlFile.close()
 
 pages = wiki['pages']
 
