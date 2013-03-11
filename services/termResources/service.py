@@ -1,13 +1,13 @@
 import json
 
-def serverTermInResource(environ, start_response, params):
+def serveTermInResource(environ, start_response, params):
     status = '200 OK'
     response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
     return json.dumps({})
 
 
-def withTerm(environ, start_response, params):
+def serveTerm(environ, start_response, params):
     status = '200 OK'
     response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
