@@ -16,7 +16,7 @@ def serveTerm(environ, start_response, params):
     if term in backlinks:
         return json.dumps({'backlinks' : backlinks[term]})
     else:
-        return json.dumps({'error' : "No backlinks found")
+        return json.dumps({'error' : "No backlinks found"})
 
 
 def routes():
