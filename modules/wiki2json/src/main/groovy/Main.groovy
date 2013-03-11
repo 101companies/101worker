@@ -29,6 +29,7 @@ class Repo101 {
         public static IS_A = 'http://101companies.org/property/isA'
         public static DEVELOPED_BY = 'http://101companies.org/property/developedBy'
         public static REVIEWED_BY = 'http://101companies.org/property/reviewedBy'
+        public static RELATES_TO = 'http://101companies.org/property/relatesTo'
         public static LABEL = 'http://www.w3.org/2000/01/rdf-schema#label'
         public static PAGE = 'http://semantic-mediawiki.org/swivt/1.0#page'
         public static TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
