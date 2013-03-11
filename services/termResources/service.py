@@ -3,7 +3,7 @@ def helloName(environ, start_response, params):
     response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
 
-    return 'Hello ' + params['name'] + ', how are you?'
+    return {}
 
 
 def hello(environ, start_response, params):
@@ -11,7 +11,7 @@ def hello(environ, start_response, params):
     response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
 
-    return 'Hello World'
+    return {}
 
 
 def routes():
