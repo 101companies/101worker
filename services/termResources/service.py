@@ -21,7 +21,7 @@ def serveTerm(environ, start_response, params):
 
 def routes():
     return [
-        ('/termResources', serveResourceNames),
-        ('/termResources/(?P<term>.+)', serveTerm),
         ('/termResources/(?P<term>.+)/(?P<resources>.+)', serveTerm),
+        ('/termResources/(?P<term>.+)', serveTerm),
+        ('/termResources', serveResourceNames)
     ]
