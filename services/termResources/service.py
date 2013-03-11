@@ -13,6 +13,11 @@ def hello(environ, start_response, params):
 
     return {}
 
+def respondError(start_response, error):
+    status = '500 Internal Server Error'
+    response_headers = [('Content-Type', 'text/plain')]
+    start_response(status, response_headers)
+    return str(error)
 
 def routes():
     return [
