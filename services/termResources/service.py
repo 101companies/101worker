@@ -1,17 +1,23 @@
 def helloName(environ, start_response, params):
-    status = '200 OK'
-    response_headers = [('Content-Type', 'text/json')]
-    start_response(status, response_headers)
-    open("resources.json", "read").read()
-    return {}
+    try:
+        status = '200 OK'
+        response_headers = [('Content-Type', 'text/json')]
+        start_response(status, response_headers)
+        open("resources.json", "read").read()
+        return {}
+    except Exception as e:
+         return respondError(start_response, error)
 
 
 def hello(environ, start_response, params):
-    status = '200 OK'
-    response_headers = [('Content-Type', 'text/json')]
-    start_response(status, response_headers)
-
-    return {}
+    try:
+        status = '200 OK'
+        response_headers = [('Content-Type', 'text/json')]
+        start_response(status, response_headers)
+        open("resources.json", "read").read()
+        return {}
+    except Exception as e:
+         return respondError(start_response, error)
 
 def respondError(start_response, error):
     status = '500 Internal Server Error'
