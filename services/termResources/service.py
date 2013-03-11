@@ -16,6 +16,6 @@ def hello(environ, start_response, params):
 
 def routes():
     return [
-        ('/hello/(?P<name>[^/]+)', helloName),
-        ('/hello', hello)
+        ('/termResources/(?P<name>[^/]+)', helloName),
+        ('/termResources', hello)
     ]
