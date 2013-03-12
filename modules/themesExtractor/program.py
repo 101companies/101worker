@@ -4,6 +4,12 @@ import sys
 import os
 import urllib2
 
+sys.path.append('../../libraries/101meta')
+import const101
+import tools101
+
+output = os.path.join(const101.sRoot, 'themes')
+
 json_path = sys.argv[1]
 
 wiki = json.load(open(json_path, 'r'))['wiki']
@@ -254,29 +260,29 @@ for t in getThemeNames(themes):
     if not members:
         continue
 
-    if not os.path.exists('output'):
-        os.mkdir('output')
-    if not os.path.exists(os.path.join('output', t)):
-        os.mkdir(os.path.join('output', t))
-    path = os.path.join('output', t, 'members.json')
+    if not os.path.exists(output):
+        os.mkdir(output)
+    if not os.path.exists(os.path.join(output, t)):
+        os.mkdir(os.path.join(output, t))
+    path = os.path.join(output, t, 'members.json')
     
     f = open(path, 'w')
     f.write(json.dumps(members, indent=4, sort_keys=True))
     f.close()   
     
-    path = os.path.join('output', t, 'features.json')
+    path = os.path.join(output, t, 'features.json')
     f = open(path, 'w')
     features = list(createFeatures(t, pages))
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()
 
-    path = os.path.join('output', t, 'concepts.json')
+    path = os.path.join(output, t, 'concepts.json')
     f = open(path, 'w')
     features = list(createConcepts(t, pages))
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()  
 
-    path = os.path.join('output', t, 'technologies.json')
+    path = os.path.join(output, t, 'technologies.json')
     f = open(path, 'w')
     features = list(createTechnologies(t, pages))
     f.write(json.dumps(features, indent=4, sort_keys=True))
