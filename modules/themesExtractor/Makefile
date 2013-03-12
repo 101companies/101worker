@@ -2,11 +2,11 @@ include ../Makefile.vars
 wiki = ${webdir}/data/dumps/Wiki101Full.json
 
 run:
-    @make clean
+	@make clean
 	@make generate
 
 reset:
-    @make clean
+	@make clean
 
 generate:
 	@./program.py ${wiki}
