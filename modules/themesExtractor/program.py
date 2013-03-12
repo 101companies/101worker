@@ -1,21 +1,56 @@
 #!/usr/bin/python
-
 import json
 import sys
 import os
 import urllib2
-
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
-
-output = os.path.join(const101.sRoot, 'themes')
 
 json_path = sys.argv[1]
 
 wiki = json.load(open(json_path, 'r'))['wiki']
 pages = wiki['pages']
 themes = filter(lambda p: "Theme" == p['page'].get('page', {}).get('p', ''), pages)
+
+def getRealFeature(f, pages):
+    f = f.replace('_', ' ')
+    def filter_func(p):
+        return p['page']['page']['p'] == 'Feature' and p['page']['page']['n'] == f
+
+    try:
+        return filter(filter_func, pages)[0]
+    except IndexError:
+        return {
+            'page': {
+                'headline': ''
+            }
+        }
+
+def getRealConcept(f, pages):
+    f = f.replace('_', ' ')
+    def filter_func(p):
+        return p['page']['page']['p'] is None and p['page']['page']['n'] == f
+
+    try:
+        return filter(filter_func, pages)[0]
+    except IndexError:
+        return {
+            'page': {
+                'headline': ''
+            }
+        }
+
+def getRealTechnology(f, pages):
+    f = f.replace('_', ' ')
+    def filter_func(p):
+        return p['page']['page']['p'] == 'Technology' and p['page']['page']['n'] == f
+
+    try:
+        return filter(filter_func, pages)[0]
+    except IndexError:
+        return {
+            'page': {
+                'headline': ''
+            }
+        }
 
 def getContributionNames(pages):
     return map(lambda p: p['page']['page']['n'], pages)
@@ -90,7 +125,7 @@ def createMembers(theme, pages):
     instances = getThemeInstances(theme, pages)
         
     for instance in instances:
-        name = instance['page'].get('page', {}).get('title', '')
+        name = instance['page'].get('page', {}).get('n', '')
 
         unique_f = map(lambda i: i['n'], getUnique([instance], instances, 'implements'))
         num_f = len(set(map(lambda i: i['n'], getAttr([instance], 'implements'))))
@@ -128,48 +163,122 @@ def getContributionsWithFeature(feature, pages):
     def filter_func(p):
         implements = p['page'].get('implements', [])
         for i in implements:
-            #print i['p'] == 'Feature', i['n'], feature
             if i['p'] == 'Feature' and i['n'] == feature:
                 return True
 
     f = filter(filter_func, pages)
-    #print f
+    return f
+
+def getContributionsWithConcept(name, pages):
+    def filter_func(p):
+        implements = p['page'].get('instanceOf', [])
+        for i in implements:
+            if i['p'] is None and i['n'] == name:
+                return True
+
+    f = filter(filter_func, pages)
+    return f
+
+def getContributionsWithTechnology(name, pages):
+    def filter_func(p):
+        implements = p['page'].get('uses', [])
+        for i in implements:
+            if i['p'] == 'Technology' and i['n'] == name:
+                return True
+
+    f = filter(filter_func, pages)
     return f
         
 def createFeatures(theme, pages):
-    features = names(getAttr(pages, 'implements'))
+    theme_pages = getThemeInstances(theme, pages)
+    features = getAttr(theme_pages, 'implements')
+    feature_names = names(features)
     
-    for feature in features:
-        contributions = getContributionsWithFeature(feature, pages)
+    for feature in feature_names:
+        rf = getRealFeature(feature, pages)
+        contributions = getContributionsWithFeature(feature, theme_pages)
+        headline = rf['page'].get('headline', '')
         contributions = getContributionNames(contributions)
+        resolved = bool(rf['page'].get('resolved', ''))
+        
         yield {
             'name': feature,
-            'headline': '',
+            'headline': headline,
             'contributions': contributions,
-            'resolved': False
+            'resolved': resolved
         
         }
 
+def createConcepts(theme, pages):
+    theme_pages = getThemeInstances(theme, pages)
+    concepts = getConcepts(theme_pages)
+    
+    for concept in concepts:
+        rf = getRealConcept(concept, pages)
+        contributions = getContributionsWithConcept(concept, theme_pages)
+        headline = rf['page'].get('headline', '')
+        contributions = getContributionNames(contributions)
+        resolved = bool(rf['page'].get('resolved', ''))
+        
+        yield {
+            'name': concept,
+            'headline': headline,
+            'contributions': contributions,
+            'resolved': resolved
+        
+        }
 
+def createTechnologies(theme, pages):
+    theme_pages = getThemeInstances(theme, pages)
+    technologies = getTechs(theme_pages)
+    
+    for tech in technologies:
+        rf = getRealTechnology(tech, pages)
+        contributions = getContributionsWithTechnology(tech, theme_pages)
+        headline = rf['page'].get('headline', '')
+        contributions = getContributionNames(contributions)
+        resolved = bool(rf['page'].get('resolved', ''))
+        
+        yield {
+            'name': tech,
+            'headline': headline,
+            'contributions': contributions,
+            'resolved': resolved
+        
+        }
 
 for t in getThemeNames(themes):
-    if not os.path.exists(output):
-        os.mkdir(output)
-    if not os.path.exists(os.path.join(output, t)):
-        os.mkdir(os.path.join(output, t))
-    path = os.path.join(output, t, 'members.json')
-    f = open(path, 'w')
+    
     members = list(createMembers(t, pages))
+
+    if not members:
+        continue
+
+    if not os.path.exists('output'):
+        os.mkdir('output')
+    if not os.path.exists(os.path.join('output', t)):
+        os.mkdir(os.path.join('output', t))
+    path = os.path.join('output', t, 'members.json')
+    
+    f = open(path, 'w')
     f.write(json.dumps(members, indent=4, sort_keys=True))
     f.close()   
     
-    path = os.path.join(output, t, 'features.json')
+    path = os.path.join('output', t, 'features.json')
     f = open(path, 'w')
     features = list(createFeatures(t, pages))
     f.write(json.dumps(features, indent=4, sort_keys=True))
-    f.close()   
-        
-    #print t
-    #print list(createMembers(t, pages))
+    f.close()
 
-#print getPageContent("Feature:Salary_total")
+    path = os.path.join('output', t, 'concepts.json')
+    f = open(path, 'w')
+    features = list(createConcepts(t, pages))
+    f.write(json.dumps(features, indent=4, sort_keys=True))
+    f.close()  
+
+    path = os.path.join('output', t, 'technologies.json')
+    f = open(path, 'w')
+    features = list(createTechnologies(t, pages))
+    f.write(json.dumps(features, indent=4, sort_keys=True))
+    f.close()  
+        
