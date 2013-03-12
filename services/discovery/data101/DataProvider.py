@@ -21,6 +21,9 @@ def getMetadata(filePath):
             if 'extractor' in unit['metadata']: extractor = unit['metadata']['extractor']
             if 'geshi' in unit['metadata']    : geshi = unit['metadata']['geshi']
 
+    #locator = DataCache.getMatchesMetadata(filePath,'locator')
+    #extractor = DataCache.getMatchesMetadata(filePath,'extractor')
+    #geshi = DataCache.getMatchesMetadata(filePath, 'geshi')
     return locator, extractor, geshi
 
 def getFragment(file, fragment, locator):
@@ -64,21 +67,14 @@ def getDirContent(dir):
     #index = json.load(open(indexPath, 'r'))
     #return index['files'], index['dirs']
 
-def getRepoLink(path):
-    match = extractContribRegex.match(path)
-    github = '<unresolved>'
-    if match:
-        contrib = match.group('contribName')
-        repoDump = json.load(open(const101.pullRepoDump, 'r'))
-        github = repoDump.get(contrib, '<unresolved>')
-        if not github == 'unresolved': github = os.path.join(github, match.group('githubPath'))
-
-    return github
-
 def getResolutionData(path):
     match = extractContribRegex.match(path)
     if match:
         contrib = match.group('contribName')
+        #metadata = DataCache.getResolutionData('contributions',contrib)
+
+        #return metadata['101repo'], metadata['headline']
+
         resolutionDump = json.load(open(const101.resolutionDump, 'r'))
         meta = resolutionDump['results']['contributions'].get(contrib, None)
         if meta:
