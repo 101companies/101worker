@@ -163,7 +163,7 @@ for t in getThemeNames(themes):
     f.write(json.dumps(members, indent=4, sort_keys=True))
     f.close()   
     
-    path = os.path.join('output', t, 'features.json')
+    path = os.path.join(output, t, 'features.json')
     f = open(path, 'w')
     features = list(createFeatures(t, pages))
     f.write(json.dumps(features, indent=4, sort_keys=True))
