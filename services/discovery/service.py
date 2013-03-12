@@ -104,7 +104,7 @@ def serveNamespace(environ, start_response, params):
         response = discovery.discoverNamespace(params.get('namespace', ''))
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        return respondHTML(start_response,response,'folder.html')
+        return respondHTML(start_response,response,'namespace.html')
 
     except Exception, error:
         return respondError(start_response, error)

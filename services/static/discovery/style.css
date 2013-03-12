@@ -55,7 +55,7 @@ body {
     padding-bottom: 10px;
 }
 
-.content-area {
+#content {
     margin-top: 50px;
 }
 
@@ -74,4 +74,12 @@ body {
 .header a {
     color:inherit;
     text-decoration: none;
+}
+
+footer {
+    border-top: 1px solid #ddd;
+    margin-top: 35px;
+    padding-top: 6px;
+    text-align: center;
+    font-size: 12px;
 }

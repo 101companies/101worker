@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Discovery Service</title>
+    <link rel="stylesheet" href="{{ base_uri }}/static/discovery/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ base_uri }}/static/discovery/bootstrap-responsive.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ base_uri }}/static/discovery/style.css" type="text/css">
+</head>
+<body>
+
+<header class="header">
+    <a href="https://github.com/101companies/101worker/tree/master/services/discovery">
+        <div class="container">
+            <h1>101companies Discovery Service</h1>
+        </div>
+    </a>
+</header>
+
+<div class="container">
+
+    <div id="content" class="row">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        Part of the <a href="http://101companies.org/wiki/101companies:Project">101companies</a> ecosystem<br />
+        Powered by <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a>,
+        <a href="http://jquery.com/">JQuery</a> and <a href="http://masonry.desandro.com/">Masonry</a>
+    </footer>
+
+</div>
+
+
+<script src="{{ base_uri }}/static/discovery/js/libs/jquery.js"></script>
+<script src="{{ base_uri }}/static/discovery/js/libs/jquery.masonry.min.js"></script>
+<script src="{{ base_uri }}/static/discovery/js/base.js"></script>
+</body>
+</html>

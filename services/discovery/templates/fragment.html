@@ -1,123 +1,61 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Discovery Service</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ base_uri }}/static/discovery/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="{{ base_uri }}/static/discovery/bootstrap-responsive.min.css" type="text/css">
-    <link rel="stylesheet" href="{{ base_uri }}/static/discovery/style.css" type="text/css">
-</head>
-<body>
-    <header class="header">
-        <a href="https://github.com/101companies/101worker/tree/master/services/discovery">
-            <div class="container">
-                <h1>101companies Discovery Service</h1>
-            </div>
-        </a>
-    </header>
-    <div class="container content-area">
+{% extends "base.html" %}
+{% block content %}
+    {% include "snippets/general.html" %}
 
-        <div class="row">
-
-            <!-- First Column -->
-            <div class="span5">
-
-                <div class="row-fluid">
-                    <div class=" info-box blue-top">
-                        <div class="box-header">
-                            General
-                        </div>
-                        <div class="box-content">
-                            <div class="box-content-fragment">
-                                <b>Headline</b>
-                                <br/>
-                                {{headline}}
-                            </div>
-                            <div class="box-content-fragment">
-                                <b>Classifier </b>
-                                {{ classifier }}
-                            </div>
-                            <div class="box-content-fragment">
-                                <b>Github </b>
-                                <a href="{{github}}">Link</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-{#                <div class="row-fluid">
-                    <div class=" info-box turquoise-top">
-                        <div class="box-header">
-                            Contributors
-                        </div>
-                        <div class="box-content">
-                            <div class="box-content-fragment">
-                                <b>Initiator</b>
-                                Testperson
-                            </div>
-                            <div class="box-content-fragment">
-                                <b>Contributors </b>
-                                <ul>
-                                    <li>Person1</li>
-                                    <li>Person2</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>#}
-
-            </div>
-
-            <!-- Second Column -->
-            <div class="span5">
-
-                <div class="row-fluid">
-                    <div class="info-box red-top">
-                        <div class="box-header">
-                            Contents
-                        </div>
-                        <div class="box-content">
-                            <div class="box-content-fragment">
-                                <b>Fragments:</b>
-                                {% if fragments == [] %}
-                                    None
-                                {% else %}
-                                    <ul>
-                                        {% for fragment in fragments %}
-                                            <li>
-                                                <a href="{{fragment.resource}}?format=html">
-                                                    {{fragment.name}}
-                                                    {% if fragment.has_key('index') %}
-                                                        ({{fragment.index}})
-                                                    {% endif %}
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
+    <div class="span5 box info-box red-top">
+        <div class="box-header">
+            Contains
         </div>
-        <!-- row end -->
-
-        {% if content %}
-            <div class="row-fluid">
-                <div class="span11 info-box yellow-top">
-                    <div class="box-header">
-                        Content
-                    </div>
-                    <div class="box-content">
-                        <pre>{{content}}</pre>
-                    </div>
-                </div>
+        <div class="box-content">
+            <div class="box-content-fragment">
+                <b>Fragments:</b>
+                {% if fragments == [] %}
+                    None
+                {% else %}
+                    <ul>
+                        {% for fragment in fragments %}
+                            <li>
+                                <a href="{{fragment.resource}}?format=html">
+                                    {{fragment.name}}
+                                    {% if fragment.has_key('index') %}
+                                        ({{fragment.index}})
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
-        {% endif %}
-
+        </div>
     </div>
-</body>
-</html>
+
+    <div class="span5 box info-box turquoise-top">
+        <div class="box-header">
+            Contributors
+        </div>
+        <div class="box-content">
+            <div class="box-content-fragment">
+                <b>Initiator</b>
+                Testperson
+            </div>
+            <div class="box-content-fragment">
+                <b>Contributors </b>
+                <ul>
+                    <li>Person1</li>
+                    <li>Person2</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% if content %}
+        <div class="span11 box info-box yellow-top">
+            <div class="box-header">
+                Content
+            </div>
+            <div class="box-content">
+                <pre>{{content}}</pre>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

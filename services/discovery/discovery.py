@@ -130,7 +130,17 @@ def discoverNamespaceMember(namespace, member):
     return discoverMemberPath(namespace, member,'')
 
 def discoverNamespace(namespace):
-    return discoverMemberPath(namespace, '','')
+    files, dirs = DataProvider.getDirContent(namespace)
+    response = { 'members' : [], 'classifier': 'Namespace' }
+
+    for d in dirs:
+        if not d.startswith('.'):
+            response['members'].append({
+                'resource': os.path.join(base_uri, namespace, d),
+                'name'    : d
+            })
+
+    return response
 
 def discoverAllNamespaces():
     return discoverMemberPath('', '', '')
