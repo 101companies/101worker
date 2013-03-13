@@ -32,7 +32,8 @@ def respondHTML(start_response, response, template):
 
     import discovery
     from templates import TemplateCache
-    response['base_uri'] = discovery.base_uri.replace('/discovery','')
+    if 'localhost' in discovery.base_uri: response['base_uri'] = discovery.base_uri.replace('/discovery','')
+    else: response['base_uri'] = 'http://worker.101companies.org/services'
     template = TemplateCache.getTemplate(template)
 
     return str( template.render(response) )
