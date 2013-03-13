@@ -41,19 +41,20 @@ def mapFragment(filePath, fragmentPath, fragment):
 def discoverFileFragment(namespace, member, path, file, fragment):
     filePath = os.path.join(namespace, member, path, file)
 
-    #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
+    #if no geshi code is defined, then we'll return basically "geshi : null"
     locator, extractor, geshi = DataProvider.getMetadata(filePath)
     response = { 'geshi' : geshi }
 
-    github, headline = DataProvider.getResolutionData(filePath)
+    github, headline, wiki = DataProvider.getResolutionData(namespace, member)
+    github = os.path.join(github, path, file)
     response['github'] = github
     response['headline'] = headline
+    response['wiki'] = wiki
 
     if locator:
         lines = DataProvider.getFragment(filePath, fragment, locator)
         fragmentText = DataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
         response['content'] = fragmentText
-
         response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
 
     if extractor:
@@ -78,15 +79,18 @@ def discoverMemberFile(namespace, member, path, file):
 
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
     locator, extractor, geshi = DataProvider.getMetadata(filePath)
-    response = { 'geshi' : geshi, 'classifier': 'File'}
+    response = { 'geshi' : geshi, 'classifier': 'File', 'name':file}
 
     #if there is a geshi code, we should be able to get content
     if geshi:
         response['content'] = DataProvider.read(filePath)
 
-    github, headline = DataProvider.getResolutionData(filePath)
+    github, headline, wiki = DataProvider.getResolutionData(namespace, member)
+    github = os.path.join(github, path, file)
+
     response['github'] = github
     response['headline'] = headline
+    response['wiki'] = wiki
 
     #if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
@@ -103,12 +107,15 @@ def discoverMemberFile(namespace, member, path, file):
 
 def discoverMemberPath(namespace, member, path):
     dirPath = os.path.join(namespace, member, path)
-    files, dirs = DataProvider.getDirContent(dirPath)
-    response = { 'folders' : [], 'files': [], 'classifier': 'Folder' }
 
-    github, headline = DataProvider.getResolutionData(dirPath)
+    files, dirs = DataProvider.getDirContent(dirPath)
+    response = { 'folders' : [], 'files': [], 'classifier': 'Folder', 'name': os.path.basename(path) }
+
+    github, headline, wiki = DataProvider.getResolutionData(namespace, member)
+    github = os.path.join(github, path)
     response['github'] = github
     response['headline'] = headline
+    response['wiki'] = wiki
 
     #add all folders to the folders list and then sort the result
     for d in dirs:
@@ -131,7 +138,12 @@ def discoverNamespaceMember(namespace, member):
 
 def discoverNamespace(namespace):
     files, dirs = DataProvider.getDirContent(namespace)
-    response = { 'members' : [], 'classifier': 'Namespace' }
+    response = { 'members' : [], 'classifier': 'Namespace', 'name':namespace }
+
+    github, headline, wiki = DataProvider.getResolutionData('namespaces',namespace)
+    response['github'] = github
+    response['headline'] = headline
+    response['wiki'] = wiki
 
     for d in dirs:
         if not d.startswith('.'):
@@ -143,5 +155,20 @@ def discoverNamespace(namespace):
     return response
 
 def discoverAllNamespaces():
-    return discoverMemberPath('', '', '')
+    files, dirs = DataProvider.getDirContent('')
+    response = { 'members' : [], 'classifier':'Namespace', 'name':'Namespace'}
+
+    github, headline, wiki = DataProvider.getResolutionData('namespaces','namespaces')
+    response['github'] = github
+    response['headline'] = headline
+    response['wiki'] = wiki
+
+    for d in dirs:
+        if not d.startswith('.'):
+            response['members'].append({
+                'resource': os.path.join(base_uri, d),
+                'name'    : d
+            })
+
+    return response
 

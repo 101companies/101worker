@@ -50,6 +50,10 @@ def getFacts(file, extractor):
 
     return json.loads(output)
 
+def isDir(dir):
+    path = os.path.join(const101.sRoot, dir)
+    return os.path.isdir(path)
+
 def getDirContent(dir):
     files, dirs = [], []
     path = os.path.join(const101.sRoot, dir)
@@ -67,23 +71,32 @@ def getDirContent(dir):
     #index = json.load(open(indexPath, 'r'))
     #return index['files'], index['dirs']
 
-def getResolutionData(path):
-    match = extractContribRegex.match(path)
-    if match:
-        contrib = match.group('contribName')
+def getResolutionData(namespace, member):
+    github, headline, wiki = None, None, None
+    resolutionDump = json.load(open(const101.resolutionDump, 'r'))
+    meta = resolutionDump['results'][namespace].get(member, None)
+    if meta:
+        github = meta.get('101repo', None)
+        headline = meta.get('headline', None)
+        wiki = meta.get('101wiki', None)
+
+    return github, headline, wiki
+    #match = extractContribRegex.match(path)
+    #if match:
+    #    contrib = match.group('contribName')
         #metadata = DataCache.getResolutionData('contributions',contrib)
 
         #return metadata['101repo'], metadata['headline']
 
-        resolutionDump = json.load(open(const101.resolutionDump, 'r'))
-        meta = resolutionDump['results']['contributions'].get(contrib, None)
-        if meta:
-            github = meta['101repo']
-            headline = meta['headline']
-            if match.group('githubPath') and not github == '<unresolved>':
-                github = os.path.join(github, match.group('githubPath'))
+    #    resolutionDump = json.load(open(const101.resolutionDump, 'r'))
+    #    meta = resolutionDump['results']['contributions'].get(contrib, None)
+    #    if meta:
+    #        github = meta['101repo']
+    #        headline = meta['headline']
+    #        if match.group('githubPath') and not github == '<unresolved>':
+    #            github = os.path.join(github, match.group('githubPath'))
 
-            return github, headline
+    #        return github, headline
 
     return None, None
 

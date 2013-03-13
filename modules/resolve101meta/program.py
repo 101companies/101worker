@@ -2,7 +2,7 @@
 
 import sys
 import json
-import re
+import os
 
 sys.path.append('../../libraries/101meta')
 import const101
@@ -14,29 +14,43 @@ repo = json.load(open(const101.pullRepoDump, 'r'))
 rules = json.load(open(const101.rulesDump, 'r'))["results"]["rules"]
 wiki = json.load(open(const101.wikiDump, 'r'))["wiki"]
 
+def formatHeadline(headline):
+    return headline.replace('== Headline ==', '').replace('\n', '').replace('[[', '').replace(']]', '')
 
 ### HELPER FUNCTIONS
 def encodeForUrl(ns, name):
     if not ns: return name.replace(' ', '_')
     return ns.encode("utf8") + ':' + name.encode("utf8").replace(' ', '_')
 
-def findWikiEntry(val, namespace, title, map):
+def handleRepoLink(repoDir, namespace, title, map):
+    if title == 'Namespace':
+        map['101repo'] = const101.url101repo
+        return
+    if repoDir:
+        path = repoDir
+        if not namespace == 'Namespace':
+            path = os.path.join(path, title)
+        if os.path.exists(os.path.join(const101.sRoot, path)):
+            map['101repo'] = os.path.join(const101.url101repo, path)
+
+def findWikiEntry(val, namespace, title, repoDir, map):
     for page in wiki['pages']:
         if page['page']['page']['p'] == namespace and page['page']['page']['n'] == title.replace('_', ' '):
             map[val] = {
                 '101wiki': wikiUrl.format(encodeForUrl(namespace,title)),
-                'headline': page['page'].get('headline', '<unresolved>')
+                'headline': formatHeadline( page['page'].get('headline', '<unresolved>') )
             }
+            handleRepoLink(repoDir,namespace, title,map[val])
             return
 
     map[val] = {'101wiki': '<unresolved>', 'headline': '<unresolved>'}
     problems.append({'missingWikiPage': wikiUrl.format(encodeForUrl(namespace, title))})
 
-def handleMention(unit, key, map, namespace):
+def handleMention(unit, key, map, namespace, repoDir):
     if key in unit:
         val = unit[key]
         if not val in map:
-            findWikiEntry(val, namespace, val, map)
+            findWikiEntry(val, namespace, val, repoDir, map)
 
 def handleContribution(name, map):
     repoUrl = repo.get(name, '<unresolved>')
@@ -46,7 +60,7 @@ def handleContribution(name, map):
     map[name] = {
         '101wiki' : wikiUrl.format(pageName),
         '101repo' : repoUrl,
-        'headline': page['page'].get('headline', '<unresolved>')
+        'headline': formatHeadline( page['page'].get('headline', '<unresolved>') )
     }
 
 
@@ -58,6 +72,7 @@ features = dict()
 languages = dict()
 technologies = dict()
 contributions = dict()
+namespaces = dict()
 results = dict()
 results["terms"] = terms
 results["concepts"] = concepts
@@ -65,25 +80,35 @@ results["features"] = features
 results["languages"] = languages
 results["technologies"] = technologies
 results["contributions"] = contributions
+results["namespaces"] = namespaces
 problems = list()
 
 # First part - check metadata values - they are supposed to have a page in the wiki
 for rule in rules:
     for unit in rule['rule']['metadata']:
-        handleMention(unit, "concept",   concepts,     None)
-        handleMention(unit, "language",  languages,    'Language')
-        handleMention(unit, "dependsOn", technologies, 'Technology')
-        handleMention(unit, "inputOf",   technologies, 'Technology')
-        handleMention(unit, "outputOf",  technologies, 'Technology')
-        handleMention(unit, "partOf",    technologies, 'Technology')
-        handleMention(unit, "term",      terms,        '101term')
-        handleMention(unit, "feature",   features,     'Feature')
-
+        handleMention(unit, "concept",   concepts,     None,         'concepts')
+        handleMention(unit, "language",  languages,    'Language',   'languages')
+        handleMention(unit, "dependsOn", technologies, 'Technology', 'technologies')
+        handleMention(unit, "inputOf",   technologies, 'Technology', 'technologies')
+        handleMention(unit, "outputOf",  technologies, 'Technology', 'technologies')
+        handleMention(unit, "partOf",    technologies, 'Technology', 'technologies')
+        handleMention(unit, "term",      terms,        '101term',    None)
+        handleMention(unit, "feature",   features,     'Feature',    None)
 
 # Second part - check that contributions in the wiki actually exist (have a repository link)
 for page in wiki['pages']:
     if page['page']['page']['p'] == 'Contribution':
         handleContribution(page['page']['page']['n'], contributions)
+
+#Third part - check namespaces
+findWikiEntry('namespaces',    'Namespace', 'Namespace',    None,            namespaces)
+findWikiEntry('contributions', 'Namespace', 'Contribution', 'contributions', namespaces)
+findWikiEntry('contributors',  'Namespace', 'Contributor',  'contributors',  namespaces)
+findWikiEntry('languages',     'Namespace', 'Language',     'languages',     namespaces)
+findWikiEntry('technologies',  'Namespace', 'Technology',   'technologies',  namespaces)
+findWikiEntry('concepts',      'Namespace', 'Concept',      'concepts',      namespaces)
+findWikiEntry('themes',        'Namespace', 'Theme',        'themes',        namespaces)
+findWikiEntry('vocabularies',  'Namespace', 'Vocabulary',   'vocabularies',  namespaces)
 
 # creation of the dump
 dump = dict()
@@ -95,5 +120,6 @@ dump["numbers"]["numbersOfFeatures"] = len(features)
 dump["numbers"]["numbersOfLanguages"] = len(languages)
 dump["numbers"]["numbersOfTechnologies"] = len(technologies)
 dump["numbers"]["numbersOfContributions"] = len(contributions)
+dump["numbers"]["numberOfNamespaces"] = len(namespaces)
 dump["problems"] = problems
 tools101.releaseDump(dump, const101.resolutionDump)

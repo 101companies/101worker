@@ -71,6 +71,11 @@ def serveMemberFile(environ, start_response, params):
 def serveMemberPath(environ, start_response, params):
     initServeRequest(environ)
     import discovery
+    from data101 import DataProvider
+    import os
+
+    if not DataProvider.isDir(os.path.join(params.get('namespace', ''), params.get('member', ''),params.get('path', ''))):
+        return serveMemberFile(environ, start_response, params)
 
     try:
         response = discovery.discoverMemberPath(params.get('namespace', ''), params.get('member', ''),
@@ -117,7 +122,7 @@ def serveAllNamespaces(environ, start_response, params):
         response = discovery.discoverAllNamespaces()
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        return respondHTML(start_response,response,'folder.html')
+        return respondHTML(start_response,response,'namespace.html')
 
     except Exception, error:
         return respondError(start_response, error)
