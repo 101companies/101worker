@@ -25,6 +25,7 @@ def findAndWrite(dirname, namespace):
     json.dump(members, open(os.path.join(path, 'members.json'), 'w'), indent=4)
 
 findAndWrite('contributions', 'Contribution')
+findAndWrite('contributors', 'Contributor')
 findAndWrite('languages', 'Language')
 findAndWrite('technologies', 'Technology')
 findAndWrite('themes', 'Theme')
