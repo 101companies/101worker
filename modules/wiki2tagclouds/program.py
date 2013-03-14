@@ -55,24 +55,24 @@ def writeFiles(counts, label, prefix):
 
 pages = wiki['pages']
 
-contributions = filter(lambda p: "Contribution" == p['page'].get('page', {}).get('ns', ''), pages)
+contributions = filter(lambda p: "Contribution" == p['page'].get('page', {}).get('p', ''), pages)
 contributions = [p['page'] for p in contributions ]
 
 uses = [p.get('uses', []) for p in contributions]
 uses = [p for use in uses for p in use]
 
-uses = filter(lambda u: u.startswith('Language'), uses)
+uses = filter(lambda u: u['p'] == 'Language', uses)
 
-uses = [use.replace('Language-3A', '') for use in uses]
+uses = [use['n'] for use in uses]
 
-lcounts = dict(Counter(uses))
+lcounts = Counter(uses)
 
 uses = [p.get('uses', []) for p in contributions]
 uses = [p for use in uses for p in use]
 
-uses = filter(lambda u: u.startswith('Technology'), uses)
+uses = filter(lambda u: u['p'] == 'Technology', uses)
 
-uses = [use.replace('Technology-3A', '') for use in uses]
+uses = [use['n'] for use in uses]
 
 tcounts = dict(Counter(uses))
 
