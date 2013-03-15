@@ -72,11 +72,6 @@ def serveMemberFile(environ, start_response, params):
 def serveMemberPath(environ, start_response, params):
     initServeRequest(environ)
     import discovery
-    from data101 import DataProvider
-    import os
-
-    if not DataProvider.isDir(os.path.join(params.get('namespace', ''), params.get('member', ''),params.get('path', ''))):
-        return serveMemberFile(environ, start_response, params)
 
     try:
         response = discovery.discoverMemberPath(params.get('namespace', ''), params.get('member', ''),
@@ -131,7 +126,7 @@ def serveAllNamespaces(environ, start_response, params):
 def routes():
     return [
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/(?P<file>.*\.[^/]+)/(?P<fragment>.+)', serveFileFragment),
-        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/(?P<file>.*\.[^/]+)', serveMemberFile),
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(?P<path>(/.)*)/(?P<file>.*\.[^/]+)', serveMemberFile),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)', serveMemberPath),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)', serveNamespaceMember),
         ( '/discovery/(?P<namespace>[^/]+)', serveNamespace),

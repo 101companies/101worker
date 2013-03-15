@@ -3,16 +3,37 @@ __author__ = 'martin'
 import json
 import commands
 import os
-import re
 import sys
 sys.path.append('../../libraries/101meta')
 import const101
 
-extractContribRegex = re.compile('contributions/(?P<contribName>[^/]+)(/(?P<githubPath>.*))?')
+def transformWikiNs(namespace):
+    values = {
+        'Contribution': 'contributions',
+        'Contributor' : 'contributors',
+        'Technology'  : 'technologies',
+        'Language'    : 'languages',
+        'Theme'       : 'themes',
+        'Vocabulary'  : 'vocabularies'
+    }
+    return values[namespace]
+
+def transformGithubNs(namespace):
+    values = {
+        'contributions': 'Contribution',
+        'contributors' : 'Contributor',
+        'technologies' : 'Technology',
+        'languages'    : 'Language',
+        'themes'       : 'Theme',
+        'vocabularies' : 'Vocabulary'
+    }
+    return values[namespace]
+
 
 def getMetadata(filePath):
     locator, extractor, geshi = None, None, None
     matchesFile = os.path.join(const101.tRoot, filePath + '.matches.json')
+
     if os.path.exists(matchesFile):
         matches = json.load(open(matchesFile))
 
@@ -20,10 +41,6 @@ def getMetadata(filePath):
             if 'locator' in unit['metadata']  : locator = unit['metadata']['locator']
             if 'extractor' in unit['metadata']: extractor = unit['metadata']['extractor']
             if 'geshi' in unit['metadata']    : geshi = unit['metadata']['geshi']
-
-    #locator = DataCache.getMatchesMetadata(filePath,'locator')
-    #extractor = DataCache.getMatchesMetadata(filePath,'extractor')
-    #geshi = DataCache.getMatchesMetadata(filePath, 'geshi')
     return locator, extractor, geshi
 
 def getFragment(file, fragment, locator):
@@ -57,47 +74,61 @@ def isDir(dir):
 def getDirContent(dir):
     files, dirs = [], []
     path = os.path.join(const101.sRoot, dir)
-    for f in os.listdir(path):
-        if os.path.isdir(os.path.join(path, f)):
-            dirs.append(f)
-        else:
-            files.append(f)
+    if os.path.exists(path):
+        for f in os.listdir(path):
+            if os.path.isdir(os.path.join(path, f)):
+                dirs.append(f)
+            else:
+                files.append(f)
 
     files.sort()
     dirs.sort()
 
     return files, dirs
-    #indexPath = os.path.join(const101.tRoot, dir, 'index.json')
-    #index = json.load(open(indexPath, 'r'))
-    #return index['files'], index['dirs']
 
-def getResolutionData(namespace, member):
-    github, headline, wiki = None, None, None
-    resolutionDump = json.load(open(const101.resolutionDump, 'r'))
-    meta = resolutionDump['results'][namespace].get(member, None)
-    if meta:
-        github = meta.get('101repo', None)
-        headline = meta.get('headline', None)
-        wiki = meta.get('101wiki', None)
+def getMembers(dir):
+    path = os.path.join(const101.tRoot, dir, 'members.json')
+    members = json.load(open(path, 'r'))
+    members.sort()
+    return members
 
-    return github, headline, wiki
-    #match = extractContribRegex.match(path)
-    #if match:
-    #    contrib = match.group('contribName')
-        #metadata = DataCache.getResolutionData('contributions',contrib)
+def getGithub(namespace, member):
+    pullRepoDump = json.load(open(const101.pullRepoDump, 'r'))
+    if member in pullRepoDump:
+        return pullRepoDump[member]
 
-        #return metadata['101repo'], metadata['headline']
+    path = os.path.join(namespace, member)
+    if os.path.exists(os.path.join(const101.sRoot,path)):
+        return os.path.join(const101.url101repo, path)
+    return None
 
-    #    resolutionDump = json.load(open(const101.resolutionDump, 'r'))
-    #    meta = resolutionDump['results']['contributions'].get(contrib, None)
-    #    if meta:
-    #        github = meta['101repo']
-    #        headline = meta['headline']
-    #        if match.group('githubPath') and not github == '<unresolved>':
-    #            github = os.path.join(github, match.group('githubPath'))
+def getWikiData(namespace, member):
+    def transform(namespace,member):
+        values = {
+            'concepts'     : None,
+            'contributions': 'Contribution',
+            'contributors' : 'Contributor',
+            'languages'    : 'Language',
+            'technologies' : 'Technology',
+            'themes'       : 'Theme',
+            'vocabularies' : 'Vocabulary',
+            'Namespace'    : 'Namespace'
+        }
+        if namespace == 'Namespace':
+            values['concepts'] = 'Concept'
+            return namespace, values[member]
 
-    #        return github, headline
+        return values.get(namespace, None), member
 
+    ns,mem = transform(namespace,member)
+    wiki = json.load(open(const101.wikiDump, 'r'))['wiki']
+    for page in wiki['pages']:
+        if page['page']['page']['p'] == ns and page['page']['page']['n'] == mem:
+            url = 'http://101companies.org/wiki/'
+            if ns: url += ns + ':' + mem
+            else: url += mem
+            headline = page['page'].get('headline','').replace('== Headline ==','').replace('\n','').replace('[[','').replace(']]','')
+            return url, headline
     return None, None
 
 def read(filePath, lines=None):
@@ -108,3 +139,13 @@ def read(filePath, lines=None):
     else:
         txt = fp.readlines()
     return ''.join(txt)
+
+def getCommitInfo(filePath):
+    initiator, contributors = None, None
+    commitFile = os.path.join(const101.tRoot, filePath+'.commitInfo.json')
+    if os.path.exists(commitFile):
+        data = json.load(open(commitFile, 'r'))
+        if len(data) > 0:
+            initiator = data[0]
+            contributors = data[1:]
+    return initiator, contributors

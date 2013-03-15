@@ -20,21 +20,17 @@
             <b>Classifier </b>
             {{ classifier }}
         </div>
-        <div class="box-content-fragment">
-            <b>Github </b>
-            {% if github %}
-                <a href="{{ github }}">Link</a>
-            {% else %}
-                unresolved
-            {% endif %}
-        </div>
-        <div class="box-content-fragment">
-            <b>Wiki </b>
-            {% if wiki %}
+        {% if github %}
+            <div class="box-content-fragment">
+                <b>Github </b>
+				<a href="{{ github }}">Link</a>
+            </div>
+        {% endif %}
+        {% if wiki %}
+			<div class="box-content-fragment">
+                <b>Wiki </b>
                 <a href="{{ wiki }}">Link</a>
-            {% else %}
-                unresolved
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     </div>
 </div>

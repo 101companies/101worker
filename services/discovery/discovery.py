@@ -45,11 +45,17 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     locator, extractor, geshi = DataProvider.getMetadata(filePath)
     response = { 'geshi' : geshi }
 
-    github, headline, wiki = DataProvider.getResolutionData(namespace, member)
+    github = DataProvider.getGithub(namespace,member)
     github = os.path.join(github, path, file)
     response['github'] = github
+    wiki, headline = DataProvider.getWikiData(namespace,member)
     response['headline'] = headline
     response['wiki'] = wiki
+
+    initiator, contributors = DataProvider.getCommitInfo(filePath)
+    response['commits'] = {'initiator' : initiator['author'], 'contributors' : []}
+    for contributor in contributors:
+        response['commits']['contributors'].append(contributor['author'])
 
     if locator:
         lines = DataProvider.getFragment(filePath, fragment, locator)
@@ -85,12 +91,23 @@ def discoverMemberFile(namespace, member, path, file):
     if geshi:
         response['content'] = DataProvider.read(filePath)
 
-    github, headline, wiki = DataProvider.getResolutionData(namespace, member)
+    github = DataProvider.getGithub(namespace,member)
     github = os.path.join(github, path, file)
 
     response['github'] = github
+    wiki, headline = DataProvider.getWikiData(namespace,member)
     response['headline'] = headline
     response['wiki'] = wiki
+
+    response['commits'] = {'initiator' : None, 'contributors' : None}
+    initiator, contributors = DataProvider.getCommitInfo(filePath)
+    if initiator:
+        response['commits']['initiator'] = initiator['author']
+    if contributors:
+        response['commits']['contributors'] = []
+        for contributor in contributors:
+            if contributor['author'] not in response['commits']['contributors']:
+                response['commits']['contributors'].append(contributor['author'])
 
     #if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
@@ -106,25 +123,53 @@ def discoverMemberFile(namespace, member, path, file):
     return response
 
 def discoverMemberPath(namespace, member, path):
-    dirPath = os.path.join(namespace, member, path)
-
-    files, dirs = DataProvider.getDirContent(dirPath)
     response = { 'folders' : [], 'files': [], 'classifier': 'Folder', 'name': os.path.basename(path) }
 
-    github, headline, wiki = DataProvider.getResolutionData(namespace, member)
-    github = os.path.join(github, path)
+    github = DataProvider.getGithub(namespace,member)
+    if github:
+        github = os.path.join(github, path)
     response['github'] = github
+    wiki, headline = DataProvider.getWikiData(namespace,member)
     response['headline'] = headline
     response['wiki'] = wiki
 
-    #add all folders to the folders list and then sort the result
+    dirPath = os.path.join(namespace, member, path)
+    files, dirs = DataProvider.getDirContent(dirPath)
+
     for d in dirs:
         response['folders'].append({
             'resource': os.path.join(base_uri, dirPath, d),
             'name'    : d
         })
 
-    #add all files to the files list and then sort the result
+    for f in files:
+        response['files'].append({
+            'resource': os.path.join(base_uri, dirPath, f),
+            'name'    : f,
+        })
+
+    return response
+
+def discoverNamespaceMember(namespace, member):
+    response = {
+        'folders': [], 'files': [],
+        'classifier': 'Member', 'name': member,
+        'github': DataProvider.getGithub(namespace, member)
+    }
+
+    wiki, headline = DataProvider.getWikiData(namespace,member)
+    response['headline'] = headline
+    response['wiki'] = wiki
+
+    dirPath = os.path.join(namespace, member)
+    files, dirs = DataProvider.getDirContent(dirPath)
+
+    for d in dirs:
+        response['folders'].append({
+            'resource': os.path.join(base_uri, dirPath, d),
+            'name'    : d
+        })
+
     for f in files:
         response['files'].append({
             'resource': os.path.join(base_uri, dirPath, f),
@@ -133,33 +178,28 @@ def discoverMemberPath(namespace, member, path):
 
     return response
 
-def discoverNamespaceMember(namespace, member):
-    return discoverMemberPath(namespace, member,'')
-
 def discoverNamespace(namespace):
-    files, dirs = DataProvider.getDirContent(namespace)
-    response = { 'members' : [], 'classifier': 'Namespace', 'name':namespace }
+    response = {'classifier': 'Namespace', 'name': namespace, 'github': DataProvider.getGithub(namespace, '')}
 
-    github, headline, wiki = DataProvider.getResolutionData('namespaces',namespace)
-    response['github'] = github
+    wiki, headline = DataProvider.getWikiData('Namespace', namespace)
     response['headline'] = headline
     response['wiki'] = wiki
 
-    for d in dirs:
-        if not d.startswith('.'):
-            response['members'].append({
-                'resource': os.path.join(base_uri, namespace, d),
-                'name'    : d
-            })
+    members = DataProvider.getMembers(namespace)
+    response['members'] = []
+    for member in members:
+        response['members'].append({
+            'resource': os.path.join(base_uri, namespace, member),
+            'name'    : member
+        })
 
     return response
 
 def discoverAllNamespaces():
     files, dirs = DataProvider.getDirContent('')
-    response = { 'members' : [], 'classifier':'Namespace', 'name':'Namespace'}
+    response = {'members': [], 'classifier': 'Namespace', 'name': 'Namespace', 'github': DataProvider.getGithub('', '')}
 
-    github, headline, wiki = DataProvider.getResolutionData('namespaces','namespaces')
-    response['github'] = github
+    wiki, headline = DataProvider.getWikiData('Namespace','Namespace')
     response['headline'] = headline
     response['wiki'] = wiki
 
