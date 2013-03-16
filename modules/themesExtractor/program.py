@@ -8,7 +8,7 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
-output = os.path.join(const101.sRoot, 'themes')
+output = os.path.join(const101.tRoot, 'themes')
 
 json_path = sys.argv[1]
 
