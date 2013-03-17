@@ -3,7 +3,6 @@ import json
 import checker
 
 contribNames = sorted(json.loads(file(sys.argv[1]).read())['dirs'])
-#print checker.check("html5tree")
 for contribName in contribNames:
 	print "Checking " + contribName + " ..."
 	report = checker.check(contribName)
