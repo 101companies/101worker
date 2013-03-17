@@ -21,6 +21,8 @@ An example looks like this:
 ```
 The services offered through this interface might have more specific requirements.
 
+Services that can serve complex HTML content should use the Jinja Template language. Therefore, the Python module for Jinja2 can also be seen as an requirement.
+
 # Adding a new service
 
 Several steps are necessary to add a new service:

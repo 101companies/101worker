@@ -1,16 +1,16 @@
+from wsgiref import handlers
+
+#helper which does some stuff that's always needed
 def initServeRequest(environ):
-    import re
     import discovery
     #setting the base uri - either localhost for developing/debugging or the real 101companies.org/resources url
     discovery.base_uri = 'http://101companies.org/resources'
 
     if 'localhost' in environ.get('HTTP_HOST', ''):
         discovery.base_uri = 'http://' + environ.get('HTTP_HOST', '') + environ.get('SCRIPT_NAME', '') + '/discovery'
-    if environ['QUERY_STRING']:
-        return dict(re.findall(r'(\S+)=(".*?"|\S+)', environ['QUERY_STRING']))
 
-    return {}
 
+#helper methods for responding with an error, in JSON or in HTML
 def respondError(start_response, error):
     status = '500 Internal Server Error'
     response_headers = [('Content-Type', 'text/plain')]
@@ -22,6 +22,7 @@ def respondJSON(start_response, response):
     status = '200 OK'
     response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
+
     return json.dumps(response)
 
 def respondHTML(start_response, response, template):
@@ -29,61 +30,105 @@ def respondHTML(start_response, response, template):
     response_headers = [('Content-Type', 'text/html')]
     start_response(status, response_headers)
 
-    from jinja2 import Template
-    template = Template(''.join(open(template, 'r').readlines()))
-    return str(template.render(response))
+    import discovery
+    from templates import TemplateCache
+    if 'localhost' in discovery.base_uri: response['base_uri'] = discovery.base_uri.replace('/discovery','')
+    else: response['base_uri'] = 'http://worker.101companies.org/services'
+    template = TemplateCache.getTemplate(template)
 
-def noParam(environ, start_response, params):
-    status = '200 OK'
-    response_headers = [('Content-Type', 'text/plain')]
-    response_body = 'DiscoveryService: Please specify some parameters'
-    start_response(status, response_headers)
-    return response_body
+    return str( template.render(response) )
 
-def serveDirRequest(environ, start_response, params):
-    url_params = initServeRequest(environ)
+
+#possible entry points
+def serveFileFragment(environ, start_response, params):
+    initServeRequest(environ)
     import discovery
 
     try:
-        response = discovery.discoverDir(params.get('filePath', ''))
-        if url_params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        response = discovery.discoverFileFragment(params.get('namespace', ''), params.get('member', ''),
+                                              params.get('path', ''), params.get('file', ''),params.get('fragment', ''))
 
-        return respondHTML(start_response,response,'templates/discoverDir.html')
+        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        return respondHTML(start_response,response,'fragment.html')
 
     except Exception, error:
         return respondError(start_response, error)
 
-def serveFileRequest(environ, start_response, params):
-    url_params = initServeRequest(environ)
+def serveMemberFile(environ, start_response, params):
+    initServeRequest(environ)
     import discovery
 
     try:
-        response = discovery.discoverFile(params.get('filePath', ''), params.get('fileName', ''))
-        if url_params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        response = discovery.discoverMemberFile(params.get('namespace',''), params.get('member',''),
+                                                params.get('path', ''), params.get('file', ''))
 
-        return respondHTML(start_response,response,'templates/discoverFile.html')
+        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+
+        return respondHTML(start_response,response,'file.html')
 
     except Exception, error:
         return respondError(start_response, error)
 
-def serveFragmentRequest(environ, start_response, params):
-    url_params = initServeRequest(environ)
+def serveMemberPath(environ, start_response, params):
+    initServeRequest(environ)
     import discovery
 
     try:
-        response = discovery.discoverFragment(params.get('filePath', ''), params.get('fileName', ''), params.get('fragment', ''))
-        if url_params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        response = discovery.discoverMemberPath(params.get('namespace', ''), params.get('member', ''),
+                                                params.get('path', ''))
 
-        return respondHTML(start_response,response,'templates/discoverFragment.html')
+        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        return respondHTML(start_response,response,'folder.html')
+
+    except Exception, error:
+        return respondError(start_response, error)
+
+
+def serveNamespaceMember(environ, start_response, params):
+    initServeRequest(environ)
+    import discovery
+
+    try:
+        response = discovery.discoverNamespaceMember(params.get('namespace', ''), params.get('member', ''))
+
+        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        return respondHTML(start_response,response,'folder.html')
+
+    except Exception, error:
+        return respondError(start_response, error)
+
+def serveNamespace(environ, start_response, params):
+    initServeRequest(environ)
+    import discovery
+
+    try:
+        response = discovery.discoverNamespace(params.get('namespace', ''))
+
+        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        return respondHTML(start_response,response,'namespace.html')
+
+    except Exception, error:
+        return respondError(start_response, error)
+
+def serveAllNamespaces(environ, start_response, params):
+    initServeRequest(environ)
+    import discovery
+
+    try:
+        response = discovery.discoverAllNamespaces()
+
+        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        return respondHTML(start_response,response,'namespace.html')
 
     except Exception, error:
         return respondError(start_response, error)
 
 def routes():
     return [
-        ( '/discovery/(?P<filePath>.+)/(?P<fileName>.*\.[^/]+)/(?P<fragment>.+)', serveFragmentRequest ),
-        ( '/discovery/(?P<filePath>.+)/(?P<fileName>.*\.[^/]+)', serveFileRequest ),
-        ( '/discovery/(?P<filePath>.+)/Makefile', serveFileRequest ),
-        ( '/discovery/(?P<filePath>.+)(/)?', serveDirRequest ),
-        ( '/discovery', serveDirRequest )
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/(?P<file>.*\.[^/]+)/(?P<fragment>.+)', serveFileFragment),
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(?P<path>(/.)*)/(?P<file>.*\.[^/]+)', serveMemberFile),
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)', serveMemberPath),
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)', serveNamespaceMember),
+        ( '/discovery/(?P<namespace>[^/]+)', serveNamespace),
+        ( '/discovery', serveAllNamespaces )
     ]

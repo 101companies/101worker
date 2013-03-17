@@ -1,5 +1,6 @@
 import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import groovy.transform.TypeChecked
 
 import static Repo101.Properties.*
@@ -25,11 +26,21 @@ class Resource {
           //def rIn = r.inE.toList()
      */
 
+
     private handleObject(props, name, object){
         if (props.containsKey(name))
             props[name] += object.getLocalName()
         else
             props[name] = [object.getLocalName()]
+
+        return props
+    }
+
+    private handlePage(props, name, object)  {
+        if (props.containsKey(name))
+            props[name] += handlePageLabel(object.getLocalName(), "-3A")
+        else
+            props[name] = [handlePageLabel(object.getLocalName(), "-3A")]
 
         return props
     }
@@ -43,16 +54,16 @@ class Resource {
         return props
     }
 
-    private handlePageLabel(label){
-       def page =  label.split(":")
+    private handlePageLabel(label, separator = ":"){
+       def page =  label.split(separator)
        def props = [:]
        if (page.size() == 1)   {
-           props["ns"] = null
-           props["title"] = page[0]
+           props["p"] = null
+           props["n"] = page[0]
        }
       else{
-           props["ns"] = page[0]
-           props["title"] = page[1]
+           props["p"] = page[0]
+           props["n"] = page[1]
        }
      return props
     }
@@ -67,27 +78,45 @@ class Resource {
                 case LABEL :
                     def obj = edge.getObject()
                     props['page'] = handlePageLabel(obj.label)
+                    try {
+                        def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/internal_links'
+                        def links = new JsonSlurper().parseText(new URL(url).text )
+                        props['internal_links'] = links
+                    } catch(e) {
+                        println(e)
+                    }
+
+                    try {
+                        def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/sections'
+                        def sections = new JsonSlurper().parseText(new URL(url).text )
+                        if ((sections.size() > 0) && (sections[0].title == "Headline")){
+                            props['headline'] = sections[0].content
+                        }
+                    }
+                    catch (e) {
+                        println(e)
+                    }
                     break
                 /*case PAGE :
                     props['page'] = edge.getObject().getLocalName()
                     break     */
                 case REVIEWED_BY :
-                    props = handleObject(props, 'reviewedBy', edge.getObject())
+                    props = handlePage(props, 'reviewedBy', edge.getObject())
                     break
                 case DEVELOPED_BY :
-                    props = handleObject(props, 'developedBy', edge.getObject())
+                    props = handlePage(props, 'developedBy', edge.getObject())
                     break
                 case IS_A :
-                    props = handleObject(props, 'isA', edge.getObject())
+                    props = handlePage(props, 'isA', edge.getObject())
                     break
                 case INSTANCE_OF :
-                    props = handleObject(props, 'instanceOf', edge.getObject())
+                    props = handlePage(props, 'instanceOf', edge.getObject())
                     break
                 case IMPLEMENTS :
-                    props = handleObject(props, 'implements', edge.getObject())
+                    props = handlePage(props, 'implements', edge.getObject())
                     break
                 case USES :
-                    props = handleObject(props, 'uses', edge.getObject())
+                    props = handlePage(props, 'uses', edge.getObject())
                     break
                 case CITES :
                     props = handleUrlObject(props, 'cites', edge.getObject())
@@ -99,7 +128,10 @@ class Resource {
                     props = handleUrlObject(props, 'identifies', edge.getObject())
                     break
                 case DEPENDS_ON :
-                    props = handleObject(props, 'dependsOn', edge.getObject())
+                    props = handlePage(props, 'dependsOn', edge.getObject())
+                    break
+                case RELATES_TO:
+                    props = handlePage(props, 'relatesTo', edge.getObject())
                     break
                 case TYPE:
                     props['type'] = edge.getObject().getLocalName()

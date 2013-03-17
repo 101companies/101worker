@@ -5,7 +5,19 @@ import os
 import re
 import imp
 
+textExtensions = ('.css', '.js')
+mimeTypes = {
+    '.css': 'text/css',
+    '.js' : 'text/javascript'
+}
 
+#handle static file calls
+def handleText(environ, start_response,ext):
+    start_response("200 Ok", [('Content-Type', mimeTypes[ext])])
+    response_body = ''.join(open(os.path.join(os.path.dirname(__file__),environ['PATH_INFO'][1:]),'r').readlines())
+    return response_body
+
+#dynamic stuff
 def loadScripts():
     routes = []
     for (root, dirs, files) in os.walk(os.path.dirname(__file__)):
@@ -25,7 +37,10 @@ def checkRoutes(environ, start_response, routes):
         if m:
             os.chdir(root)
             sys.path.append(os.getcwd())
-            return callback(environ, start_response, m.groupdict())
+            params = m.groupdict()
+            if environ['QUERY_STRING']:
+                params.update(dict(re.findall(r'(\S+)=(".*?"|\S+)', environ['QUERY_STRING'])))
+            return callback(environ, start_response, params)
 
     start_response("404 Not Found", [('Content-Type', 'text/plain')])
     response_body = "Didn't find a service for this URL"
@@ -34,6 +49,14 @@ def checkRoutes(environ, start_response, routes):
 #entrypoint
 def application(environ, start_response):
     try:
+        #TODO I don't like that - I guess some discussion about the best way to deliver static files is necessary
+        #check if a static (css, javascript, ...) is enough
+        if environ.get('PATH_INFO','').startswith('/static'):
+            if environ['PATH_INFO'].endswith(textExtensions):
+                fileName, fileExt = os.path.splitext(environ['PATH_INFO'])
+                return handleText(environ,start_response,fileExt)
+
+
         r = loadScripts()
         result = checkRoutes(environ, start_response, r)
         return [result]

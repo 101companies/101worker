@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+    {% include "snippets/general.html" %}
+
+    <div class="span5 box info-box red-top">
+        <div class="box-header">
+            Contains
+        </div>
+        <div class="box-content">
+            <div class="box-content-fragment">
+                <b>Fragments:</b>
+                {% if fragments == [] %}
+                    None
+                {% else %}
+                    <ul>
+                        {% for fragment in fragments %}
+                            <li>
+                                <a href="{{fragment.resource}}?format=html">
+                                    {{fragment.name}}
+                                    {% if fragment.has_key('index') %}
+                                        ({{fragment.index}})
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {%  include "snippets/persons.html" %}
+
+    {% if content %}
+        <div class="span11 box info-box yellow-top">
+            <div class="box-header">
+                Content
+            </div>
+            <div class="box-content">
+                <pre>{{content}}</pre>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

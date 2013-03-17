@@ -1,0 +1,36 @@
+<div class="span5 box info-box blue-top">
+    <div class="box-header">
+        General
+    </div>
+    <div class="box-content">
+        <div class="box-content-fragment">
+            <b>Headline</b>
+            {% if headline %}
+                <br/>
+                {{ headline }}
+            {% else %}
+                unresolved
+            {% endif %}
+        </div>
+	    <div class="box-content-fragment">
+			<b>Name </b>
+			{{ name }}
+	    </div>
+        <div class="box-content-fragment">
+            <b>Classifier </b>
+            {{ classifier }}
+        </div>
+        {% if github %}
+            <div class="box-content-fragment">
+                <b>Github </b>
+				<a href="{{ github }}">Link</a>
+            </div>
+        {% endif %}
+        {% if wiki %}
+			<div class="box-content-fragment">
+                <b>Wiki </b>
+                <a href="{{ wiki }}">Link</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
