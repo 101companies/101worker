@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<script src="d3.js"></script>
-<script src="d3.layout.cloud.js"></script>
-<script src="jquery.js"></script>
-<script type="text/javascript" src="spahql-min.js"></script>
+<script src="../dumps/moretagclouds/d3.js"></script>
+<script src="../dumps/moretagclouds/d3.layout.cloud.js"></script>
+<script src="../dumps/moretagclouds/jquery.js"></script>
+
 
 <style type='text/css'>
 
@@ -31,7 +31,7 @@ svg {
     var width = 1200;
     var height = 700;
     
-    $.getJSON('languages.json', function(data) {
+    $.getJSON('../dumps/moretagclouds/languages.json', function(data) {
 
         var word_numbers = $.map(data, function(x) {
             return x;

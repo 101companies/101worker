@@ -9,5 +9,6 @@ generate:
 	python program.py ${wiki}
 
 deploy:
-	@cp *.html *.css *.js *.json ${viewsDir}
+	@cp *.html *.css ${viewsDir}
+	@cp *.js *.json ${dumpsDir}/moretagclouds
 
