@@ -6,7 +6,7 @@ run:
 	@make deploy
 
 generate:
-	python @./program.py ${wiki}
+	python program.py ${wiki}
 
 deploy:
 	@cp *.html *.css *.js *.json ${viewsDir}
