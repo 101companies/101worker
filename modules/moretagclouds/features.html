@@ -80,7 +80,7 @@ svg {
         .style("fill", function(d, i) { return fill(i); })
         .attr("text-anchor", "middle")
         .on("click", function(d) {
-            window.location.href = 'http://101companies.org/wiki/Contribution:' + d.text;
+            window.location.href = 'http://101companies.org/wiki/Feature:' + d.text;
         })
         .attr("transform", function(d) {
         return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";

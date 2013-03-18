@@ -97,6 +97,7 @@ developedBy = filter(lambda o: o['p'] == 'Contributor', developedBy)
 developedBy = map(lambda o: o['n'], developedBy)
 
 developedBy = [d.replace('_', ' ') for d in developedBy]
+developedBy = [ d.decode('utf8') for d in developedBy]
 
 ccounts = dict(Counter(developedBy))
 
