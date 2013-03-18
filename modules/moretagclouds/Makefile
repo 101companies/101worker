@@ -9,5 +9,5 @@ generate:
 	@./program.py ${wiki}
 
 deploy:
-	@cp *.html *.css *.js ${viewsDir}
+	@cp *.html *.css *.js .*json ${viewsDir}
 
