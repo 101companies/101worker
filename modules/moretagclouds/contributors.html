@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="d3.js"></script>
+<script src="d3.layout.cloud.js"></script>
+<script src="jquery.js"></script>
+<script type="text/javascript" src="spahql-min.js"></script>
+
+<style type='text/css'>
+
+text:hover {
+    opacity: 0.7 !important;
+}
+
+text {
+    cursor: pointer;
+    opacity: 1;
+}
+
+svg {
+
+    margin-top: 50px;
+
+}
+
+
+</style>
+
+<body>
+<script>
+
+    var width = 1200;
+    var height = 700;
+    
+    $.getJSON('contributors.json', function(data) {
+
+        var word_numbers = $.map(data, function(x) {
+            return x;
+        });
+
+        var word_number = word_numbers.reduce(function(x, y) {
+            return x + y;
+        });
+
+        var words = $.map(data, function(_, x) {
+            return x;
+        });
+        
+        var step = Math.max.apply(null, word_numbers) / 6
+        
+        var fill = d3.scale.category20();
+
+        d3.layout.cloud().size([width, height])
+        .words(words.map(function(d) {
+            var factor = 40;
+            var count = data[d];
+            console.log(step);
+            var css = count / step;
+            factor += css*15;
+            
+            return {text: d, size: factor};
+        }))
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .font("Impact")
+        .fontSize(function(d) { return d.size; })
+        .on("end", draw)
+        .start();
+
+        function draw(words) {
+        d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width/2 + "," + height/2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .attr("text-anchor", "middle")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        .style("fill", function(d, i) { return fill(i); })
+        .attr("text-anchor", "middle")
+        .on("click", function(d) {
+            window.location.href = 'http://101companies.org/wiki/Contribution:' + d.text;
+        })
+        .attr("transform", function(d) {
+        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+        }
+        
+        
+
+    });
+
+</script>
+
+</body>
+</html>

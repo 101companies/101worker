@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+  <title>{{ title }}</title>
+  <link rel="stylesheet" type="text/css" href="wiki2tagclouds.css"/>
+</head>
+<body>
+
+{% for tag, count in counts -%}
+
+    {% set css = count // step %}
+    <a href="{{ root }}:{{ tag }}" class="size-{{ css }}">{{ tag }}</a>
+
+{%- endfor %}
+
+</body>
+</html>
