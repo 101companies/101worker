@@ -35,7 +35,7 @@ def serveTerm(environ, start_response, params):
         result = {}
         resourceNames = backlinksInfo['resources']
         for resource in resourceNames:
-            result[resourceName] = json.dumps(lookup(term,resource,mapping,backlinks))
+            result[resource] = json.dumps(lookup(term,resource,mapping,backlinks))
         return json.dumps(result)
 
 def routes():
