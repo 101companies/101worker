@@ -5,10 +5,13 @@ import os
 import urllib2
 
 sys.path.append('../../libraries/101meta')
+sys.path.append('../../libraries')
 import const101
 import tools101
+from mediawiki import remove_headline_markup
 
 output = os.path.join(const101.tRoot, 'themes')
+output = os.path.abspath(output)
 
 json_path = sys.argv[1]
 
@@ -145,7 +148,7 @@ def createMembers(theme, pages):
         unique_c = getUniqueConcepts([instance], instances)
         num_c = len(set(getConcepts([instance])))
         
-        headline = instance['page'].get('headline', '')
+        headline = remove_headline_markup(instance['page'].get('headline', ''))
         
         yield {
         
@@ -203,7 +206,7 @@ def createFeatures(theme, pages):
     for feature in feature_names:
         rf = getRealFeature(feature, pages)
         contributions = getContributionsWithFeature(feature, theme_pages)
-        headline = rf['page'].get('headline', '')
+        headline = remove_headline_markup(rf['page'].get('headline', ''))
         contributions = getContributionNames(contributions)
         resolved = bool(rf['page'].get('resolved', ''))
         
@@ -222,7 +225,7 @@ def createConcepts(theme, pages):
     for concept in concepts:
         rf = getRealConcept(concept, pages)
         contributions = getContributionsWithConcept(concept, theme_pages)
-        headline = rf['page'].get('headline', '')
+        headline = remove_headline_markup(rf['page'].get('headline', ''))
         contributions = getContributionNames(contributions)
         resolved = bool(rf['page'].get('resolved', ''))
         
@@ -241,7 +244,7 @@ def createTechnologies(theme, pages):
     for tech in technologies:
         rf = getRealTechnology(tech, pages)
         contributions = getContributionsWithTechnology(tech, theme_pages)
-        headline = rf['page'].get('headline', '')
+        headline = remove_headline_markup(rf['page'].get('headline', ''))
         contributions = getContributionNames(contributions)
         resolved = bool(rf['page'].get('resolved', ''))
         
