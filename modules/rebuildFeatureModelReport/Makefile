@@ -3,7 +3,7 @@ include ../Makefile.vars
 run:
 	@make build
 	@make clean-deployment
-	@python createReport.py ${contrDir}/fileindex.json ${webdir}/data/dumps/featureModelReports/
+	@python createReport.py ${contrDir}/fileindex.json ${webdir}/data/dumps/ featureModelReports/
 	@make clean
 
 build:
