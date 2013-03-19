@@ -59,11 +59,11 @@ class Resource {
        def props = [:]
        if (page.size() == 1)   {
            props["p"] = null
-           props["n"] = page[0]
+           props["n"] = page[0].replaceAll('-C3-A', 'ä')
        }
       else{
            props["p"] = page[0]
-           props["n"] = page[1]
+           props["n"] = page[1].replaceAll('-C3-A', 'ä')
        }
      return props
     }
@@ -90,7 +90,7 @@ class Resource {
                         def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/sections'
                         def sections = new JsonSlurper().parseText(new URL(url).text )
                         if ((sections.size() > 0) && (sections[0].title == "Headline")){
-                            props['headline'] = sections[0].content
+                            props['headline'] = sections[0].content.replaceAll("== Headline ==", "").replaceAll("==Headline==","")
                         }
                     }
                     catch (e) {
