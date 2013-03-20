@@ -4,9 +4,9 @@ abstract FeatureSpec
     xor OneOrManyCompanies ?
       OneCompany
       ManyCompanies
-    xor FlatOrHierachicalCompanies
+    xor FlatOrHierarchicalCompanies
       FlatCompanies
-      HierachicalCompanies
+      HierarchicalCompanies
     ConflictOfInterests ?
     SalaryAlignment ?
 
@@ -20,5 +20,5 @@ abstract FeatureSpec
     SerializableCompanies ?
     PersistentCompanies ?
 
-  [CompanyDepth => HierachicalCompanies]
-  [SalaryAlignment => HierachicalCompanies]
+  [CompanyDepth => HierarchicalCompanies]
+  [SalaryAlignment => HierarchicalCompanies]
