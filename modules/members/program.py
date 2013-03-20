@@ -13,7 +13,7 @@ def findNamespaceMembers(namespace, instanceof):
     members = []
     for page in wikiDump['wiki']['pages']:
         pageData = page['page']
-        if pageData['page']['p'] == namespace:
+        if pageData['page']['p'] == namespace and not pageData['page']['n'] == namespace:
             if (instanceof and any(instanceof in s for s in pageData.get('internal_links', []))) or not instanceof:
                 members.append(pageData['page']['n'])
     members.sort()
