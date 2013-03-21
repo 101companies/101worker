@@ -1,13 +1,6 @@
-/**
- * Base js functions
- */
-
 $(document).ready(function(){
-    //Init jQuery Masonry layout
     init_masonry();
-
 });
-
 
 function init_masonry(){
     var $container = $('#content');
@@ -31,13 +24,4 @@ function init_masonry(){
             return col;
         }
     });
-/**/
-
-
-/*    $container.masonry({
-            itemSelector : '.box',
-            gutterWidth: 0,
-            isAnimated: true,
-            columnWidth: 400
-        });*/
 }

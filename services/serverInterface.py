@@ -13,7 +13,12 @@ mimeTypes = {
 
 #handle static file calls
 def handleText(environ, start_response,ext):
-    start_response("200 Ok", [('Content-Type', mimeTypes[ext])])
+    start_response("200 Ok", [
+        ('Content-Type', mimeTypes[ext]),
+        ('Cache-Control','max-age=3600, must-revalidate'),
+        ('Expires',' Fri, 30 Oct 1998 14:19:41 GMT'),
+        ('Last-Modified','Last-Modified: Mon, 29 Jun 1998 02:28:12 GMT')
+    ])
     response_body = ''.join(open(os.path.join(os.path.dirname(__file__),environ['PATH_INFO'][1:]),'r').readlines())
     return response_body
 

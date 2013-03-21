@@ -7,29 +7,6 @@ import sys
 sys.path.append('../../libraries/101meta')
 import const101
 
-def transformWikiNs(namespace):
-    values = {
-        'Contribution': 'contributions',
-        'Contributor' : 'contributors',
-        'Technology'  : 'technologies',
-        'Language'    : 'languages',
-        'Theme'       : 'themes',
-        'Vocabulary'  : 'vocabularies'
-    }
-    return values[namespace]
-
-def transformGithubNs(namespace):
-    values = {
-        'contributions': 'Contribution',
-        'contributors' : 'Contributor',
-        'technologies' : 'Technology',
-        'languages'    : 'Language',
-        'themes'       : 'Theme',
-        'vocabularies' : 'Vocabulary'
-    }
-    return values[namespace]
-
-
 def getMetadata(filePath):
     locator, extractor, geshi = None, None, None
     matchesFile = os.path.join(const101.tRoot, filePath + '.matches.json')
@@ -88,9 +65,11 @@ def getDirContent(dir):
 
 def getMembers(dir):
     path = os.path.join(const101.tRoot, dir, 'members.json')
-    members = json.load(open(path, 'r'))
-    members.sort()
-    return members
+    if os.path.exists(path):
+        members = json.load(open(path, 'r'))
+        members.sort()
+        return members
+    return []
 
 def getGithub(namespace, member):
     pullRepoDump = json.load(open(const101.pullRepoDump, 'r'))
@@ -101,35 +80,6 @@ def getGithub(namespace, member):
     if os.path.exists(os.path.join(const101.sRoot,path)):
         return os.path.join(const101.url101repo, path)
     return None
-
-def getWikiData(namespace, member):
-    def transform(namespace,member):
-        values = {
-            'concepts'     : None,
-            'contributions': 'Contribution',
-            'contributors' : 'Contributor',
-            'languages'    : 'Language',
-            'technologies' : 'Technology',
-            'themes'       : 'Theme',
-            'vocabularies' : 'Vocabulary',
-            'Namespace'    : 'Namespace'
-        }
-        if namespace == 'Namespace':
-            values['concepts'] = 'Concept'
-            return namespace, values[member]
-
-        return values.get(namespace, None), member
-
-    ns,mem = transform(namespace,member)
-    wiki = json.load(open(const101.wikiDump, 'r'))['wiki']
-    for page in wiki['pages']:
-        if page['page']['page']['p'] == ns and page['page']['page']['n'] == mem:
-            url = 'http://101companies.org/wiki/'
-            if ns: url += ns + ':' + mem
-            else: url += mem
-            headline = page['page'].get('headline','').replace('== Headline ==','').replace('\n','').replace('[[','').replace(']]','')
-            return url, headline
-    return None, None
 
 def read(filePath, lines=None):
     fullPath = os.path.join(const101.sRoot, filePath)

@@ -31,10 +31,11 @@ def respondHTML(start_response, response, template):
     start_response(status, response_headers)
 
     import discovery
-    from templates import TemplateCache
+    from templates import TemplateProvider
+    #base URI, needed for static urls
     if 'localhost' in discovery.base_uri: response['base_uri'] = discovery.base_uri.replace('/discovery','')
     else: response['base_uri'] = 'http://worker.101companies.org/services'
-    template = TemplateCache.getTemplate(template)
+    template = TemplateProvider.getTemplate(template)
 
     return str( template.render(response) )
 
@@ -59,6 +60,10 @@ def serveMemberFile(environ, start_response, params):
     import discovery
 
     try:
+        #I don't understand under which circumstances the regex says that params['path'] = None, but it says it
+        #in some cases => for these cases, the line is necessary
+        if not params.get('path',None): params['path'] = ''
+
         response = discovery.discoverMemberFile(params.get('namespace',''), params.get('member',''),
                                                 params.get('path', ''), params.get('file', ''))
 
@@ -72,6 +77,15 @@ def serveMemberFile(environ, start_response, params):
 def serveMemberPath(environ, start_response, params):
     initServeRequest(environ)
     import discovery
+    from data101 import DataProvider
+    import os
+
+    #needed for strange files, that have no . ! e.g. "Makefile"
+    if not DataProvider.isDir(os.path.join(params.get('namespace',''), params.get('member',''),params.get('path',''))):
+        path = params['path']
+        params['path'] = os.path.dirname(path)
+        params['file'] = os.path.basename(path)
+        return serveMemberFile(environ, start_response, params)
 
     try:
         response = discovery.discoverMemberPath(params.get('namespace', ''), params.get('member', ''),
@@ -126,7 +140,7 @@ def serveAllNamespaces(environ, start_response, params):
 def routes():
     return [
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/(?P<file>.*\.[^/]+)/(?P<fragment>.+)', serveFileFragment),
-        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(?P<path>(/.)*)/(?P<file>.*\.[^/]+)', serveMemberFile),
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)', serveMemberFile),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)', serveMemberPath),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)', serveNamespaceMember),
         ( '/discovery/(?P<namespace>[^/]+)', serveNamespace),
