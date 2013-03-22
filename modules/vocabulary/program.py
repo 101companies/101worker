@@ -7,6 +7,7 @@ import asq
 from asq.initiators import query
 import sys
 import os
+from jinja2 import FileSystemLoader, Environment
 
 sys.path.append('../../libraries/101meta')
 sys.path.append('../../libraries')
@@ -45,5 +46,19 @@ for voc in vocs:
         })
 
     json.dump(data, f, indent=4, sort_keys=True)
+    f.close()
         
+    loader = FileSystemLoader('.')
+    env = Environment(loader=loader)
+    template = env.get_template('html.tpl')
+
+    f = open(os.path.join(output, voc, 'members.html'), 'w')
+    f.write(template.render({'data': data}))
+    f.close()
+
+    template = env.get_template('tex.tpl')
+
+    f = open(os.path.join(output, voc, 'members.tex'), 'w')
+    f.write(template.render({'data': data}))
+    f.close()
     

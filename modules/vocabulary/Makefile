@@ -9,7 +9,7 @@ reset:
 	@make clean
 
 generate:
-	@./program.py ${wiki}
+	@python program.py ${wiki}
 
 clean:
 	@rm -rf ${pulled101RepoDir}/vocabularies/*
