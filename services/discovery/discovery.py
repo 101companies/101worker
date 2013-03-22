@@ -1,7 +1,13 @@
 import os
-from data101 import DataProvider
+from data101 import DumpdataProvider
 from data101 import WikidataProvider
+from data101 import TripledataProvider
 from xml.sax.saxutils import escape
+import sys
+sys.path.append('../../libraries')
+from mediawiki import wikifyNamespace
+from mediawiki import dewikifyNamespace
+
 
 base_uri = ''
 
@@ -48,7 +54,7 @@ def setWikidata(response, namespace, member):
 def setCommitInfos(response, filePath):
     #TODO update, just a rudimentary implementation
     response['commits'] = {'initiator' : None, 'contributors' : None}
-    initiator, contributors = DataProvider.getCommitInfo(filePath)
+    initiator, contributors = DumpdataProvider.getCommitInfo(filePath)
     if initiator:
         response['commits']['initiator'] = initiator['author']
     if contributors:
@@ -60,13 +66,13 @@ def setCommitInfos(response, filePath):
 def discoverFileFragment(namespace, member, path, file, fragment):
     filePath = os.path.join(namespace, member, path, file)
     #if no geshi code is defined, then we'll return basically "geshi : null"
-    locator, extractor, geshi = DataProvider.getMetadata(filePath)
+    locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
 
     #name and classifier are set later (in the extractor phase
     response = {
         'geshi'    : geshi,
         'fragments': [],
-        'github'   : DataProvider.getGithub(namespace,member)
+        'github'   : DumpdataProvider.getGithub(namespace,member)
     }
 
     #update github data
@@ -74,11 +80,12 @@ def discoverFileFragment(namespace, member, path, file, fragment):
         response['github'] = os.path.join(response['github'], path, file)
 
     #gather wiki data
-    setWikidata(response, WikidataProvider.wikifyNamespace(namespace), member)
+    wikiNs = wikifyNamespace(namespace)
+    setWikidata(response, wikiNs, member)
 
     #gather member data
     if extractor:
-        extractedFacts = DataProvider.getFacts(filePath, extractor)
+        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
         #TODO There has to be a better way to do this
         for f1 in extractedFacts['fragments']:
             selected, fragmentPath = find(f1, fragment)
@@ -91,12 +98,14 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     #gather content
     if locator:
-        lines = DataProvider.getFragment(filePath, fragment, locator)
-        fragmentText = DataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
+        lines = DumpdataProvider.getFragment(filePath, fragment, locator)
+        fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
         response['content'] = escape(fragmentText)
         response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
 
     setCommitInfos(response, filePath)
+
+    response['triples'] = TripledataProvider.getTriplesContaining(wikiNs, member)
 
     return response
 
@@ -105,14 +114,14 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 def discoverMemberFile(namespace, member, path, file):
     filePath = os.path.join(namespace, member, path, file)
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
-    locator, extractor, geshi = DataProvider.getMetadata(filePath)
+    locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
 
     response = {
         'geshi'     : geshi,
         'fragments' : [],
         'classifier': 'File',
         'name'      : file,
-        'github'    : DataProvider.getGithub(namespace,member)
+        'github'    : DumpdataProvider.getGithub(namespace,member)
     }
 
     #update github data
@@ -120,11 +129,12 @@ def discoverMemberFile(namespace, member, path, file):
         response['github'] = os.path.join(response['github'], path, file)
 
     #gather wiki data
-    setWikidata(response, WikidataProvider.wikifyNamespace(namespace), member)
+    wikiNs = wikifyNamespace(namespace)
+    setWikidata(response, wikiNs, member)
 
     #gather member data - if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
-        extractedFacts = DataProvider.getFacts(filePath, extractor)
+        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
         for fragment in extractedFacts.get('fragments', []):
             fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
             response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
@@ -132,11 +142,15 @@ def discoverMemberFile(namespace, member, path, file):
 
     #gather content - if there is a geshi code, we should be able to get content
     if geshi:
-        response['content'] = escape(DataProvider.read(filePath))
+        response['content'] = escape(DumpdataProvider.read(filePath))
 
-
+    #commit infos
     setCommitInfos(response,filePath)
 
+    #terms
+    response['terms'] = DumpdataProvider.getTerms(filePath)
+
+    response['triples'] = TripledataProvider.getTriplesContaining(wikiNs, member)
 
     return response
 
@@ -146,7 +160,7 @@ def discoverMemberPath(namespace, member, path):
         'files'     : [],
         'classifier': 'Folder',
         'name'      : os.path.basename(path),
-        'github'    : DataProvider.getGithub(namespace, member)
+        'github'    : DumpdataProvider.getGithub(namespace, member)
     }
 
     #update github data
@@ -154,11 +168,12 @@ def discoverMemberPath(namespace, member, path):
         response['github'] = os.path.join(response['github'], path)
 
     #gather wiki data
-    setWikidata(response, WikidataProvider.wikifyNamespace(namespace), member)
+    wikiNS = wikifyNamespace(namespace)
+    setWikidata(response, wikiNS, member)
 
     #gather member data
     dirPath = os.path.join(namespace, member, path)
-    files, dirs = DataProvider.getDirContent(dirPath)
+    files, dirs = DumpdataProvider.getDirContent(dirPath)
 
     for d in dirs:
         response['folders'].append({
@@ -172,6 +187,8 @@ def discoverMemberPath(namespace, member, path):
             'name'    : f,
         })
 
+    response['triples'] = TripledataProvider.getTriplesContaining(wikiNS, member)
+
     return response
 
 def discoverNamespaceMember(namespace, member):
@@ -180,15 +197,16 @@ def discoverNamespaceMember(namespace, member):
         'files'     : [],
         'classifier': 'Member',
         'name'      : member,
-        'github'    : DataProvider.getGithub(namespace, member)
+        'github'    : DumpdataProvider.getGithub(namespace, member)
     }
 
     #gather wiki data
-    setWikidata(response,WikidataProvider.wikifyNamespace(namespace),member)
+    wikiNS = wikifyNamespace(namespace)
+    setWikidata(response, wikiNS, member)
 
     #gather member data
     dirPath = os.path.join(namespace, member.replace(' ','_'))
-    files, dirs = DataProvider.getDirContent(dirPath)
+    files, dirs = DumpdataProvider.getDirContent(dirPath)
 
     for d in dirs:
         response['folders'].append({
@@ -202,37 +220,44 @@ def discoverNamespaceMember(namespace, member):
             'name'    : f,
             })
 
+    response['triples'] = TripledataProvider.getTriplesContaining(wikiNS, member)
+
     return response
 
 def discoverNamespace(namespace):
-    response = {'classifier': 'Namespace', 'name': namespace, 'members': [], 'github': DataProvider.getGithub(namespace, '')}
+    response = {'classifier': 'Namespace', 'name': namespace, 'members': [], 'github': DumpdataProvider.getGithub(namespace, '')}
 
     #gather wiki data
-    setWikidata(response,'Namespace', WikidataProvider.wikifyNamespace(namespace))
+    wikiNS = wikifyNamespace(namespace)
+    setWikidata(response,'Namespace', wikiNS)
 
     #gather member data
-    members = DataProvider.getMembers(namespace)
+    members = DumpdataProvider.getMembers(namespace)
     for member in members:
         response['members'].append({
             'resource': os.path.join(base_uri, namespace, member),
             'name'    : member
         })
 
+    response['triples'] = TripledataProvider.getTriplesContaining('Namespace', wikiNS)
+
     return response
 
 def discoverAllNamespaces():
-    response = {'classifier': 'Namespace', 'name': 'Namespace', 'members': [], 'github': DataProvider.getGithub('', '')}
+    response = {'classifier': 'Namespace', 'name': 'Namespace', 'members': [], 'github': DumpdataProvider.getGithub('', '')}
 
     #gather wiki data
     setWikidata(response,'Namespace','Namespace')
 
     #gather member data
-    members = DataProvider.getMembers('')
+    members = DumpdataProvider.getMembers('')
     for member in members:
         response['members'].append({
-            'resource': os.path.join(base_uri, WikidataProvider.dewikifyNamespace(member)),
+            'resource': os.path.join(base_uri, dewikifyNamespace(member)),
             'name'    : member
         })
+
+    response['triples'] = TripledataProvider.getTriplesContaining('Namespace','Namespace')
 
     return response
 

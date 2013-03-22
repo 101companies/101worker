@@ -7,6 +7,7 @@ import sys
 sys.path.append('../../libraries/101meta')
 import const101
 
+
 def getMetadata(filePath):
     locator, extractor, geshi = None, None, None
     matchesFile = os.path.join(const101.tRoot, filePath + '.matches.json')
@@ -19,6 +20,21 @@ def getMetadata(filePath):
             if 'extractor' in unit['metadata']: extractor = unit['metadata']['extractor']
             if 'geshi' in unit['metadata']    : geshi = unit['metadata']['geshi']
     return locator, extractor, geshi
+
+def getTerms(file):
+    terms = []
+    predicatesFile = os.path.join(const101.tRoot, file + '.predicates.json')
+
+    if os.path.exists(predicatesFile):
+        predicates = json.load(open(predicatesFile, 'r'))
+
+        for unit in predicates:
+            if 'term' in unit['metadata']:
+                terms.append(unit['metadata']['term'])
+            if 'phrase' in unit['metadata']:
+                terms += unit['metadata']['phrase']
+        terms = list(set(terms))
+    return terms
 
 def getFragment(file, fragment, locator):
     fullFile = os.path.join(const101.sRoot, file)

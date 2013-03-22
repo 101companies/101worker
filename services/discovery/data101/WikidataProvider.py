@@ -1,32 +1,11 @@
 import json
 import sys
 sys.path.append('../../libraries/101meta')
+sys.path.append('../../libraries')
+from mediawiki import remove_headline_markup
 import const101
 
-def dewikifyNamespace(namespace):
-    values = {
-        'Contribution': 'contributions',
-        'Contributor' : 'contributors',
-        'Concept'     : 'concepts',
-        'Technology'  : 'technologies',
-        'Language'    : 'languages',
-        'Theme'       : 'themes',
-        'Vocabulary'  : 'vocabularies'
-    }
-    return values.get(namespace,'')
 
-def wikifyNamespace(namespace):
-    values = {
-        'contributions': 'Contribution',
-        'contributors' : 'Contributor',
-        'concepts'     : None,
-        'technologies' : 'Technology',
-        'languages'    : 'Language',
-        'themes'       : 'Theme',
-        'vocabularies' : 'Vocabulary',
-        'Namespace'    : 'Namespace'
-    }
-    return values[namespace]
 
 def getWikiData(namespace, member):
     wiki = json.load(open(const101.wikiDump, 'r'))['wiki']
@@ -38,6 +17,6 @@ def getWikiData(namespace, member):
             else: url += member
 
             headline = page['page'].get('headline','')
-            headline = headline.replace('== Headline ==','').replace('\n','').replace('[[','').replace(']]','')
+            headline = remove_headline_markup(headline)
             return url, headline
     return None, None

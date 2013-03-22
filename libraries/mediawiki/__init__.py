@@ -14,6 +14,31 @@ def remove_headline_markup(text):
 
     return text.strip()
 
+def dewikifyNamespace(namespace):
+    values = {
+        'Contribution': 'contributions',
+        'Contributor' : 'contributors',
+        'Concept'     : 'concepts',
+        'Technology'  : 'technologies',
+        'Language'    : 'languages',
+        'Theme'       : 'themes',
+        'Vocabulary'  : 'vocabularies'
+    }
+    return values.get(namespace,'')
+
+def wikifyNamespace(namespace):
+    values = {
+        'contributions': 'Contribution',
+        'contributors' : 'Contributor',
+        'concepts'     : None,
+        'technologies' : 'Technology',
+        'languages'    : 'Language',
+        'themes'       : 'Theme',
+        'vocabularies' : 'Vocabulary',
+        'Namespace'    : 'Namespace'
+    }
+    return values[namespace]
+
 if __name__ == '__main__':
     print remove_headline_markup("a|ab")
 

@@ -77,11 +77,11 @@ def serveMemberFile(environ, start_response, params):
 def serveMemberPath(environ, start_response, params):
     initServeRequest(environ)
     import discovery
-    from data101 import DataProvider
+    from data101 import DumpdataProvider
     import os
 
     #needed for strange files, that have no . ! e.g. "Makefile"
-    if not DataProvider.isDir(os.path.join(params.get('namespace',''), params.get('member',''),params.get('path',''))):
+    if not DumpdataProvider.isDir(os.path.join(params.get('namespace',''), params.get('member',''),params.get('path',''))):
         path = params['path']
         params['path'] = os.path.dirname(path)
         params['file'] = os.path.basename(path)
