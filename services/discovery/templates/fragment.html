@@ -29,16 +29,7 @@
         </div>
     </div>
 
-    {%  include "snippets/persons.html" %}
+    {% include "snippets/persons.html" %}
 
-    {% if content %}
-        <div class="span11 box info-box yellow-top">
-            <div class="box-header">
-                Content
-            </div>
-            <div class="box-content">
-                <pre>{{content}}</pre>
-            </div>
-        </div>
-    {% endif %}
+    {% include "snippets/content.html" %}
 {% endblock %}
