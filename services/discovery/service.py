@@ -46,6 +46,8 @@ def serveFileFragment(environ, start_response, params):
     import discovery
 
     try:
+        if not params.get('path',None): params['path'] = ''
+
         response = discovery.discoverFileFragment(params.get('namespace', ''), params.get('member', ''),
                                               params.get('path', ''), params.get('file', ''),params.get('fragment', ''))
 
@@ -66,7 +68,8 @@ def serveMemberFile(environ, start_response, params):
 
         response = discovery.discoverMemberFile(params.get('namespace',''), params.get('member',''),
                                                 params.get('path', ''), params.get('file', ''))
-
+        #xquery sampleCompany.xml/element/company is wrongly classified... why?
+        response['lalala'] = params.get('file','no file set')
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
 
         return respondHTML(start_response,response,'file.html')
@@ -139,7 +142,7 @@ def serveAllNamespaces(environ, start_response, params):
 
 def routes():
     return [
-        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/(?P<file>.*\.[^/]+)/(?P<fragment>.+)', serveFileFragment),
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/(?P<fragment>.+)', serveFileFragment),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)', serveMemberFile),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)', serveMemberPath),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)', serveNamespaceMember),

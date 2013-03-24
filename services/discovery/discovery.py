@@ -98,10 +98,13 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     #gather content
     if locator:
-        lines = DumpdataProvider.getFragment(filePath, fragment, locator)
-        fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
-        response['content'] = escape(fragmentText)
-        response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
+        try:
+            lines = DumpdataProvider.getFragment(filePath, fragment, locator)
+            fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
+            response['content'] = escape(fragmentText)
+            response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
+        except:
+            pass
 
     setCommitInfos(response, filePath)
 
