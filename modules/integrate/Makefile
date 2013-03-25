@@ -17,7 +17,7 @@ deploy:
 	mkdir -p ${modulesDir}/integrate ;\
 	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate/allbooks ;\
 	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate/perbook ;\
-	python deployRespurces.py
+	python deployResources.py
 
 # Remove local temporary files, if any
 clean:  
