@@ -2,6 +2,7 @@ include ../Makefile.vars
 integrateDir = ${resultsdir}/repos/101integrate
 
 run:
+	make clean
 	make bootstrap
 	cd ${integrateDir} ; make download-books; make bootstrap; make mine; make from-cache; make analyze; make backlink
 	make integrate
@@ -11,20 +12,21 @@ bootstrap:
 	cd ${integrateDir}/src; python bootstrap.py 	
 
 integrate:
-	cd ${integrateDir} ; make coverageTables	
+	cd ${integrateDir}/src/integrate ; make integrate
 
 deploy:
 	mkdir -p ${modulesDir}/integrate ;\
-	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate/allbooks ;\
-	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate/perbook ;\
-	python deployResources.py
+	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate/data/allbooks ;\
+	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate/data/perbook ;\
+	python deployResources.py ;\
+	cp -r ${integrateDir}/data/summary ${modulesDir}/integrate/data/summary
 
 # Remove local temporary files, if any
 clean:  
-	find ${modulesDir}/integrate -type f -delete ;\
-	cd ${modulesDir}/integrate ; make clean
+	rm -r ${modulesDir}/integrate
+	mkdir -p ${modulesDir}/integrate
 
 # Remove files created by this module
 reset:
+	rm -r ${modulesDir}/integrate
 	mkdir -p ${modulesDir}/integrate
-	find ${modulesDir}/integrate -type f -delete ;\
