@@ -14,4 +14,4 @@ languages = get_immediate_subdirectories('../../../101results/repos/101integrate
 
 baseResources = '../../../101web/data/resources/'
 for lang in languages:
-	shutil.copy2('../../../101results/repos/101integrate/data/languages/' + lang + '/coverage.html', base + 'languages/' + lang)
+	shutil.copy2('../../../101results/repos/101integrate/data/languages/' + lang + '/coverage.html', baseResources + 'languages/' + lang)
