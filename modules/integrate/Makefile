@@ -23,4 +23,4 @@ clean:
 # Remove files created by this module
 reset:
 	mkdir -p ${modulesDir}/integrate
-	rm -r ${modulesDir}/integrate/*
+	find ${modulesDir}/integrate -type f -delete ;\
