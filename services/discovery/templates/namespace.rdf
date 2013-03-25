@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<rdf:Description rdf:about="http://101companies.org/resources">
+		<dc:headline>{{ headline }}</dc:headline>
+		<dc:name>{{ name }}</dc:name>
+		<dc:classifier>{{ classifier }}</dc:classifier>
+		<dc:wiki>{{ wiki }}</dc:wiki>
+		<dc:github>{{ github }}</dc:github>
+
+		{% for member in members %}
+		<dc:member rdf:resource="{{ member.resource }}" dc:name="{{ member.name }}"/>
+		{% endfor %}
+	</rdf:Description>
+</rdf:RDF>
+  

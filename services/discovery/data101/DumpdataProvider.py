@@ -7,6 +7,9 @@ import sys
 sys.path.append('../../libraries/101meta')
 import const101
 
+def exists(path):
+    fullPath = os.path.join(const101.sRoot, path)
+    return os.path.exists(fullPath)
 
 def getMetadata(filePath):
     locator, extractor, geshi = None, None, None

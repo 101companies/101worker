@@ -1,13 +1,32 @@
 import os
-from data101 import DumpdataProvider
-from data101 import WikidataProvider
-from data101 import TripledataProvider
 from xml.sax.saxutils import escape
 import sys
 sys.path.append('../../libraries')
 from mediawiki import wikifyNamespace
 from mediawiki import dewikifyNamespace
+from data101 import DumpdataProvider
+from data101 import WikidataProvider
+from data101 import TripledataProvider
 
+class DiscoveryException(Exception):
+    def __init__(self, status, msg):
+        self._status = status
+        self._msg = msg
+
+    @property
+    def ErrorMessage(self):
+        return self._msg
+
+    @property
+    def Status(self):
+        return self._status
+
+    def __str__(self):
+        return str(self.Status) + '\n\n' + self.ErrorMessage
+
+class ResourceNotFoundException(DiscoveryException):
+    def __init__(self):
+        DiscoveryException.__init__(self, '404 Not found', 'Requested resource not found')
 
 base_uri = ''
 
@@ -65,6 +84,8 @@ def setCommitInfos(response, filePath):
 
 def discoverFileFragment(namespace, member, path, file, fragment):
     filePath = os.path.join(namespace, member, path, file)
+    if not DumpdataProvider.exists(filePath):
+        raise ResourceNotFoundException()
     #if no geshi code is defined, then we'll return basically "geshi : null"
     locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
 
@@ -116,6 +137,9 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
 def discoverMemberFile(namespace, member, path, file):
     filePath = os.path.join(namespace, member, path, file)
+    if not DumpdataProvider.exists(filePath):
+        raise ResourceNotFoundException()
+
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
     locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
 
@@ -195,6 +219,10 @@ def discoverMemberPath(namespace, member, path):
     return response
 
 def discoverNamespaceMember(namespace, member):
+    if not member in DumpdataProvider.getMembers(namespace):
+        raise ResourceNotFoundException()
+
+
     response = {
         'folders'   : [],
         'files'     : [],
@@ -228,6 +256,9 @@ def discoverNamespaceMember(namespace, member):
     return response
 
 def discoverNamespace(namespace):
+    if not wikifyNamespace(namespace) in DumpdataProvider.getMembers(''):
+        raise ResourceNotFoundException()
+
     response = {'classifier': 'Namespace', 'name': namespace, 'members': [], 'github': DumpdataProvider.getGithub(namespace, '')}
 
     #gather wiki data
