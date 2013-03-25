@@ -3,7 +3,7 @@ integrateDir = ${resultsdir}/repos/101integrate
 
 run:
 	make clean
-	cd ${integrateDir} ; make download-books; make bootstrap; make mine; make from-cache;
+	cd ${integrateDir} ; make download-books; make bootstrap; make mine; make from-cache; make analyze; make backlink
 	make integrate
 	make deploy
 
