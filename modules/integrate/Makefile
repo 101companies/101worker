@@ -2,7 +2,8 @@ include ../Makefile.vars
 integrateDir = ${resultsdir}/repos/101integrate
 
 run:
-	cd ${integrateDir} ; make download-books; make bootstrap; make mine; 
+	make clean
+	cd ${integrateDir} ; make download-books; make bootstrap; make mine; make from-cache;
 	make integrate
 	make deploy
 
@@ -12,10 +13,12 @@ integrate:
 deploy:
 	mkdir -p ${webdir}/modules/integrate
 	rm -r *.* ${webdir}/modules/integrate/
+	cp data/allbooks ${webdir}/modules/integrate/allbooks
+	cp data/perbook ${webdir}/modules/integrate/perbook
 
 # Remove local temporary files, if any
 clean:  
-	@#no-op
+	cd ${integrateDir} ; make clean
 
 # Remove files created by this module
 reset:
