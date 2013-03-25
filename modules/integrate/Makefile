@@ -11,16 +11,16 @@ integrate:
 	cd ${integrateDir} ; make coverageTables	
 
 deploy:
-	mkdir -p ${modulesDir}/integrate
-	cp data/allbooks ${modulesDir}/integrate/allbooks
-	cp data/perbook ${modulesDir}/integrate/perbook
+	mkdir -p ${integrateDir}
+	cp data/allbooks ${integrateDir}/allbooks
+	cp data/perbook ${integrateDir}/perbook
 
 # Remove local temporary files, if any
 clean:  
-	rm -r ${modulesDir}/integrate/*
-	cd ${integrateDir} ; make clean
+	find ${integrateDir} -type f -delete ;\
+	cd ${integrateDir}; make clean
 
 # Remove files created by this module
 reset:
 	mkdir -p ${modulesDir}/integrate
-	find ${modulesDir}/integrate -type f -delete ;\
+	make clean
