@@ -7,6 +7,7 @@ import asq
 from asq.initiators import query
 import re
 from jinja2 import FileSystemLoader, Environment, evalcontextfilter
+import shutil
 
 sys.path.append('../../libraries/101meta')
 sys.path.append('../../libraries')
@@ -22,6 +23,10 @@ json_path = sys.argv[1]
 wiki = json.load(open(json_path, 'r'))['wiki']
 pages = wiki['pages']
 themes = filter(lambda p: "Theme" == p['page'].get('page', {}).get('p', ''), pages)
+
+for d in os.listdir(output):
+    if os.path.isdir(os.path.join(output, d)):
+        shutil.rmtree(os.path.join(output, d))
 
 def render(d):
     if isinstance(d, list):
@@ -92,12 +97,6 @@ def getAttr(pages, attr):
 def names(ps):
     return map(lambda p: p['n'], ps)
 
-def getUnique(page, pages, attr):
-    f = getAttr(page, attr)
-    features =  getAttr(pages, attr)
-    unique = filter(lambda p: features.count(p) == 1, f)
-    return unique
-
 def getLangs(pages):
     langs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('uses::Language'), p['page'].get('internal_links', [])))) \
         .select(lambda p: filter(lambda i: i.startswith('uses::Language'), p['page']['internal_links'])).to_list()
@@ -128,11 +127,25 @@ def getConcepts(pages):
     s = reduce(lambda a, b: a + b, techs) if techs else []
     return list(set(map(lambda n: n.replace('instanceof::', ''), s)))
 
+
+def getFeatures(pages):
+    techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('implements::Feature:'), p['page'].get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: i.startswith('implements::Feature:'), p['page']['internal_links'])).to_list()
+    s = reduce(lambda a, b: a + b, techs) if techs else []
+    return list(set(map(lambda n: n.replace('implements::Feature:', ''), s)))
+
 def getUniqueConcepts(page, pages):
     concepts = getConcepts(pages)
     c = getConcepts(page)
     unique = filter(lambda p: concepts.count(p) == 1, page)
-    return concepts
+    return unique
+
+def getUniqueFeatures(page, pages):
+    features = getFeatures(pages)
+    c = getFeatures(page)
+    unique = filter(lambda p: features.count(p) == 1, page)
+    return unique
+
 
 def getThemeInstances(theme, pages):
     #theme = getThemeName(theme)
@@ -145,8 +158,8 @@ def createMembers(theme, pages):
     for instance in instances:
         name = instance['page'].get('page', {}).get('n', '')
 
-        unique_f = map(lambda i: i['n'], getUnique([instance], instances, 'implements'))
-        num_f = len(set(map(lambda i: i['n'], getAttr([instance], 'implements'))))
+        unique_f = getUniqueFeatures([instance], instances)
+        num_f = len(getFeatures([instance]))
         
         unique_l = getUniqueLanguages([instance], instances)
         num_l = len(set(getLangs([instance])))
@@ -179,44 +192,47 @@ def createMembers(theme, pages):
 
 def getContributionsWithFeature(feature, pages):
     def filter_func(p):
-        implements = p['page'].get('implements', [])
-        for i in implements:
-            if i['p'] == 'Feature' and i['n'] == feature:
-                return True
+        f = getFeatures([p])
+        return feature in f
 
     f = filter(filter_func, pages)
     return f
 
 def getContributionsWithConcept(name, pages):
     def filter_func(p):
-        implements = p['page'].get('instanceOf', [])
-        for i in implements:
-            if i['p'] is None and i['n'] == name:
-                return True
+        f = getConcepts([p])
+        return name in f
+        #implements = p['page'].get('instanceOf', [])
+        #for i in implements:
+        #    if i['p'] is None and i['n'] == name:
+        #        return True
 
     f = filter(filter_func, pages)
     return f
 
 def getContributionsWithTechnology(name, pages):
     def filter_func(p):
-        implements = p['page'].get('uses', [])
-        for i in implements:
-            if i['p'] == 'Technology' and i['n'] == name:
-                return True
+        t = getTechs([p])
+        return name in t
+        #implements = p['page'].get('uses', [])
+        #for i in implements:
+        #    if i['p'] == 'Technology' and i['n'] == name:
+        #        return True
 
     f = filter(filter_func, pages)
     return f
         
 def createFeatures(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
-    features = getAttr(theme_pages, 'implements')
-    feature_names = names(features)
+    
+    features = getFeatures(theme_pages)
+    feature_names = features
     
     for feature in feature_names:
         rf = getRealFeature(feature, pages)
         contributions = getContributionsWithFeature(feature, theme_pages)
         headline = remove_headline_markup(rf['page'].get('headline', ''))
-        contributions = getContributionNames(contributions)
+        contributions = len(getContributionNames(contributions))
         resolved = bool(rf['page'].get('resolved', ''))
         
         yield {
@@ -235,7 +251,7 @@ def createConcepts(theme, pages):
         rf = getRealConcept(concept, pages)
         contributions = getContributionsWithConcept(concept, theme_pages)
         headline = remove_headline_markup(rf['page'].get('headline', ''))
-        contributions = getContributionNames(contributions)
+        contributions = len(getContributionNames(contributions))
         resolved = bool(rf['page'].get('resolved', ''))
         
         yield {
@@ -254,7 +270,7 @@ def createTechnologies(theme, pages):
         rf = getRealTechnology(tech, pages)
         contributions = getContributionsWithTechnology(tech, theme_pages)
         headline = remove_headline_markup(rf['page'].get('headline', ''))
-        contributions = getContributionNames(contributions)
+        contributions = len(getContributionNames(contributions))
         resolved = bool(rf['page'].get('resolved', ''))
         
         yield {
@@ -262,7 +278,6 @@ def createTechnologies(theme, pages):
             'headline': headline,
             'contributions': contributions,
             'resolved': resolved
-        
         }
 
 def deleteEmptyCells(data):

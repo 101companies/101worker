@@ -9,7 +9,8 @@ reset:
 	@make clean
 
 generate:
-	@./program.py ${wiki}
+    @make clean
+	@python program.py ${wiki}
 
 clean:
 	@rm -rf ${pulled101RepoDir}/themes/*
