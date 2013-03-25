@@ -9,7 +9,6 @@ reset:
 	@make clean
 
 generate:
-    @make clean
 	@python program.py ${wiki}
 
 clean:
