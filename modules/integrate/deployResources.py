@@ -7,7 +7,7 @@ import os
 import shutil
 
 
-languages = get_immediate_subdirectories('../../../101results/repos/101integrate/data/languages')
+languages = os.get_immediate_subdirectories('../../../101results/repos/101integrate/data/languages')
 
 baseResources = '../../../101web/data/resources/'
 for lang in languages:
