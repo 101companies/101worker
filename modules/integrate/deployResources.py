@@ -11,7 +11,12 @@ def get_immediate_subdirectories(dir):
             if os.path.isdir(os.path.join(dir, name))]
 
 languages = get_immediate_subdirectories('../../../101results/repos/101integrate/data/languages')
+themes = get_immediate_subdirectories('../../../101results/repos/101integrate/data/themes')
+
 
 baseResources = '../../../101web/data/resources/'
 for lang in languages:
 	shutil.copy2('../../../101results/repos/101integrate/data/languages/' + lang + '/coverage.html', baseResources + 'languages/' + lang)
+
+for theme in themes:
+	shutil.copy2('../../../101results/repos/101integrate/data/themes/' + theme + '/coverage.html', baseResources + 'themes/' + theme)
