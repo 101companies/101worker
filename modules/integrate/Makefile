@@ -12,15 +12,15 @@ integrate:
 
 deploy:
 	mkdir -p ${webdir}/modules/integrate
-	rm -r *.* ${webdir}/modules/integrate/
 	cp data/allbooks ${webdir}/modules/integrate/allbooks
 	cp data/perbook ${webdir}/modules/integrate/perbook
 
 # Remove local temporary files, if any
 clean:  
+	rm -r ${webdir}/modules/integrate/*
 	cd ${integrateDir} ; make clean
 
 # Remove files created by this module
 reset:
 	mkdir -f ${webdir}/modules/integrate
-	rm -r *.* ${webdir}/modules/integrate/
+	rm -r ${webdir}/modules/integrate/*
