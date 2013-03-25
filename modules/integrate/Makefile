@@ -2,10 +2,13 @@ include ../Makefile.vars
 integrateDir = ${resultsdir}/repos/101integrate
 
 run:
-	cd ${integrateDir}/src; python bootstrap.py ;\ 
+	make bootstrap
 	cd ${integrateDir} ; make download-books; make bootstrap; make mine; make from-cache; make analyze; make backlink
 	make integrate
 	make deploy
+
+bootstrap:
+	cd ${integrateDir}/src; python bootstrap.py 	
 
 integrate:
 	cd ${integrateDir} ; make coverageTables	
