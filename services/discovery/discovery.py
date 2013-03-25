@@ -1,13 +1,32 @@
 import os
-from data101 import DumpdataProvider
-from data101 import WikidataProvider
-from data101 import TripledataProvider
 from xml.sax.saxutils import escape
 import sys
 sys.path.append('../../libraries')
 from mediawiki import wikifyNamespace
 from mediawiki import dewikifyNamespace
+from data101 import DumpdataProvider
+from data101 import WikidataProvider
+from data101 import TripledataProvider
 
+class DiscoveryException(Exception):
+    def __init__(self, status, msg):
+        self._status = status
+        self._msg = msg
+
+    @property
+    def ErrorMessage(self):
+        return self._msg
+
+    @property
+    def Status(self):
+        return self._status
+
+    def __str__(self):
+        return str(self.Status) + '\n\n' + self.ErrorMessage
+
+class ResourceNotFoundException(DiscoveryException):
+    def __init__(self):
+        DiscoveryException.__init__(self, '404 Not found', 'Requested resource not found')
 
 base_uri = ''
 
@@ -65,6 +84,8 @@ def setCommitInfos(response, filePath):
 
 def discoverFileFragment(namespace, member, path, file, fragment):
     filePath = os.path.join(namespace, member, path, file)
+    if not DumpdataProvider.exists(filePath):
+        raise ResourceNotFoundException()
     #if no geshi code is defined, then we'll return basically "geshi : null"
     locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
 
@@ -85,23 +106,29 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     #gather member data
     if extractor:
-        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
-        #TODO There has to be a better way to do this
-        for f1 in extractedFacts['fragments']:
-            selected, fragmentPath = find(f1, fragment)
-            if selected:
-                response['classifier'] = selected['classifier']
-                response['name'] = selected['name']
-                for f2 in selected.get('fragments',[]):
-                    response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
-                break
+        try:
+            extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+            #TODO There has to be a better way to do this
+            for f1 in extractedFacts['fragments']:
+                selected, fragmentPath = find(f1, fragment)
+                if selected:
+                    response['classifier'] = selected['classifier']
+                    response['name'] = selected['name']
+                    for f2 in selected.get('fragments',[]):
+                        response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
+                    break
+        except:
+            pass
 
     #gather content
     if locator:
-        lines = DumpdataProvider.getFragment(filePath, fragment, locator)
-        fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
-        response['content'] = escape(fragmentText)
-        response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
+        try:
+            lines = DumpdataProvider.getFragment(filePath, fragment, locator)
+            fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
+            response['content'] = escape(fragmentText)
+            response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
+        except:
+            raise DiscoveryException('500 Internal Server Error', 'Fragment location failed')
 
     setCommitInfos(response, filePath)
 
@@ -113,6 +140,9 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
 def discoverMemberFile(namespace, member, path, file):
     filePath = os.path.join(namespace, member, path, file)
+    if not DumpdataProvider.exists(filePath):
+        raise ResourceNotFoundException()
+
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
     locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
 
@@ -134,10 +164,13 @@ def discoverMemberFile(namespace, member, path, file):
 
     #gather member data - if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
-        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
-        for fragment in extractedFacts.get('fragments', []):
-            fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
-            response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
+        try:
+            extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+            for fragment in extractedFacts.get('fragments', []):
+                fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
+                response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
+        except:
+            pass
 
 
     #gather content - if there is a geshi code, we should be able to get content
@@ -192,6 +225,10 @@ def discoverMemberPath(namespace, member, path):
     return response
 
 def discoverNamespaceMember(namespace, member):
+    if not member in DumpdataProvider.getMembers(namespace):
+        raise ResourceNotFoundException()
+
+
     response = {
         'folders'   : [],
         'files'     : [],
@@ -225,6 +262,9 @@ def discoverNamespaceMember(namespace, member):
     return response
 
 def discoverNamespace(namespace):
+    if not wikifyNamespace(namespace) in DumpdataProvider.getMembers(''):
+        raise ResourceNotFoundException()
+
     response = {'classifier': 'Namespace', 'name': namespace, 'members': [], 'github': DumpdataProvider.getGithub(namespace, '')}
 
     #gather wiki data

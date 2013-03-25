@@ -30,14 +30,14 @@ def wikifyNamespace(namespace):
     values = {
         'contributions': 'Contribution',
         'contributors' : 'Contributor',
-        'concepts'     : None,
+        'concepts'     : '',
         'technologies' : 'Technology',
         'languages'    : 'Language',
         'themes'       : 'Theme',
         'vocabularies' : 'Vocabulary',
         'Namespace'    : 'Namespace'
     }
-    return values[namespace]
+    return values.get(namespace, None)
 
 if __name__ == '__main__':
     print remove_headline_markup("a|ab")
