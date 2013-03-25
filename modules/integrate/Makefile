@@ -15,8 +15,8 @@ integrate:
 
 deploy:
 	mkdir -p ${modulesDir}/integrate
-	cp data/allbooks ${modulesDir}/integrate/allbooks
-	cp data/perbook ${modulesDir}/integrate/perbook
+	cp ${integrateDir}/data/allbooks ${modulesDir}/integrate/allbooks
+	cp ${integrateDir}/data/perbook ${modulesDir}/integrate/perbook
 
 # Remove local temporary files, if any
 clean:  
