@@ -106,16 +106,19 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     #gather member data
     if extractor:
-        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
-        #TODO There has to be a better way to do this
-        for f1 in extractedFacts['fragments']:
-            selected, fragmentPath = find(f1, fragment)
-            if selected:
-                response['classifier'] = selected['classifier']
-                response['name'] = selected['name']
-                for f2 in selected.get('fragments',[]):
-                    response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
-                break
+        try:
+            extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+            #TODO There has to be a better way to do this
+            for f1 in extractedFacts['fragments']:
+                selected, fragmentPath = find(f1, fragment)
+                if selected:
+                    response['classifier'] = selected['classifier']
+                    response['name'] = selected['name']
+                    for f2 in selected.get('fragments',[]):
+                        response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
+                    break
+        except:
+            pass
 
     #gather content
     if locator:
@@ -125,7 +128,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
             response['content'] = escape(fragmentText)
             response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
         except:
-            pass
+            raise DiscoveryException('500 Internal Server Error', 'Fragment location failed')
 
     setCommitInfos(response, filePath)
 
@@ -161,10 +164,13 @@ def discoverMemberFile(namespace, member, path, file):
 
     #gather member data - if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
-        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
-        for fragment in extractedFacts.get('fragments', []):
-            fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
-            response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
+        try:
+            extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+            for fragment in extractedFacts.get('fragments', []):
+                fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
+                response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
+        except:
+            pass
 
 
     #gather content - if there is a geshi code, we should be able to get content
