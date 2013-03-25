@@ -6,8 +6,11 @@
 import os
 import shutil
 
+def get_immediate_subdirectories(dir):
+	return [name for name in os.listdir(dir)
+            if os.path.isdir(os.path.join(dir, name))]
 
-languages = os.get_immediate_subdirectories('../../../101results/repos/101integrate/data/languages')
+languages = get_immediate_subdirectories('../../../101results/repos/101integrate/data/languages')
 
 baseResources = '../../../101web/data/resources/'
 for lang in languages:
