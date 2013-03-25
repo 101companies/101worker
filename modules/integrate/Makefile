@@ -2,7 +2,16 @@ include ../Makefile.vars
 integrateDir = ${resultsdir}/repos/101integrate
 
 run:
-	cd ${integrateDir} ; make download-books; make bootstrap; make mine; make analyze
+	cd ${integrateDir} ; make download-books; make bootstrap; make mine; 
+	make integrate
+	make deploy
+
+integrate:
+	cd ${integrateDir}/src/integrate; make coverageTables	
+
+deploy:
+	mkdir -p ${webdir}/modules/integrate
+	rm -r *.* ${webdir}/modules/integrate/
 
 # Remove local temporary files, if any
 clean:  
@@ -10,5 +19,5 @@ clean:
 
 # Remove files created by this module
 reset:
-	@rm -f ${predicatesDump}
-	@find ${contrDir} -name "*.predicates.json" -exec rm -f {} \;
+	mkdir -f ${webdir}/modules/integrate
+	rm -r *.* ${webdir}/modules/integrate/
