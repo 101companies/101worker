@@ -14,9 +14,9 @@ integrate:
 	cd ${integrateDir} ; make coverageTables	
 
 deploy:
-	mkdir -p ${modulesDir}/integrate
-	cp ${integrateDir}/data/allbooks ${modulesDir}/integrate/allbooks
-	cp ${integrateDir}/data/perbook ${modulesDir}/integrate/perbook
+	mkdir -p ${modulesDir}/integrate ;\
+	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate/allbooks ;\
+	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate/perbook ;\
 
 # Remove local temporary files, if any
 clean:  
