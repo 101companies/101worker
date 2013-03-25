@@ -8,7 +8,7 @@ run:
 	make deploy
 
 integrate:
-	cd ${integrateDir}/src/integrate; make coverageTables	
+	cd ${integrateDir} ; make coverageTables	
 
 deploy:
 	mkdir -p ${webdir}/modules/integrate
