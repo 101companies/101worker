@@ -16,10 +16,10 @@ integrate:
 
 deploy:
 	mkdir -p ${modulesDir}/integrate ;\
-	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate/data ;\
-	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate/data ;\
+	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate ;\
+	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate ;\
 	python deployResources.py ;\
-	cp -r ${integrateDir}/data/summary ${modulesDir}/integrate/data
+	cp -r ${integrateDir}/data/summary ${modulesDir}/integrate
 
 # Remove local temporary files, if any
 clean:  
