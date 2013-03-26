@@ -41,7 +41,7 @@ for voc in vocs:
     for instance in instances:
         data.append({
             'name': instance['page']['page']['n'],
-            'namespace': instance['page']['page']['p'] or '',
+            #'namespace': instance['page']['page']['p'] or '',
             'headline': remove_headline_markup(instance['page'].get('headline', ''))
         })
 

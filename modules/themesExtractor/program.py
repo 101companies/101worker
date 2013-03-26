@@ -122,10 +122,10 @@ def getUniqueTechs(page, pages):
     return unique
 
 def getConcepts(pages):
-    techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('instanceof::'), p['page'].get('internal_links', [])))) \
-        .select(lambda p: filter(lambda i: re.match('^instanceof::[a-zA-Z0-9 ]+$', i), p['page']['internal_links'])).to_list()
+    techs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page'].get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page']['internal_links'])).to_list()
     s = reduce(lambda a, b: a + b, techs) if techs else []
-    return list(set(map(lambda n: n.replace('instanceof::', ''), s)))
+    return list(set(s))
 
 
 def getFeatures(pages):
@@ -159,16 +159,16 @@ def createMembers(theme, pages):
         name = instance['page'].get('page', {}).get('n', '')
 
         unique_f = getUniqueFeatures([instance], instances)
-        num_f = len(getFeatures([instance]))
+        num_f = getFeatures([instance])
         
         unique_l = getUniqueLanguages([instance], instances)
-        num_l = len(set(getLangs([instance])))
+        num_l = list(set(getLangs([instance])))
         
         unique_t = getUniqueTechs([instance], instances)
-        num_t = len(set(getTechs([instance])))
+        num_t = list(set(getTechs([instance])))
 
         unique_c = getUniqueConcepts([instance], instances)
-        num_c = len(set(getConcepts([instance])))
+        num_c = list(set(getConcepts([instance])))
         
         headline = remove_headline_markup(instance['page'].get('headline', ''))
         
@@ -232,7 +232,7 @@ def createFeatures(theme, pages):
         rf = getRealFeature(feature, pages)
         contributions = getContributionsWithFeature(feature, theme_pages)
         headline = remove_headline_markup(rf['page'].get('headline', ''))
-        contributions = len(getContributionNames(contributions))
+        contributions = getContributionNames(contributions)
         resolved = bool(rf['page'].get('resolved', ''))
         
         yield {
@@ -251,7 +251,7 @@ def createConcepts(theme, pages):
         rf = getRealConcept(concept, pages)
         contributions = getContributionsWithConcept(concept, theme_pages)
         headline = remove_headline_markup(rf['page'].get('headline', ''))
-        contributions = len(getContributionNames(contributions))
+        contributions = getContributionNames(contributions)
         resolved = bool(rf['page'].get('resolved', ''))
         
         yield {
@@ -270,7 +270,7 @@ def createTechnologies(theme, pages):
         rf = getRealTechnology(tech, pages)
         contributions = getContributionsWithTechnology(tech, theme_pages)
         headline = remove_headline_markup(rf['page'].get('headline', ''))
-        contributions = len(getContributionNames(contributions))
+        contributions = getContributionNames(contributions)
         resolved = bool(rf['page'].get('resolved', ''))
         
         yield {
