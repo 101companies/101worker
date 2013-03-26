@@ -30,7 +30,6 @@
       {
          border: 0.2px solid black;
          table-layout: fixed;
-         cellspacing: 0px;
          width: 100%; /*Table width must be set or it wont resize the cells*/
       }
       th, td 
@@ -60,7 +59,7 @@
  </head> 
 
 <body>
-<table>
+<table cellspacing=0px;>
   <tr>
       <th class='impl'><div>Impl.</div></th>
       <th class='rotated_cell number'><div class='rotate_text'># Features</div></th>
