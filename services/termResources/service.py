@@ -14,10 +14,7 @@ def serveResourceNames(environ, start_response, params):
 def lookup(term, resource, mapping, backlinks):
     if resource in mapping:
         if term in mapping[resource]:
-            if mapping[resource][term] in backlinks:
-                return {'backlinks' : backlinks[mapping[resource][term]][resource]}
-            else:
-                return {'error' : "No backlinks found for " + mapping[resource][term]}
+            return {'backlinks' : backlinks[mapping[resource][term]][resource]}
         else:
             return {'error' : "No mapping found for " + term}
     else:
