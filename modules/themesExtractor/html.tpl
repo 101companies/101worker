@@ -43,12 +43,11 @@
       {
         text-align: bottom;
         vertical-align: bottom;
-        height:130px;
       }
       .rotated_cell
       {
-         height:100px;
-         vertical-align:bottom
+         height:130px;
+         vertical-align:bottom;
       }
       .number
       {
