@@ -1,24 +1,33 @@
-
 <html>
-
 <body>
 
-<table border="3" frame="void" cellspacing="5">
+<table border="1">
 <thead>
     <tr>
-      {% if data|length > 0 %}
-      {% for d in data[0].keys() %}
-      <th>{{ d }}</th>
-      {% endfor %}
-      {% endif %}
+      <td>Impl.</td>
+      <td># Features</td>
+      <td>Unique</td>
+      <td># Languages</td>
+      <td>Unique</td>
+      <td># Technologies</td>
+      <td>Unique</td>
+      <td># Concepts</td>
+      <td>Unique</td>
+      <td>Headline</td>
     </tr>
   </thead>
 {% for d in data %}
     <tr>
-        {% for k in d.keys() %}
-        
-            {% if d[k] %}<td>{{ d[k]|render }}</td>{% endif %}
-        {% endfor %}
+      <td>d['name']</td>
+      <td>len(d['features'])</td>
+      <td>len(d['ufeatures'])</td>
+      <td>len(d['languages'])</td>
+      <td>len(d['ulanguages'])</td>
+      <td>len(d['technologies'])</td>
+      <td>len(d['utechnologies'])</td>
+      <td>len(d['concepts'])</td>
+      <td>len(d['uconcepts'])</td>
+      <td>d['headline']</td>
     </tr>
 {% endfor %}
 </table>
