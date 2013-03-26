@@ -17,7 +17,7 @@ def lookup(term, resource, mapping, backlinks):
             if mapping[resource][term] in backlinks:
                 return {'backlinks' : backlinks[mapping[resource][term]][resource]}
             else:
-                return {'error' : "No backlinks found for " + term}
+                return {'error' : "No backlinks found for " + mapping[resource][term]}
         else:
             return {'error' : "No mapping found for " + term}
     else:
