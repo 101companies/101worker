@@ -28,8 +28,9 @@
    <style>  
       table
       {
-         border: 0.2px solid black;
+         border: 0.5px solid black;
          table-layout: fixed;
+         border-spacing
          width: 100%; /*Table width must be set or it wont resize the cells*/
       }
       th, td 
@@ -59,7 +60,7 @@
  </head> 
 
 <body>
-<table cellspacing=0px;>
+<table>
   <tr>
       <th class='impl'><div>Impl.</div></th>
       <th class='rotated_cell number'><div class='rotate_text'># Features</div></th>
