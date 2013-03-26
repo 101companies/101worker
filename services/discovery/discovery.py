@@ -132,7 +132,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     setCommitInfos(response, filePath)
 
-    response['triples'] = TripledataProvider.getTriplesContaining(wikiNs, member)
+    #response['triples'] = TripledataProvider.getTriplesContaining(wikiNs, member)
 
     return response
 
@@ -183,7 +183,7 @@ def discoverMemberFile(namespace, member, path, file):
     #terms
     response['terms'] = DumpdataProvider.getTerms(filePath)
 
-    response['triples'] = TripledataProvider.getTriplesContaining(wikiNs, member)
+    #response['triples'] = TripledataProvider.getTriplesContaining(wikiNs, member)
 
     return response
 
@@ -220,7 +220,7 @@ def discoverMemberPath(namespace, member, path):
             'name'    : f,
         })
 
-    response['triples'] = TripledataProvider.getTriplesContaining(wikiNS, member)
+    #response['triples'] = TripledataProvider.getTriplesContaining(wikiNS, member)
 
     return response
 
@@ -257,7 +257,7 @@ def discoverNamespaceMember(namespace, member):
             'name'    : f,
             })
 
-    response['triples'] = TripledataProvider.getTriplesContaining(wikiNS, member)
+    #response['triples'] = TripledataProvider.getTriplesContaining(wikiNS, member)
 
     return response
 
@@ -279,7 +279,7 @@ def discoverNamespace(namespace):
             'name'    : member
         })
 
-    response['triples'] = TripledataProvider.getTriplesContaining('Namespace', wikiNS)
+    #response['triples'] = TripledataProvider.getTriplesContaining('Namespace', wikiNS)
 
     return response
 
@@ -297,7 +297,7 @@ def discoverAllNamespaces():
             'name'    : member
         })
 
-    response['triples'] = TripledataProvider.getTriplesContaining('Namespace','Namespace')
+    #response['triples'] = TripledataProvider.getTriplesContaining('Namespace','Namespace')
 
     return response
 
