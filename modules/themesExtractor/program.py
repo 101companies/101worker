@@ -225,7 +225,7 @@ def getContributionsWithTechnology(name, pages):
 def createFeatures(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
     
-    features = getFeatures(theme_pages)
+    features = list(set(getFeatures(theme_pages)))
     feature_names = features
     
     for feature in feature_names:
@@ -264,7 +264,7 @@ def createConcepts(theme, pages):
 
 def createTechnologies(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
-    technologies = getTechs(theme_pages)
+    technologies = list(set(getTechs(theme_pages)))
     
     for tech in technologies:
         rf = getRealTechnology(tech, pages)
