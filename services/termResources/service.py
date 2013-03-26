@@ -2,7 +2,7 @@ import json
 
 def serveResourceNames(environ, start_response, params):
     status = '200 OK'
-    isJsonp = params.get('format', '') and params.get('format', '') == 'jsonp':
+    isJsonp = params.get('format', '') and params.get('format', '') == 'jsonp'
     if isJsonp:
        response_headers = [('Content-Type', 'text/jsonp')]
     else:
@@ -30,7 +30,7 @@ def lookup(term, resource, mapping, backlinks):
 
 def serveTerm(environ, start_response, params):
     status = '200 OK'
-    isJsonp = params.get('format', '') and params.get('format', '') == 'jsonp':
+    isJsonp = params.get('format', '') and params.get('format', '') == 'jsonp'
     if isJsonp:
        response_headers = [('Content-Type', 'text/jsonp')]
     else:
