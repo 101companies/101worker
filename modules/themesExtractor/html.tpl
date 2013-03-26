@@ -21,7 +21,7 @@
          -o-transform-origin:  top left;
           position:relative;
          top:20px;
-         width:130px;
+         width:40px;
       }
    </style>
 <!--<![endif]-->
@@ -46,7 +46,7 @@
       }
       .rotated_cell
       {
-         height:130px;
+         height:100px;
          vertical-align:bottom;
       }
       .number
