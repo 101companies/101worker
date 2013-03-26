@@ -15,7 +15,7 @@ def lookup(term, resource, mapping, backlinks):
     if resource in mapping:
         if term in mapping[resource]:
             if mapping[resource][term] in backlinks:
-                return {'backlinks' : backlinks[mapping[resource][term]][resource]}
+                return {backlinks[mapping[resource][term]][resource]}
             else:
                 return {'error' : "No backlinks found for " + mapping[resource][term]}
         else:
@@ -40,11 +40,8 @@ def serveTerm(environ, start_response, params):
         resourceNames = backlinksInfo['resources']
         for resource in resourceNames:
             cResult = lookup(term,resource,mapping,backlinks)
-            currentBacklinks = {}
-            currentBacklinks['name'] = resource
-            currentBacklinks['primary'] = cResult['primary']
-            currentBacklinks['secondary'] = cResult['secondary']
-            result.append(currentBacklinks)
+            cResult['name'] = resource
+            result.append(cResult)
         result = json.dumps(result)
     if params.get('format', '') and params.get('format', '') == 'jsonp':
        result = 'callback(' + result + ')'
