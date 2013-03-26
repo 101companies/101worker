@@ -40,7 +40,6 @@ def serveTerm(environ, start_response, params):
         resourceNames = backlinksInfo['resources']
         for resource in resourceNames:
             backlinks = lookup(term,resource,mapping,backlinks)
-            backlinks['name'] = resource
             result.append(backlinks)
         result = json.dumps(result)
     if params.get('format', '') and params.get('format', '') == 'jsonp':
