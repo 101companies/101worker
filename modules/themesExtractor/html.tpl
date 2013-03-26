@@ -49,15 +49,15 @@
   <th style="border: 1px solid black;">
     <tr>
       <td>Impl.</td>
-      <td class='rotated_cell'># Features</td>
-      <td class='rotated_cell'>Unique</td>
-      <td class='rotated_cell'># Languages</td>
-      <td class='rotated_cell'>Unique</td>
-      <td class='rotated_cell'># Technologies</td>
-      <td class='rotated_cell'>Unique</td>
-      <td class='rotated_cell'># Concepts</td>
-      <td class='rotated_cell'>Unique</td>
-      <td class='rotated_cell'>Headline</td>
+      <td class='rotated_cell'><div class='rotate_text'># Features</div></td>
+      <td class='rotated_cell'><div class='rotate_text'>Unique</div></td>
+      <td class='rotated_cell'><div class='rotate_text'># Languages</div></td>
+      <td class='rotated_cell'><div class='rotate_text'>Unique</div></td>
+      <td class='rotated_cell'><div class='rotate_text'># Technologies</div></td>
+      <td class='rotated_cell'><div class='rotate_text'>Unique</div></td>
+      <td class='rotated_cell'><div class='rotate_text'># Concepts</div></td>
+      <td class='rotated_cell'><div class='rotate_text'>Unique</div></td>
+      <td class='rotated_cell'><div class='rotate_text'>Headline</div></td>
     </tr>
   </th>
 {% for d in data %}
