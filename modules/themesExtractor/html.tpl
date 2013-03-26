@@ -35,7 +35,7 @@
       th, td 
       {
           border: 1px solid black;
-          width: 23px;
+          /*width: 23px;*/
       }
       .rotated_cell
       {
