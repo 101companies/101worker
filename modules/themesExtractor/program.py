@@ -245,7 +245,7 @@ def createFeatures(theme, pages):
 
 def createConcepts(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
-    concepts = getConcepts(theme_pages)
+    concepts = list(set(getConcepts(theme_pages)))
     
     for concept in concepts:
         rf = getRealConcept(concept, pages)
@@ -293,7 +293,7 @@ def deleteEmptyCells(data):
 
 for t in getThemeNames(themes):
     
-    members = list(createMembers(t, pages))
+    members = sorted(list(createMembers(t, pages)), key=lambda s: s['name'])
 
     if not members:
         continue
@@ -327,7 +327,7 @@ for t in getThemeNames(themes):
     
     path = os.path.join(output, t, 'features.json')
     f = open(path, 'w')
-    features = list(createFeatures(t, pages))
+    features = sorted(list(createFeatures(t, pages)), key=lambda s: s['name'])
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()
 
@@ -345,7 +345,7 @@ for t in getThemeNames(themes):
 
     path = os.path.join(output, t, 'concepts.json')
     f = open(path, 'w')
-    concepts = list(createConcepts(t, pages))
+    concepts = sorted(list(createConcepts(t, pages)), key=lambda s: s['name'])
     f.write(json.dumps(concepts, indent=4, sort_keys=True))
     f.close()  
 
@@ -363,7 +363,7 @@ for t in getThemeNames(themes):
 
     path = os.path.join(output, t, 'technologies.json')
     f = open(path, 'w')
-    technologies = list(createTechnologies(t, pages))
+    technologies = sorted(list(createTechnologies(t, pages)), key=lambda s: s['name'])
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()  
 

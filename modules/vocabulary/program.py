@@ -45,6 +45,8 @@ for voc in vocs:
             'headline': remove_headline_markup(instance['page'].get('headline', ''))
         })
 
+    data = sorted(data, key=lambda s: s['name'])
+
     json.dump(data, f, indent=4, sort_keys=True)
     f.close()
         
