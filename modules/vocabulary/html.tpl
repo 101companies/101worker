@@ -5,13 +5,13 @@
 
 <table cellspacing='0px'>
   <tr>
-      <th>Name</th>
-      <th>Headline</th>
+      <th style="border: 0.2px solid black;">Name</th>
+      <th style="border: 0.2px solid black;">Headline</th>
   </tr>
 {% for d in data %}
     <tr>
-      <td>{{d['name']}}</td>
-      <td>{{d['headline']}}</td>
+      <td style="border: 0.2px solid black;">{{d['name']}}</td>
+      <td style="border: 0.2px solid black;">{{d['headline']}}</td>
     </tr>
 {% endfor %}
 </table>
