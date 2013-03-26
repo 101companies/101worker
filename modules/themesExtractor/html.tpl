@@ -60,7 +60,7 @@
  </head> 
 
 <body>
-<table>
+<table cellspacing='0px'>
   <tr>
       <th class='impl'><div>Impl.</div></th>
       <th class='rotated_cell number'><div class='rotate_text'># Features</div></th>
