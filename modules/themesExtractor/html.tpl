@@ -21,7 +21,7 @@
          -o-transform-origin:  top left;
           position:relative;
          top:20px;
-         width:80px;
+         width:130px;
       }
    </style>
 <!--<![endif]-->
@@ -43,6 +43,7 @@
       {
         text-align: bottom;
         vertical-align: bottom;
+        height:130px;
       }
       .rotated_cell
       {
