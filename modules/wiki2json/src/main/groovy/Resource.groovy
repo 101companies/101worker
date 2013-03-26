@@ -79,14 +79,17 @@ class Resource {
                     def obj = edge.getObject()
                     props['page'] = handlePageLabel(obj.label)
                     try {
+                        Thread.currentThread().sleep(4 * 1000)
                         def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/internal_links'
                         def links = new JsonSlurper().parseText(new URL(url).text )
                         props['internal_links'] = links
+
                     } catch(e) {
                         println(e)
                     }
 
                     try {
+                        Thread.currentThread().sleep(4 * 1000)
                         def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/sections'
                         def sections = new JsonSlurper().parseText(new URL(url).text )
                         if ((sections.size() > 0) && (sections[0].title == "Headline")){

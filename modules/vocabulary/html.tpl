@@ -3,20 +3,15 @@
 
 <body>
 
-<table border="3" frame="void" cellspacing="5">
-<thead>
-    <tr>
-      {% for d in data[0].keys() %}
-      {% if data[0][d] %} <th>{{ d }}</th> {% endif %}
-      {% endfor %}
-    </tr>
-  </thead>
+<table cellspacing='0px'>
+  <tr>
+      <th style="border: 1px solid black;">Name</th>
+      <th style="border: 1px solid black;">Headline</th>
+  </tr>
 {% for d in data %}
     <tr>
-        {% for k in d.keys() %}
-        
-            {% if d[k] %}<td>{{ d[k] }}</td>{% endif %}
-        {% endfor %}
+      <td style="border: 1px solid black;">{{d['name']}}</td>
+      <td style="border: 1px solid black;">{{d['headline']}}</td>
     </tr>
 {% endfor %}
 </table>

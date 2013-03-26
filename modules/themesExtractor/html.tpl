@@ -20,8 +20,8 @@
          -o-transform: rotate(-90deg);
          -o-transform-origin:  top left;
           position:relative;
-         top:20px;
-         width:80px;
+         top:10px;
+         width:40px;
       }
    </style>
 <!--<![endif]-->
@@ -46,8 +46,10 @@
       }
       .rotated_cell
       {
-         height:100px;
-         vertical-align:bottom
+         height:130px;
+         vertical-align:bottom;
+         overflow: hidden;
+         white-space: nowrap;
       }
       .number
       {
