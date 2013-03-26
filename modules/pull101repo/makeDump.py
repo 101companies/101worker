@@ -18,7 +18,7 @@ def handleNormal(dump, dep):
 def handleSubdirs(dump, dep):
 	parts = dep['sourcerepo'].split('/')
 	contribName = parts[len(parts)-1].replace('.git', '')
-	path = os.path.join(os.path.dirname(const101.sRoot), 'gitdebs', contribName)
+	path = os.path.join(os.path.dirname(const101.sRoot), 'gitdeps', contribName)
 	if not dep['sourcedir'] == '/':
 		path +=  dep['sourcedir']
 	url = dep['sourcerepo'].replace('.git', '')
