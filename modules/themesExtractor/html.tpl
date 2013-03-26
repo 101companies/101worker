@@ -38,6 +38,10 @@
           border: 1px solid black;
           /*width: 23px;*/
       }
+      tr
+      {
+        text-align: bottom;
+      }
       .rotated_cell
       {
          height:300px;
@@ -57,16 +61,16 @@
 <body>
 <table>
   <tr>
-      <th class='impl'>Impl.</th>
-      <th class='rotated_cell number'><div class='rotate_text'># Features</div></th>
+      <th class='impl'><div>Impl.</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>#Features</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'># Languages</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>#Languages</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'># Technologies</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>#Technologies</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'># Concepts</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>#Concepts</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell'><div class='rotate_text'>Headline</div></th>
+      <th class='rotated_cell'><div>Headline</div></th>
   </tr>
 {% for d in data %}
     <tr>
