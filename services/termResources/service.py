@@ -32,10 +32,12 @@ def serveTerm(environ, start_response, params):
     if resource:
         return json.dumps(lookup(term,resource,mapping,backlinks))
     else:
-        result = {}
+        result = []
         resourceNames = backlinksInfo['resources']
         for resource in resourceNames:
-            result[resource] = lookup(term,resource,mapping,backlinks)
+            backlinks = lookup(term,resource,mapping,backlinks)
+            backlinks['name'] = resource
+            result.append(backlinks)
         return json.dumps(result)
 
 def routes():
