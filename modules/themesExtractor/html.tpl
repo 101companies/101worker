@@ -28,9 +28,9 @@
    <style>  
       table
       {
-         border: 0.5px solid black;
+         border: 0.2px solid black;
          table-layout: fixed;
-         border-spacing
+         cellspacing: 0px;
          width: 100%; /*Table width must be set or it wont resize the cells*/
       }
       th, td 
@@ -63,13 +63,13 @@
 <table>
   <tr>
       <th class='impl'><div>Impl.</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'>#Features</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'># Features</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'>#Languages</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'># Languages</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'>#Technologies</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'># Technologies</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'>#Concepts</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'># Concepts</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
       <th class='rotated_cell'><div>Headline</div></th>
   </tr>
