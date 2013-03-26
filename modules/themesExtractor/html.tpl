@@ -31,7 +31,7 @@
       {
          border: 0.5px solid black;
          table-layout: fixed;
-         width: 69px; /*Table width must be set or it wont resize the cells*/
+         width: 569px; /*Table width must be set or it wont resize the cells*/
       }
       th, td 
       {
