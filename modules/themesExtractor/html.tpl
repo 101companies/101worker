@@ -45,7 +45,7 @@
       }
       .rotated_cell
       {
-         height:300px;
+         height:30px;
          vertical-align:bottom
       }
       .number
