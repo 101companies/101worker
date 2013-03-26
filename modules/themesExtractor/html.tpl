@@ -44,8 +44,10 @@
       }
    </style>
  </head> 
+ 
 <body>
 <table>
+  <thead>
   <th style="border: 1px solid black;">
     <tr>
       <td>Impl.</td>
@@ -60,6 +62,7 @@
       <td class='rotated_cell'><div class='rotate_text'>Headline</div></td>
     </tr>
   </th>
+ </thead> 
 {% for d in data %}
     <tr>
       <td>{{d['name']}}</td>
