@@ -21,6 +21,7 @@
          -o-transform-origin:  top left;
           position:relative;
          top:20px;
+         width:80px;
       }
    </style>
 <!--<![endif]-->
@@ -28,7 +29,7 @@
    <style>  
       table
       {
-         border: 0.5px solid black;
+         border: 0.2px solid black;
          table-layout: fixed;
          border-spacing
          width: 100%; /*Table width must be set or it wont resize the cells*/
