@@ -42,7 +42,7 @@ def serveTerm(environ, start_response, params):
             backlinks = lookup(term,resource,mapping,backlinks)
             backlinks['name'] = resource
             result.append(backlinks)
-        result = json.dumps(result)
+        result = json.dumps(params.get('format', ''))
     if params.get('format', '') and params.get('format', '') == 'jsonp':
        result = 'callback(' + result + ')'
     return result
