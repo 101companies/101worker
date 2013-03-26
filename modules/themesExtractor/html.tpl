@@ -1,6 +1,5 @@
 <html>
 <head>
-<head>
 <!--[if IE]>
    <style>
       .rotate_text
@@ -44,8 +43,6 @@
          vertical-align:bottom
       }
    </style>
-
-</head>
  </head> 
 <body>
 <table>
