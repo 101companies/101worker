@@ -42,6 +42,10 @@
          height:300px;
          vertical-align:bottom
       }
+      .number
+      {
+        width: 30px;
+      }
    </style>
  </head> 
 
@@ -49,14 +53,14 @@
 <table>
   <tr>
       <th>Impl.</th>
-      <th class='rotated_cell'><div class='rotate_text'># Features</div></th>
-      <th class='rotated_cell'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell'><div class='rotate_text'># Languages</div></th>
-      <th class='rotated_cell'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell'><div class='rotate_text'># Technologies</div></th>
-      <th class='rotated_cell'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell'><div class='rotate_text'># Concepts</div></th>
-      <th class='rotated_cell'><div class='rotate_text'>Unique</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'># Features</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'># Languages</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'># Technologies</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'># Concepts</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
       <th class='rotated_cell'><div class='rotate_text'>Headline</div></th>
   </tr>
 {% for d in data %}
