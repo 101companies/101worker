@@ -5,7 +5,11 @@ def serveResourceNames(environ, start_response, params):
     response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
     resourceNames = json.load(open('./backlinks.json'))['resources']
-    return json.dumps({'availableResouces' : resourceNames})
+    result = json.dumps({'availableResouces' : resourceNames})
+    if params.get('format', '') and params.get('format', '') == 'jsonp':
+       result = 'callback(' + result + ')'
+    return result
+
 
 def lookup(term, resource, mapping, backlinks):
     if resource in mapping:
@@ -30,7 +34,7 @@ def serveTerm(environ, start_response, params):
     term = params.get('term', '')
     resource = params.get('resource', '')
     if resource:
-        return json.dumps(lookup(term,resource,mapping,backlinks))
+        result = json.dumps(lookup(term,resource,mapping,backlinks))
     else:
         result = []
         resourceNames = backlinksInfo['resources']
@@ -38,11 +42,14 @@ def serveTerm(environ, start_response, params):
             backlinks = lookup(term,resource,mapping,backlinks)
             backlinks['name'] = resource
             result.append(backlinks)
-        return json.dumps(result)
+        result = json.dumps(result)
+    if params.get('format', '') and params.get('format', '') == 'jsonp':
+       result = 'callback(' + result + ')'
+    return result
 
 def routes():
     return [
-        ('/termResources/(?P<term>.+)/(?P<resource>.+)', serveTerm),
-        ('/termResources/(?P<term>.+)', serveTerm),
-        ('/termResources', serveResourceNames)
+        ('/termResources/(?P<term>.+)/(?P<resource>.+)(?.<format>)', serveTerm),
+        ('/termResources/(?P<term>.+)(?.<format>)', serveTerm),
+        ('/termResources(?.<format>)', serveResourceNames)
     ]
