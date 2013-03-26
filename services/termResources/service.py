@@ -49,7 +49,7 @@ def serveTerm(environ, start_response, params):
 
 def routes():
     return [
-        ('/termResources/(?P<term>.+)/(?P<resource>.+)(?P<format>\.jsonp)', serveTerm),
-        ('/termResources/(?P<term>.+)(?P<format>\.jsonp)', serveTerm),
-        ('/termResources\.(?P<format>\.jsonp)', serveResourceNames)
+        ('/termResources/(?P<term>.+)/(?P<resource>.+)(?P<format>(\.jsonp)?)', serveTerm),
+        ('/termResources/(?P<term>.+)(?P<format>(\.jsonp)?)', serveTerm),
+        ('/termResources(?P<format>(\.jsonp)?)', serveResourceNames)
     ]
