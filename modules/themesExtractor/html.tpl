@@ -20,7 +20,7 @@
          -o-transform: rotate(-90deg);
          -o-transform-origin:  top left;
           position:relative;
-         top:20px;
+         top:10px;
          width:40px;
       }
    </style>
