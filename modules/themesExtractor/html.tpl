@@ -30,7 +30,8 @@
       {
          border: 0.5px solid black;
          table-layout: fixed;
-         width: 569px; /*Table width must be set or it wont resize the cells*/
+         border-spacing
+         width: 100%; /*Table width must be set or it wont resize the cells*/
       }
       th, td 
       {
@@ -46,13 +47,17 @@
       {
         width: 30px;
       }
+      .impl
+      {
+        width: 120px;
+      }
    </style>
  </head> 
 
 <body>
 <table>
   <tr>
-      <th>Impl.</th>
+      <th class='impl'>Impl.</th>
       <th class='rotated_cell number'><div class='rotate_text'># Features</div></th>
       <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
       <th class='rotated_cell number'><div class='rotate_text'># Languages</div></th>
