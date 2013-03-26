@@ -125,14 +125,14 @@ def getConcepts(pages):
     techs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page'].get('internal_links', [])))) \
         .select(lambda p: filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page']['internal_links'])).to_list()
     s = reduce(lambda a, b: a + b, techs) if techs else []
-    return list(set(s))
+    return s
 
 
 def getFeatures(pages):
     techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('implements::Feature:'), p['page'].get('internal_links', [])))) \
         .select(lambda p: filter(lambda i: i.startswith('implements::Feature:'), p['page']['internal_links'])).to_list()
     s = reduce(lambda a, b: a + b, techs) if techs else []
-    return list(set(map(lambda n: n.replace('implements::Feature:', ''), s)))
+    return map(lambda n: n.replace('implements::Feature:', ''), s)
 
 def getUniqueConcepts(page, pages):
     concepts = getConcepts(pages)
@@ -143,7 +143,7 @@ def getUniqueConcepts(page, pages):
 def getUniqueFeatures(page, pages):
     features = getFeatures(pages)
     c = getFeatures(page)
-    unique = filter(lambda p: features.count(p) == 1, page)
+    unique = filter(lambda p: features.count(p) == 1, c)
     return unique
 
 
