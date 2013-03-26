@@ -2,18 +2,26 @@ import json
 
 def serveResourceNames(environ, start_response, params):
     status = '200 OK'
-    response_headers = [('Content-Type', 'text/json')]
+    isJsonp = params.get('format', '') and params.get('format', '') == 'jsonp'
+    if isJsonp:
+       response_headers = [('Content-Type', 'text/jsonp')]
+    else:
+        response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
     resourceNames = json.load(open('./backlinks.json'))['resources']
-    return json.dumps({'availableResouces' : resourceNames})
+    result = json.dumps({'availableResouces' : resourceNames})
+    if isJsonp:
+       result = 'resourcecallback(' + result + ')'
+    return result
+
 
 def lookup(term, resource, mapping, backlinks):
     if resource in mapping:
         if term in mapping[resource]:
             if mapping[resource][term] in backlinks:
-                return {'backlinks' : backlinks[mapping[resource][term]][resource]}
+                return backlinks[mapping[resource][term]][resource]
             else:
-                return {'error' : "No backlinks found for " + term}
+                return {'error' : "No backlinks found for " + mapping[resource][term]}
         else:
             return {'error' : "No mapping found for " + term}
     else:
@@ -22,7 +30,11 @@ def lookup(term, resource, mapping, backlinks):
 
 def serveTerm(environ, start_response, params):
     status = '200 OK'
-    response_headers = [('Content-Type', 'text/json')]
+    isJsonp = params.get('format', '') and params.get('format', '') == 'jsonp'
+    if isJsonp:
+       response_headers = [('Content-Type', 'text/jsonp')]
+    else:
+        response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
     backlinksInfo = json.load(open('./backlinks.json'))
     mapping = json.load(open('./mapping.json'))
@@ -30,17 +42,22 @@ def serveTerm(environ, start_response, params):
     term = params.get('term', '')
     resource = params.get('resource', '')
     if resource:
-        return json.dumps(lookup(term,resource,mapping,backlinks))
+        result = json.dumps(lookup(term,resource,mapping,backlinks))
     else:
-        result = {}
+        result = []
         resourceNames = backlinksInfo['resources']
         for resource in resourceNames:
-            result[resource] = lookup(term,resource,mapping,backlinks)
-        return json.dumps(result)
+            cResult = lookup(term,resource,mapping,backlinks)
+            cResult['name'] = resource
+            result.append(cResult)
+        result = json.dumps(result)
+    if isJsonp:
+       result = 'resourcecallback(' + result + ')'
+    return result
 
 def routes():
     return [
-        ('/termResources/(?P<term>.+)/(?P<resource>.+)', serveTerm),
-        ('/termResources/(?P<term>.+)', serveTerm),
-        ('/termResources', serveResourceNames)
+        ('/termResources/(?P<term>.+)/(?P<resource>.+)\.(?P<format>.+)', serveTerm),
+        ('/termResources/(?P<term>.+)\.(?P<format>.+)', serveTerm),
+        ('/termResources\.(?P<format>.+)', serveResourceNames)
     ]
