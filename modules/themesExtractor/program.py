@@ -291,6 +291,11 @@ def deleteEmptyCells(data):
                 del d[cell]
     return data
 
+def toTex(list, file):
+    with open (file, 'w') as f:
+        f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
+
+
 for t in getThemeNames(themes):
     
     members = sorted(list(createMembers(t, pages)), key=lambda s: s['name'])
@@ -323,6 +328,9 @@ for t in getThemeNames(themes):
     f = open(os.path.join(output, t, 'members.tex'), 'w')
     f.write(template.render({'data': deleteEmptyCells(members)}))
     f.close()
+
+    toTex(deleteEmptyCells(members), os.path.join(output, t, 'members_list.tex'))
+    
     # to here
     
     path = os.path.join(output, t, 'features.json')
@@ -331,17 +339,19 @@ for t in getThemeNames(themes):
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()
 
-    template = env.get_template('html.tpl')
+    template = env.get_template('features.html')
 
     f = open(os.path.join(output, t, 'features.html'), 'w')
     f.write(template.render({'data': deleteEmptyCells(features)}))
     f.close()
 
-    template = env.get_template('tex.tpl')
+    template = env.get_template('features.tex')
 
     f = open(os.path.join(output, t, 'features.tex'), 'w')
     f.write(template.render({'data': deleteEmptyCells(features)}))
     f.close()
+
+    toTex(deleteEmptyCells(features), os.path.join(output, t, 'features_list.tex'))
 
     path = os.path.join(output, t, 'concepts.json')
     f = open(path, 'w')
@@ -361,6 +371,8 @@ for t in getThemeNames(themes):
     f.write(template.render({'data': deleteEmptyCells(concepts)}))
     f.close()
 
+    toTex(deleteEmptyCells(concepts), os.path.join(output, t, 'concepts_list.tex'))
+
     path = os.path.join(output, t, 'technologies.json')
     f = open(path, 'w')
     technologies = sorted(list(createTechnologies(t, pages)), key=lambda s: s['name'])
@@ -378,4 +390,6 @@ for t in getThemeNames(themes):
     f = open(os.path.join(output, t, 'technologies.tex'), 'w')
     f.write(template.render({'data': deleteEmptyCells(technologies)}))
     f.close()
+
+    toTex(deleteEmptyCells(technologies), os.path.join(output, t, 'technologies_list.tex'))
         

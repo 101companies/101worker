@@ -27,6 +27,10 @@ pages = wikidump['wiki']['pages']
 vocs = (query(pages).where(lambda page: page['page']['page']['p'] == 'Vocabulary')
     .select(lambda p: p['page']['page']['n']).to_list())
 
+def toTex(list, file):
+    with open (file, 'w') as f:
+        f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
+
 for voc in vocs:
     voc_name = unicode('instanceof::Vocabulary:' + voc).strip()
     
@@ -63,4 +67,6 @@ for voc in vocs:
     f = open(os.path.join(output, voc, 'members.tex'), 'w')
     f.write(template.render({'data': data}))
     f.close()
+
+    toTex(data, os.path.join(output, voc, 'members_list.tex'))
     
