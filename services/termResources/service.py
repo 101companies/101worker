@@ -6,7 +6,7 @@ def serveResourceNames(environ, start_response, params):
     start_response(status, response_headers)
     resourceNames = json.load(open('./backlinks.json'))['resources']
     result = json.dumps({'availableResouces' : resourceNames})
-    if params.get('format', '') and params.get('format', '') == '.jsonp':
+    if params.get('format', '') and params.get('format', '') == 'jsonp':
        result = 'callback(' + result + ')'
     return result
 
@@ -43,7 +43,7 @@ def serveTerm(environ, start_response, params):
             backlinks['name'] = resource
             result.append(backlinks)
         result = json.dumps(result)
-    if params.get('format', '') and params.get('format', '') == '.jsonp':
+    if params.get('format', '') and params.get('format', '') == 'jsonp':
        result = 'callback(' + result + ')'
     return result
 
