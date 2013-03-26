@@ -10,11 +10,15 @@ def initServeRequest(environ):
         discovery.base_uri = 'http://' + environ.get('HTTP_HOST', '') + environ.get('SCRIPT_NAME', '') + '/discovery'
 
 
-#helper methods for responding with an error, in JSON or in HTML
+#helper methods for responding with an error, in JSON, HTML or RDF
 def respondError(start_response, error):
-    status = '500 Internal Server Error'
+    from discovery import DiscoveryException
     response_headers = [('Content-Type', 'text/plain')]
-    start_response(status, response_headers)
+
+    if isinstance(error, DiscoveryException):
+        start_response(error.Status, response_headers)
+    else:
+        start_response('500 Internal Server Error', response_headers)
     return str(error)
 
 def respondJSON(start_response, response):
@@ -31,10 +35,23 @@ def respondHTML(start_response, response, template):
     start_response(status, response_headers)
 
     import discovery
-    from templates import TemplateCache
+    from templates import TemplateProvider
+    #base URI, needed for static urls
     if 'localhost' in discovery.base_uri: response['base_uri'] = discovery.base_uri.replace('/discovery','')
     else: response['base_uri'] = 'http://worker.101companies.org/services'
-    template = TemplateCache.getTemplate(template)
+    template = TemplateProvider.getTemplate(template)
+
+    return str( template.render(response) )
+
+def respondRDF(start_response, response, template, environ):
+    response['about'] = 'http://101companies.org/resources' + environ['PATH_INFO'].replace('/discovery','')
+
+    status = '200 OK'
+    response_headers = [('Content-Type', 'application/rdf+xml')]
+    start_response(status, response_headers)
+
+    from templates import TemplateProvider
+    template = TemplateProvider.getTemplate(template)
 
     return str( template.render(response) )
 
@@ -45,6 +62,8 @@ def serveFileFragment(environ, start_response, params):
     import discovery
 
     try:
+        if not params.get('path',None): params['path'] = ''
+
         response = discovery.discoverFileFragment(params.get('namespace', ''), params.get('member', ''),
                                               params.get('path', ''), params.get('file', ''),params.get('fragment', ''))
 
@@ -59,10 +78,15 @@ def serveMemberFile(environ, start_response, params):
     import discovery
 
     try:
+        #I don't understand under which circumstances the regex says that params['path'] = None, but it says it
+        #in some cases => for these cases, the line is necessary
+        if not params.get('path',None): params['path'] = ''
+
         response = discovery.discoverMemberFile(params.get('namespace',''), params.get('member',''),
                                                 params.get('path', ''), params.get('file', ''))
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        if params['format'] == 'rdf': return respondRDF(start_response, response, 'file.rdf', environ)
 
         return respondHTML(start_response,response,'file.html')
 
@@ -72,6 +96,17 @@ def serveMemberFile(environ, start_response, params):
 def serveMemberPath(environ, start_response, params):
     initServeRequest(environ)
     import discovery
+    from data101 import DumpdataProvider
+    import os
+
+    #needed for strange files, that have no . ! e.g. "Makefile"
+    #This is also the reason why serveMemberPath doesn't need a check if a path exists, because non existing paths will
+    #be classified as files first!!!
+    if not DumpdataProvider.isDir(os.path.join(params.get('namespace',''), params.get('member',''),params.get('path',''))):
+        path = params['path']
+        params['path'] = os.path.dirname(path)
+        params['file'] = os.path.basename(path)
+        return serveMemberFile(environ, start_response, params)
 
     try:
         response = discovery.discoverMemberPath(params.get('namespace', ''), params.get('member', ''),
@@ -105,6 +140,7 @@ def serveNamespace(environ, start_response, params):
         response = discovery.discoverNamespace(params.get('namespace', ''))
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+
         return respondHTML(start_response,response,'namespace.html')
 
     except Exception, error:
@@ -117,6 +153,7 @@ def serveAllNamespaces(environ, start_response, params):
     try:
         response = discovery.discoverAllNamespaces()
 
+        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'namespace.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
         return respondHTML(start_response,response,'namespace.html')
 
@@ -125,8 +162,8 @@ def serveAllNamespaces(environ, start_response, params):
 
 def routes():
     return [
-        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/(?P<file>.*\.[^/]+)/(?P<fragment>.+)', serveFileFragment),
-        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(?P<path>(/.)*)/(?P<file>.*\.[^/]+)', serveMemberFile),
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/(?P<fragment>.+)', serveFileFragment),
+        ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)', serveMemberFile),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)', serveMemberPath),
         ( '/discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)', serveNamespaceMember),
         ( '/discovery/(?P<namespace>[^/]+)', serveNamespace),

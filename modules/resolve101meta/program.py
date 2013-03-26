@@ -5,17 +5,16 @@ import json
 import os
 
 sys.path.append('../../libraries/101meta')
+sys.path.append('../../libraries')
 import const101
 import tools101
+from mediawiki import remove_headline_markup
 
 wikiUrl = unicode('http://101companies.org/wiki/{0}')
 # loading of the dumps this module depends on
 repo = json.load(open(const101.pullRepoDump, 'r'))
 rules = json.load(open(const101.rulesDump, 'r'))["results"]["rules"]
 wiki = json.load(open(const101.wikiDump, 'r'))["wiki"]
-
-def formatHeadline(headline):
-    return headline.replace('== Headline ==', '').replace('\n', '').replace('[[', '').replace(']]', '')
 
 ### HELPER FUNCTIONS
 def encodeForUrl(ns, name):
@@ -38,7 +37,7 @@ def findWikiEntry(val, namespace, title, repoDir, map):
         if page['page']['page']['p'] == namespace and page['page']['page']['n'] == title.replace('_', ' '):
             map[val] = {
                 '101wiki': wikiUrl.format(encodeForUrl(namespace,title)),
-                'headline': formatHeadline( page['page'].get('headline', '<unresolved>') )
+                'headline': remove_headline_markup( page['page'].get('headline', '<unresolved>') )
             }
             handleRepoLink(repoDir,namespace, title,map[val])
             return
@@ -60,7 +59,7 @@ def handleContribution(name, map):
     map[name] = {
         '101wiki' : wikiUrl.format(pageName),
         '101repo' : repoUrl,
-        'headline': formatHeadline( page['page'].get('headline', '<unresolved>') )
+        'headline': remove_headline_markup( page['page'].get('headline', '<unresolved>') )
     }
 
 

@@ -80,7 +80,7 @@ def copySubdirs(dep):
 
 #MAIN PROGRAM
 basePath = os.path.dirname(const101.sRoot)
-gitdepsFolder = os.path.join(basePath, "gitdebs")
+gitdepsFolder = os.path.join(basePath, "gitdeps")
 gitdepsFile = '../../../101results/101repo/.gitdeps'
 ensureFolder(gitdepsFolder)
 gitdepsJson = json.loads(open(gitdepsFile).read())
@@ -107,7 +107,7 @@ for dep in gitdepsJson:
         print output
         dep['needsUpdate'] = True
     if (status):
-        print "pullGitDebs failed on " + dep['sourcerepo']
+        print "pullGitDeps failed on " + dep['sourcerepo']
         sys.exit(status)
 
 print "copying files, if needed"
@@ -118,7 +118,7 @@ for dep in gitdepsJson:
     else:
         copySubdirs(dep)
 
-print "saving .gitdebs file"
+print "saving .gitdeps file"
 shutil.copy(gitdepsFile, './gitdeps_local')
 f = open('./.copied', 'w')
 f.write(json.dumps(copied))

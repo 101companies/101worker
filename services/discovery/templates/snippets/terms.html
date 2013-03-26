@@ -1,0 +1,12 @@
+{% if not terms == [] %}
+	<div class="span5 box info-box green-yellow-top">
+		<div class="box-header">
+			Terms
+		</div>
+		<div class="box-content">
+            {% for term in terms %}
+			    {{ term }}
+            {% endfor %}
+		</div>
+	</div>
+{% endif %}

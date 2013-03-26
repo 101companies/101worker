@@ -3,6 +3,11 @@ import json
 import sys
 import os
 import urllib2
+import asq
+from asq.initiators import query
+import re
+from jinja2 import FileSystemLoader, Environment, evalcontextfilter
+import shutil
 
 sys.path.append('../../libraries/101meta')
 sys.path.append('../../libraries')
@@ -18,6 +23,16 @@ json_path = sys.argv[1]
 wiki = json.load(open(json_path, 'r'))['wiki']
 pages = wiki['pages']
 themes = filter(lambda p: "Theme" == p['page'].get('page', {}).get('p', ''), pages)
+
+for d in os.listdir(output):
+    if os.path.isdir(os.path.join(output, d)):
+        shutil.rmtree(os.path.join(output, d))
+
+def render(d):
+    if isinstance(d, list):
+        return ', '.join(d)
+    else:
+        return d
 
 def getRealFeature(f, pages):
     f = f.replace('_', ' ')
@@ -82,15 +97,11 @@ def getAttr(pages, attr):
 def names(ps):
     return map(lambda p: p['n'], ps)
 
-def getUnique(page, pages, attr):
-    f = getAttr(page, attr)
-    features =  getAttr(pages, attr)
-    unique = filter(lambda p: features.count(p) == 1, f)
-    return unique
-
 def getLangs(pages):
-    pages = getAttr(pages, 'uses')
-    return map(lambda i: i['n'], filter(lambda i: i['p'] == 'Language', pages))
+    langs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('uses::Language'), p['page'].get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: i.startswith('uses::Language'), p['page']['internal_links'])).to_list()
+    s = reduce(lambda a, b: a + b, langs) if langs else []
+    return map(lambda n: n.replace('uses::Language:', ''), s)
 
 def getUniqueLanguages(page, pages):
     langs = getLangs(pages)
@@ -99,8 +110,10 @@ def getUniqueLanguages(page, pages):
     return unique
     
 def getTechs(pages):
-    pages = getAttr(pages, 'uses')
-    return map(lambda i: i['n'], filter(lambda i: i['p'] == 'Technology', pages))
+    techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('uses::Technology'), p['page'].get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: i.startswith('uses::Technology'), p['page']['internal_links'])).to_list()
+    s = reduce(lambda a, b: a + b, techs) if techs else []
+    return map(lambda n: n.replace('uses::Technology:', ''), s)
 
 def getUniqueTechs(page, pages):
     techs = getTechs(pages)
@@ -109,26 +122,35 @@ def getUniqueTechs(page, pages):
     return unique
 
 def getConcepts(pages):
-    pages = getAttr(pages, 'instanceOf')
-    return map(lambda i: i['n'], filter(lambda i: i['p'] is None, pages))
+    techs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page'].get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page']['internal_links'])).to_list()
+    s = reduce(lambda a, b: a + b, techs) if techs else []
+    return list(set(s))
+
+
+def getFeatures(pages):
+    techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('implements::Feature:'), p['page'].get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: i.startswith('implements::Feature:'), p['page']['internal_links'])).to_list()
+    s = reduce(lambda a, b: a + b, techs) if techs else []
+    return list(set(map(lambda n: n.replace('implements::Feature:', ''), s)))
 
 def getUniqueConcepts(page, pages):
     concepts = getConcepts(pages)
     c = getConcepts(page)
     unique = filter(lambda p: concepts.count(p) == 1, page)
-    return concepts
+    return unique
+
+def getUniqueFeatures(page, pages):
+    features = getFeatures(pages)
+    c = getFeatures(page)
+    unique = filter(lambda p: features.count(p) == 1, page)
+    return unique
+
 
 def getThemeInstances(theme, pages):
-    instance_theme_name = getThemeName(theme)
-    def filter_func(p):
-        ins = p['page'].get('instanceOf', [])
-        for i in ins:
-            if i['p'] == 'Theme' and i['n'] == instance_theme_name:
-                return True
-
-        return False
-    
-    return filter(filter_func, pages)
+    #theme = getThemeName(theme)
+    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceof::Theme:' + theme, p['page'].get('internal_links', [])))).to_list()
+    return techs
 
 def createMembers(theme, pages):
     instances = getThemeInstances(theme, pages)
@@ -136,17 +158,17 @@ def createMembers(theme, pages):
     for instance in instances:
         name = instance['page'].get('page', {}).get('n', '')
 
-        unique_f = map(lambda i: i['n'], getUnique([instance], instances, 'implements'))
-        num_f = len(set(map(lambda i: i['n'], getAttr([instance], 'implements'))))
+        unique_f = getUniqueFeatures([instance], instances)
+        num_f = getFeatures([instance])
         
         unique_l = getUniqueLanguages([instance], instances)
-        num_l = len(set(getLangs([instance])))
+        num_l = list(set(getLangs([instance])))
         
         unique_t = getUniqueTechs([instance], instances)
-        num_t = len(set(getTechs([instance])))
+        num_t = list(set(getTechs([instance])))
 
         unique_c = getUniqueConcepts([instance], instances)
-        num_c = len(set(getConcepts([instance])))
+        num_c = list(set(getConcepts([instance])))
         
         headline = remove_headline_markup(instance['page'].get('headline', ''))
         
@@ -170,38 +192,41 @@ def createMembers(theme, pages):
 
 def getContributionsWithFeature(feature, pages):
     def filter_func(p):
-        implements = p['page'].get('implements', [])
-        for i in implements:
-            if i['p'] == 'Feature' and i['n'] == feature:
-                return True
+        f = getFeatures([p])
+        return feature in f
 
     f = filter(filter_func, pages)
     return f
 
 def getContributionsWithConcept(name, pages):
     def filter_func(p):
-        implements = p['page'].get('instanceOf', [])
-        for i in implements:
-            if i['p'] is None and i['n'] == name:
-                return True
+        f = getConcepts([p])
+        return name in f
+        #implements = p['page'].get('instanceOf', [])
+        #for i in implements:
+        #    if i['p'] is None and i['n'] == name:
+        #        return True
 
     f = filter(filter_func, pages)
     return f
 
 def getContributionsWithTechnology(name, pages):
     def filter_func(p):
-        implements = p['page'].get('uses', [])
-        for i in implements:
-            if i['p'] == 'Technology' and i['n'] == name:
-                return True
+        t = getTechs([p])
+        return name in t
+        #implements = p['page'].get('uses', [])
+        #for i in implements:
+        #    if i['p'] == 'Technology' and i['n'] == name:
+        #        return True
 
     f = filter(filter_func, pages)
     return f
         
 def createFeatures(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
-    features = getAttr(theme_pages, 'implements')
-    feature_names = names(features)
+    
+    features = getFeatures(theme_pages)
+    feature_names = features
     
     for feature in feature_names:
         rf = getRealFeature(feature, pages)
@@ -253,8 +278,18 @@ def createTechnologies(theme, pages):
             'headline': headline,
             'contributions': contributions,
             'resolved': resolved
-        
         }
+
+def deleteEmptyCells(data):
+    if not data:
+        return data
+
+    cells = data[0].keys()
+    for cell in cells:
+        if all(not d[cell] for d in data):
+            for d in data:
+                del d[cell]
+    return data
 
 for t in getThemeNames(themes):
     
@@ -271,7 +306,24 @@ for t in getThemeNames(themes):
     
     f = open(path, 'w')
     f.write(json.dumps(members, indent=4, sort_keys=True))
-    f.close()   
+    f.close()
+
+    # template stuff
+    loader = FileSystemLoader('.')
+    env = Environment(loader=loader)
+    env.filters['render'] = render
+    template = env.get_template('html.tpl')
+
+    f = open(os.path.join(output, t, 'members.html'), 'w')
+    f.write(template.render({'data': deleteEmptyCells(members)}))
+    f.close()
+
+    template = env.get_template('tex.tpl')
+
+    f = open(os.path.join(output, t, 'members.tex'), 'w')
+    f.write(template.render({'data': deleteEmptyCells(members)}))
+    f.close()
+    # to here
     
     path = os.path.join(output, t, 'features.json')
     f = open(path, 'w')
@@ -279,15 +331,51 @@ for t in getThemeNames(themes):
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()
 
+    template = env.get_template('html.tpl')
+
+    f = open(os.path.join(output, t, 'features.html'), 'w')
+    f.write(template.render({'data': deleteEmptyCells(features)}))
+    f.close()
+
+    template = env.get_template('tex.tpl')
+
+    f = open(os.path.join(output, t, 'features.tex'), 'w')
+    f.write(template.render({'data': deleteEmptyCells(features)}))
+    f.close()
+
     path = os.path.join(output, t, 'concepts.json')
     f = open(path, 'w')
-    features = list(createConcepts(t, pages))
-    f.write(json.dumps(features, indent=4, sort_keys=True))
+    concepts = list(createConcepts(t, pages))
+    f.write(json.dumps(concepts, indent=4, sort_keys=True))
     f.close()  
+
+    template = env.get_template('html.tpl')
+
+    f = open(os.path.join(output, t, 'concepts.html'), 'w')
+    f.write(template.render({'data': deleteEmptyCells(concepts)}))
+    f.close()
+
+    template = env.get_template('tex.tpl')
+
+    f = open(os.path.join(output, t, 'concepts.tex'), 'w')
+    f.write(template.render({'data': deleteEmptyCells(concepts)}))
+    f.close()
 
     path = os.path.join(output, t, 'technologies.json')
     f = open(path, 'w')
-    features = list(createTechnologies(t, pages))
+    technologies = list(createTechnologies(t, pages))
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()  
+
+    template = env.get_template('html.tpl')
+
+    f = open(os.path.join(output, t, 'technologies.html'), 'w')
+    f.write(template.render({'data': deleteEmptyCells(technologies)}))
+    f.close()
+
+    template = env.get_template('tex.tpl')
+
+    f = open(os.path.join(output, t, 'technologies.tex'), 'w')
+    f.write(template.render({'data': deleteEmptyCells(technologies)}))
+    f.close()
         
