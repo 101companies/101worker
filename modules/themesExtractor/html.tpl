@@ -41,6 +41,7 @@
       tr
       {
         text-align: bottom;
+        vertical-align: bottom;
       }
       .rotated_cell
       {
@@ -49,7 +50,7 @@
       }
       .number
       {
-        width: 30px;
+        width: 15px;
       }
       .impl
       {
