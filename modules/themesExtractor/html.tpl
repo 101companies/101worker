@@ -19,14 +19,14 @@
 {% for d in data %}
     <tr>
       <td>{{d['name']}}</td>
-      <td>{{len(d['features'])}}</td>
-      <td>{{len(d['ufeatures'])}}</td>
-      <td>{{len(d['languages'])}}</td>
-      <td>{{len(d['ulanguages'])}}</td>
-      <td>{{len(d['technologies'])}}</td>
-      <td>{{len(d['utechnologies'])}}</td>
-      <td>{{len(d['concepts'])}}</td>
-      <td>{{len(d['uconcepts'])}}</td>
+      <td>{{d['features']|len}}</td>
+      <td>{{d['ufeatures']|len}}</td>
+      <td>{{d['languages']|len}}</td>
+      <td>{{d['ulanguages']|len}}</td>
+      <td>{{d['technologies']|len}}</td>
+      <td>{{d['utechnologies']|len}}</td>
+      <td>{{d['concepts']|len}}</td>
+      <td>{{d['uconcepts']|len}}</td>
       <td>{{d['headline']}}</td>
     </tr>
 {% endfor %}
