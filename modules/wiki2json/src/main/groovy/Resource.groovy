@@ -68,6 +68,37 @@ class Resource {
      return props
     }
 
+    def getJSON(url, attemps = 0){
+        try{
+            def links = null;
+            URLConnection connection = new URL(url).openConnection();
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                InputStream response = connection.getInputStream();
+                String txt = new Scanner(response, "UTF-8").useDelimiter("\\A").next();
+                links = new JsonSlurper().parseText(txt)
+            }
+            else if (responseCode == HttpURLConnection.HTTP_SERVER_ERROR){
+                println('HTTP 500 server error. Retrying...')
+                attemps++
+                if (attemps < 3){
+                    getJSON(url, attemps)
+                }
+            }
+            else {
+                return null;
+            }
+            return links
+        }
+        catch(java.io.FileNotFoundException e){
+            print('not found: ')
+            println(e)
+        }
+        catch (java.io.IOException e) {
+            println(e)
+        }
+    }
+
     public getProperties(){
         def props = [:]
         resource.outE.each{
@@ -79,24 +110,24 @@ class Resource {
                     def obj = edge.getObject()
                     props['page'] = handlePageLabel(obj.label)
                     try {
-                        Thread.currentThread().sleep(4 * 1000)
                         def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/internal_links'
-                        def links = new JsonSlurper().parseText(new URL(url).text )
-                        props['internal_links'] = links
-
-                    } catch(e) {
-                        println(e)
+                        props['internal_links'] = getJSON(url)
+                    }
+                    catch(e){
+                      println('weird exception')
+                      println(e)
                     }
 
                     try {
-                        Thread.currentThread().sleep(4 * 1000)
+                        Thread.currentThread().sleep(2 * 1000)
                         def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/sections'
-                        def sections = new JsonSlurper().parseText(new URL(url).text )
-                        if ((sections.size() > 0) && (sections[0].title == "Headline")){
+                        def sections = getJSON(url)
+                        if ((sections != null) && (sections.size() > 0) && (sections[0].title == "Headline")){
                             props['headline'] = sections[0].content.replaceAll("== Headline ==", "").replaceAll("==Headline==","")
                         }
                     }
-                    catch (e) {
+                    catch(e){
+                        println('weird exception')
                         println(e)
                     }
                     break
