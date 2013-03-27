@@ -77,6 +77,9 @@ class Resource {
                 InputStream response = connection.getInputStream();
                 String txt = new Scanner(response, "UTF-8").useDelimiter("\\A").next();
                 links = new JsonSlurper().parseText(txt)
+                if (attemps > 0){
+                    println('successfully got data from ' + url)
+                }
             }
             else if (responseCode == HttpURLConnection.HTTP_SERVER_ERROR){
                 println(' HTTP 500 server error. Retrying...' + url)
