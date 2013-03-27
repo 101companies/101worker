@@ -342,13 +342,13 @@ for t in getThemeNames(themes):
     template = env.get_template('features.html')
 
     f = open(os.path.join(output, t, 'features.html'), 'w')
-    f.write(template.render({'data': deleteEmptyCells(features)}))
+    f.write(template.render({'data': deleteEmptyCells(features), 'title': 'Concepts'}))
     f.close()
 
     template = env.get_template('features.tex')
 
     f = open(os.path.join(output, t, 'features.tex'), 'w')
-    f.write(template.render({'data': deleteEmptyCells(features)}))
+    f.write(template.render({'data': deleteEmptyCells(features), 'title': 'Concepts'}))
     f.close()
 
     toTex(deleteEmptyCells(features), os.path.join(output, t, 'features_list.tex'))
@@ -359,16 +359,16 @@ for t in getThemeNames(themes):
     f.write(json.dumps(concepts, indent=4, sort_keys=True))
     f.close()  
 
-    template = env.get_template('html.tpl')
+    template = env.get_template('features.html')
 
     f = open(os.path.join(output, t, 'concepts.html'), 'w')
-    f.write(template.render({'data': deleteEmptyCells(concepts)}))
+    f.write(template.render({'data': deleteEmptyCells(concepts), 'title': 'Concepts'}))
     f.close()
 
-    template = env.get_template('tex.tpl')
+    template = env.get_template('features.tex')
 
     f = open(os.path.join(output, t, 'concepts.tex'), 'w')
-    f.write(template.render({'data': deleteEmptyCells(concepts)}))
+    f.write(template.render({'data': deleteEmptyCells(concepts), 'title': 'Concepts'}))
     f.close()
 
     toTex(deleteEmptyCells(concepts), os.path.join(output, t, 'concepts_list.tex'))
