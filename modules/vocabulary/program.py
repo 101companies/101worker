@@ -47,7 +47,7 @@ for voc in vocs:
 
     json.dump(data, f, indent=4, sort_keys=True)
     f.close()
-        
+
     loader = FileSystemLoader('.')
     env = Environment(loader=loader)
     template = env.get_template('html.tpl')
@@ -61,4 +61,3 @@ for voc in vocs:
     f = open(os.path.join(output, voc, 'members.tex'), 'w')
     f.write(template.render({'data': data}))
     f.close()
-    
