@@ -79,7 +79,7 @@ class Resource {
                 links = new JsonSlurper().parseText(txt)
             }
             else if (responseCode == HttpURLConnection.HTTP_SERVER_ERROR){
-                println('HTTP 500 server error. Retrying...')
+                println(' HTTP 500 server error. Retrying...' + url)
                 attemps++
                 if (attemps < 3){
                     getJSON(url, attemps)
