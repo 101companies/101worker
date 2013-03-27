@@ -27,6 +27,10 @@ pages = wikidump['wiki']['pages']
 vocs = (query(pages).where(lambda page: page['page']['page']['p'] == 'Vocabulary')
     .select(lambda p: p['page']['page']['n']).to_list())
 
+def toTex(list, file):
+    with open (file, 'w') as f:
+        f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
+
 for voc in vocs:
     voc_name = unicode('instanceof::Vocabulary:' + voc).strip()
     
@@ -45,6 +49,8 @@ for voc in vocs:
             'headline': remove_headline_markup(instance['page'].get('headline', ''))
         })
 
+    data = sorted(data, key=lambda s: s['name'])
+
     json.dump(data, f, indent=4, sort_keys=True)
     f.close()
 
@@ -61,3 +67,9 @@ for voc in vocs:
     f = open(os.path.join(output, voc, 'members.tex'), 'w')
     f.write(template.render({'data': data}))
     f.close()
+<<<<<<< HEAD
+=======
+
+    toTex(data, os.path.join(output, voc, 'members_list.tex'))
+    
+>>>>>>> 5e7474e45d8311381017bcba98562809b5385c9c
