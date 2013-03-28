@@ -8,8 +8,8 @@ def serveResourceNames(environ, start_response, params):
     else:
         response_headers = [('Content-Type', 'text/json')]
     start_response(status, response_headers)
-    resourceNames = json.load(open('./backlinks.json'))['resources']
-    result = json.dumps({'availableResouces' : resourceNames})
+    resources = json.load(open('./backlinks.json'))['resources']
+    result = json.dumps({'availableResouces' : resources})
     if isJsonp:
        result = 'resourcecallback(' + result + ')'
     return result
@@ -45,10 +45,12 @@ def serveTerm(environ, start_response, params):
         result = json.dumps(lookup(term,resource,mapping,backlinks))
     else:
         result = []
-        resourceNames = backlinksInfo['resources']
-        for resource in resourceNames:
+        resources = backlinksInfo['resources']
+        for resource in resources:
             cResult = lookup(term,resource,mapping,backlinks)
             cResult['name'] = resource
+            cResult['fullName'] = resources[resource]['fullName']
+            cResult['isLinkable'] = resources[resource]['isLinkable']
             result.append(cResult)
         result = json.dumps(result)
     if isJsonp:
