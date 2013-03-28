@@ -122,9 +122,9 @@ def getUniqueTechs(page, pages):
     return unique
 
 def getConcepts(pages):
-    techs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page'].get('internal_links', [])))) \
+    cs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page'].get('internal_links', [])))) \
         .select(lambda p: filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page']['internal_links'])).to_list()
-    s = reduce(lambda a, b: a + b, techs) if techs else []
+    s = reduce(lambda a, b: a + b, cs) if cs else []
     return s
 
 
@@ -137,7 +137,7 @@ def getFeatures(pages):
 def getUniqueConcepts(page, pages):
     concepts = getConcepts(pages)
     c = getConcepts(page)
-    unique = filter(lambda p: concepts.count(p) == 1, page)
+    unique = filter(lambda p: concepts.count(p) == 1, c)
     return unique
 
 def getUniqueFeatures(page, pages):
