@@ -70,13 +70,13 @@ class Resource {
 
     def getJSON(url, attemps = 0){
         try{
-            def links = [];
+            def res = null;
             URLConnection connection = new URL(url).openConnection();
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 InputStream response = connection.getInputStream();
                 String txt = new Scanner(response, "UTF-8").useDelimiter("\\A").next();
-                links = new JsonSlurper().parseText(txt)
+                res = new JsonSlurper().parseText(txt)
                 if (attemps > 0){
                     println('successfully got data from ' + url)
                 }
@@ -88,10 +88,7 @@ class Resource {
                     getJSON(url, attemps)
                 }
             }
-            else {
-                return [];
-            }
-            return links
+            return res
         }
         catch(java.io.FileNotFoundException e){
             print('not found: ')
@@ -113,25 +110,18 @@ class Resource {
                     def obj = edge.getObject()
                     props['page'] = handlePageLabel(obj.label)
                     try {
-                        def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/internal_links'
-                        props['internal_links'] = getJSON(url)
-                    }
-                    catch(e){
-                      println('weird exception')
-                      println(e)
-                    }
-
-                    try {
-                        //Thread.currentThread().sleep(2 * 1000)
-                        def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/sections'
-                        def sections = getJSON(url)
-                        if ((sections != null) && (sections.size() > 0) && (sections[0].title == "Headline")){
-                            props['headline'] = sections[0].content.replaceAll("== Headline ==", "").replaceAll("==Headline==","")
+                        def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/summary'
+                        def json = getJSON(url)
+                        if (json != null){
+                            def sections = json.sections
+                            if ((sections != null) && (sections.size() > 0) && (sections[0].title == "Headline")){
+                                props['headline'] = sections[0].content.replaceAll("== Headline ==", "").replaceAll("==Headline==","")
+                            }
+                            props['internal_links'] = json.internal_links
                         }
                     }
                     catch(e){
-                        println('weird exception')
-                        println(e)
+                      println(e)
                     }
                     break
                 /*case PAGE :
