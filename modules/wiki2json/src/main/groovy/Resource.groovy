@@ -119,6 +119,10 @@ class Resource {
                             }
                             props['internal_links'] = json.internal_links
                         }
+                        else{
+                            props['internal_links'] = []
+
+                        }
                     }
                     catch(e){
                       println(e)
