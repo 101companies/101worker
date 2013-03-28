@@ -67,9 +67,5 @@ for voc in vocs:
     f = open(os.path.join(output, voc, 'members.tex'), 'w')
     f.write(template.render({'data': data}))
     f.close()
-<<<<<<< HEAD
-=======
 
     toTex(data, os.path.join(output, voc, 'members_list.tex'))
-    
->>>>>>> 5e7474e45d8311381017bcba98562809b5385c9c
