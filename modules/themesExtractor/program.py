@@ -37,7 +37,7 @@ def render(d):
 def getRealFeature(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] == 'Feature' and p['page']['page']['n'] == f
+        return p['page']['page']['p'] == 'Feature' and p['page']['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -51,7 +51,7 @@ def getRealFeature(f, pages):
 def getRealConcept(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] is None and p['page']['page']['n'] == f
+        return p['page']['page']['p'] is None and p['page']['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -65,7 +65,7 @@ def getRealConcept(f, pages):
 def getRealTechnology(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] == 'Technology' and p['page']['page']['n'] == f
+        return p['page']['page']['p'] == 'Technology' and p['page']['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
