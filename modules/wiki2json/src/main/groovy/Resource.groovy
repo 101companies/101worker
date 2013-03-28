@@ -122,7 +122,7 @@ class Resource {
                     }
 
                     try {
-                        Thread.currentThread().sleep(2 * 1000)
+                        //Thread.currentThread().sleep(2 * 1000)
                         def url = 'http://beta.101companies.org/api/pages/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/sections'
                         def sections = getJSON(url)
                         if ((sections != null) && (sections.size() > 0) && (sections[0].title == "Headline")){
