@@ -379,13 +379,13 @@ for t in getThemeNames(themes):
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()  
 
-    template = env.get_template('html.tpl')
+    template = env.get_template('features.html')
 
     f = open(os.path.join(output, t, 'technologies.html'), 'w')
     f.write(template.render({'data': deleteEmptyCells(technologies)}))
     f.close()
 
-    template = env.get_template('tex.tpl')
+    template = env.get_template('features.tex')
 
     f = open(os.path.join(output, t, 'technologies.tex'), 'w')
     f.write(template.render({'data': deleteEmptyCells(technologies)}))
