@@ -70,7 +70,7 @@ class Resource {
 
     def getJSON(url, attemps = 0){
         try{
-            def links = null;
+            def links = [];
             URLConnection connection = new URL(url).openConnection();
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -89,7 +89,7 @@ class Resource {
                 }
             }
             else {
-                return null;
+                return [];
             }
             return links
         }
