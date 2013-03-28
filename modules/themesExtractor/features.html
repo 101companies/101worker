@@ -65,29 +65,16 @@
 <body>
 <table cellspacing='0px'>
   <tr>
-      <th class='impl'><div>Impl.</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'># Features</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'># Languages</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'># Technologies</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'># Concepts</div></th>
-      <th class='rotated_cell number'><div class='rotate_text'>Unique</div></th>
-      <th class='rotated_cell'><div>Headline</div></th>
+      <th class='impl'><div>{{ title }}</div></th>
+      <th class='rotated_cell number'><div class='rotate_text'>Headline</div></th>
+            <th class='rotated_cell number'><div class='rotate_text'># Contributions</div></th>
   </tr>
 {% for d in data %}
     <tr>
       <td>{{d['name']}}</td>
-      <td>{{d['features']|length}}</td>
-      <td>{{d['ufeatures']|length}}</td>
-      <td>{{d['languages']|length}}</td>
-      <td>{{d['ulanguages']|length}}</td>
-      <td>{{d['technologies']|length}}</td>
-      <td>{{d['utechnologies']|length}}</td>
-      <td>{{d['concepts']|length}}</td>
-      <td>{{d['uconcepts']|length}}</td>
       <td>{{d['headline']}}</td>
+      <td>{{d['contributions']|length }}</td>
+
     </tr>
 {% endfor %}
 </table>

@@ -1,0 +1,18 @@
+\begin{tabular} {| c|c|c |} 
+\hline
+
+  \textbf{ {{ title }} } &  \textbf{ Headline } &  \textbf{ # Contributions }   
+
+\\
+
+\hline
+{% for d in data %}
+        
+        {{d['name']}} &
+        {{d['headline']}} &
+        {{d['contributions']|length }}
+
+    \\
+{% endfor %}
+\hline
+\end{tabular}

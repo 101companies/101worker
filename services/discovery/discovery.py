@@ -132,7 +132,8 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     setCommitInfos(response, filePath)
 
-    #response['triples'] = TripledataProvider.getTriplesContaining(wikiNs, member)
+    response['endpoint'] = TripledataProvider.getEndpointLink(wikiNs, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNs, member)
 
     return response
 
@@ -183,7 +184,8 @@ def discoverMemberFile(namespace, member, path, file):
     #terms
     response['terms'] = DumpdataProvider.getTerms(filePath)
 
-    #response['triples'] = TripledataProvider.getTriplesContaining(wikiNs, member)
+    response['endpoint'] = TripledataProvider.getEndpointLink(wikiNs, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNs, member)
 
     return response
 
@@ -220,7 +222,8 @@ def discoverMemberPath(namespace, member, path):
             'name'    : f,
         })
 
-    #response['triples'] = TripledataProvider.getTriplesContaining(wikiNS, member)
+    response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
 
@@ -257,7 +260,8 @@ def discoverNamespaceMember(namespace, member):
             'name'    : f,
             })
 
-    #response['triples'] = TripledataProvider.getTriplesContaining(wikiNS, member)
+    response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
 
@@ -279,7 +283,8 @@ def discoverNamespace(namespace):
             'name'    : member
         })
 
-    #response['triples'] = TripledataProvider.getTriplesContaining('Namespace', wikiNS)
+    response['endpoint'] = TripledataProvider.getEndpointLink('Namespace', wikiNS)
+    response['sesame']   = TripledataProvider.getSesameLink('Namespace', wikiNS)
 
     return response
 
@@ -297,7 +302,8 @@ def discoverAllNamespaces():
             'name'    : member
         })
 
-    #response['triples'] = TripledataProvider.getTriplesContaining('Namespace','Namespace')
+    response['endpoint'] = TripledataProvider.getEndpointLink('Namespace', 'Namespace')
+    response['sesame']   = TripledataProvider.getSesameLink('Namespace', 'Namespace')
 
     return response
 

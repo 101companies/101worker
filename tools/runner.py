@@ -82,7 +82,7 @@ def main(config, is_verbose):
       pid_file.close()
 
       print "\nWaiting for completion..." + module
-      retval, stdout, timeout = run(p, 30*60)
+      retval, stdout, timeout = run(p, 60*60)
       #for line in stdout.readlines():
       write2moduleLog(stdout, module) 
 

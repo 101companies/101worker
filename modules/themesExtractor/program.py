@@ -37,7 +37,7 @@ def render(d):
 def getRealFeature(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] == 'Feature' and p['page']['page']['n'] == f
+        return p['page']['page']['p'] == 'Feature' and p['page']['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -51,7 +51,7 @@ def getRealFeature(f, pages):
 def getRealConcept(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] is None and p['page']['page']['n'] == f
+        return p['page']['page']['p'] is None and p['page']['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -65,7 +65,7 @@ def getRealConcept(f, pages):
 def getRealTechnology(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] == 'Technology' and p['page']['page']['n'] == f
+        return p['page']['page']['p'] == 'Technology' and p['page']['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -122,28 +122,28 @@ def getUniqueTechs(page, pages):
     return unique
 
 def getConcepts(pages):
-    techs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page'].get('internal_links', [])))) \
+    cs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page'].get('internal_links', [])))) \
         .select(lambda p: filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page']['internal_links'])).to_list()
-    s = reduce(lambda a, b: a + b, techs) if techs else []
-    return list(set(s))
+    s = reduce(lambda a, b: a + b, cs) if cs else []
+    return s
 
 
 def getFeatures(pages):
     techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('implements::Feature:'), p['page'].get('internal_links', [])))) \
         .select(lambda p: filter(lambda i: i.startswith('implements::Feature:'), p['page']['internal_links'])).to_list()
     s = reduce(lambda a, b: a + b, techs) if techs else []
-    return list(set(map(lambda n: n.replace('implements::Feature:', ''), s)))
+    return map(lambda n: n.replace('implements::Feature:', ''), s)
 
 def getUniqueConcepts(page, pages):
     concepts = getConcepts(pages)
     c = getConcepts(page)
-    unique = filter(lambda p: concepts.count(p) == 1, page)
+    unique = filter(lambda p: concepts.count(p) == 1, c)
     return unique
 
 def getUniqueFeatures(page, pages):
     features = getFeatures(pages)
     c = getFeatures(page)
-    unique = filter(lambda p: features.count(p) == 1, page)
+    unique = filter(lambda p: features.count(p) == 1, c)
     return unique
 
 
@@ -225,7 +225,7 @@ def getContributionsWithTechnology(name, pages):
 def createFeatures(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
     
-    features = getFeatures(theme_pages)
+    features = list(set(getFeatures(theme_pages)))
     feature_names = features
     
     for feature in feature_names:
@@ -245,7 +245,7 @@ def createFeatures(theme, pages):
 
 def createConcepts(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
-    concepts = getConcepts(theme_pages)
+    concepts = list(set(getConcepts(theme_pages)))
     
     for concept in concepts:
         rf = getRealConcept(concept, pages)
@@ -264,7 +264,7 @@ def createConcepts(theme, pages):
 
 def createTechnologies(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
-    technologies = getTechs(theme_pages)
+    technologies = list(set(getTechs(theme_pages)))
     
     for tech in technologies:
         rf = getRealTechnology(tech, pages)
@@ -291,9 +291,14 @@ def deleteEmptyCells(data):
                 del d[cell]
     return data
 
+def toTex(list, file):
+    with open (file, 'w') as f:
+        f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
+
+
 for t in getThemeNames(themes):
     
-    members = list(createMembers(t, pages))
+    members = sorted(list(createMembers(t, pages)), key=lambda s: s['name'])
 
     if not members:
         continue
@@ -323,59 +328,68 @@ for t in getThemeNames(themes):
     f = open(os.path.join(output, t, 'members.tex'), 'w')
     f.write(template.render({'data': deleteEmptyCells(members)}))
     f.close()
+
+    toTex(deleteEmptyCells(members), os.path.join(output, t, 'members_list.tex'))
+    
     # to here
     
     path = os.path.join(output, t, 'features.json')
     f = open(path, 'w')
-    features = list(createFeatures(t, pages))
+    features = sorted(list(createFeatures(t, pages)), key=lambda s: len(s['contributions']))[::-1]
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()
 
-    template = env.get_template('html.tpl')
+    template = env.get_template('features.html')
 
     f = open(os.path.join(output, t, 'features.html'), 'w')
-    f.write(template.render({'data': deleteEmptyCells(features)}))
+    f.write(template.render({'data': deleteEmptyCells(features), 'title': 'Concepts'}))
     f.close()
 
-    template = env.get_template('tex.tpl')
+    template = env.get_template('features.tex')
 
     f = open(os.path.join(output, t, 'features.tex'), 'w')
-    f.write(template.render({'data': deleteEmptyCells(features)}))
+    f.write(template.render({'data': deleteEmptyCells(features), 'title': 'Concepts'}))
     f.close()
+
+    toTex(deleteEmptyCells(features), os.path.join(output, t, 'features_list.tex'))
 
     path = os.path.join(output, t, 'concepts.json')
     f = open(path, 'w')
-    concepts = list(createConcepts(t, pages))
+    concepts = sorted(list(createConcepts(t, pages)), key=lambda s: s['name'])
     f.write(json.dumps(concepts, indent=4, sort_keys=True))
     f.close()  
 
-    template = env.get_template('html.tpl')
+    template = env.get_template('features.html')
 
     f = open(os.path.join(output, t, 'concepts.html'), 'w')
-    f.write(template.render({'data': deleteEmptyCells(concepts)}))
+    f.write(template.render({'data': deleteEmptyCells(concepts), 'title': 'Concepts'}))
     f.close()
 
-    template = env.get_template('tex.tpl')
+    template = env.get_template('features.tex')
 
     f = open(os.path.join(output, t, 'concepts.tex'), 'w')
-    f.write(template.render({'data': deleteEmptyCells(concepts)}))
+    f.write(template.render({'data': deleteEmptyCells(concepts), 'title': 'Concepts'}))
     f.close()
+
+    toTex(deleteEmptyCells(concepts), os.path.join(output, t, 'concepts_list.tex'))
 
     path = os.path.join(output, t, 'technologies.json')
     f = open(path, 'w')
-    technologies = list(createTechnologies(t, pages))
+    technologies = sorted(list(createTechnologies(t, pages)), key=lambda s: s['name'])
     f.write(json.dumps(features, indent=4, sort_keys=True))
     f.close()  
 
-    template = env.get_template('html.tpl')
+    template = env.get_template('features.html')
 
     f = open(os.path.join(output, t, 'technologies.html'), 'w')
     f.write(template.render({'data': deleteEmptyCells(technologies)}))
     f.close()
 
-    template = env.get_template('tex.tpl')
+    template = env.get_template('features.tex')
 
     f = open(os.path.join(output, t, 'technologies.tex'), 'w')
     f.write(template.render({'data': deleteEmptyCells(technologies)}))
     f.close()
+
+    toTex(deleteEmptyCells(technologies), os.path.join(output, t, 'technologies_list.tex'))
         
