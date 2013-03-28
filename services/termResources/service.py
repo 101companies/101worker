@@ -47,7 +47,7 @@ def serveTerm(environ, start_response, params):
         result = []
         resources = backlinksInfo['resources']
         for resource in resources:
-            cResult = set(lookup(term,resource,mapping,backlinks))
+            cResult = lookup(term,resource,mapping,backlinks)
             cResult['name'] = resource
             cResult['fullName'] = resources[resource]['fullName']
             cResult['isLinkable'] = resources[resource]['isLinkable']
