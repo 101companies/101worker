@@ -117,7 +117,12 @@ class Resource {
                             if ((sections != null) && (sections.size() > 0) && (sections[0].title == "Headline")){
                                 props['headline'] = sections[0].content.replaceAll("== Headline ==", "").replaceAll("==Headline==","")
                             }
-                            props['internal_links'] = json.internal_links
+                            if (json.internal_links == null){
+                                 props['internal_links'] = []
+                            }
+                            else{
+                                props['internal_links'] = json.internal_links
+                            }
                         }
                         else{
                             props['internal_links'] = []
