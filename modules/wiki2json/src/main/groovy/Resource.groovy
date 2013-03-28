@@ -79,6 +79,7 @@ class Resource {
                 res = new JsonSlurper().parseText(txt)
                 if (attemps > 0){
                     println('successfully got data from ' + url)
+                    return res
                 }
             }
             else if (responseCode == HttpURLConnection.HTTP_SERVER_ERROR){
