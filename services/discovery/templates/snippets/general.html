@@ -32,5 +32,17 @@
                 <a href="{{ wiki }}">Link</a>
             </div>
         {% endif %}
+	    {% if sesame %}
+			<div class="box-content-fragment">
+                <b>Sesame</b>
+                <a href="{{ sesame }}">Link</a>
+			</div>
+	    {% endif %}
+	    {% if endpoint %}
+			<div class="box-content-fragment">
+                <b>Endpoint</b>
+                <a href="{{ endpoint }}">Link</a>
+			</div>
+	    {% endif %}
     </div>
 </div>
