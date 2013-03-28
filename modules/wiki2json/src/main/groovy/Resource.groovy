@@ -85,7 +85,7 @@ class Resource {
                 println(' HTTP 500 server error. Retrying...' + url)
                 attemps++
                 if (attemps < 3){
-                    getJSON(url, attemps)
+                    return getJSON(url, attemps)
                 }
             }
             return res
