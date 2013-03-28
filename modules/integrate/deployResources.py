@@ -16,7 +16,7 @@ themes = get_immediate_subdirectories('../../../101results/repos/101integrate/da
 
 baseResources = '../../../101web/data/resources/'
 for lang in languages:
-	shutil.copy2('../../../101results/repos/101integrate/data/languages/' + lang + '/coverage.html', baseResources + 'languages/' + lang)
+	shutil.copy2('../../../101results/repos/101integrate/data/languages/' + lang.strip() + '/coverage.html', baseResources + 'languages/' + lang.strip())
 
 for theme in themes:
-	shutil.copy2('../../../101results/repos/101integrate/data/themes/' + theme + '/coverage.html', baseResources + 'themes/' + theme)
+	shutil.copy2('../../../101results/repos/101integrate/data/themes/' + theme.strip() + '/coverage.html', baseResources + 'themes/' + theme.strip())
