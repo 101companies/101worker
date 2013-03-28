@@ -50,6 +50,9 @@ for voc in vocs:
         })
 
     data = sorted(data, key=lambda s: s['name'])
+    for d in data:
+        if data.count(d) > 1:
+            data.remove(d)
 
     json.dump(data, f, indent=4, sort_keys=True)
     f.close()
