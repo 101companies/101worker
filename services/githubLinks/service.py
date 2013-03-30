@@ -7,7 +7,7 @@ def serveLink(environ, start_response, params):
     data = json.load(rawdata)
     if name in data:
         result = json.dumps(data[name])
-        if iparams.get('format', '') and params.get('format', '') == 'jsonp':
+        if params.get('format', '') and params.get('format', '') == 'jsonp':
             response_headers = [('Content-Type', 'text/jsonp')]
             result = 'resourcecallback(' + result + ')'
         else:
