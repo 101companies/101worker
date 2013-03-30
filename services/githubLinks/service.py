@@ -14,7 +14,7 @@ def serveLink(environ, start_response, params):
         else:
             response_headers = [('Content-Type', 'text/json')]
         return result
-    else
+    else:
         start_response('404 Resource not found', [('Content-Type', 'text/plain')])
 
 def routes():
