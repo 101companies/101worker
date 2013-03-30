@@ -3,7 +3,7 @@ import json
 
 def serveLink(environ, start_response, params):
     name = params.get('name', '')
-    rawdata = urllib2.urlopen('http://localhost/dumps/PullRepo.jsonp')
+    rawdata = urllib2.urlopen('http://data.101companies.org/dumps/PullRepo.json')
     data = json.load(rawdata)
     if name in data:
         start_response('200 OK', response_headers)
