@@ -21,5 +21,5 @@ def serveLink(environ, start_response, params):
 
 def routes():
     return [
-        ('/githubLinks/(?P<name>.+)\.(?P<format>.+)', serveLink),
+        ('/sourceLinks/(?P<name>.+)\.(?P<format>.+)', serveLink),
     ]
