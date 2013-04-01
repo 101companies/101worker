@@ -2,10 +2,45 @@ import os
 import sys
 import commands
 import re
+import json
 
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
+
+basics = None
+
+matches = list()
+failures = list()
+predicates = set()
+locators = set()
+noFiles = 0
+noUnits = 0
+noFilesAffected = 0
+noPatternConstraints = 0
+noPatternConstraintsOk = 0
+noContentConstraints = 0
+noContentConstraintsOk = 0
+noPredicateConstraints = 0
+noPredicateConstraintsOk = 0
+noFragments = 0
+
+
+def _getBasics():
+    global basics
+
+    if not basics:
+        matches = json.load(open(const101.matchesDump, 'r'))['matches']
+        basics = dict()
+        for match in matches:
+            basics[match['filename']] = match
+
+    return basics
+
+def _getLocator(filename):
+    for unit in _getBasics()[filename]['units']:
+        if 'locator' in unit['metadata']:
+            return unit['metadata']['locator']
 
 #
 # Build metadata unit
@@ -111,16 +146,21 @@ def _matchFile(phase, dirname, basename, rule):
         if searchResult is None:
             return None
         else:
-            pass
+            global noContentConstraintsOk
+            noContentConstraintsOk += 1
 
     #
     # Apply predicate, if present.
     #
     if "predicate" in rule:
         predicate = rule["predicate"]
+        global predicates
+        predicates.add(predicate)
+        global noPredicateConstraints
+        noPredicateConstraints += 1
         if "args" in rule:
             args = rule["args"]
-            if not isinstance(args, list): args = [args]
+            if not isinstance(args, list): args = [ args ]
         else:
             args = []
         cmd = os.path.join(const101.sRoot, predicate)
@@ -129,78 +169,81 @@ def _matchFile(phase, dirname, basename, rule):
         cmd += " \"" + os.path.join(const101.sRoot, filename) + "\""
         (status, output) = commands.getstatusoutput(cmd)
         if status == 0:
-            pass
+            global noPredicateConstraintsOk
+            noPredicateConstraintsOk += 1
         else:
             return None
 
     #
     # Locate fragment, if present.
     #
-    # if "fragment" in rule:
-    #     fragment = rule["fragment"]
-    #     global noFragments
-    #     noFragments += 1
-    #     if "args" in rule:
-    #         args = rule["args"]
-    #         if not isinstance(args, list): args = [args]
-    #     else:
-    #         args = []
-    #     locator = None
-    #     if filename in basics:
-    #         locator = tools101.valueByKey(basics[filename]["units"], "locator")
-    #     if locator is None:
-    #         failure = dict()
-    #         failure["error"] = "locator not found"
-    #         failure["rule"] = rule
-    #         failures.append(failure)
-    #         return None
-    #     global locators
-    #     locators.add(locator)
-    #     cmd = os.path.join(const101.sRoot, locator)
-    #     tmpIn = os.path.join(const101.tRoot, filename + ".tmpIn")
-    #     tmpOut = os.path.join(const101.tRoot, filename + ".tmpOut")
-    #     for arg in args:
-    #         cmd += " \"" + arg + "\""
-    #     cmd += " \"" + os.path.join(const101.sRoot, filename) + "\""
-    #     cmd += " \"" + tmpIn + "\""
-    #     cmd += " \"" + tmpOut + "\""
-    #     tmpInFile = open(tmpIn, 'w')
-    #     if isinstance(fragment, basestring):
-    #         tmpInContent = fragment
-    #     else:
-    #         tmpInContent = json.dumps(fragment)
-    #     tmpInFile.write(tmpInContent)
-    #     tmpInFile.close()
-    #     (status, output) = commands.getstatusoutput(cmd)
-    #     if status == 0:
-    #         try:
-    #             os.remove(tmpIn)
-    #         except:
-    #             pass
-    #         try:
-    #             tmpOutFile = open(tmpOut, 'r')
-    #             result["lines"] = json.load(open(tmpOut, 'r'))
-    #         except:
-    #             failure = dict()
-    #             failure["locator"] = locator
-    #             failure["command"] = cmd
-    #             failure["output"] = "result of fragment location not found"
-    #             failure["rule"] = rule
-    #             failures.append(failure)
-    #             return None
-    #         try:
-    #             os.remove(tmpOut)
-    #         except:
-    #             pass
-    #     if status != 0:
-    #         failure = dict()
-    #         failure["locator"] = locator
-    #         failure["command"] = cmd
-    #         failure["status"] = status
-    #         failure["output"] = output
-    #         failure["rule"] = rule
-    #         failures.append(failure)
-    #         return None
+    if "fragment" in rule:
+        fragment = rule["fragment"]
+        global noFragments
+        noFragments += 1
+        if "args" in rule:
+            args = rule["args"]
+            if not isinstance(args, list): args = [args]
+        else:
+            args = []
+        locator = None
+        if filename in _getBasics():
+            locator = _getLocator(filename)
+        if locator is None:
+            failure = dict()
+            failure["error"] = "locator not found"
+            failure["rule"] = rule
+            failures.append(failure)
+            return None
+        global locators
+        locators.add(locator)
+        cmd = os.path.join(const101.sRoot, locator)
+        cmd += " {0} < {1}".format(fragment, os.path.join(const101.sRoot, filename))
+        print cmd
+        # tmpIn = os.path.join(const101.tRoot, filename + ".tmpIn")
+        # tmpOut = os.path.join(const101.tRoot, filename + ".tmpOut")
+        # for arg in args:
+        #     cmd += " \"" + arg + "\""
+        # cmd += " \"" + os.path.join(const101.sRoot, filename) + "\""
+        # cmd += " \"" + tmpIn + "\""
+        # cmd += " \"" + tmpOut + "\""
+        # tmpInFile = open(tmpIn, 'w')
+        # if isinstance(fragment, basestring):
+        #     tmpInContent = fragment
+        # else:
+        #     tmpInContent = json.dumps(fragment)
+        # tmpInFile.write(tmpInContent)
+        # tmpInFile.close()
+        (status, output) = commands.getstatusoutput(cmd)
+        # if status == 0:
+        #     try:
+        #         os.remove(tmpIn)
+        #     except:
+        #         pass
+        #     try:
+        #         tmpOutFile = open(tmpOut, 'r')
+        #         result["lines"] = json.load(open(tmpOut, 'r'))
+        #     except:
+        #         failure = dict()
+        #         failure["locator"] = locator
+        #         failure["command"] = cmd
+        #         failure["output"] = "result of fragment location not found"
+        #         failure["rule"] = rule
+        #         failures.append(failure)
+        #         return None
+        #     try:
+        #         os.remove(tmpOut)
+        #     except:
+        #         pass
+        if status != 0:
+            failure = dict()
+            failure["locator"] = locator
+            failure["command"] = cmd
+            failure["status"] = status
+            failure["output"] = output
+            failure["rule"] = rule
+            failures.append(failure)
+            return None
 
 
     #
@@ -249,5 +292,10 @@ def handleFile(phase, dirname, basename, rules):
         if not unit in removals:
             survivals.append(unit)
     units = survivals
+
+    global noUnits
+    global noFilesAffected
+    noUnits += len(units)
+    noFilesAffected += 1
 
     return units

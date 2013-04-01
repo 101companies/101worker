@@ -11,4 +11,4 @@ clean:
 # Remove files created by this module
 reset:
 	@rm -f ${matchesDump}
-	@find ${contrDir} -name "*.matches.json" -exec rm -f {} \;
+	@find ${webdir}/data/resources -name "*.matches.json" -exec rm -f {} \;
