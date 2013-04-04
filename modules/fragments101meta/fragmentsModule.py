@@ -14,7 +14,7 @@ from cores import matchesCore
 rules = json.load(open(const101.rulesDump))["results"]["rules"]
 
 #create the dump (a new dump so I can compare with the old dump and search for errors)
-dump = ModuleDump('/Daten/101companies/101web/data/dumps/matches_new.json')
+dump = ModuleDump('/Daten/101companies/101web/data/dumps/fragments_new.json')
 dump.matches  = []
 dump.failures = []
 dump.rules    = rules
@@ -31,7 +31,7 @@ def matchingFunc(sFile, tFile):
         basename = os.path.basename(sFile)
 
         #deleting part of the dirname is necessary because of the "filename" constraint
-        units = matchesCore.handleFile('basics', dirname[len(const101.sRoot) + 1:], basename, rules)
+        units = matchesCore.handleFile('fragments', dirname[len(const101.sRoot) + 1:], basename, rules)
 
         makedirs(os.path.dirname(tFile))
         json.dump(units, open(tFile, 'w'))
@@ -42,10 +42,9 @@ def matchingFunc(sFile, tFile):
     #updating dump
     if len(units) > 0:
         dump.matches.append({
-                'units' : units,
-                'filename': sFile[len(const101.sRoot) + 1:]
-                #'filename': sFile.replace(const101.sRoot, '')
-            })
+            'units' : units,
+            'filename': sFile[len(const101.sRoot) + 1:]
+        })
 
     tick()
 
@@ -54,13 +53,14 @@ def matchingFunc(sFile, tFile):
 ### MAIN PROGRAM ###
 print 'Matching 101meta metadata on 101repo'
 #actual loop
-loopOverDir(const101.sRoot, const101.tRoot, '.matches.json', matchingFunc)
+loopOverDir(const101.sRoot, const101.tRoot, '.fragments.json', matchingFunc)
 
 #contains inbuild checking if writing is necessary
 dump.write()
 
 #str(dump) is currently only useful if the keys "problems" or "numbers" exist
 print '\nMatching finished\n' + str(dump)
+
 
 print str(matchesCore.noFiles) + " files examined."
 print str(matchesCore.noFilesAffected) + " files affected."
@@ -70,3 +70,6 @@ print str(matchesCore.noContentConstraints) + " content constraints checked."
 print str(matchesCore.noContentConstraintsOk) + " content constraints succeeded."
 print str(matchesCore.noPatternConstraints) + " filename-pattern constraints checked."
 print str(matchesCore.noPatternConstraintsOk) + " filename-pattern constraints succeeded."
+
+print str(len(matchesCore.locators)) + " fragment locators exercised."
+print str(matchesCore.noFragments) + " fragment descriptions checked."

@@ -1,5 +1,4 @@
 import os
-from xml.sax.saxutils import escape
 import sys
 sys.path.append('../../libraries')
 from mediawiki import wikifyNamespace
@@ -125,7 +124,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
         try:
             lines = DumpdataProvider.getFragment(filePath, fragment, locator)
             fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
-            response['content'] = escape(fragmentText)
+            response['content'] = fragmentText
             response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
         except:
             raise DiscoveryException('500 Internal Server Error', 'Fragment location failed')
@@ -176,7 +175,7 @@ def discoverMemberFile(namespace, member, path, file):
 
     #gather content - if there is a geshi code, we should be able to get content
     if geshi:
-        response['content'] = escape(DumpdataProvider.read(filePath))
+        response['content'] = DumpdataProvider.read(filePath)
 
     #commit infos
     setCommitInfos(response,filePath)

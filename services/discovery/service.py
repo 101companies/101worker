@@ -34,6 +34,11 @@ def respondHTML(start_response, response, template):
     response_headers = [('Content-Type', 'text/html')]
     start_response(status, response_headers)
 
+
+    if 'content' in response:
+        from xml.sax.saxutils import escape
+        response['content'] = escape(response['content'])
+
     import discovery
     from templates import TemplateProvider
     #base URI, needed for static urls
