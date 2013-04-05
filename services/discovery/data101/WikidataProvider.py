@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 import json
 import sys
 sys.path.append('../../libraries/101meta')

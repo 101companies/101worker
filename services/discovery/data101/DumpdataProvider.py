@@ -1,4 +1,4 @@
-__author__ = 'martin'
+# -*- coding: utf-8 -*-
 
 import json
 import commands
