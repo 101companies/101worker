@@ -85,8 +85,9 @@ def getDirContent(dir):
 def getMembers(dir):
     path = os.path.join(const101.tRoot, dir, 'members.json')
     if os.path.exists(path):
-        members = json.loads(open(path, 'r').read().decode('utf-8'))
+        members = json.load(open(path, 'r'))
         members.sort()
+        #return [s.encode('utf_8') for s in members]
         return members
     return []
 

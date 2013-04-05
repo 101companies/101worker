@@ -270,6 +270,7 @@ def discoverNamespaceMember(namespace, member):
 def discoverNamespace(namespace):
     if not wikifyNamespace(namespace) in DumpdataProvider.getMembers(''):
         raise ResourceNotFoundException()
+#    response = {'members' : DumpdataProvider.getMembers(namespace)}
 
     response = {'classifier': 'Namespace', 'name': namespace, 'members': [], 'github': DumpdataProvider.getGithub(namespace, '')}
 

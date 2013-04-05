@@ -46,7 +46,8 @@ def respondHTML(start_response, response, template):
     else: response['base_uri'] = 'http://worker.101companies.org/services'
     template = TemplateProvider.getTemplate(template)
 
-    return str( template.render(response) )
+    return str( template.render(response).encode('utf-8') )
+    #return str( template.render(response) )
 
 def respondRDF(start_response, response, template, environ):
     response['about'] = 'http://101companies.org/resources' + environ['PATH_INFO'].replace('/discovery','')
