@@ -17,7 +17,7 @@ def findNamespaceMembers(namespace, instanceof):
             if (instanceof and any(instanceof in s for s in pageData.get('internal_links', []))) or not instanceof:
                 members.append(pageData['page']['n'])
     members.sort()
-    return [s.encode('ascii') for s in members]
+    return [s.encode('latin_1') for s in members]
     #return members
 
 def findAndWrite(dirname, namespace, instanceof=None):
