@@ -2,6 +2,7 @@ def match(environ, start_response, params):
     import matches
     import json
 
+    matches.checkout(params.get('username', ''), params.get('reponame', ''))
     results = matches.matchFiles(params.get('username', ''), params.get('reponame', ''), params.get('subfolder', ''))
 
     if results == None:
