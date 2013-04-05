@@ -2,6 +2,7 @@ import os
 
 url101wiki = "http://101companies.org/index.php/"
 url101repo = "https://github.com/101companies/101repo/tree/master/"
+results101 = "../../../101results"
 sRoot = "../../../101results/101repo" # the root for source files
 tRoot = "../../../101web/data/resources" # the root for target files
 dumps = "../../../101web/data/dumps" # the root for dumps

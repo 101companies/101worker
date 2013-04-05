@@ -141,6 +141,9 @@ def _matchFile(phase, dirname, basename, rule):
         pattern = rule["content"]
         if pattern[0] == "#" and pattern[len(pattern) - 1] == "#":
             pattern = pattern[1:len(pattern) - 2]
+        #TODO nicht sinnvoll hier
+        if not os.path.exists(os.path.join(const101.sRoot, filename)):
+            return None
         content = open(os.path.join(const101.sRoot, filename), 'r').read()
         searchResult = re.search(pattern, content)
         if searchResult is None:

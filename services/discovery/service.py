@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 from wsgiref import handlers
+
 
 #helper which does some stuff that's always needed
 def initServeRequest(environ):
