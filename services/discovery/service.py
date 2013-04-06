@@ -29,7 +29,7 @@ def respondJSON(start_response, response):
 
     return json.dumps(response)
 
-def respondHTML(start_response, response, template):
+def respondHTML(start_response, response, environ, template):
     status = '200 OK'
     response_headers = [('Content-Type', 'text/html')]
     start_response(status, response_headers)
@@ -40,10 +40,15 @@ def respondHTML(start_response, response, template):
         response['content'] = escape(response['content'])
 
     import discovery
-    from templates import TemplateProvider
     #base URI, needed for static urls
     if 'localhost' in discovery.base_uri: response['base_uri'] = discovery.base_uri.replace('/discovery','')
     else: response['base_uri'] = 'http://worker.101companies.org/services'
+
+    response['back_uri'] = discovery.base_uri + environ['PATH_INFO'].replace('/discovery', '')
+    if response['back_uri'].endswith('/'):
+        response['back_uri'] = response['back_uri'][:-1]
+
+    from templates import TemplateProvider
     template = TemplateProvider.getTemplate(template)
 
     return str( template.render(response).encode('utf-8') )
@@ -74,7 +79,7 @@ def serveFileFragment(environ, start_response, params):
                                               params.get('path', ''), params.get('file', ''),params.get('fragment', ''))
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        return respondHTML(start_response,response,'fragment.html')
+        return respondHTML(start_response,response, environ, 'fragment.html')
 
     except Exception, error:
         return respondError(start_response, error)
@@ -94,7 +99,7 @@ def serveMemberFile(environ, start_response, params):
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
         if params['format'] == 'rdf': return respondRDF(start_response, response, 'file.rdf', environ)
 
-        return respondHTML(start_response,response,'file.html')
+        return respondHTML(start_response,response, environ, 'file.html')
 
     except Exception, error:
         return respondError(start_response, error)
@@ -119,7 +124,7 @@ def serveMemberPath(environ, start_response, params):
                                                 params.get('path', ''))
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        return respondHTML(start_response,response,'folder.html')
+        return respondHTML(start_response,response, environ, 'folder.html')
 
     except Exception, error:
         return respondError(start_response, error)
@@ -133,7 +138,7 @@ def serveNamespaceMember(environ, start_response, params):
         response = discovery.discoverNamespaceMember(params.get('namespace', ''), params.get('member', ''))
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        return respondHTML(start_response,response,'folder.html')
+        return respondHTML(start_response,response, environ, 'folder.html')
 
     except Exception, error:
         return respondError(start_response, error)
@@ -147,7 +152,7 @@ def serveNamespace(environ, start_response, params):
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
 
-        return respondHTML(start_response,response,'namespace.html')
+        return respondHTML(start_response,response, environ, 'namespace.html')
 
     except Exception, error:
         return respondError(start_response, error)
@@ -161,7 +166,7 @@ def serveAllNamespaces(environ, start_response, params):
 
         if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'namespace.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        return respondHTML(start_response,response,'namespace.html')
+        return respondHTML(start_response,response, environ, 'root.html')
 
     except Exception, error:
         return respondError(start_response, error)

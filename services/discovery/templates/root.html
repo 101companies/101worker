@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{%  block content %}
+    {% include "snippets/general.html" %}
+
+	<div class="span5 box info-box red-top">
+		<div class="box-header">
+			Contains
+		</div>
+		<div class="box-content">
+			<div class="box-content-fragment">
+				<b>Members </b>
+                {% if members == [] %}
+					None
+                {% else %}
+					<ul>
+                        {% for member in members %}
+							<li><a href="{{ member.resource }}?format=html">{{ member.name }}</a></li>
+                        {% endfor %}
+					</ul>
+                {% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
