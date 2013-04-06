@@ -6,6 +6,7 @@ import json
 import sys
 sys.path.append('../../libraries/101meta')
 import const101
+import tools101
 sys.path.append('../../libraries')
 from cores import *
 from cores import matchesCore
@@ -20,9 +21,16 @@ dump.failures = []
 dump.rules    = rules
 
 
+def isRelevantFile(sFile):
+    return tools101.getRelevanceForFile(sFile[len(const101.sRoot) + 1:]) == 'system'
+
 def matchingFunc(sFile, tFile):
     global rules
     global dump
+
+    #check for relevance value
+    if not isRelevantFile(sFile):
+        return
 
     #incremental check
     if build(sFile, tFile):

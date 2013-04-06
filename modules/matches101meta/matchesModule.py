@@ -11,10 +11,11 @@ from cores import *
 from cores import matchesCore
 
 #load rules
+#TODO checken if regeln sich geaendert haben
 rules = json.load(open(const101.rulesDump))["results"]["rules"]
 
 #create the dump (a new dump so I can compare with the old dump and search for errors)
-dump = ModuleDump('/Daten/101companies/101web/data/dumps/matches_new.json')
+dump = ModuleDump('/Daten/101companies/101web/data/dumps/matches.json')
 dump.matches  = []
 dump.failures = []
 dump.rules    = rules
@@ -32,7 +33,9 @@ def matchingFunc(sFile, tFile):
 
         #deleting part of the dirname is necessary because of the "filename" constraint
         units = matchesCore.handleFile('basics', dirname[len(const101.sRoot) + 1:], basename, rules)
+        print units
 
+        #TODO try to factor this IO stuff out into a library (gets
         makedirs(os.path.dirname(tFile))
         json.dump(units, open(tFile, 'w'))
     else:
