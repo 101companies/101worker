@@ -119,3 +119,21 @@ def getCommitInfo(filePath):
             initiator = data[0]
             contributors = data[1:]
     return initiator, contributors
+
+def getDerivedFiles(filePath):
+    fullPath = os.path.join(const101.tRoot, filePath)
+    fullDir = os.path.dirname(fullPath)
+    basename = os.path.basename(fullPath)
+
+    cmd = 'ls {0} | grep {1}'.format(fullDir, basename)
+    status, output = commands.getstatusoutput(cmd)
+
+    result = []
+    if status == 0:
+        for str in output.split('\n'):
+            result.append({
+                'name'    : str,
+                'resource': 'http://data.101companies.org/resources/{}'.format(os.path.join(os.path.dirname(filePath), str))
+            })
+
+    return result

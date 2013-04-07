@@ -189,6 +189,8 @@ def discoverMemberFile(namespace, member, path, file):
     response['endpoint'] = TripledataProvider.getEndpointLink(wikiNs, member)
     response['sesame']   = TripledataProvider.getSesameLink(wikiNs, member)
 
+    response['derived'] = DumpdataProvider.getDerivedFiles(filePath)
+
     return response
 
 def discoverMemberPath(namespace, member, path):

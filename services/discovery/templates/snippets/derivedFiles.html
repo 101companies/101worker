@@ -1,0 +1,12 @@
+<div class="span5 box info-box orange-top">
+	<div class="box-header">
+	    Derived files
+	</div>
+    <div class="box-content">
+	    <ul>
+            {% for d in derived %}
+                <li><a href="{{ d.resource }}">{{ d.name }}</a></li>
+            {% endfor %}
+		</ul>
+	</div>
+</div>
