@@ -29,6 +29,17 @@ def respondJSON(start_response, response):
 
     return json.dumps(response)
 
+def blah(data):
+    import collections
+    if isinstance(data, collections.Mapping):
+        return dict(map(blah, data.iteritems()))
+    elif isinstance(data, collections.Iterable):
+        return type(data)(map(blah, data))
+    else:
+        return data.decode('utf_8')
+
+
+
 def respondHTML(start_response, response, environ, template):
     status = '200 OK'
     response_headers = [('Content-Type', 'text/html')]
@@ -40,19 +51,19 @@ def respondHTML(start_response, response, environ, template):
         response['content'] = escape(response['content'])
 
     import discovery
+
     #base URI, needed for static urls
     if 'localhost' in discovery.base_uri: response['base_uri'] = discovery.base_uri.replace('/discovery','')
     else: response['base_uri'] = 'http://worker.101companies.org/services'
 
-    response['back_uri'] = discovery.base_uri + environ['PATH_INFO'].replace('/discovery', '')
+    response['back_uri'] = (discovery.base_uri + environ['PATH_INFO'].replace('/discovery', ''))#.decode('utf_8')
     if response['back_uri'].endswith('/'):
         response['back_uri'] = response['back_uri'][:-1]
 
     from templates import TemplateProvider
     template = TemplateProvider.getTemplate(template)
 
-    return str( template.render(response).encode('utf-8') )
-    #return str( template.render(response) )
+    return str( template.render( response ).encode('utf_8') )
 
 def respondRDF(start_response, response, template, environ):
     response['about'] = 'http://101companies.org/resources' + environ['PATH_INFO'].replace('/discovery','')
@@ -136,6 +147,7 @@ def serveNamespaceMember(environ, start_response, params):
 
     try:
         response = discovery.discoverNamespaceMember(params.get('namespace', ''), params.get('member', ''))
+
 
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
         return respondHTML(start_response,response, environ, 'folder.html')

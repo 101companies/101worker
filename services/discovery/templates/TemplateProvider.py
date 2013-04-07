@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 from jinja2 import Environment, FileSystemLoader, FileSystemBytecodeCache
 
@@ -5,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader, FileSystemBytecodeCache
 #but I guess at some point, it should be re-enabled
 env = Environment(
     loader=FileSystemLoader(os.path.dirname(__file__)),
+
     #bytecode_cache=FileSystemBytecodeCache(os.path.join(os.path.dirname(__file__), 'cache'), '%s.cache')
 )
 

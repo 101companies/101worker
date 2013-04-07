@@ -232,7 +232,7 @@ def discoverMemberPath(namespace, member, path):
     return response
 
 def discoverNamespaceMember(namespace, member):
-    if not member in DumpdataProvider.getMembers(namespace):
+    if not member.decode('utf_8') in DumpdataProvider.getMembers(namespace):
         raise ResourceNotFoundException()
 
 

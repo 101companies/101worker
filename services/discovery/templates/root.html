@@ -14,7 +14,7 @@
                 {% else %}
 					<ul>
                         {% for member in members %}
-							<li><a href="{{ member.resource }}?format=html">{{ member.name }}</a></li>
+							<li><a href="{{ member.resource.decode('utf_8') }}?format=html">{{ member.name.decode('utf_8') }}</a></li>
                         {% endfor %}
 					</ul>
                 {% endif %}

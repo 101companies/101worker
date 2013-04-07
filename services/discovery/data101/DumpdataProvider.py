@@ -87,7 +87,7 @@ def getMembers(dir):
     if os.path.exists(path):
         members = json.load(open(path, 'r'))
         members.sort()
-        #return [s.encode('utf_8') for s in members]
+        #return [s.decode('latin_1') for s in members]
         return members
     return []
 

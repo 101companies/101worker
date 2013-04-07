@@ -6,14 +6,14 @@
         <div class="box-content">
             <div class="box-content-fragment">
                 <b>Initiator</b>
-                {{ commits['initiator'] }}
+                {{ commits['initiator'].decode('utf_8') }}
             </div>
             <div class="box-content-fragment">
                 <b>Contributors </b>
                 {% if commits['contributors'] %}
                     <ul>
                         {% for contributor in commits['contributors'] %}
-                            <li>{{ contributor }}</li>
+                            <li>{{ contributor.decode('utf_8') }}</li>
                         {% endfor %}
                     </ul>
 				{% else %}

@@ -5,7 +5,7 @@
     <div class="box-content">
 	    <ul>
             {% for d in derived %}
-                <li><a href="{{ d.resource }}">{{ d.name }}</a></li>
+                <li><a href="{{ d.resource.decode('utf_8') }}">{{ d.name.decode('utf_8') }}</a></li>
             {% endfor %}
 		</ul>
 	</div>

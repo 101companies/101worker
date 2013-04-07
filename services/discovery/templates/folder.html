@@ -5,7 +5,7 @@
     <div class="span5 box info-box red-top">
         <div class="box-header">
             Contains
-			<a href="{{ back_uri }}/..?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
+			<a href="{{ back_uri.decode('utf_8') }}/..?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
         </div>
         <div class="box-content">
             <div class="box-content-fragment">
@@ -15,7 +15,7 @@
                 {% else %}
                     <ul>
                         {% for folder in folders %}
-                            <li><a href="{{ folder.resource }}?format=html">{{ folder.name }}</a></li>
+                            <li><a href="{{ folder.resource.decode('utf_8') }}?format=html">{{ folder.name.decode('utf_8') }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}
@@ -28,7 +28,7 @@
                 {% else %}
                     <ul>
                         {% for file in files %}
-                            <li><a href="{{ file.resource }}?format=html">{{ file.name }}</a></li>
+                            <li><a href="{{ file.resource.decode('utf_8') }}?format=html">{{ file.name.decode('utf_8') }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}
