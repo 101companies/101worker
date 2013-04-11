@@ -22,7 +22,9 @@ def dewikifyNamespace(namespace):
         'Technology'  : 'technologies',
         'Language'    : 'languages',
         'Theme'       : 'themes',
-        'Vocabulary'  : 'vocabularies'
+        'Vocabulary'  : 'vocabularies',
+        'Module'      : 'modules',
+        'Service'     : 'services'
     }
     return values.get(namespace,'')
 
@@ -35,6 +37,8 @@ def wikifyNamespace(namespace):
         'languages'    : 'Language',
         'themes'       : 'Theme',
         'vocabularies' : 'Vocabulary',
+        'modules'      : 'Module',
+        'services'     : 'Service',
         'Namespace'    : 'Namespace'
     }
     return values.get(namespace, None)
