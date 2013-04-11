@@ -44,7 +44,7 @@ def getFragment(file, fragment, locator):
     fullLocator = os.path.join(const101.sRoot, locator)
     command = '{0} {1} < {2}'.format(fullLocator, fragment, fullFile)
     status, output = commands.getstatusoutput(command)
-    if not status == 0: raise Exception('Fragment location failed: {0}'.format(output))
+    if not status == 0: raise Exception('Fragment location failed: {0} \n command was {1}\n locator was {2}'.format(output, command, fullLocator))
 
     return json.loads(output)
 

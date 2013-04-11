@@ -88,6 +88,11 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     filePath = os.path.join(namespace, member, path, file)
     if not DumpdataProvider.exists(filePath):
         raise ResourceNotFoundException()
+
+    #remove tailing slash, if there is one
+    if fragment.endswith('/'):
+        fragment = fragment[:-1]
+
     #if no geshi code is defined, then we'll return basically "geshi : null"
     locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
 
@@ -124,13 +129,13 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     #gather content
     if locator:
-        try:
-            lines = DumpdataProvider.getFragment(filePath, fragment, locator)
-            fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
-            response['content'] = fragmentText
-            response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
-        except:
-            raise DiscoveryException('500 Internal Server Error', 'Fragment location failed')
+        #try:
+        lines = DumpdataProvider.getFragment(filePath, fragment, locator)
+        fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
+        response['content'] = fragmentText
+        response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
+        #except Exception as e:
+        #    raise DiscoveryException('500 Internal Server Error', 'Fragment location failed:\n' + str(e))
 
     setCommitInfos(response, filePath)
 
