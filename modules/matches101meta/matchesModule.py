@@ -14,7 +14,7 @@ from cores import matchesCore
 rules = json.load(open(const101.rulesDump))["results"]["rules"]
 
 #create the dump (a new dump so I can compare with the old dump and search for errors)
-dump = ModuleDump('/Daten/101companies/101web/data/dumps/matches.json')
+dump = ModuleDump(const101.matchesDump)
 dump.matches  = []
 dump.failures = []
 dump.rules    = rules
