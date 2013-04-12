@@ -11,7 +11,6 @@ from cores import *
 from cores import matchesCore
 
 #load rules
-#TODO checken if regeln sich geaendert haben
 rules = json.load(open(const101.rulesDump))["results"]["rules"]
 
 #create the dump (a new dump so I can compare with the old dump and search for errors)
@@ -26,18 +25,15 @@ def matchingFunc(sFile, tFile):
     global dump
 
     #incremental check
-    if build(sFile, tFile):
+    if build(sFile, tFile) or build(const101.rulesDump, tFile):
         #.matches.json file needs to be created
         dirname = os.path.dirname(sFile)
         basename = os.path.basename(sFile)
 
         #deleting part of the dirname is necessary because of the "filename" constraint
-        units = matchesCore.handleFile('basics', dirname[len(const101.sRoot) + 1:], basename, rules)
-        print units
+        units = matchesCore.handleFile('basics', const101.sRoot, dirname[len(const101.sRoot) + 1:], basename, rules)
 
-        #TODO try to factor this IO stuff out into a library (gets
-        makedirs(os.path.dirname(tFile))
-        json.dump(units, open(tFile, 'w'))
+        write(tFile, units)
     else:
         #an current matches.json file exists
         units = json.load(open(tFile, 'r'))

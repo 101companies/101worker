@@ -6,7 +6,6 @@ import Oracle
 import PreProcessing
 import json
 
-#wordnet nachschauen
 
 # try to split up even further to words that are known to the oracle
 # the process starts at the beginning of the word and the end and tries to find it in the oracle,

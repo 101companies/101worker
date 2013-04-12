@@ -15,7 +15,7 @@ from cores import matchesCore
 rules = json.load(open(const101.rulesDump))["results"]["rules"]
 
 #create the dump (a new dump so I can compare with the old dump and search for errors)
-dump = ModuleDump('/Daten/101companies/101web/data/dumps/predicates_new.json')
+dump = ModuleDump('/Daten/101companies/101web/data/dumps/predicates.json')
 dump.matches    = []
 dump.failures   = []
 dump.rules      = rules
@@ -27,7 +27,7 @@ def matchingFunc(sFile, tFile):
     global dump
 
     #incremental check
-    if build(sFile, tFile):
+    if build(sFile, tFile) or build(const101.rulesDump, tFile):
         #.matches.json file needs to be created
         dirname = os.path.dirname(sFile)
         basename = os.path.basename(sFile)
@@ -36,8 +36,7 @@ def matchingFunc(sFile, tFile):
         #deleting part of the dirname is necessary because of the "filename" constraint
         units = matchesCore.handleFile('predicates', dirname[len(const101.sRoot) + 1:], basename, rules)
 
-        makedirs(os.path.dirname(tFile))
-        json.dump(units, open(tFile, 'w'))
+        write(tFile, units)
     else:
         #an current matches.json file exists
         units = json.load(open(tFile, 'r'))

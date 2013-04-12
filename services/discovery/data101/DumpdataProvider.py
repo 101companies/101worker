@@ -137,3 +137,9 @@ def getDerivedFiles(filePath):
             })
 
     return result
+
+def getModuleDescription(module):
+    fullPath = os.path.join(const101.sRoot, 'modules', module, 'module.json')
+    if os.path.exists(fullPath):
+        return json.load(open(fullPath, 'r'))
+    return None

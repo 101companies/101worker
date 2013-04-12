@@ -272,6 +272,9 @@ def discoverNamespaceMember(namespace, member):
     response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
     response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
+    if namespace == 'modules':
+        response['module'] = DumpdataProvider.getModuleDescription(member)
+
     return response
 
 def discoverNamespace(namespace):

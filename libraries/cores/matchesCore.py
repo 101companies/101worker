@@ -89,7 +89,7 @@ def _checkFilename(rule, key, value):
 #
 # Try one rule for the given file
 #
-def _matchFile(phase, dirname, basename, rule):
+def _matchFile(phase, basepath, dirname, basename, rule):
     result = dict()
     filename = os.path.join(dirname, basename)
 
@@ -137,14 +137,11 @@ def _matchFile(phase, dirname, basename, rule):
     # Check content, if required.
     #
     if "content" in rule:
-        pass
         pattern = rule["content"]
         if pattern[0] == "#" and pattern[len(pattern) - 1] == "#":
             pattern = pattern[1:len(pattern) - 2]
-        #TODO nicht sinnvoll hier
-        if not os.path.exists(os.path.join(const101.sRoot, filename)):
-            return None
-        content = open(os.path.join(const101.sRoot, filename), 'r').read()
+        #content = open(os.path.join(const101.sRoot, filename), 'r').read()
+        content = open(os.path.join(basepath, filename), 'r').read()
         searchResult = re.search(pattern, content)
         if searchResult is None:
             return None
@@ -169,7 +166,8 @@ def _matchFile(phase, dirname, basename, rule):
         cmd = os.path.join(const101.sRoot, predicate)
         for arg in args:
             cmd += " \"" + arg + "\""
-        cmd += " \"" + os.path.join(const101.sRoot, filename) + "\""
+        #cmd += " \"" + os.path.join(const101.sRoot, filename) + "\""
+        cmd += " \"" + os.path.join(basepath, filename) + "\""
         (status, output) = commands.getstatusoutput(cmd)
         if status == 0:
             global noPredicateConstraintsOk
@@ -258,14 +256,22 @@ def _matchFile(phase, dirname, basename, rule):
 #
 # Try all rules for the given file and build metadata units
 #
-def handleFile(phase, dirname, basename, rules):
+def handleFile(phase, basepath, dirname, basename, rules):
+    """
+    :param phase: either basic, predicates or fragments
+    :param basepath: a basepath, that usually preceeds dirname
+    :param dirname: path that succeeds basepath
+    :param basename: name of the file
+    :param rules: list of rules
+    :return: list of matched units
+    """
     filename = os.path.join(dirname, basename)
 
     units = list() # metadata units for the file at hand
     id = 0 # current rule number
     for r in rules:
         rule = r["rule"]
-        result = _matchFile(phase, dirname, basename, rule)
+        result = _matchFile(phase, basepath, dirname, basename, rule)
         if not result is None:
             if "metadata" in rule:
                 metadata = rule["metadata"]

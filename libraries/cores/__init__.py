@@ -19,6 +19,10 @@ def makedirs(d):
         except OSError:
             pass
 
+def write(tFile, data):
+    makedirs(os.path.dirname(tFile))
+    json.dump(data, open(tFile, 'w'))
+
 # Test whether a target is needed relative to a source
 def build(sFilename, tFilename):
     try:
