@@ -1,33 +1,27 @@
-<?xml version="1.0"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
-	<rdf:Description rdf:about="{{ about }}">
-		<dc:headline>{{ headline }}</dc:headline>
-		<dc:name>{{ name }}</dc:name>
-		<dc:classifier>{{ classifier }}</dc:classifier>
-		<dc:wiki>{{ wiki }}</dc:wiki>
-		<dc:github>{{ github }}</dc:github>
-	    <dc:geshi>{{ geshi }}</dc:geshi>
+{% extends "base.rdf" %}
+{% block content %}
+	{% include "snippets/general.rdf" %}
 
-  	    <dc:terms>
-            <rdf:Bag>
-                {% for term in terms %}
-                    <rdf:li>{{ term }}</rdf:li>
-                {% endfor %}
-            </rdf:Bag>
-		</dc:terms>
+	<co:terms>
+		<rdf:Bag>
+            {% for term in terms %}
+				<rdf:li>{{ term }}</rdf:li>
+            {% endfor %}
+		</rdf:Bag>
+	</co:terms>
 
-	    <dc:content>{{ content }}</dc:content>
+	<co:content>{{ content }}</co:content>
 
-        {% for fragment in fragments %}
-			<dc:fragment rdf:resource="{{ fragment.resource }}" dc:name="{{ fragment.name }}" dc:classifier="{{ fragment.classifier }}"/>
-        {% endfor %}
+    {% for fragment in fragments %}
+		<co:fragment rdf:resource="{{ fragment.resource }}?format=rdf" co:name="{{ fragment.name }}" co:classifier="{{ fragment.classifier }}"/>
+    {% endfor %}
 
-{#
+    {#
         <dc:fragments rdf:parseType="Collection">
 			{% for fragment in fragments %}
 			<rdf:Description rdf:about="{{ fragment.resource }}" dc:name="{{ fragment.name }}" dc:classifier="{{ fragment.classifier }}"/>
 			{% endfor %}
 	    </dc:fragments>
-#}
-	</rdf:Description>
-</rdf:RDF>
+    #}
+
+{% endblock %}

@@ -89,6 +89,7 @@ def serveFileFragment(environ, start_response, params):
         response = discovery.discoverFileFragment(params.get('namespace', ''), params.get('member', ''),
                                               params.get('path', ''), params.get('file', ''),params.get('fragment', ''))
 
+        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'fragment.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
         return respondHTML(start_response,response, environ, 'fragment.html')
 
@@ -107,6 +108,7 @@ def serveMemberFile(environ, start_response, params):
         response = discovery.discoverMemberFile(params.get('namespace',''), params.get('member',''),
                                                 params.get('path', ''), params.get('file', ''))
 
+        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'file.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
         if params['format'] == 'rdf': return respondRDF(start_response, response, 'file.rdf', environ)
 
@@ -134,6 +136,7 @@ def serveMemberPath(environ, start_response, params):
         response = discovery.discoverMemberPath(params.get('namespace', ''), params.get('member', ''),
                                                 params.get('path', ''))
 
+        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'folder.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
         return respondHTML(start_response,response, environ, 'folder.html')
 
@@ -148,7 +151,7 @@ def serveNamespaceMember(environ, start_response, params):
     try:
         response = discovery.discoverNamespaceMember(params.get('namespace', ''), params.get('member', ''))
 
-
+        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'folder.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
         return respondHTML(start_response,response, environ, 'folder.html')
 
@@ -162,8 +165,8 @@ def serveNamespace(environ, start_response, params):
     try:
         response = discovery.discoverNamespace(params.get('namespace', ''))
 
+        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'namespace.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-
         return respondHTML(start_response,response, environ, 'namespace.html')
 
     except Exception, error:
@@ -176,7 +179,7 @@ def serveAllNamespaces(environ, start_response, params):
     try:
         response = discovery.discoverAllNamespaces()
 
-        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'namespace.rdf', environ)
+        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'root.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
         return respondHTML(start_response,response, environ, 'root.html')
 

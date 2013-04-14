@@ -6,6 +6,7 @@ import json
 
 sys.path.append('../../libraries/101meta')
 import const101
+import tools101
 
 wikiDump = json.load(open(const101.wikiDump, 'r'))
 
@@ -14,7 +15,7 @@ def findNamespaceMembers(namespace, instanceof):
     for page in wikiDump['wiki']['pages']:
         pageData = page['page']
         if pageData['page']['p'] == namespace and not pageData['page']['n'] == namespace:
-            if (instanceof and any(instanceof in s for s in pageData.get('internal_links', []))) or not instanceof:
+            if (instanceof and instanceof in pageData.get('instanceOf',[])) or not instanceof:
                 members.append(pageData['page']['n'])
     members.sort()
     return [s.encode('latin_1') for s in members]
@@ -22,10 +23,9 @@ def findNamespaceMembers(namespace, instanceof):
 
 def findAndWrite(dirname, namespace, instanceof=None):
     members = findNamespaceMembers(namespace, instanceof)
-    path = os.path.join(const101.tRoot, dirname)
-    if not os.path.exists(path):
-        os.mkdir(path)
-    json.dump(members, open(os.path.join(path, 'members.json'), 'w'))
+    path = os.path.join(const101.tRoot, dirname, 'members.json')
+    tools101.makedirs(os.path.dirname(path))
+    json.dump(members, open(path, 'w'))
 
 print "Trying to find namespaces..."
 
@@ -38,4 +38,4 @@ findAndWrite('vocabularies',  'Vocabulary')
 findAndWrite('modules',       'Module')
 findAndWrite('services',      'Service')
 findAndWrite('concepts',      None)
-findAndWrite('',              'Namespace', 'instanceof::Namespace:Namespace')
+findAndWrite('',              'Namespace', {'p': 'Namespace', 'n': 'Namespace'})

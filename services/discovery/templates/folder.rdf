@@ -1,0 +1,12 @@
+{% extends "base.rdf" %}
+{% block content %}
+    {% include "snippets/general.rdf" %}
+
+    {% for folder in folders %}
+		<co:folder rdf:resource="{{ folder.resource }}?format=rdf" co:name="{{ folder.name }}"/>
+    {% endfor %}
+
+    {% for file in files %}
+		<co:file rdf:resource="{{ file.resource }}?format=rdf" co:name="{{ file.name }}"/>
+    {% endfor %}
+{% endblock %}
