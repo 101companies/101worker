@@ -6,7 +6,7 @@
   "authors" : [ "thomasschmorleizas" ],
   "languages" : [ "make", "php", "bash", "python" ],
   "os" : [ "*nix", "windows" ],
-  "libraries" : [ "101worker/libraries/wikibotClasses"
+  "libraries" : [ "101worker/libraries/wikibotClasses",
                   "101worker/libraries/MediaWikiAPI" ],
   "modules" : [ ],
   "inputs" : {
@@ -16,7 +16,7 @@
     "101wiki" : {
       "http://101companies.org" : "mostly all content pages of the wiki are read"
     }
-  }
+  },
   "outputs" : {
     "Wiki101JsonDump" : {
       "101web/dumps/Wiki101Full.json" : "full dump of the wiki represented in json"

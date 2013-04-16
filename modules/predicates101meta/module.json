@@ -4,7 +4,7 @@
   "comment" : "see the 'predicate' constraint for programmable matching constraint http://101companies.org/index.php/Language:101meta#Programmable_matching_constraints",
   "issues" : {
     "portability" : "although the module runs on windows the results collected might not be the same as on linux as commands may fail"
-  ) 
+  }, 
   "authors" : [ "ralflaemmel" ],
   "timeout" : 30,
   "languages" : [ "make", "python" ],
@@ -12,19 +12,19 @@
   "libraries" : [ "101worker/libraries/101meta" ],
   "modules" : [ "matches101meta", "pull101repo" ],
   "inputs" : {
-    "matchesDump" : {
-       "_from" : "matches101meta.matchesDump"
-    },
-    "worker101repoContributionFiles[*]" : {
-       "101results/101repo/contributions//*" : "the contribution file ${2}"
-    },
-    "predicates[*]" {
-       "101results/101repo/technologies/*" : "",
-    },
+	    "matchesDump" : {
+	       "_from" : "matches101meta.matchesDump"
+	    },
+	    "worker101repoContributionFiles[*]" : {
+	       "101results/101repo/contributions//*" : "the contribution file ${2}"
+	    },
+	    "predicates[*]" : {
+	       "101results/101repo/technologies/*" : ""
+	    }
   },
   "outputs" : {
     "predicatesDump" : {
-      "101web/dumps/predicates.json" : "summary of predicates execution",
+      "101web/dumps/predicates.json" : "summary of predicates execution"
     },
     "predicatesFiles*" : {
       "101web/contributions//*.predicate.json" : "result of evaluation of predicates for the file ${2}" 

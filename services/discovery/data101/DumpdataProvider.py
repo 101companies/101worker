@@ -130,10 +130,21 @@ def getDerivedFiles(filePath):
 
     result = []
     if status == 0:
+        moduleSummary = json.load(open(const101.moduleSummaryDump, 'r'))['resource']
         for str in output.split('\n'):
+            ext = '.' + '.'.join(str.rsplit('.', 2)[1:])
+            summary = moduleSummary.get(ext, None)
+            producedBy = None
+            info = None
+            if summary:
+                producedBy = os.path.join('http://101companies.org/resources/modules', summary.get('name'))
+                info       = summary['info']
+
             result.append({
-                'name'    : str,
-                'resource': 'http://data.101companies.org/resources/{}'.format(os.path.join(os.path.dirname(filePath), str))
+                'name'      : str,
+                'resource'  : 'http://data.101companies.org/resources/{}'.format(os.path.join(os.path.dirname(filePath), str)),
+                'producedBy': producedBy,
+                'info'      : info
             })
 
     return result

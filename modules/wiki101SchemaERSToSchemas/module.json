@@ -9,10 +9,10 @@
   "libraries" : [ ],
   "modules" : [ ],
   "inputs" : {
-    "Wiki101ERSSchema" {
+    "Wiki101ERSSchema" : {
       "101worker/configs/Wiki101Schema.ers" : "The schema of the wiki expressed in the Entity Relationship Schema" 
-    },
-  }
+    }
+  },
   "outputs" : {
     "Wiki101ERSSchemas[*]" : {
       "101web/dumps/Wiki101Schema.ers" : "The schema of the wiki expressed in the Entity Relationship Schema"

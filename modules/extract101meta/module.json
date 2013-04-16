@@ -3,8 +3,7 @@
   "heading" : "A module applying 'extractors' to files in 101repo according to 101meta matches",
   "comment" : "see the 'extractor' metadata in http://101companies.org/index.php/Language:101meta#Metadata_collection",
   "issues" : {
-    "getstatusoutput" : "Does not work on windows (and may be some *nix) because of the use of getstatusoutput that seems to be non portable. See http://stackoverflow.com/questions/1535672/how-to-interpret-status-code-in-python-commands-getstatusoutput for instance, or https://github.com/victorporof/Sublime-HTMLPrettify/issues/12"}
-  }
+    "getstatusoutput" : "Does not work on windows (and may be some *nix) because of the use of getstatusoutput that seems to be non portable. See http://stackoverflow.com/questions/1535672/how-to-interpret-status-code-in-python-commands-getstatusoutput for instance, or https://github.com/victorporof/Sublime-HTMLPrettify/issues/12"},
   "authors" : [ "ralflaemmel" ],
   "timeout" : 15,
   "languages" : [ "make", "python" ],
@@ -18,13 +17,13 @@
     "worker101repoContributionFiles[*]" : {
        "101results/101repo/contributions//*" : "the contribution file ${2}"
     },
-    "extractor[*]" {
-       "101results/101repo/technologies/*[Ee]xtractor*" : "the validator for ${1}",
-    },
+    "extractor[*]" : {
+       "101results/101repo/technologies/*[Ee]xtractor*" : "the validator for ${1}"
+    }
   },
   "outputs" : {
     "extractorDump" : {
-      "101web/dumps/extractor.json" : "summary of extractor execution",
+      "101web/dumps/extractor.json" : "summary of extractor execution"
     },
     "extractorFiles*" : {
       "101web/contributions//*.extractor.json" : "result of the extractor for the file ${1}" 

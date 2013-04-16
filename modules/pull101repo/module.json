@@ -12,7 +12,7 @@
     "101repo" : {
       "https://github.com/101companies/101repo" : "101repo github repository" 
     }
-  }
+  },
   "outputs" : {
     "worker101repo" : {
       "101results/101repo/" : "clone of the 101repo github repository",

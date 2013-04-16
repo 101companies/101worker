@@ -11,7 +11,7 @@
     "101dev" : {
       "https://github.com/101companies/101dev" : "101 dev github repository" 
     }
-  }
+  },
   "outputs" : {
     "101results/101dev" : {
       "101results/101dev/*" : "clone of the 101dev github repository"

@@ -12,7 +12,7 @@
     "101webContributions" : {
       "101web/contributions" : "" 
     }
-  }
+  },
   "outputs" : {
     "101webContributionsZipped" : {
       "101web/contributions.tgz" : "archive of the 101web/contributions directory"

@@ -14,8 +14,8 @@
       "*" : "any directory in the file system can be read if specified in list of libraries"
     } ,
     "web" : {
-      "http:*" : "any file from the web can be download if specified in the list of libraries",
-    }
+      "http:*" : "any file from the web can be download if specified in the list of libraries"
+    },
     "github" : {
       "http://github.com" : "github project can be pulled if specified in the list of libraries"
     } 

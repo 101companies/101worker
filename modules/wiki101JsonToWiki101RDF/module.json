@@ -13,10 +13,10 @@
     "Wiki101JsonDump" : {
       "_from" : "wiki101ToWiki101Json.Wiki101JsonDump" 
     },
-    "Wiki101ERSSchema" {
+    "Wiki101ERSSchema" : {
       "101worker/configs/Wiki101Schema.ers" : "The schema of the wiki expressed in the Entity Relationship Schema" 
-    },
-  }
+    }
+  },
   "outputs" : {
     "Wiki101Dumps[*]" : {
       "101web/dumps/Wiki101Full.rdf" : "full dump of the wiki represented in RDF/XML",
@@ -26,7 +26,7 @@
       "101web/dumps/Wiki101Full.html" :  "full dump of the wiki represented in RDF/html",
       "101web/dumps/Wiki101Full.graphml" : "the wiki represented as a GraphML graph (with the YEd dialect)",
       "101web/dumps/Wiki101Full.dot" : "the wiki represented as a dot graph (for graphviz). This graph is currently not very usable as there is no layout, coloring, etc",
-      "101web/dumps/Wiki101Full.graphml" : "the wiki represented as a GraphML graph (with the YEd dialect)",
+      "101web/dumps/Wiki101Full.graphml" : "the wiki represented as a GraphML graph (with the YEd dialect)"
     } 
   }
 }

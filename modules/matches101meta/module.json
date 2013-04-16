@@ -18,7 +18,7 @@
   },
   "outputs" : {
     "matchDump" : {
-      "101web/dumps/matches.json" : "summary of matches",
+      "101web/dumps/matches.json" : "summary of matches"
     },
     "matchesFiles[*]" : {
       "101web/contributions//*.matches.json" : "result of the rule matches for the file ${1}" 
