@@ -14,7 +14,7 @@ import org.openrdf.repository.http.HTTPRepository
 import static Repo101.Properties.*
 
 class Repo101 {
-    private static final String repoURI = 'http://sl-mac.uni-koblenz.de:8081/openrdf-sesame/repositories/wiki101/';
+    private static final String repoURI = 'http://triples.101companies.org/openrdf-sesame/repositories/wiki101/';
     static Repository repo;
     static SailGraph graph;
 
