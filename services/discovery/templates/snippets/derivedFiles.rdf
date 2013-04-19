@@ -1,0 +1,3 @@
+{% for d in derived %}
+    <co:derived co:link="{{ d.resource }}" co:name="{{ d.name }}" co:producedBy="{{ d.producedBy }}"></co:derived>
+{% endfor %}

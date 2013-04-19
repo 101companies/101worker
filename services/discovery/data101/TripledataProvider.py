@@ -32,6 +32,6 @@ def getSesameLink(namespace, member):
     if member == '':
         member = 'Concept'
     if not namespace or namespace == '':
-        return "http://sl-mac.uni-koblenz.de:8081/openrdf-workbench/repositories/wiki101/explore?resource=wiki%3A{}".format(member)
+        return "http://triples.101companies.org/openrdf-workbench/repositories/wiki101/explore?resource=%3Chttp%3A%2F%2F101companies.org%2Fresource%2F{}%3E".format(member)
     else:
-        return "http://sl-mac.uni-koblenz.de:8081/openrdf-workbench/repositories/wiki101/explore?resource=wiki%3A{0}-3A{1}".format(namespace, member)
+        return "http://triples.101companies.org/openrdf-workbench/repositories/wiki101/explore?resource=%3Chttp%3A%2F%2F101companies.org%2Fresource%2F{0}-3A{1}%3E".format(namespace, member)

@@ -2,6 +2,10 @@
 {% block content %}
 	{% include "snippets/general.rdf" %}
 
+	{% include "snippets/persons.rdf" %}
+
+	{% include "snippets/derivedFiles.rdf" %}
+
 	<co:terms>
 		<rdf:Bag>
             {% for term in terms %}
@@ -10,7 +14,7 @@
 		</rdf:Bag>
 	</co:terms>
 
-	<co:content>{{ content }}</co:content>
+	<co:content>{{ content.decode('utf_8', 'ignore') }}</co:content>
 
     {% for fragment in fragments %}
 		<co:fragment rdf:resource="{{ fragment.resource }}?format=rdf" co:name="{{ fragment.name }}" co:classifier="{{ fragment.classifier }}"/>

@@ -68,6 +68,10 @@ def respondHTML(start_response, response, environ, template):
 def respondRDF(start_response, response, template, environ):
     response['about'] = 'http://101companies.org/resources' + environ['PATH_INFO'].replace('/discovery','')
 
+    if 'content' in response:
+        from xml.sax.saxutils import escape
+        response['content'] = escape(response['content'])
+
     status = '200 OK'
     response_headers = [('Content-Type', 'application/rdf+xml')]
     start_response(status, response_headers)
@@ -149,6 +153,9 @@ def serveNamespaceMember(environ, start_response, params):
     import discovery
 
     try:
+        if '_' in params.get('member', ''):
+            params['member'] = params['member'].replace('_', ' ')
+
         response = discovery.discoverNamespaceMember(params.get('namespace', ''), params.get('member', ''))
 
         if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'folder.rdf', environ)
