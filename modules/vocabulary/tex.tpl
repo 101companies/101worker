@@ -1,7 +1,9 @@
 
-\begin{tabular} {% block header %} {{ '{|' }}{% for col in data[0].keys() %}c{% if not loop.last %}|{% endif %}{% endfor %}{{ '|}' }} {% endblock %}
+\begin{tabular} {% block header %} {{ '{|' }}{% if data %}{% for col in data[0].keys() %}c{% if not loop.last %}|{% endif %}{% endfor %}{% endif %}{{ '|}' }} {% endblock %}
 \hline
+{% if data %}
 {% for col in data[0].keys() %} \textbf{ {{col}} } {% if not loop.last %}&{% endif %} {% endfor %}
+{% endif %}
 \\
 \hline
 {% for d in data %}
