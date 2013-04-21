@@ -39,6 +39,8 @@ def loadScripts():
 
 def checkRoutes(environ, start_response, routes):
     path = environ.get('PATH_INFO', '')
+    if path.endswith('/'): path = path[:-1]
+
     for (route, root, callback) in routes:
         m = route.match(path)
         if m:

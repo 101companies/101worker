@@ -108,8 +108,10 @@ def discoverFileFragment(namespace, member, path, file, fragment):
         response['github'] = os.path.join(response['github'], path, file)
 
     #gather wiki data
-    wikiNs = wikifyNamespace(namespace)
-    setWikidata(response, wikiNs, member)
+    wikiNS = wikifyNamespace(namespace)
+    setWikidata(response, wikiNS, member)
+
+    response['namespace'] = wikiNS
 
     #gather member data
     if extractor:
@@ -139,8 +141,8 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     setCommitInfos(response, filePath)
 
-    response['endpoint'] = TripledataProvider.getEndpointLink(wikiNs, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNs, member)
+    response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
 
@@ -167,8 +169,10 @@ def discoverMemberFile(namespace, member, path, file):
         response['github'] = os.path.join(response['github'], path, file)
 
     #gather wiki data
-    wikiNs = wikifyNamespace(namespace)
-    setWikidata(response, wikiNs, member)
+    wikiNS = wikifyNamespace(namespace)
+    setWikidata(response, wikiNS, member)
+
+    response['namespace'] = wikiNS
 
     #gather member data - if there is a fact extractor, then we also want give back selectable fragments
     if extractor:
@@ -191,8 +195,8 @@ def discoverMemberFile(namespace, member, path, file):
     #terms
     response['terms'] = DumpdataProvider.getTerms(filePath)
 
-    response['endpoint'] = TripledataProvider.getEndpointLink(wikiNs, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNs, member)
+    response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     response['derived'] = DumpdataProvider.getDerivedFiles(filePath)
 
@@ -214,6 +218,8 @@ def discoverMemberPath(namespace, member, path):
     #gather wiki data
     wikiNS = wikifyNamespace(namespace)
     setWikidata(response, wikiNS, member)
+
+    response['namespace'] = wikiNS
 
     #gather member data
     dirPath = os.path.join(namespace, member, path)
@@ -244,7 +250,7 @@ def discoverNamespaceMember(namespace, member):
     response = {
         'folders'   : [],
         'files'     : [],
-        'classifier': 'Member',
+        'classifier': 'Namespace member',
         'name'      : member,
         'github'    : DumpdataProvider.getGithub(namespace, member)
     }
@@ -252,6 +258,8 @@ def discoverNamespaceMember(namespace, member):
     #gather wiki data
     wikiNS = wikifyNamespace(namespace)
     setWikidata(response, wikiNS, member)
+
+    response['namespace'] = wikiNS
 
     #gather member data
     dirPath = os.path.join(namespace, member.replace(' ','_'))
@@ -287,6 +295,8 @@ def discoverNamespace(namespace):
     wikiNS = wikifyNamespace(namespace)
     setWikidata(response,'Namespace', wikiNS)
 
+    response['namespace'] = 'Namespace'
+
     #gather member data
     members = DumpdataProvider.getMembers(namespace)
     for member in members:
@@ -305,6 +315,8 @@ def discoverAllNamespaces():
 
     #gather wiki data
     setWikidata(response,'Namespace','Namespace')
+
+    response['namespace'] = 'Namespace'
 
     #gather member data
     members = DumpdataProvider.getMembers('')

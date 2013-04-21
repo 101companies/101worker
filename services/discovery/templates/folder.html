@@ -2,9 +2,11 @@
 {% block content %}
     {%  include "snippets/general.html" %}
 
+
+
     <div class="span5 box info-box red-top">
         <div class="box-header">
-            Contains
+            Parts
 			<a href="{{ back_uri.decode('utf_8') }}/..?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
         </div>
         <div class="box-content">
@@ -35,4 +37,6 @@
             </div>
         </div>
     </div>
+
+    {% include "snippets/links.html" %}
 {% endblock %}
