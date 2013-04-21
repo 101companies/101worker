@@ -1,6 +1,6 @@
 <div class="span5 box info-box blue-top">
     <div class="box-header">
-        General
+        Summary
     </div>
     <div class="box-content">
         <div class="box-content-fragment">
@@ -17,32 +17,12 @@
 			{{ name.decode('utf_8') }}
 	    </div>
         <div class="box-content-fragment">
+            <b>Namespace </b>
+            {{ namespace.decode('utf_8') }}
+        </div>
+        <div class="box-content-fragment">
             <b>Classifier </b>
             {{ classifier.decode('utf_8') }}
         </div>
-        {% if github %}
-            <div class="box-content-fragment">
-                <b>Github </b>
-				<a href="{{ github.decode('utf_8') }}">Link</a>
-            </div>
-        {% endif %}
-        {% if wiki %}
-			<div class="box-content-fragment">
-                <b>Wiki </b>
-                <a href="{{ wiki.decode('utf_8') }}">Link</a>
-            </div>
-        {% endif %}
-	    {% if sesame %}
-			<div class="box-content-fragment">
-                <b>Sesame</b>
-                <a href="{{ sesame.decode('utf_8') }}">Link</a>
-			</div>
-	    {% endif %}
-	    {% if endpoint %}
-			<div class="box-content-fragment">
-                <b>Endpoint</b>
-                <a href="{{ endpoint.decode('utf_8') }}">Link</a>
-			</div>
-	    {% endif %}
     </div>
 </div>
