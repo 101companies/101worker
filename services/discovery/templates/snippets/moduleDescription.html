@@ -1,0 +1,14 @@
+<div class="span5 box info-box crimson-top">
+    <div class="box-header">
+        Module Description
+    </div>
+    <div class="box-content">
+        {% for target in module['targets'] %}
+            <div class="box-content-fragment">
+                <b>Creates {{ target.headline }}</b> <br/>
+                Scope: {{ target.scope }} <br />
+                Files: {{ target.suffix }}(Language: {{ target.language }})
+            </div>
+        {% endfor %}
+    </div>
+</div>

@@ -4,5 +4,9 @@
 
     {% include "snippets/parts.html" %}
 
+    {% if module and classifier == 'Namespace member' %}
+        {% include "snippets/moduleDescription.html" %}
+    {% endif %}
+
     {% include "snippets/links.html" %}
 {% endblock %}
