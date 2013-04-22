@@ -41,6 +41,10 @@ body {
     border-top-color: greenyellow;
 }
 
+.crimson-top {
+    border-top-color: crimson;
+}
+
 .box-header {
     font-weight: bold;
     font-size: 200%;
