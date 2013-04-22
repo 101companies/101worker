@@ -36,9 +36,9 @@ All the mentioned directories are automatically created, if needed.
 
 101worker repeatedly executes a certain list of modules.
 
-See the file "101worker/configs/production.config" for the list.
+See the file "101worker/configs/production.json" for the list.
 
-Module names are to be separated by spaces.
+Module names are stored in  a json list.
 
 The production cycle can be manually invoked as follows:
 
@@ -70,12 +70,12 @@ Follow these steps:
 Finally, also register the module:
 
 * Change directory to "101worker/config".
-* Add the module name to "production.config".
+* Add the module name to "production.json".
 
 
 # Alternative module lists
 
-The default list is "101worker/configs/production.config".
+The default list is "101worker/configs/production.json".
 
 Alternative module lists may be good for testing 101worker.
 
