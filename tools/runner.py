@@ -14,7 +14,6 @@ VERBOSE = False
 
 def write2log(msg):
     log = open('../../101logs/runner.log', 'a+')
-    global VERBOSE
     if VERBOSE == True:
         print msg
     else:
@@ -22,7 +21,6 @@ def write2log(msg):
         log.close()
 
 def write2moduleLog(msg, module):
-    global VERBOSE
     if VERBOSE == True:
         print msg
     else:
@@ -102,7 +100,6 @@ def main(config, is_verbose):
     sys.exit(0)
 
 if __name__ == "__main__":
-    print sys.argv
     try:
         if (len(sys.argv) > 1):
             #check if the config file exists
