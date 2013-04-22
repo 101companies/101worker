@@ -2,35 +2,7 @@
 {% block content %}
     {% include "snippets/general.html" %}
 
-
-
-    <div class="span5 box info-box red-top">
-        <div class="box-header">
-            Parts
-			<a href="{{ back_uri.decode('utf_8') }}/../..?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
-        </div>
-        <div class="box-content">
-            <div class="box-content-fragment">
-                <b>Fragments:</b>
-                {% if fragments == [] %}
-                    None
-                {% else %}
-                    <ul>
-                        {% for fragment in fragments %}
-                            <li>
-                                <a href="{{fragment.resource.decode('utf_8')}}?format=html">
-                                    {{fragment.name.decode('utf_8')}}
-                                    {% if fragment.has_key('index') %}
-                                        ({{fragment.index.decode('utf_8')}})
-                                    {% endif %}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    {% include "snippets/parts.html" %}
 
     {% include "snippets/links.html" %}
 

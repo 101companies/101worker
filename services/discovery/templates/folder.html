@@ -1,42 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-    {%  include "snippets/general.html" %}
+    {% include "snippets/general.html" %}
 
-
-
-    <div class="span5 box info-box red-top">
-        <div class="box-header">
-            Parts
-			<a href="{{ back_uri.decode('utf_8') }}/..?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
-        </div>
-        <div class="box-content">
-            <div class="box-content-fragment">
-                <b>Folders </b>
-                {% if folders == [] %}
-                    None
-                {% else %}
-                    <ul>
-                        {% for folder in folders %}
-                            <li><a href="{{ folder.resource.decode('utf_8') }}?format=html">{{ folder.name.decode('utf_8') }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-
-            <div class="box-content-fragment">
-                <b>Files </b>
-                {% if files == [] %}
-                    None
-                {% else %}
-                    <ul>
-                        {% for file in files %}
-                            <li><a href="{{ file.resource.decode('utf_8') }}?format=html">{{ file.name.decode('utf_8') }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    {% include "snippets/parts.html" %}
 
     {% include "snippets/links.html" %}
 {% endblock %}

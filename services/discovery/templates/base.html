@@ -3,7 +3,7 @@
 <head>
     <title>Discovery Service</title>
 	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="{{ base_uri }}/static/discovery/style.css" type="text/css">
+	<link rel="stylesheet" href="{{ static_uri }}/static/discovery/style.css" type="text/css">
 
 	<meta charset="utf-8">
 </head>
@@ -26,7 +26,7 @@
 
     <footer>
         <a href="http://101companies.org/wiki/Information:Discover">What's the Discovery Service?</a> <br />
-        Switch from HTML format to <a href="{{ back_uri.decode('utf_8') }}">JSON format</a> or <a href="{{ back_uri.decode('utf_8') }}?format=rdf">RDF format</a>.<br />
+        Switch from HTML format to <a href="{{ uri.decode('utf_8') }}">JSON format</a> or <a href="{{ uri.decode('utf_8') }}?format=rdf">RDF format</a>.<br />
 
         Powered by <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a>,
         <a href="http://jquery.com/">JQuery</a> and <a href="http://masonry.desandro.com/">Masonry</a>
@@ -36,7 +36,7 @@
 
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="{{ base_uri }}/static/discovery/js/libs/jquery.masonry.min.js"></script>
-<script src="{{ base_uri }}/static/discovery/js/base.js"></script>
+<script src="{{ static_uri }}/static/discovery/js/libs/jquery.masonry.min.js"></script>
+<script src="{{ static_uri }}/static/discovery/js/base.js"></script>
 </body>
 </html>

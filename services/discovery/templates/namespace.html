@@ -2,28 +2,7 @@
 {%  block content %}
     {% include "snippets/general.html" %}
 
-
-
-    <div class="span5 box info-box red-top">
-        <div class="box-header">
-            Parts
-			<a href="{{ back_uri.decode('utf_8') }}/..?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
-        </div>
-        <div class="box-content">
-            <div class="box-content-fragment">
-                <b>Members </b>
-                {% if members == [] %}
-                    None
-                {% else %}
-                    <ul>
-                        {% for member in members %}
-                            <li><a href="{{ member.resource }}?format=html">{{ member.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+	{% include "snippets/parts.html" %}
 
     {% include "snippets/links.html" %}
 {% endblock %}

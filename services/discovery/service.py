@@ -29,17 +29,6 @@ def respondJSON(start_response, response):
 
     return json.dumps(response)
 
-def blah(data):
-    import collections
-    if isinstance(data, collections.Mapping):
-        return dict(map(blah, data.iteritems()))
-    elif isinstance(data, collections.Iterable):
-        return type(data)(map(blah, data))
-    else:
-        return data.decode('utf_8')
-
-
-
 def respondHTML(start_response, response, environ, template):
     status = '200 OK'
     response_headers = [('Content-Type', 'text/html')]
@@ -53,12 +42,12 @@ def respondHTML(start_response, response, environ, template):
     import discovery
 
     #base URI, needed for static urls
-    if 'localhost' in discovery.base_uri: response['base_uri'] = discovery.base_uri.replace('/discovery','')
-    else: response['base_uri'] = 'http://worker.101companies.org/services'
+    if 'localhost' in discovery.base_uri: response['static_uri'] = discovery.base_uri.replace('/discovery','', 1)
+    else: response['static_uri'] = 'http://worker.101companies.org/services'
 
-    response['back_uri'] = (discovery.base_uri + environ['PATH_INFO'].replace('/discovery', ''))#.decode('utf_8')
-    if response['back_uri'].endswith('/'):
-        response['back_uri'] = response['back_uri'][:-1]
+    response['uri'] = (discovery.base_uri + environ['PATH_INFO'].replace('/discovery', '', 1))#.decode('utf_8')
+    if response['uri'].endswith('/'):
+        response['uri'] = response['uri'][:-1]
 
     from templates import TemplateProvider
     template = TemplateProvider.getTemplate(template)
