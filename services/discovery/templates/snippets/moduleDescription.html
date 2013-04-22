@@ -7,7 +7,9 @@
             <div class="box-content-fragment">
                 <b>Creates {{ target.headline }}</b> <br/>
                 Scope: {{ target.scope }} <br />
-                Files: {{ target.suffix }}(Language: {{ target.language }})
+                {% if target.suffix %}
+                    see {{ target.suffix }} files (Language: {{ target.language }})
+                {% endif %}
             </div>
         {% endfor %}
     </div>
