@@ -9,7 +9,7 @@ from mailer import Message
 # Configure addresses and server
 emailFrom = "softlang@uni-koblenz.de"
 #emailTo = "dotnetby@gmail.com" # for testing
-emailTo = "101companies@gmail.org"
+emailTo = "101companies@gmail.com"
 emailServer = "deliver.uni-koblenz.de"
 
 tmpl = "<table><tr><td>Status</td><td>Module</td></tr>"
