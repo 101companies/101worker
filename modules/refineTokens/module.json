@@ -1,10 +1,10 @@
 {
   "targets" : [
     {
-      "headline" : "Extracted Facts",
+      "headline" : "Refined Tokens",
       "classifier" : "resource",
       "scope" : "file",
-      "suffix" : ".extractor.json",
+      "suffix" : ".refinedTokens.json",
       "language" : "JSON"
     }
   ]

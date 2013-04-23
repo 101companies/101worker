@@ -1,27 +1,11 @@
 {
-  "name" : "matches101meta",
-  "heading" : "A module to match 101meta rules against 101repo",
-  "comment" : "see http://101companies.org/index.php/Language:101meta#Metadata_collection",
-  "authors" : [ "ralflaemmel" ],
-  "timeout" : 15,
-  "languages" : [ "make", "python" ],
-  "os" : ["*nix","windows"],
-  "libraries" : [ "101worker/libraries/101meta" ],
-  "modules" : [ "gather101meta", "pull101repo" ],
-  "inputs" : {
-    "rulesDump" : {
-       "_from" : "gather101meta.rulesDump"
-    },
-    "worker101repo" : {
-      "_form" : "pull101repo.worker101repo"
+  "targets" : [
+    {
+      "headline" : "Matches",
+      "classifier" : "resource",
+      "scope" : "file",
+      "suffix" : ".matches.json",
+      "language" : "JSON"
     }
-  },
-  "outputs" : {
-    "matchDump" : {
-      "101web/dumps/matches.json" : "summary of matches"
-    },
-    "matchesFiles[*]" : {
-      "101web/contributions//*.matches.json" : "result of the rule matches for the file ${1}" 
-    }
-  }
+  ]
 }

@@ -26,4 +26,5 @@ def getWikiData(namespace, member):
             headline = page['page'].get('headline','')
             headline = remove_headline_markup(headline)
             return url, headline
+
     return None, None
