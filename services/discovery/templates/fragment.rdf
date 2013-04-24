@@ -2,9 +2,11 @@
 {% block content %}
     {% include "snippets/general.rdf" %}
 
-	{% include "snippets/content.rdf" %}
+    {% include "snippets/parts.rdf" %}
 
-    {% for fragment in fragments %}
-		<co:fragment rdf:resource="{{ fragment.resource }}?format=rdf" co:name="{{ fragment.name }}" co:classifier="{{ fragment.classifier }}"/>
-    {% endfor %}
+    {% include "snippets/links.rdf" %}
+
+    {% include "snippets/persons.rdf" %}
+
+    {% include "snippets/content.rdf" %}
 {% endblock %}

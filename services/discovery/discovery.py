@@ -192,9 +192,6 @@ def discoverMemberFile(namespace, member, path, file):
     #commit infos
     setCommitInfos(response,filePath)
 
-    #terms
-    response['terms'] = DumpdataProvider.getTerms(filePath)
-
     response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
     response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 

@@ -1,24 +1,20 @@
 {% extends "base.rdf" %}
 {% block content %}
-	{% include "snippets/general.rdf" %}
+    {% include "snippets/general.rdf" %}
 
-	{% include "snippets/persons.rdf" %}
+    {% include "snippets/parts.rdf" %}
 
-	{% include "snippets/derivedFiles.rdf" %}
+    {% include "snippets/links.rdf" %}
 
-	<co:terms>
-		<rdf:Bag>
-            {% for term in terms %}
-				<rdf:li>{{ term }}</rdf:li>
-            {% endfor %}
-		</rdf:Bag>
-	</co:terms>
+    {% include "snippets/persons.rdf" %}
+
+    {% include "snippets/derivedFiles.rdf" %}
 
     {% include "snippets/content.rdf" %}
 
-    {% for fragment in fragments %}
+{#    {% for fragment in fragments %}
 		<co:fragment rdf:resource="{{ fragment.resource }}?format=rdf" co:name="{{ fragment.name }}" co:classifier="{{ fragment.classifier }}"/>
-    {% endfor %}
+    {% endfor %}#}
 
     {#
         <dc:fragments rdf:parseType="Collection">
