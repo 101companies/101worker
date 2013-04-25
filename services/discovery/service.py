@@ -55,11 +55,16 @@ def respondHTML(start_response, response, environ, template):
     return str( template.render( response ).encode('utf_8') )
 
 def respondRDF(start_response, response, template, environ):
-    response['about'] = 'http://101companies.org/resources' + environ['PATH_INFO'].replace('/discovery','')
+    response['about'] = 'http://101companies.org/resources' + environ['PATH_INFO'].replace('/discovery','', 1)
+
+
 
     if 'content' in response:
         from xml.sax.saxutils import escape
         response['content'] = escape(response['content'])
+    if 'endpoint' in response:
+        response['endpoint'] = response['endpoint'].replace('&', '&amp;')
+
 
     status = '200 OK'
     response_headers = [('Content-Type', 'application/rdf+xml')]
