@@ -3,6 +3,7 @@
 import json
 import commands
 import os
+import codecs
 import sys
 sys.path.append('../../libraries/101meta')
 import const101
@@ -12,7 +13,7 @@ def exists(path):
     return os.path.exists(fullPath)
 
 def getMetadata(filePath):
-    locator, extractor, geshi = None, None, None
+    locator, extractor, geshi, language = None, None, None, None
     matchesFile = os.path.join(const101.tRoot, filePath + '.matches.json')
 
     if os.path.exists(matchesFile):
@@ -22,7 +23,8 @@ def getMetadata(filePath):
             if 'locator' in unit['metadata']  : locator = unit['metadata']['locator']
             if 'extractor' in unit['metadata']: extractor = unit['metadata']['extractor']
             if 'geshi' in unit['metadata']    : geshi = unit['metadata']['geshi']
-    return locator, extractor, geshi
+            if 'language' in unit['metadata'] : language = unit['metadata']['language']
+    return locator, extractor, geshi, language
 
 def getTerms(file):
     terms = []
@@ -103,7 +105,7 @@ def getGithub(namespace, member):
 
 def read(filePath, lines=None):
     fullPath = os.path.join(const101.sRoot, filePath)
-    fp = open(fullPath, 'r')
+    fp = codecs.open(fullPath, 'r', 'utf-8-sig')
     if lines:
         txt = [x for i, x in enumerate(fp) if i in lines]
     else:

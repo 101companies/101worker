@@ -24,5 +24,11 @@
             <b>Classifier </b>
             {{ classifier.decode('utf_8') }}
         </div>
+        {% if language %}
+            <div class="box-content-fragment">
+                <b>Language</b>
+                {{ language.decode('utf_8') }}
+            </div>
+        {% endif %}
     </div>
 </div>

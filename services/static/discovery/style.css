@@ -60,7 +60,7 @@ body {
 }
 
 #content {
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .header {
@@ -78,6 +78,10 @@ body {
 .header a {
     color:inherit;
     text-decoration: none;
+}
+
+.position-indicator {
+    margin: 20px 60px 0px 60px;
 }
 
 footer {

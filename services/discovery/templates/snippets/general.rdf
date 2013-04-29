@@ -5,3 +5,6 @@
 {% if geshi %}
 	<co:geshi>{{ geshi }}</co:geshi>
 {% endif %}
+{% if language %}
+    <co:language>{{ language }}</co:language>
+{% endif %}
