@@ -20,7 +20,7 @@
 {% if not name == 'Namespace' %}
     <div class="alert alert-success text-center position-indicator">
         <strong>
-            Locator: {{ uri.replace('http://101companies.org', '').replace('http://localhost/services/discovery', '')[1:].decode('utf_8') }}
+            Locator: {{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '')[1:].decode('utf_8') }}
         </strong>
     </div>
 {% endif %}
