@@ -5,12 +5,16 @@
     <div class="box-content">
         {% for target in module['targets'] %}
             <div class="box-content-fragment">
-                <b>Creates {{ target.headline }}</b> <br/>
-                Scope: {{ target.scope }} <br />
-                {% if target.suffix %}
-                    see {{ target.suffix }} files (Language: {{ target.language }})
+                {% if target.scope == 'file' %}
+                    <b>Creates {{ target.headline }} files based on source files (Scope: {{ target.scope }})</b> <br/>
+                    {% if target.suffix %}
+                        see {{ target.suffix }} files (Language: {{ target.language }})
+                    {% endif %}
                 {% endif %}
             </div>
+            {% if not loop.last %}
+                <br/>
+            {% endif %}
         {% endfor %}
     </div>
 </div>

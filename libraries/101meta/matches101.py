@@ -6,6 +6,12 @@ import re
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
+from ThreadPool import ThreadPool
+
+
+
+
+
 
 #
 # Build metadata unit
@@ -322,6 +328,9 @@ def matchAll(phase, suffix):
     noPredicateConstraints = 0
     noPredicateConstraintsOk = 0
     noFragments = 0
+
+    pool = ThreadPool(4)
+
     print "Matching 101meta metadata on 101repo (phase \"" + str(phase)+ "\")."
     for root, dirs, files in os.walk(os.path.join(const101.sRoot, "contributions")):
         if not root.startswith(os.path.join(const101.sRoot, ".git")+os.sep):
@@ -329,8 +338,13 @@ def matchAll(phase, suffix):
                 noFiles += 1
                 if not basename in [".gitignore"]:
                     dirname = root[len(const101.sRoot)+1:]
-                    handleFile(phase, dirname, basename, suffix)
+                    pool.add_task(handleFile, phase, dirname, basename, suffix)
+                    #handleFile(phase, dirname, basename, suffix)
+
     sys.stdout.write('\n')
+
+    pool.wait_completion()
+
     mr = dict()
     mr["matches"] = matches
     mr["failures"] = failures

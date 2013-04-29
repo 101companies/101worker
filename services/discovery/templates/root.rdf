@@ -2,7 +2,7 @@
 {% block content %}
     {% include "snippets/general.rdf" %}
 
-    {% for member in members %}
-		<co:member rdf:resource="{{ member.resource.decode('utf_8') }}?format=rdf" co:name="{{ member.name.decode('utf_8') }}" />
-    {% endfor %}
+	{% include "snippets/parts.rdf" %}
+
+    {% include "snippets/links.rdf" %}
 {% endblock %}

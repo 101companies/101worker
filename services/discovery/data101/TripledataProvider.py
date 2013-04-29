@@ -24,9 +24,9 @@ def getEndpointLink(namespace, member):
     if member == '':
         member = 'Concept'
     if not namespace or namespace == '':
-        return "http://sl-mac.uni-koblenz.de:8081/org.softlang.semanticendpoint/doQuery?method=getResourceTriples&resource={}".format(member)
+        return "http://triples.101companies.org/org.softlang.semanticendpoint/doQuery?method=getResourceTriples&resource={}".format(member)
     else:
-        return "http://sl-mac.uni-koblenz.de:8081/org.softlang.semanticendpoint/doQuery?method=getResourceTriples&resource={0}-3A{1}".format(namespace, member)
+        return "http://triples.101companies.org/org.softlang.semanticendpoint/doQuery?method=getResourceTriples&resource={0}-3A{1}".format(namespace, member)
 
 def getSesameLink(namespace, member):
     if member == '':
