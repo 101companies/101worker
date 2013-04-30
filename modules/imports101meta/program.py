@@ -9,31 +9,41 @@ import const101
 import tools101
 
 def fun(dirname, dirs, files):
-   for basename in files:
-      filename = os.path.join(dirname, basename)
-      matchesFilename = os.path.join(const101.tRoot, filename + '.matches.json')
-      try:
-         matches = json.load(open(matchesFilename, 'r'))
-      except IOError:
-         matches = []
-      if tools101.valuesByKey(matches, "extractor"):
-         factFilename = os.path.join(const101.tRoot, filename + '.extractor.json')
-         try:
-            facts = json.load(open(factFilename, 'r'))
+    for basename in files:
+        filename = os.path.join(dirname, basename)
+        matchesFilename = os.path.join(const101.tRoot, filename + '.matches.json')
+        try:
+            matches = json.load(open(matchesFilename, 'r'))
+        except IOError:
+            matches = []
+        if tools101.valuesByKey(matches, "extractor"):
+            factFilename = os.path.join(const101.tRoot, filename + '.extractor.json')
+            #try:
+            try:
+                if os.path.exists(factFilename):
+                    facts = json.load(open(factFilename, 'r'))
+                else:
+                    problems.append({'noFactsFile': [filename, factFilename]})
+                    continue
+            except ValueError:
+                problems.append({'invalidFactsFile': [filename, factFilename]})
+                continue
+            if not facts.has_key('imports') or not facts.has_key('package'):
+                continue
             package = facts["package"]
             defined.add(package)
             if not package in filesByDef:
-               filesByDef[package] = []
+                filesByDef[package] = []
             filesByDef[package].append(filename)
             for imp in facts["imports"]:
-               used.add(imp)
-               if not imp in filesByUse:
-                  filesByUse[imp] = []
-               filesByUse[imp].append(filename)
-         except ValueError:
-            problems.append(filename)
-         except IOError:
-            problems.append(filename)
+                used.add(imp)
+                if not imp in filesByUse:
+                    filesByUse[imp] = []
+                filesByUse[imp].append(filename)
+        #except ValueError:
+            #    problems.append(filename)
+            #except IOError:
+            #    problems.append(filename)
 
 print "Analyzing imports for 101repo."
 defined = set()
@@ -41,9 +51,9 @@ used = set()
 matched = set()
 predicates = json.load(open(const101.rulesDump, 'r'))["results"]["predicates"]
 for p in predicates:
-   if p in ['technologies/Java_platform/javaImport.sh']:
-      for x in predicates[p]:
-         matched.add(x)
+    if p in ['technologies/Java_platform/javaImport.sh']:
+        for x in predicates[p]:
+            matched.add(x)
 filesByDef = dict()
 filesByUse = dict()
 problems = []
