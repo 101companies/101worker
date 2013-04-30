@@ -57,18 +57,19 @@ gitdeps = json.load(open(os.path.join(const101.sRoot, '.gitdeps'), 'r'))
 for dep in gitdeps:
     match = regex.match(dep['sourcerepo'])
     toAnalyze.append({
-        'path': os.path.join(results101,'gitdebs',match.group('folder')),
+        'path': os.path.join(results101,'gitdeps',match.group('folder')),
         'sourcedir': dep['sourcedir'][1:],
         'targetdir': dep['targetdir'],
         'mode'     : dep.get('mode', None)
     })
-
 
 #analyze main repo
 for target in toAnalyze:
     os.chdir(target['path'])
     status, output = commands.getstatusoutput(cmd)
     os.chdir(cwd)
+
+
 
     if status:
         raise Exception('problem with "git log" command', output)
@@ -82,6 +83,7 @@ for target in toAnalyze:
                 ch['file'] = ch['file'].replace(target['sourcedir'], target['targetdir'], 1)
 
     commits += cs
+
 
 if debug:
     json.dump(commits, open('temporary.debug.json', 'w'), indent=4)

@@ -74,15 +74,18 @@ def setWikidata(response, namespace, member):
 
 def setCommitInfos(response, filePath):
     #TODO update, just a rudimentary implementation
-    response['commits'] = {'initiator' : None, 'contributors' : None}
     initiator, contributors = DumpdataProvider.getCommitInfo(filePath)
     if initiator:
-        response['commits']['initiator'] = initiator['author']
+        response['people'] = []
+        response['people'].append({'name' : initiator['author'], 'role' : 'Initiator?'})
     if contributors:
-        response['commits']['contributors'] = []
+        contribList = []
         for contributor in contributors:
-            if contributor['author'] not in response['commits']['contributors']:
-                response['commits']['contributors'].append(contributor['author'])
+            if contributor['author'] not in contribList and not contributor['author'] == initiator['author']:
+                contribList.append(contributor['author'])
+
+        for c in contribList:
+            response['people'].append({'name' : c, 'role' : None})
 
 def discoverFileFragment(namespace, member, path, file, fragment):
     filePath = os.path.join(namespace, member, path, file)
@@ -94,7 +97,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
         fragment = fragment[:-1]
 
     #if no geshi code is defined, then we'll return basically "geshi : null"
-    locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
+    locator, extractor, geshi, language = DumpdataProvider.getMetadata(filePath)
 
     #name and classifier are set later (in the extractor phase
     response = {
@@ -102,6 +105,9 @@ def discoverFileFragment(namespace, member, path, file, fragment):
         'fragments': [],
         'github'   : DumpdataProvider.getGithub(namespace,member)
     }
+
+    if language:
+        response['language'] = language
 
     #update github data
     if response['github']:
@@ -154,7 +160,7 @@ def discoverMemberFile(namespace, member, path, file):
         raise ResourceNotFoundException()
 
     #if no geshi code is defined, then we'll return basically "geshi : null" and nothing else
-    locator, extractor, geshi = DumpdataProvider.getMetadata(filePath)
+    locator, extractor, geshi, language = DumpdataProvider.getMetadata(filePath)
 
     response = {
         'geshi'     : geshi,
@@ -163,6 +169,9 @@ def discoverMemberFile(namespace, member, path, file):
         'name'      : file,
         'github'    : DumpdataProvider.getGithub(namespace,member)
     }
+
+    if language:
+        response['language'] = language
 
     #update github data
     if response['github']:
@@ -225,12 +234,14 @@ def discoverMemberPath(namespace, member, path):
     for d in dirs:
         response['folders'].append({
             'resource': os.path.join(base_uri, dirPath, d),
+            'classifier': 'Folder',
             'name'    : d
         })
 
     for f in files:
         response['files'].append({
             'resource': os.path.join(base_uri, dirPath, f),
+            'classifier': 'File',
             'name'    : f,
         })
 
@@ -264,14 +275,16 @@ def discoverNamespaceMember(namespace, member):
 
     for d in dirs:
         response['folders'].append({
-            'resource': os.path.join(base_uri, dirPath, d),
-            'name'    : d
+            'resource'  : os.path.join(base_uri, dirPath, d),
+            'classifier': 'Folder',
+            'name'      : d
         })
 
     for f in files:
         response['files'].append({
-            'resource': os.path.join(base_uri, dirPath, f),
-            'name'    : f,
+            'resource'  : os.path.join(base_uri, dirPath, f),
+            'classifier': 'File',
+            'name'      : f
             })
 
     response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
@@ -299,6 +312,7 @@ def discoverNamespace(namespace):
     for member in members:
         response['members'].append({
             'resource': os.path.join(base_uri, namespace, member),
+            'classifier': 'Namespace member',
             'name'    : member
         })
 
@@ -319,8 +333,9 @@ def discoverAllNamespaces():
     members = DumpdataProvider.getMembers('')
     for member in members:
         response['members'].append({
-            'resource': os.path.join(base_uri, dewikifyNamespace(member)),
-            'name'    : member
+            'resource'  : os.path.join(base_uri, dewikifyNamespace(member)),
+            'classifier': 'Namespace',
+            'name'      : member
         })
 
     response['endpoint'] = TripledataProvider.getEndpointLink('Namespace', 'Namespace')

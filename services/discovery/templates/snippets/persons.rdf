@@ -1,9 +1,0 @@
-{% if commits['initiator'] %}
-    <co:initiator> {{ commits['initiator'].decode('utf_8') }} </co:initiator>
-
-    {% if commits['contributors'] %}
-        {% for contributor in commits['contributors'] %}
-            <co:contributor> {{ contributor.decode('utf_8') }} </co:contributor>
-        {% endfor %}
-    {% endif %}
-{% endif %}
