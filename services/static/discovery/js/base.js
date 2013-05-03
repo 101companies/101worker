@@ -1,5 +1,7 @@
 $(document).ready(function(){
     init_masonry();
+
+    init_ZeroClipboard();
 });
 
 function init_masonry(){
@@ -24,4 +26,18 @@ function init_masonry(){
             return col;
         }
     });
+}
+function init_ZeroClipboard() {
+    var clip = new ZeroClipboard( document.getElementById("copy-button"), {
+        //moviePath: "http://localhost/services/static/discovery/js/libs/ZeroClipboard.swf"
+        moviePath: "http://worker.101companies.org/services/static/discovery/js/libs/ZeroClipboard.swf"
+    });
+
+    clip.on( 'load', function(client) {
+        // alert( "movie is loaded" );
+    } );
+
+    clip.on( 'complete', function(client, args) {
+        //alert("Copied text to clipboard: " + args.text );
+    } );
 }

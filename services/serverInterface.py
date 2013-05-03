@@ -7,14 +7,16 @@ import os
 import re
 import imp
 
-textExtensions = ('.css', '.js')
+textExtensions = ('.css', '.js', '.swf')
+otherExtensions = ( '.swf' )
 mimeTypes = {
     '.css': 'text/css',
-    '.js' : 'text/javascript'
+    '.js' : 'text/javascript',
+    '.swf': 'application/x-shockwave-flash'
 }
 
 #handle static file calls
-def handleText(environ, start_response,ext):
+def handleText(environ, start_response, ext):
     start_response("200 Ok", [
         ('Content-Type', mimeTypes[ext]),
         ('Cache-Control','max-age=3600, must-revalidate'),
@@ -24,6 +26,12 @@ def handleText(environ, start_response,ext):
     response_body = ''.join(open(os.path.join(os.path.dirname(__file__),environ['PATH_INFO'][1:]),'r').readlines())
     return response_body
 
+def handleOther(environ, start_response, ext):
+    start_response("200 Ok", [
+        ('Content-Type', mimeTypes[ext])
+    ])
+    response_body = ''.join(open(os.path.join(os.path.dirname(__file__),environ['PATH_INFO'][1:]),'r').readlines())
+    return response_body
 #dynamic stuff
 def loadScripts():
     routes = []
@@ -64,6 +72,9 @@ def application(environ, start_response):
             if environ['PATH_INFO'].endswith(textExtensions):
                 fileName, fileExt = os.path.splitext(environ['PATH_INFO'])
                 return handleText(environ,start_response,fileExt)
+            if environ['PATH_INFO'].endswith(otherExtensions):
+                fileName, fileExt = os.path.splitext(environ['PATH_INFO'])
+                return handleOther(environ,start_response,fileExt)
 
 
         r = loadScripts()
