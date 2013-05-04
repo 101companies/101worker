@@ -20,9 +20,9 @@
 {% if not name == 'Namespace' %}
     <div class="alert alert-success text-center position-indicator">
         <b style="font-size: 115%;">Locator:</b>
-        <strong id="locator-path">
+        <span id="locator-path">
             {{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '')[1:].decode('utf_8') }}
-        </strong>
+        </span>
         <a id="copy-button" data-clipboard-target="locator-path" title="Copy into Clipboard" class="pull-right btn btn-mini"><i class="icon-share"></i></a>
     </div>
 {% endif %}
