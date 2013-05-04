@@ -29,8 +29,8 @@ function init_masonry(){
 }
 function init_ZeroClipboard() {
     var clip = new ZeroClipboard( document.getElementById("copy-button"), {
-        //moviePath: "http://localhost/services/static/discovery/js/libs/ZeroClipboard.swf"
-        moviePath: "http://worker.101companies.org/services/static/discovery/js/libs/ZeroClipboard.swf"
+        moviePath: "http://localhost/services/static/discovery/swf/libs/ZeroClipboard.swf"
+        //moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf"
     });
 
     clip.on( 'load', function(client) {
@@ -38,6 +38,7 @@ function init_ZeroClipboard() {
     } );
 
     clip.on( 'complete', function(client, args) {
-        //alert("Copied text to clipboard: " + args.text );
+        //alert('copied into clipboard')
+        //document.getElementById('copy-button').addClass('btn-success')
     } );
 }
