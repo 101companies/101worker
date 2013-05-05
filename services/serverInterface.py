@@ -7,7 +7,7 @@ import os
 import re
 import imp
 
-textExtensions = ('.css', '.js', '.swf')
+textExtensions = ('.css', '.js')
 otherExtensions = ( '.swf' )
 mimeTypes = {
     '.css': 'text/css',
