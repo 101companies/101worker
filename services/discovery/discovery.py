@@ -343,3 +343,14 @@ def discoverAllNamespaces():
 
     return response
 
+def createRedirectUrl(wikititle):
+    if not ':' in wikititle:
+        ns = 'concepts'
+        member = wikititle
+    else:
+        parts = wikititle.split(':')
+        ns = dewikifyNamespace(parts[0])
+        member = parts[1]
+
+    return os.path.join(base_uri, ns, member)
+

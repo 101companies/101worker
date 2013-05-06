@@ -6,6 +6,7 @@ import sys
 import os
 import re
 import imp
+import urlparse
 
 textExtensions = ('.css', '.js')
 otherExtensions = ( '.swf' )
@@ -56,7 +57,8 @@ def checkRoutes(environ, start_response, routes):
             sys.path.append(os.getcwd())
             params = m.groupdict()
             if environ['QUERY_STRING']:
-                params.update(dict(re.findall(r'(\S+)=(".*?"|\S+)', environ['QUERY_STRING'])))
+                params.update(urlparse.parse_qsl(environ['QUERY_STRING']))
+                #params.update(dict(re.findall(r'(\S+)=(".*?"|\S+)', environ['QUERY_STRING'])))
             return callback(environ, start_response, params)
 
     start_response("404 Not Found", [('Content-Type', 'text/plain')])

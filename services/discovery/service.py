@@ -177,6 +177,15 @@ def serveAllNamespaces(environ, start_response, params):
     initServeRequest(environ)
     import discovery
 
+    if 'wikititle' in params:
+        redirectUrl = discovery.createRedirectUrl(params['wikititle'])
+        if 'format' in params:
+            redirectUrl += '?format=' + params['format']
+        status = '303 See Other'
+        response_headers = [('Location', redirectUrl)]
+        start_response(status, response_headers)
+        return ''
+
     try:
         response = discovery.discoverAllNamespaces()
 
