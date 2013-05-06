@@ -1,6 +1,7 @@
 import sys
 import commands
 import os
+import json
 
 if os.path.isfile('configs/%s' % sys.argv[1]) == False:
 	print "config file not found"
@@ -11,7 +12,7 @@ if os.path.isfile('../101logs/runner.log'):
 	os.remove('../101logs/runner.log')
    
 config_file = open('configs/%s' % sys.argv[1], "r")
-modules = config_file.readlines()
+modules = json.load(config_file)
 
 for module in modules:
 	module = module.strip()	

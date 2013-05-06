@@ -21,7 +21,7 @@ report:
 
 # What is this?
 %.clean:
-	python tools/cleaner.py $*.config
+	python tools/cleaner.py $*.json
 
 # Remove ALL derived files
 full-reset:
