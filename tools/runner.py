@@ -7,7 +7,7 @@ import commands
 from threading import Timer
 from time import gmtime, strftime
 
-VERBOSE = True
+VERBOSE = False
 #log = open('../../101logs/runner.log', 'a+')
 #log.write("MODULE;START;FINISH;STATUS;COMMENT")
 #log.close()
