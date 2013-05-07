@@ -349,8 +349,12 @@ def createRedirectUrl(wikititle):
         member = wikititle
     else:
         parts = wikititle.split(':')
-        ns = dewikifyNamespace(parts[0])
-        member = parts[1]
+        if not parts[0] == 'Namespace':
+            ns = dewikifyNamespace(parts[0])
+            member = parts[1]
+        else:
+            ns = ''
+            member = dewikifyNamespace(parts[1])
 
     return os.path.join(base_uri, ns, member)
 
