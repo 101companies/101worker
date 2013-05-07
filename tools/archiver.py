@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import datetime
 import sys
 import shutil
@@ -22,7 +23,7 @@ except OSError:
 	pass
 
 config_file = open('../configs/%s' % sys.argv[1], "r")
-modules = config_file.readlines()
+modules = json.load(config_file)
 
 for module in modules:
 	module = module.strip()	
