@@ -29,6 +29,9 @@ def respondJSON(start_response, response):
 
     return json.dumps(response)
 
+def respondJSONP(start_response, response):
+    return 'discovery_callback(' + respondJSON(start_response, response) + ')'
+
 def respondHTML(start_response, response, environ, template):
     status = '200 OK'
     response_headers = [('Content-Type', 'text/html')]
@@ -89,6 +92,7 @@ def serveFileFragment(environ, start_response, params):
 
         if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'fragment.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response)
         return respondHTML(start_response,response, environ, 'fragment.html')
 
     except Exception, error:
@@ -108,6 +112,7 @@ def serveMemberFile(environ, start_response, params):
 
         if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'file.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response)
         if params['format'] == 'rdf': return respondRDF(start_response, response, 'file.rdf', environ)
 
         return respondHTML(start_response,response, environ, 'file.html')
@@ -136,6 +141,7 @@ def serveMemberPath(environ, start_response, params):
 
         if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'folder.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response)
         return respondHTML(start_response,response, environ, 'folder.html')
 
     except Exception, error:
@@ -154,6 +160,7 @@ def serveNamespaceMember(environ, start_response, params):
 
         if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'folder.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response)
         return respondHTML(start_response,response, environ, 'folder.html')
 
     except Exception, error:
@@ -168,6 +175,7 @@ def serveNamespace(environ, start_response, params):
 
         if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'namespace.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response)
         return respondHTML(start_response,response, environ, 'namespace.html')
 
     except Exception, error:
@@ -191,6 +199,7 @@ def serveAllNamespaces(environ, start_response, params):
 
         if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'root.rdf', environ)
         if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
+        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response)
         return respondHTML(start_response,response, environ, 'root.html')
 
     except Exception, error:
