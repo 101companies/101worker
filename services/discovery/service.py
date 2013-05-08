@@ -189,6 +189,8 @@ def serveAllNamespaces(environ, start_response, params):
         redirectUrl = discovery.createRedirectUrl(params['wikititle'])
         if 'format' in params:
             redirectUrl += '?format=' + params['format']
+            if params.get('callback', ''):
+                redirectUrl += '&callback=' + params['callback']
         status = '303 See Other'
         response_headers = [('Location', redirectUrl)]
         start_response(status, response_headers)
