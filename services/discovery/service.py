@@ -21,7 +21,10 @@ def respondError(start_response, error):
         start_response('500 Internal Server Error', response_headers)
     return str(error)
 
-def respondJSON(start_response, response):
+def respondJSON(kwargs):
+    start_response = kwargs['start_response']
+    response = kwargs['response']
+
     import json
     status = '200 OK'
     response_headers = [('Content-Type', 'text/json')]
@@ -29,10 +32,18 @@ def respondJSON(start_response, response):
 
     return json.dumps(response)
 
-def respondJSONP(start_response, response, callback):
-    return callback + '(' + respondJSON(start_response, response) + ')'
+def respondJSONP(kwargs):
+    callback = kwargs['callback']
 
-def respondHTML(start_response, response, environ, template):
+    return callback + '(' + respondJSON(kwargs) + ')'
+
+
+def respondHTML(kwargs):
+    start_response = kwargs['start_response']
+    response = kwargs['response']
+    environ = kwargs['environ']
+    template = kwargs['htmltemplate']
+
     status = '200 OK'
     response_headers = [('Content-Type', 'text/html')]
     start_response(status, response_headers)
@@ -57,10 +68,14 @@ def respondHTML(start_response, response, environ, template):
 
     return str( template.render( response ).encode('utf_8') )
 
-def respondRDF(start_response, response, template, environ):
+def respondRDF(kwargs):
+    start_response = kwargs['start_response']
+    response = kwargs['response']
+    environ = kwargs['environ']
+    template = kwargs['rdftemplate']
+
+
     response['about'] = 'http://101companies.org/resources' + environ['PATH_INFO'].replace('/discovery','', 1)
-
-
 
     if 'content' in response:
         from xml.sax.saxutils import escape
@@ -78,6 +93,14 @@ def respondRDF(start_response, response, template, environ):
 
     return str( template.render(response) )
 
+def respond(format, **kwargs):
+    m = {
+        'json' : respondJSON,
+        'jsonp': respondJSONP,
+        'html' : respondHTML,
+        'rdf'  : respondRDF
+    }.get(format, respondJSON)
+    return m(kwargs)
 
 #possible entry points
 def serveFileFragment(environ, start_response, params):
@@ -90,10 +113,14 @@ def serveFileFragment(environ, start_response, params):
         response = discovery.discoverFileFragment(params.get('namespace', ''), params.get('member', ''),
                                               params.get('path', ''), params.get('file', ''),params.get('fragment', ''))
 
-        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'fragment.rdf', environ)
-        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response, params.get('callback', 'callback'))
-        return respondHTML(start_response,response, environ, 'fragment.html')
+        return respond(params.get('format', 'json'),
+                       start_response=start_response,
+                       environ = environ,
+                       response=response,
+                       callback=params.get('callback', 'callback'),
+                       rdftemplate = 'fragment.rdf',
+                       htmltemplate = 'fragment.html'
+        )
 
     except Exception, error:
         return respondError(start_response, error)
@@ -110,12 +137,14 @@ def serveMemberFile(environ, start_response, params):
         response = discovery.discoverMemberFile(params.get('namespace',''), params.get('member',''),
                                                 params.get('path', ''), params.get('file', ''))
 
-        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'file.rdf', environ)
-        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response, params.get('callback', 'callback'))
-        if params['format'] == 'rdf': return respondRDF(start_response, response, 'file.rdf', environ)
-
-        return respondHTML(start_response,response, environ, 'file.html')
+        return respond(params.get('format', 'json'),
+                       start_response=start_response,
+                       environ = environ,
+                       response=response,
+                       callback=params.get('callback', 'callback'),
+                       rdftemplate = 'file.rdf',
+                       htmltemplate = 'file.html'
+        )
 
     except Exception, error:
         return respondError(start_response, error)
@@ -139,10 +168,14 @@ def serveMemberPath(environ, start_response, params):
         response = discovery.discoverMemberPath(params.get('namespace', ''), params.get('member', ''),
                                                 params.get('path', ''))
 
-        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'folder.rdf', environ)
-        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response, params.get('callback', 'callback'))
-        return respondHTML(start_response,response, environ, 'folder.html')
+        return respond(params.get('format', 'json'),
+                       start_response=start_response,
+                       environ = environ,
+                       response=response,
+                       callback=params.get('callback', 'callback'),
+                       rdftemplate = 'folder.rdf',
+                       htmltemplate = 'folder.html'
+        )
 
     except Exception, error:
         return respondError(start_response, error)
@@ -158,10 +191,14 @@ def serveNamespaceMember(environ, start_response, params):
 
         response = discovery.discoverNamespaceMember(params.get('namespace', ''), params.get('member', ''))
 
-        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'folder.rdf', environ)
-        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response, params.get('callback', 'callback'))
-        return respondHTML(start_response,response, environ, 'folder.html')
+        return respond(params.get('format', 'json'),
+                       start_response=start_response,
+                       environ = environ,
+                       response=response,
+                       callback=params.get('callback', 'callback'),
+                       rdftemplate = 'folder.rdf',
+                       htmltemplate = 'folder.html'
+        )
 
     except Exception, error:
         return respondError(start_response, error)
@@ -173,10 +210,14 @@ def serveNamespace(environ, start_response, params):
     try:
         response = discovery.discoverNamespace(params.get('namespace', ''))
 
-        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'namespace.rdf', environ)
-        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response, params.get('callback', 'callback'))
-        return respondHTML(start_response,response, environ, 'namespace.html')
+        return respond(params.get('format', 'json'),
+                       start_response=start_response,
+                       environ = environ,
+                       response=response,
+                       callback=params.get('callback', 'callback'),
+                       rdftemplate = 'namespace.rdf',
+                       htmltemplate = 'namespace.html'
+        )
 
     except Exception, error:
         return respondError(start_response, error)
@@ -199,10 +240,14 @@ def serveAllNamespaces(environ, start_response, params):
     try:
         response = discovery.discoverAllNamespaces()
 
-        if params.get('format', 'json') == 'rdf': return respondRDF(start_response, response, 'root.rdf', environ)
-        if params.get('format', 'json') == 'json': return respondJSON(start_response, response)
-        if params.get('format', 'json') == 'jsonp': return respondJSONP(start_response, response, params.get('callback', 'callback'))
-        return respondHTML(start_response,response, environ, 'root.html')
+        return respond(params.get('format', 'json'),
+                       start_response=start_response,
+                       environ = environ,
+                       response=response,
+                       callback=params.get('callback', 'callback'),
+                       rdftemplate = 'root.rdf',
+                       htmltemplate = 'root.html'
+        )
 
     except Exception, error:
         return respondError(start_response, error)
