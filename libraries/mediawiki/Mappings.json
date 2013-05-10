@@ -10,7 +10,8 @@
 		"Module" : "modules",
 		"Service" : "services",
 		"Information" : "information",
-		"Course" : "courses"
+		"Course" : "courses",
+		"Script" : "scripts"
 	},
 	"wikify" : {
 		"contributions" : "Contribution",
@@ -24,6 +25,7 @@
 		"services" : "Service",
 		"Namespace" : "Namespace",
 		"information" : "Information",
-		"courses" : "Course"
+		"courses" : "Course",
+		"scripts" : "Script"
 	}
 }
