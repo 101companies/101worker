@@ -18,11 +18,11 @@ def remove_headline_markup(text):
 
 def dewikifyNamespace(namespace):
     values = json.load(open(os.path.join(os.path.dirname(__file__), 'Mappings.json')))['dewikify']
-    return values.get(namespace,'')
+    return str(values.get(namespace,''))
 
 def wikifyNamespace(namespace):
     values = json.load(open(os.path.join(os.path.dirname(__file__), 'Mappings.json')))['wikify']
-    return values.get(namespace, None)
+    return str(values.get(namespace, None))
 
 if __name__ == '__main__':
     print remove_headline_markup("a|ab")

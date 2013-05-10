@@ -235,7 +235,7 @@ def serveAllNamespaces(environ, start_response, params):
         status = '303 See Other'
         response_headers = [('Location', redirectUrl)]
         start_response(status, response_headers)
-        return ''
+
 
     try:
         response = discovery.discoverAllNamespaces()

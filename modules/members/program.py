@@ -38,4 +38,4 @@ for folderName in mappings.keys():
         namespace = None
     findAndWrite(folderName, namespace)
 
-findAndWrite('',              'Namespace', {'p': 'Namespace', 'n': 'Namespace'})
+findAndWrite('', 'Namespace', {'p': 'Namespace', 'n': 'Namespace'})
