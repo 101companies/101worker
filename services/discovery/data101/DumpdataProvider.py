@@ -63,7 +63,7 @@ def getFacts(file, extractor):
     fullExtractor = os.path.join(const101.sRoot, extractor)
     command = '{0} < {1}'.format(fullExtractor, fullFile)
     #escape some shell symbols
-    command = command.replace(';', '\;').replace('|', '\|')
+    command = command.replace(';', '\;').replace('|', '\|').replace('&', '\&')
     status, output = commands.getstatusoutput(command)
     if not status == 0: raise Exception('Fact extraction failed: {0}'.format(output))
 

@@ -1,0 +1,29 @@
+{
+	"dewikify" : {
+		"Contribution" : "contributions",
+		"Contributor" : "contributors",
+		"Concept" : "concepts",
+		"Technology" : "technologies",
+		"Language" : "languages",
+		"Theme" : "themes",
+		"Vocabulary" : "vocabularies",
+		"Module" : "modules",
+		"Service" : "services",
+		"Information" : "information",
+		"Course" : "courses"
+	},
+	"wikify" : {
+		"contributions" : "Contribution",
+		"contributors" : "Contributor",
+		"concepts" : "",
+		"technologies" : "Technology",
+		"languages" : "Language",
+		"themes" : "Theme",
+		"vocabularies" : "Vocabulary",
+		"modules" : "Module",
+		"services" : "Service",
+		"Namespace" : "Namespace",
+		"information" : "Information",
+		"courses" : "Course"
+	}
+}

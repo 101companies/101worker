@@ -1,4 +1,6 @@
 import re
+import json
+import os
 
 def remove_headline_markup(text):
 
@@ -15,34 +17,11 @@ def remove_headline_markup(text):
     return text.strip()
 
 def dewikifyNamespace(namespace):
-    values = {
-        'Contribution': 'contributions',
-        'Contributor' : 'contributors',
-        'Concept'     : 'concepts',
-        'Technology'  : 'technologies',
-        'Language'    : 'languages',
-        'Theme'       : 'themes',
-        'Vocabulary'  : 'vocabularies',
-        'Module'      : 'modules',
-        'Service'     : 'services',
-        'Information' : 'information'
-    }
+    values = json.load(open(os.path.join(os.path.dirname(__file__), 'Mappings.json')))['dewikify']
     return values.get(namespace,'')
 
 def wikifyNamespace(namespace):
-    values = {
-        'contributions': 'Contribution',
-        'contributors' : 'Contributor',
-        'concepts'     : '',
-        'technologies' : 'Technology',
-        'languages'    : 'Language',
-        'themes'       : 'Theme',
-        'vocabularies' : 'Vocabulary',
-        'modules'      : 'Module',
-        'services'     : 'Service',
-        'Namespace'    : 'Namespace',
-        'information'  : 'Information'
-    }
+    values = json.load(open(os.path.join(os.path.dirname(__file__), 'Mappings.json')))['wikify']
     return values.get(namespace, None)
 
 if __name__ == '__main__':
