@@ -9,6 +9,9 @@ import const101
 import tools101
 
 wikiDump = json.load(open(const101.wikiDump, 'r'))
+mappings = json.load(open('../../libraries/mediawiki/Mappings.json'))['wikify']
+
+
 
 def findNamespaceMembers(namespace, instanceof):
     members = []
@@ -29,14 +32,10 @@ def findAndWrite(dirname, namespace, instanceof=None):
 
 print "Trying to find namespaces..."
 
-findAndWrite('contributions', 'Contribution')
-findAndWrite('contributors',  'Contributor')
-findAndWrite('languages',     'Language')
-findAndWrite('technologies',  'Technology')
-findAndWrite('themes',        'Theme')
-findAndWrite('vocabularies',  'Vocabulary')
-findAndWrite('modules',       'Module')
-findAndWrite('services',      'Service')
-findAndWrite('concepts',      None)
-findAndWrite('information',   'Information')
+for folderName in mappings.keys():
+    namespace = mappings[folderName]
+    if namespace == '':
+        namespace = None
+    findAndWrite(folderName, namespace)
+
 findAndWrite('',              'Namespace', {'p': 'Namespace', 'n': 'Namespace'})
