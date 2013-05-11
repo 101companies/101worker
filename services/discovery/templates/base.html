@@ -23,7 +23,7 @@
         <span id="locator-path">
             {{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '')[1:].decode('utf_8') }}
         </span>
-        <a id="copy-button" data-clipboard-target="locator-path" title="Copy into Clipboard" class="pull-right btn btn-mini"><i class="icon-share"></i></a>
+        <a title="Copy into Clipboard" id="copy" data-clipboard-target="locator-path" class="pull-right btn btn-mini"><i class="icon-share"></i></a>
     </div>
 {% endif %}
 

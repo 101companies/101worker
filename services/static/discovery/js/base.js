@@ -29,7 +29,7 @@ function init_masonry(){
 
 
 function init_ZeroClipboard() {
-    var clip = new ZeroClipboard( document.getElementById("copy-button"), {
+    var clip = new ZeroClipboard( document.getElementById("copy"), {
         moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
         trustedDomains: ['*'],
         allowScriptAccess: "always"
