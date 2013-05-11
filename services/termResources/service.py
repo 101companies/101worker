@@ -4,9 +4,9 @@ def serveResourceNames(environ, start_response, params):
     status = '200 OK'
     isJsonp = params.get('format', '') and params.get('format', '') == 'jsonp'
     if isJsonp:
-       response_headers = [('Content-Type', 'text/jsonp')]
+       response_headers = [('Content-Type', 'text/javascript')]
     else:
-        response_headers = [('Content-Type', 'text/json')]
+        response_headers = [('Content-Type', 'text/javascript')]
     start_response(status, response_headers)
     resources = json.load(open('./backlinks.json'))['resources']
     result = json.dumps({'availableResouces' : resources})
@@ -32,9 +32,9 @@ def serveTerm(environ, start_response, params):
     status = '200 OK'
     isJsonp = params.get('format', '') and params.get('format', '') == 'jsonp'
     if isJsonp:
-       response_headers = [('Content-Type', 'text/jsonp')]
+       response_headers = [('Content-Type', 'text/javascript')]
     else:
-        response_headers = [('Content-Type', 'text/json')]
+        response_headers = [('Content-Type', 'text/javascript')]
     start_response(status, response_headers)
     backlinksInfo = json.load(open('./backlinks.json'))
     mapping = json.load(open('./mapping.json'))
