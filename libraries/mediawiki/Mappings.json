@@ -11,7 +11,8 @@
 		"Service" : "services",
 		"Information" : "information",
 		"Course" : "courses",
-		"Script" : "scripts"
+		"Script" : "scripts",
+		"101companies" : "101companies"
 	},
 	"wikify" : {
 		"contributions" : "Contribution",
@@ -26,6 +27,7 @@
 		"Namespace" : "Namespace",
 		"information" : "Information",
 		"courses" : "Course",
-		"scripts" : "Script"
+		"scripts" : "Script",
+		"101companies" : "101companies"
 	}
 }

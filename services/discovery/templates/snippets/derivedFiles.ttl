@@ -1,0 +1,4 @@
+
+{% for d in derived %}
+	co:derived "{{d.resource}}"
+{%- endfor %}
