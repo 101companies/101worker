@@ -1,0 +1,15 @@
+{% extends "base.ttl" %}
+{%- block content -%}
+<{{about}}>
+	rdf:type co:File ;
+    {%- include "snippets/general.ttl" -%} ;
+    {%- include "snippets/links.ttl" -%}
+    {%- include "snippets/people.ttl" -%}
+    {%- include "snippets/derivedFiles.ttl" -%}
+    {%- include "snippets/content.ttl" -%}
+
+    {%- if fragments and not fragments == [] -%} ; {% else %} . {% endif %}
+
+    {%- include "snippets/parts.ttl" -%}
+    {%- include "snippets/derivedFilesExtra.ttl" -%}
+{% endblock %}

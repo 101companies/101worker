@@ -37,7 +37,6 @@ def respondJSONP(kwargs):
 
     return callback + '(' + respondJSON(kwargs) + ')'
 
-
 def respondHTML(kwargs):
     start_response = kwargs['start_response']
     response = kwargs['response']
@@ -93,12 +92,37 @@ def respondRDF(kwargs):
 
     return str( template.render(response) )
 
+def respondTurtle(kwargs):
+    start_response = kwargs['start_response']
+    response = kwargs['response']
+    environ = kwargs['environ']
+    template = kwargs['ttltemplate']
+
+    response['about'] = 'http://101companies.org/resources' + environ['PATH_INFO'].replace('/discovery','', 1)
+
+    if 'content' in response:
+        from xml.sax.saxutils import escape
+        response['content'] = escape(response['content'])
+    if 'endpoint' in response:
+        response['endpoint'] = response['endpoint'].replace('&', '&amp;')
+
+
+    status = '200 OK'
+    response_headers = [('Content-Type', 'text/turtle;charset=utf-8')]
+    start_response(status, response_headers)
+
+    from templates import TemplateProvider
+    template = TemplateProvider.getTemplate(template)
+
+    return str( template.render(response) )
+
 def respond(format, **kwargs):
     m = {
         'json' : respondJSON,
         'jsonp': respondJSONP,
         'html' : respondHTML,
-        'rdf'  : respondRDF
+        'rdf'  : respondRDF,
+        'ttl'  : respondTurtle
     }.get(format, respondJSON)
     return m(kwargs)
 
@@ -119,7 +143,8 @@ def serveFileFragment(environ, start_response, params):
                        response=response,
                        callback=params.get('callback', 'callback'),
                        rdftemplate = 'fragment.rdf',
-                       htmltemplate = 'fragment.html'
+                       htmltemplate = 'fragment.html',
+                       ttltemplate = "fragment.ttl"
         )
 
     except Exception, error:
@@ -143,7 +168,8 @@ def serveMemberFile(environ, start_response, params):
                        response=response,
                        callback=params.get('callback', 'callback'),
                        rdftemplate = 'file.rdf',
-                       htmltemplate = 'file.html'
+                       htmltemplate = 'file.html',
+                       ttltemplate = "file.ttl"
         )
 
     except Exception, error:
@@ -174,7 +200,8 @@ def serveMemberPath(environ, start_response, params):
                        response=response,
                        callback=params.get('callback', 'callback'),
                        rdftemplate = 'folder.rdf',
-                       htmltemplate = 'folder.html'
+                       htmltemplate = 'folder.html',
+                       ttltemplate = "folder.ttl"
         )
 
     except Exception, error:
@@ -197,7 +224,8 @@ def serveNamespaceMember(environ, start_response, params):
                        response=response,
                        callback=params.get('callback', 'callback'),
                        rdftemplate = 'folder.rdf',
-                       htmltemplate = 'folder.html'
+                       htmltemplate = 'folder.html',
+                       ttltemplate = "folder.ttl"
         )
 
     except Exception, error:
@@ -216,7 +244,8 @@ def serveNamespace(environ, start_response, params):
                        response=response,
                        callback=params.get('callback', 'callback'),
                        rdftemplate = 'namespace.rdf',
-                       htmltemplate = 'namespace.html'
+                       htmltemplate = 'namespace.html',
+                       ttltemplate = "namespace.ttl"
         )
 
     except Exception, error:
@@ -247,7 +276,8 @@ def serveAllNamespaces(environ, start_response, params):
                        response=response,
                        callback=params.get('callback', 'callback'),
                        rdftemplate = 'root.rdf',
-                       htmltemplate = 'root.html'
+                       htmltemplate = 'root.html',
+                       ttltemplate = "root.ttl"
         )
 
     except Exception, error:
