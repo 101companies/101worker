@@ -37,3 +37,9 @@ abstract FeatureSpec
     WebUI ?
 
   [Depth => Nesting]
+  [Ranking => Nesting]
+  [History => Total]
+  [History => Median]
+  [WebUI => Browsing]
+  [Editing => Browsing]
+  [Restructuring => Editing]
