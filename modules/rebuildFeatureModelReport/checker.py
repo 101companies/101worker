@@ -11,7 +11,7 @@ def check(contribName):
     contribClafer = contribToClafer.contribToClafer(contribName)
   except Exception as e:
     return {'success': False, 'message': e.message}
-  tempClaferf = tempfile.NamedTemporaryFile(dir=".", delete=True)
+  tempClaferf = tempfile.NamedTemporaryFile(dir=".", delete=False)
   shutil.copyfileobj(open("features.clf", "rb"), tempClaferf)
   tempClaferf.write(contribClafer)
   tempClaferf.flush()

@@ -1,9 +1,11 @@
 include ../Makefile.vars
 
 run:
+	echo 'Building and cleaning...'
 	@make build
 	@make clean-deployment
-	@python createReport.py ${contrDir}/fileindex.json ${webdir}/data/dumps/ featureModelReports/
+	echo 'Creating reports...'
+	python createReport.py ${contrDir}/fileindex.json ${webdir}/data/dumps/ featureModelReports/
 	@make clean
 
 build:

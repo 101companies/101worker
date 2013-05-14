@@ -9,8 +9,8 @@ def featureURLToClafer(url):
 	return re.sub("([a-zA-Z])\_([a-zA-Z])",lambda pat: pat.group(1) + pat.group(2).upper(), raw)
 
 def contribToClafer(contrib):
-  host = "http://sl-mac.uni-koblenz.de"
-  port = "8081"
+  host = "http://triples.101companies.org"
+  port = "80"
   service = "org.softlang.semanticendpoint/doQuery"
   parameters = {"method" : "getResourceTriples", "resource" : "Contribution-3A" + contrib}
   url = "%s:%s/%s?%s" % (host, port, service, urllib.urlencode(parameters))

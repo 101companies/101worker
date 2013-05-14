@@ -1,24 +1,39 @@
 abstract FeatureSpec
 
   DataRequirements
-    xor OneOrManyCompanies ?
-      OneCompany
-      ManyCompanies
-    xor FlatOrHierarchicalCompanies
-      FlatCompanies
-      HierarchicalCompanies
-    ConflictOfInterests ?
-    SalaryAlignment ?
+    xor Company ?
+      Flatness
+      Nesting
+    COI ?
+    Mentoring ?
+    Ranking ?
+    Singleton ?
+    History ?
 
   FunctionalRequirements
-    SalaryCut ?
-    SalaryTotal ?
-    SalaryDelta ?
-    CompanyDepth ?
+    Cut ?
+    Total ?
+    Median?
+    Logging ?
+    Depth ?
+    Parsing ?
+    Unparsing ?
+    History ?
 
   NonFunctionalRequirement
-    SerializableCompanies ?
-    PersistentCompanies ?
+    xor Serialization
+      OpenSerialization
+      ClosedSerialization
+    Persistence ?
+    Mapping ?
+    Distribution ?
+    DataParallelism ?
+    TaskParallelism ?
 
-  [CompanyDepth => HierarchicalCompanies]
-  [SalaryAlignment => HierarchicalCompanies]
+  UIRequirements
+    Browsing ?
+    Editing ?
+    Restructuring ?
+    WebUI ?
+
+  [Depth => Nesting]
