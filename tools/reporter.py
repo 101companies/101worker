@@ -31,7 +31,7 @@ def buildMailContent():
 
 # Send the email
 log = buildMailContent()
-if (string.find(log, 'FAIL')>=0):
+#if (string.find(log, 'FAIL')>=0):
 	#msg = MIMEText(log.encode('utf-8'), 'text/html', 'utf-8')
 	#msg["To"] = emailTo
 	#msg["From"] = emailFrom
@@ -40,8 +40,8 @@ if (string.find(log, 'FAIL')>=0):
 	#smtp.connect(emailServer)
 	#smtp.sendmail(emailFrom, msg["To"], msg.as_string())
 
-	message = Message(From=emailFrom,To=emailTo)
-	message.Subject = "[101worker] Execution Status Report"
-	message.Html = log
-	sender = Mailer(emailServer)
-	sender.send(message)
+message = Message(From=emailFrom,To=emailTo)
+message.Subject = "[101worker] Execution Status Report"
+message.Html = log
+sender = Mailer(emailServer)
+sender.send(message)
