@@ -31,12 +31,16 @@
         </div>
 
         <div id="with-markup" style="display: none; visibility: hidden;">
-            {%- if classifier == 'Folder' -%}
-               &lt;folder url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
-            {% elif classifier == 'File' %}
-                &lt;file url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
+            {% if not classifier == 'Namespace member' %}
+                {%- if classifier == 'Folder' -%}
+                   &lt;folder url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
+                {%- elif classifier == 'File' -%}
+                    &lt;file url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
+                {%- else -%}
+                    &lt;fragment url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
+                {% endif %}
             {% else %}
-                &lt;fragment url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
+                &lt;folder url="" /&gt;
             {% endif %}
         </div>
 
