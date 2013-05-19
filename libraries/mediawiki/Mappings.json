@@ -15,7 +15,8 @@
 		"101" : "101",
 		"Abbreviation" : "abbreviations",
 		"Property" : "properties",
-		"Resource" : "resources"
+		"Resource" : "resources",
+		"Feature" : "features"
 	},
 	"wikify" : {
 		"contributions" : "Contribution",
@@ -34,6 +35,7 @@
 		"101" : "101",
 		"abbreviations" : "Abbreviation",
 		"properties" : "Property",
-		"resources" : "Resource"
+		"resources" : "Resource",
+		"features" : "Feature"
 	}
 }
