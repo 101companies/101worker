@@ -12,7 +12,7 @@
 		"Information" : "information",
 		"Course" : "courses",
 		"Script" : "scripts",
-		"101companies" : "101companies"
+		"101" : "101"
 	},
 	"wikify" : {
 		"contributions" : "Contribution",
@@ -28,6 +28,6 @@
 		"information" : "Information",
 		"courses" : "Course",
 		"scripts" : "Script",
-		"101companies" : "101companies"
+		"101" : "101"
 	}
 }
