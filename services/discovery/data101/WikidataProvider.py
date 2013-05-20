@@ -12,7 +12,7 @@ import const101
 
 def getWikiData(namespace, member):
     wiki = json.load(open(const101.wikiDump, 'r'))['wiki']
-    if namespace == '' or '101':
+    if namespace == '' or namespace == '101':
         namespace = None
     if member == '':
         member = 'Concept'
