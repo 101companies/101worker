@@ -5,39 +5,11 @@ import os
 import re
 import copy
 import commands
+from asq.initiators import query
 
-def tag_rules(rules):
-    rules = copy.copy(rules)
-    for index, rule in enumerate(rules['results']['rules']):
-        if rule['rule'].has_key('predicate'):
-            rule['rule']['level'] = 10
-     
-        elif rule['rule'].has_key('fragment'):
-            rule['rule']['level'] = 9   
 
-        elif rule['rule'].has_key('content'):
-            rule['rule']['level'] = 8   
-
-        elif rule['rule'].has_key('basename'):
-            rule['rule']['level'] = 5  
-
-        elif rule['rule'].has_key('dirname'):
-            rule['rule']['level'] = 1
-
-        elif rule['rule'].has_key('suffix'):
-            rule['rule']['level'] = 1
-
-        elif rule['rule'].has_key('filename'):
-            rule['rule']['level'] = 1
-
-        else:
-            rule['rule']['level'] = 11
-
-        rules['results']['rules'][index] = rule
-    
-    return rules
-
-def match_file(file, rules, level=99):
+def match_file(file, rules, filter_function, append=False):
+    rules = filter(filter_function, rules)
     matches = []
 
     for rule in rules:
@@ -94,33 +66,66 @@ def match_file(file, rules, level=99):
             'id': -1,
             'metadata': rule.get('metadata', {})
         })
-
-    result = {
-        'units': matches,
-        'filename': file
-    }
     
-    return result
+    if append:
+        f = open(file + '.metadata.json', 'r')
+        data = json.load(f)
+        f.close()
+        data.append(matches)
+        f = open(file + '.metadata.json', 'a')
+        data = json.dump(data, f)
+        f.close()
+        
+    else:
+        f = open(file + '.metadata.json', 'w')
+        json.dump(matches, f)
+        f.close()
 
-def apply_rules(files, rules, level):
+def apply_rules(files, rules, filter_function):
     rules = rules['results']['rules']
-    return map(lambda file: match_file(file, rules, level), files)
+    map(lambda file: match_file(file, rules, filter_function), files)
     
+def group_fast_predicates(rules):
+    rules = rules['results']['rules']
+    fpredicate_rules = query(rules).where(lambda rule: rule['rule'].has_key('fpredicate')).select(lambda rule: rule['rule']).to_list()
 
-def main(data):
+    groups = []
+    used = []
 
-    f = open(os.path.join(os.path.dirname(__file__), 'rules.json'))
-    rules = json.load(f)
-    f.close()
-
-    if data['type'] == 'folders':
-        data['data'] = reduce(operator.add, map(lambda folder: map(lambda file: os.path.join(folder, file), os.listdir(folder)), data['data']))
-
-    rules = tag_rules(rules)
-
-    return apply_rules(data['data'], rules, level=data['level'])
+    for rule in fpredicate_rules:
+        if rule in used:
+            continue
     
+        same_predicate = query(fpredicate_rules).where(lambda r: r['fpredicate'] == rule['fpredicate']).to_list()
+        groups.append([rule])
+        used.append(rule)
 
+        tmp_rule = copy.copy(rule)
+        del tmp_rule['args']
+        del tmp_rule['metadata']
+        
+        for p in same_predicate:
+            tmp_p = copy.copy(p)
+            del tmp_p['args']
+            del tmp_p['metadata']
+
+            if tmp_p == tmp_rule and p != rule:
+                used.append(p)
+                groups[-1].append(p)
+
+
+    result = []
+    for group in groups:
+        i = group[0]
+        i['args'] = [i['args']] + query(group[1:]).select(lambda rule: rule['args']).to_list()
+        i['metadata'] = [i['metadata']] + query(group[1:]).select(lambda rule: rule['metadata']).to_list()
+        result.append(i)
+
+    return result
+    
+    
 if __name__ == '__main__':
-    main(sys.argv)
+    print group_fast_predicates(json.load(open('rules.json')))
+
+
  
