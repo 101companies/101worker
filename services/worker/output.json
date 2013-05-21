@@ -1,0 +1,29 @@
+[
+    {
+        "result": [
+            {
+                "units": [
+                    {
+                        "id": -1, 
+                        "metadata": [
+                            {
+                                "geshi": "python"
+                            }, 
+                            {
+                                "language": "Python"
+                            }, 
+                            {
+                                "extractor": "technologies/PyFactExtractor/extractor.py"
+                            }, 
+                            {
+                                "locator": "technologies/PyFragmentLocator/locator.py"
+                            }
+                        ]
+                    }
+                ], 
+                "filename": "contributions/pyBorg\\program.py"
+            }
+        ], 
+        "module": "rules"
+    }
+]
