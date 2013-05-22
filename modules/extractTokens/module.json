@@ -1,0 +1,19 @@
+{
+  "targets" : [
+    {
+      "headline" : "Metrics",
+      "classifier" : "resource",
+      "scope" : "file",
+      "suffix" : ".metrics.json",
+      "language" : "JSON"
+    },
+    {
+      "headline" : "Tokens",
+      "classifier" : "resource",
+      "scope" : "file",
+      "suffix" : ".tokens.json",
+      "language" : "JSON"
+    }
+  ]
+}
+

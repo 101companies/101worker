@@ -1,0 +1,11 @@
+{
+  "targets" : [
+    {
+      "headline" : "Extracted Facts",
+      "classifier" : "resource",
+      "scope" : "file",
+      "suffix" : ".extractor.json",
+      "language" : "JSON"
+    }
+  ]
+}
