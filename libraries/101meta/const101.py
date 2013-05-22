@@ -18,7 +18,7 @@ summaryDump = os.path.join(dumps, "summary.json")
 suffixesDump = os.path.join(dumps, "suffixes.json")
 importsDump = os.path.join(dumps, "imports.json")
 resolutionDump = os.path.join(dumps, "resolution.json")
-wikiDump = os.path.join(dumps, "Wiki101Full.json")
+wikiDump = os.path.join(dumps, "wiki.json")
 pullRepoDump = os.path.join(dumps, "PullRepo.json")
 moduleSummaryDump = os.path.join(dumps, 'ModuleSummaryDump.json')
 
