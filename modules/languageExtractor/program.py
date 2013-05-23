@@ -15,7 +15,7 @@ import const101
 import tools101
 from mediawiki import remove_headline_markup
 
-output = os.path.join(const101.tRoot, 'languages')
+output = os.path.join(const101.tRoot, 'Languages')
 output = os.path.abspath(output)
 
 json_path = sys.argv[1]
@@ -153,7 +153,7 @@ def getThemeInstances(theme, pages):
     return techs
 
 def getLanguageInstances(lang, pages):
-    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'language:' + lang, p['page'].get('internal_links', [])))).to_list()
+    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'Language:' + lang, p['page'].get('internal_links', [])))).to_list()
     return techs
 
 def createMembers(theme, pages):
@@ -183,8 +183,8 @@ def createMembers(theme, pages):
             'features': num_f,
             'ufeatures': unique_f,
             
-            'languages': num_l,
-            'ulanguages': unique_l,
+            'Languages': num_l,
+            'uLanguages': unique_l,
             
             'technologies': num_t,
             'utechnologies': unique_t,
@@ -298,6 +298,7 @@ def deleteEmptyCells(data):
 def toTex(list, file):
     with open (file, 'w') as f:
         f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
+
 
 for t in getThemeNames(themes):
     
