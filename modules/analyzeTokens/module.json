@@ -1,0 +1,11 @@
+{
+  "targets" : [
+    {
+      "headline" : "Refined Tokens",
+      "classifier" : "resource",
+      "scope" : "file",
+      "suffix" : ".refinedTokens.json",
+      "language" : "JSON"
+    }
+  ]
+}
