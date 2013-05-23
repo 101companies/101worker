@@ -15,7 +15,7 @@ import const101
 import tools101
 from mediawiki import remove_headline_markup
 
-output = os.path.join(const101.tRoot, 'Languages')
+output = os.path.join(const101.tRoot, 'languages')
 output = os.path.abspath(output)
 
 json_path = sys.argv[1]
