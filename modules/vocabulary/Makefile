@@ -1,5 +1,4 @@
 include ../Makefile.vars
-wiki = ${webdir}/data/dumps/Wiki101Full.json
 
 run:
 	@make clean
@@ -9,7 +8,7 @@ reset:
 	@make clean
 
 generate:
-	@python program.py ${wiki}
+	@python program.py ${wikiDump}
 
 clean:
 	@rm -rf ${pulled101RepoDir}/vocabularies/*
