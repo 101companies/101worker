@@ -11,7 +11,7 @@ def serveResourceNames(environ, start_response, params):
     resources = json.load(open('./backlinks.json'))['resources']
     result = json.dumps({'availableResouces' : resources})
     if isJsonp:
-       result = 'resourcecallback(' + result + ')'
+       result = params.get('callback', 'callback') + '(' + result + ')'
     return result
 
 
@@ -54,7 +54,7 @@ def serveTerm(environ, start_response, params):
             result.append(cResult)
         result = json.dumps(result)
     if isJsonp:
-       result = 'resourcecallback(' + result + ')'
+       result = params.get('callback', 'callback') + '(' + result + ')'
     return result
 
 def routes():
