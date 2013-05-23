@@ -149,7 +149,7 @@ def getUniqueFeatures(page, pages):
 
 def getThemeInstances(theme, pages):
     #theme = getThemeName(theme)
-    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceof::Theme:' + theme, p['page'].get('internal_links', [])))).to_list()
+    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceOf::Theme:' + theme, p['page'].get('internal_links', [])))).to_list()
     return techs
 
 def getLanguageInstances(lang, pages):
