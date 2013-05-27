@@ -76,3 +76,4 @@ dump.json
 /modules/resolve101meta/.idea/testrunner.xml
 /modules/resolve101meta/.idea/vcs.xml
 /modules/resolve101meta/.idea/workspace.xml
+*.pyc

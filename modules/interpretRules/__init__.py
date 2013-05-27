@@ -5,6 +5,7 @@ import os
 import re
 import copy
 import commands
+<<<<<<< HEAD
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
@@ -13,11 +14,23 @@ from asq.initiators import query
 
 
 def match_file(file, rules, filter_function, append):
+=======
+from asq.initiators import query
+
+
+def match_file(file, rules, filter_function, append=False):
+>>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
     rules = filter(filter_function, rules)
     matches = []
 
     for rule in rules:
         rule = rule['rule']
+<<<<<<< HEAD
+=======
+
+        if rule['level'] > level:
+            continue
+>>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
         
         if rule.has_key('basename'):
             if isinstance(rule['basename'], list):
@@ -55,6 +68,7 @@ def match_file(file, rules, filter_function, append):
                 if not isinstance(args, list): args = [ args ]
             else:
                 args = []
+<<<<<<< HEAD
             cmd = os.path.join(const101.sRoot, predicate)
             for arg in args:
                 cmd += " \"" + arg + "\""
@@ -62,6 +76,14 @@ def match_file(file, rules, filter_function, append):
             (status, output) = commands.getstatusoutput(cmd)
             if status != 0:
                 #print 'failed:', cmd, output
+=======
+            cmd = os.path.join(predicate)
+            for arg in args:
+                cmd += " \"" + arg + "\""
+            cmd += " \"" + os.path.join(const101.sRoot, filename) + "\""
+            (status, output) = commands.getstatusoutput(cmd)
+            if status != 0:
+>>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
                 continue
 
         matches.append({
@@ -70,6 +92,7 @@ def match_file(file, rules, filter_function, append):
         })
     
     if append:
+<<<<<<< HEAD
         if not matches:
             return
         f = open(file + '.metadata.json', 'r')
@@ -78,16 +101,33 @@ def match_file(file, rules, filter_function, append):
         data.extend(matches)
         f = open(file + '.metadata.json', 'w')
         data = json.dump(data, f, indent=4, sort_keys=True)
+=======
+        f = open(file + '.metadata.json', 'r')
+        data = json.load(f)
+        f.close()
+        data.append(matches)
+        f = open(file + '.metadata.json', 'a')
+        data = json.dump(data, f)
+>>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
         f.close()
         
     else:
         f = open(file + '.metadata.json', 'w')
+<<<<<<< HEAD
         json.dump(matches, f, indent=4, sort_keys=True)
         f.close()
 
 def apply_rules(files, rules, filter_function, append):
     rules = rules['results']['rules']
     map(lambda file: match_file(file, rules, filter_function, append), files)
+=======
+        json.dump(matches, f)
+        f.close()
+
+def apply_rules(files, rules, filter_function):
+    rules = rules['results']['rules']
+    map(lambda file: match_file(file, rules, filter_function), files)
+>>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
     
 def group_fast_predicates(rules):
     rules = rules['results']['rules']
@@ -125,7 +165,11 @@ def group_fast_predicates(rules):
         i['metadata'] = [i['metadata']] + query(group[1:]).select(lambda rule: rule['metadata']).to_list()
         result.append(i)
 
+<<<<<<< HEAD
     return {'results': {'rules': result } }
+=======
+    return result
+>>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
     
     
 if __name__ == '__main__':
