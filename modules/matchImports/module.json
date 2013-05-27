@@ -1,0 +1,12 @@
+{
+  "targets" : [
+    {
+      "headline" : "Predicate Matches",
+      "classifier" : "resource",
+      "scope" : "file",
+      "suffix" : ".predicates.json",
+      "language" : "JSON"
+    }
+  ]
+}
+
