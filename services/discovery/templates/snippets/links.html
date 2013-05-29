@@ -1,3 +1,4 @@
+{#
 <div class="span5 box info-box green-yellow-top">
     <div class="box-header">
         Links
@@ -28,4 +29,20 @@
 			</div>
 	    {% endif %}
     </div>
+</div>#}
+
+<div class="section">
+    <div class="headlinecontainer">
+        <h2>Links</h2>
+    </div>
+    <div class="section-content">
+        {% if endpoint %}
+            <p><a href="{{ endpoint.decode('utf_8') }}">Endpoint</a></p>
+        {% endif %}
+        {% if sesame %}
+            <p><a href="{{ sesame.decode('utf_8') }}">Sesame</a></p>
+        {% endif %}
+    </div>
 </div>
+
+<br>
