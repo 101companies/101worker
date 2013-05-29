@@ -32,7 +32,7 @@ def toTex(list, file):
         f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
 
 for voc in vocs:
-    voc_name = unicode('instanceOf::Vocabulary:' + voc).strip()
+    voc_name = unicode('instanceof::Vocabulary:' + voc).strip()
     
     instances = (query(pages).where(lambda page: voc_name in page['page'].get('internal_links', [])).to_list())
 

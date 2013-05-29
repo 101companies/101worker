@@ -149,11 +149,11 @@ def getUniqueFeatures(page, pages):
 
 def getThemeInstances(theme, pages):
     #theme = getThemeName(theme)
-    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceOf::Theme:' + theme, p['page'].get('internal_links', [])))).to_list()
+    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceof::Theme:' + theme, p['page'].get('internal_links', [])))).to_list()
     return techs
 
 def getLanguageInstances(lang, pages):
-    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'Language:' + lang, p['page'].get('internal_links', [])))).to_list()
+    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'language:' + lang, p['page'].get('internal_links', [])))).to_list()
     return techs
 
 def createMembers(theme, pages):
@@ -183,8 +183,8 @@ def createMembers(theme, pages):
             'features': num_f,
             'ufeatures': unique_f,
             
-            'Languages': num_l,
-            'uLanguages': unique_l,
+            'languages': num_l,
+            'ulanguages': unique_l,
             
             'technologies': num_t,
             'utechnologies': unique_t,
@@ -298,7 +298,6 @@ def deleteEmptyCells(data):
 def toTex(list, file):
     with open (file, 'w') as f:
         f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
-
 
 for t in getThemeNames(themes):
     

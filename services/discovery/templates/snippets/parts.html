@@ -4,11 +4,7 @@
         {% if not name == 'Namespace' %}
             {% if classifier not in ['File', 'Folder', 'Namespace member', 'Namespace'] %}
             {#  If we are looking at a fragment, we have to go two steps back (Total.java/class/Total => Total.java)  #}
-                {% if uri.rsplit('/', 1)[1].isdigit()  %}
-                    <a href="{{ back(back(back( uri.decode('utf_8') ))) }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
-                {% else %}
-                    <a href="{{ back(back( uri.decode('utf_8') )) }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
-                {% endif %}
+                <a href="{{ back(back( uri.decode('utf_8') )) }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
             {% else %}
                 <a href="{{ back( uri.decode('utf_8') ) }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
             {% endif %}
@@ -28,7 +24,7 @@
                                 <a href="{{fragment.resource.decode('utf_8')}}?format=html">
                                     {{fragment.name.decode('utf_8')}}
                                     {% if fragment.has_key('index') %}
-                                        ({{fragment.index}})
+                                        ({{fragment.index.decode('utf_8')}})
                                     {% endif %}
                                 </a>
                             </li>

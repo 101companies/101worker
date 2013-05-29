@@ -12,11 +12,7 @@
 		"Information" : "information",
 		"Course" : "courses",
 		"Script" : "scripts",
-		"101" : "101",
-		"Abbreviation" : "abbreviations",
-		"Property" : "properties",
-		"Resource" : "resources",
-		"Feature" : "features"
+		"101companies" : "101companies"
 	},
 	"wikify" : {
 		"contributions" : "Contribution",
@@ -32,10 +28,6 @@
 		"information" : "Information",
 		"courses" : "Course",
 		"scripts" : "Script",
-		"101" : "101",
-		"abbreviations" : "Abbreviation",
-		"properties" : "Property",
-		"resources" : "Resource",
-		"features" : "Feature"
+		"101companies" : "101companies"
 	}
 }

@@ -11,7 +11,7 @@ def serveLink(environ, start_response, params):
         result = json.dumps(result)
         if params.get('format', '') and params.get('format', '') == 'jsonp':
             response_headers = [('Content-Type', 'text/jsonp')]
-            result = params.get('callback', 'callback') + '(' + result + ')'
+            result = 'sourcelinkscallback(' + result + ')'
         else:
             response_headers = [('Content-Type', 'text/json')]
         start_response('200 OK', response_headers)

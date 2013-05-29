@@ -35,27 +35,12 @@ function init_ZeroClipboard() {
         allowScriptAccess: "always"
     });
 
-    var clip1 = new ZeroClipboard( document.getElementById("copy-absolute"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
-    });
+    clip.on( 'load', function(client) {
+         //alert( "movie is loaded" );
+    } );
 
-    var clip2 = new ZeroClipboard( document.getElementById("copy-relative"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
-    });
-
-    var clip3 = new ZeroClipboard( document.getElementById("copy-absolute-markup"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
-    });
-
-    var clip4 = new ZeroClipboard( document.getElementById("copy-relative-markup"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
-    });
+    clip.on( 'complete', function(client, args) {
+        //alert('copied into clipboard')
+        //document.getElementById('copy-button').addClass('btn-success')
+    } );
 }

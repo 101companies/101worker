@@ -1,5 +1,5 @@
 include ../Makefile.vars
-output = ${dumpsDir}/wiki.json
+output = ${dumpsDir}/Wiki101Full.json
 
 run:
 	cd src 

@@ -7,6 +7,18 @@ sys.path.append('../../libraries/101meta')
 import const101
 import tools101
 
+<<<<<<< HEAD
+def relevantFiles(matches, relevanceValues = [ 'system' ]):
+	files = []
+	for f in matches:
+		relevance = 'system'
+		if os.path.exists(f + '.metrics.json'):
+		    match = json.load(open(f + '.metrics.json'))
+		    if 'relevance' in match:
+			    relevance = match['relevance']
+		    if relevance in relevanceValues:
+			    files.append(f)
+=======
 matches = json.load(open(os.path.join(const101.dumps, 'matches.json'), 'r'))['matches']
 
 def relevantFiles(relevanceValues = [ 'system' ]):
@@ -18,6 +30,7 @@ def relevantFiles(relevanceValues = [ 'system' ]):
 				relevance = unit['metadata']['relevance']
 		if relevance in relevanceValues:
 			files.append(match['filename'])
+>>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
 	return files
 
 def derivedFiles(baseFiles, fileExt):
@@ -51,4 +64,8 @@ def tRoot():
 	return const101.tRoot
 
 def incProgress():
+<<<<<<< HEAD
 	tools101.tick();
+=======
+	tools101.tick();
+>>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
