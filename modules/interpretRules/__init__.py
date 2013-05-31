@@ -8,6 +8,8 @@ import commands
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
+import pipes
+import subprocess
 
 from asq.initiators import query
 
@@ -57,11 +59,23 @@ def match_file(file, rules, filter_function, append=False):
             cmd = os.path.join(const101.sRoot, predicate)
             for arg in args:
                 cmd += " \"" + arg + "\""
-            cmd += " \"" + os.path.join(const101.sRoot, file) + "\""
+            cmd += " \"" + file + "\""
             (status, output) = commands.getstatusoutput(cmd)
             if status != 0:
                 #print 'failed:', cmd, output
                 continue
+
+        if rule.has_key('fpredicate'):
+            fpredicate = rule['fpredicate']
+            args = rule['args']
+            cmd = [os.path.join(const101.sRoot, predicate)]
+            cmd.append(pipes.quote(file))
+            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+            result = json.loads(p.communicate(input=json.dumps(args)))
+            for i, value in enumerate(result):
+                if not value:
+                    rule['metadata'][i] = {}
+            
 
         matches.append({
             'id': -1,

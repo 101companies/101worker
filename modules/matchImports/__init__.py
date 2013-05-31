@@ -17,5 +17,8 @@ def main(data):
 
     rules = json.load(open(const101.rulesDump))
 
+    fpredicate_rules = interpretRules.group_fast_predicates(rules)
+
     interpretRules.apply_rules(data['data'], rules, lambda rule: any(filter(lambda key: key  == 'predicate', rule['rule'].keys())), append=True)
+    interpretRules.apply_rules(data['data'], fpredicate_rules, lambda rule: True, append=True)
 

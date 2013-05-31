@@ -77,6 +77,10 @@ def matchFile(phase, dirname, basename, rule):
     or (not "fragment" in rule and phase == "fragments"):
         return None
 
+    # ignore fpredicates
+    if rule.has_key('fpredicate'):
+        continue    
+    
     #
     # Check dirname constraint
     #
