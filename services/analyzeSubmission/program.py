@@ -40,9 +40,10 @@ def index():
         n = __import__(module)
         n.main(data)
 
-    results = []
+    result = open(os.path.join(path, 'summary.json'), 'r').read()
+    
 
-    return json.dumps(result, indent=4)
+    return result
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import os
 
 def load(fileName, buffer=None):
@@ -22,26 +21,6 @@ def load(fileName, buffer=None):
 
     file.close()
     return buffer
-=======
-def load(fileName, buffer=None):
-	if not buffer:
-		buffer = {}
-
-	file = open(fileName)
-	line = file.readline().replace('\n', '')
-
-	while line:
-		if not line[0].isspace():
-			splitted = line.split(' ')[0].split('_')
-			for s in splitted:
-				buffer[s] = True
-		line = file.readline().replace('\n', '')
-		while len(line) == 1:
-			line = file.readline().replace('\n', '')
-
-	file.close()
-	return buffer
->>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
 
 wordList = load('wordnet/index.adj')
 wordList = load('wordnet/index.adv', wordList)
@@ -51,8 +30,4 @@ wordList = load('wordnet/specific.txt', wordList)
 
 
 def isWord(term):
-<<<<<<< HEAD
     return wordList.has_key(term.lower())
-=======
-	return wordList.has_key(term.lower())
->>>>>>> 789459768f776d4d06b3c35544858ffc922ad749

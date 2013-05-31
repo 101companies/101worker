@@ -223,3 +223,8 @@ dump.json
 /services/.idea/dictionaries/martin.xml
 /services/.idea/inspectionProfiles/Project_Default.xml
 /services/.idea/vagrant.xml
+*.bak
+*.pyc
+
+
+/libraries/mediawiki/.goutputstream-KX73TW

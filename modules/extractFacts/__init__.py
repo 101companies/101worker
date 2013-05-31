@@ -11,7 +11,7 @@ import tools101
 
 
 # Per-file functinonality
-<<<<<<< HEAD
+
 def derive(extractor, sFilename, tFilename):
 
    # Housekeeping for extractor
@@ -21,15 +21,7 @@ def derive(extractor, sFilename, tFilename):
    # sFilename = input
    # tFilename = output
    command = "{0} < \"{1}\" > \"{2}\"".format(os.path.join(const101.sRoot, extractor), sFilename, tFilename)
-=======
-def derive(extractor, rFilename, sFilename, tFilename):
 
-   # Housekeeping for extractor
-   extractors.add(extractor)
-   
-   print "Extract facts from " + rFilename + " with " + extractor + "."
-   command = "{0} < \"{1}\" > \"{2}\"".format(os.path.join(const101.sRoot, extractor),sFilename,tFilename)
->>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
    (status, output) = tools101.run(command)
 
    # Result aggregation
@@ -46,7 +38,6 @@ def main(data):
 
     for f in data['data']:
         if os.path.exists(f + '.metadata.json'):
-<<<<<<< HEAD
             metadata = json.load(open(f + '.metadata.json', 'r'))          
             
             for match in metadata:
@@ -59,7 +50,3 @@ if __name__ == '__main__':
     main({'data': ['/tmp/jaxbExtension/contributions/jaxbExtension'], 'type': 'folders'})
 
             
-=======
-            metadata = json.load(open(f + '.metadata.json', 'r'))
-            # TODO: add stuff    
->>>>>>> 789459768f776d4d06b3c35544858ffc922ad749
