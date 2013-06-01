@@ -41,7 +41,7 @@ def handle_request(input_data):
     r = requests.post(input_data['backping'], data=result, headers=headers)
     
 
-@app.route("/services/analyzeSubmission", methods=['POST'])
+@app.route("/", methods=['POST'])
 def index():
     
     input_data = request.json
