@@ -17,7 +17,8 @@ def validRule(rule):
       or "suffix" in rule) \
       and \
       (not "predicate" in rule \
-       or not "fragment" in rule)
+       or not "fragment" in rule
+       or not "fpredicate" in rule)
 
 # Normalize rule
 def normalizeRule(rule):
@@ -121,10 +122,10 @@ numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 
 # Write to files and stdout if there have been changes
-if not os.path.exists(const101.rulesDump) or not json.load(open(const101.rulesDump, 'r')) == dump:
-   rulesFile = open(const101.rulesDump, 'w')
-   rulesFile.write(json.dumps(dump))
-else:
-   print 'write ommited since there were no changes'
+#if not os.path.exists(const101.rulesDump) or not json.load(open(const101.rulesDump, 'r')) == dump:
+rulesFile = open(const101.rulesDump, 'w')
+rulesFile.write(json.dumps(dump, indent=4))
+#else:
+#   print 'write ommited since there were no changes'
 tools101.releaseDump(dump)
 sys.exit(0)

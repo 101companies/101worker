@@ -22,6 +22,7 @@ def main(data):
     data = expand_data(data)
 
     rules = json.load(open(const101.rulesDump))
-    rules = interpretRules.group_fast_predicates(rules)
+    fpredicate_rules = interpretRules.group_fast_predicates(rules)
+    print fpredicate_rules
 
-    interpretRules.apply_rules(data['data'], rules, lambda rule: any(filter(lambda key: key  == 'fpredicate', rule['rule'].keys())), True)
+    interpretRules.apply_rules(data['data'], fpredicate_rules, lambda rule: lambda rule: rule['rule']['fpredicate'] == "technologies/fpredicate_generic_platform/tokens.py", append=True)

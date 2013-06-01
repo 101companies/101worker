@@ -66,6 +66,7 @@ def match_file(file, rules, filter_function, append=False):
                 continue
 
         if rule.has_key('fpredicate'):
+            print 'fpredicate'
             fpredicate = rule['fpredicate']
             args = rule['args']
             cmd = [os.path.join(const101.sRoot, predicate)]
@@ -75,6 +76,8 @@ def match_file(file, rules, filter_function, append=False):
             for i, value in enumerate(result):
                 if not value:
                     rule['metadata'][i] = {}
+                    
+            rule['metadata'] = filter(bool, rule['metadata'])
             
 
         matches.append({
@@ -136,7 +139,7 @@ def group_fast_predicates(rules):
         i = group[0]
         i['args'] = [i['args']] + query(group[1:]).select(lambda rule: rule['args']).to_list()
         i['metadata'] = [i['metadata']] + query(group[1:]).select(lambda rule: rule['metadata']).to_list()
-        result.append(i)
+        result.append({'rule': i})
 
     return {'results': {'rules': result } }
     
