@@ -1,0 +1,23 @@
+<div class="span5 box info-box orange-top">
+	<div class="box-header">
+	    Derived files
+	</div>
+    <div class="box-content">
+        {% if derived == [] %}
+            None
+        {% else %}
+            <ul>
+                {% for d in derived %}
+                    {% if d.info %}
+                        <li><a href="{{ d.resource.decode('utf_8') }}">{{ d.info.headline.decode('utf_8') }}</a></li>
+                        <ul>
+                            <li>Produced by <a href="{{ d.producedBy }}?format=html">{{ d.producedBy.rsplit('/', 1)[1] }}</a></li>
+                        </ul>
+                    {% else %}
+                        <li><a href="{{ d.resource.decode('utf_8') }}">{{ d.name.decode('utf_8') }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+	</div>
+</div>

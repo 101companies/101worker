@@ -1,13 +1,14 @@
-from flask import Flask, request
 import json
 import sys
 import os
+
+os.chdir(os.path.dirname(__file__))
+
 import pipes
 import requests
 from multiprocessing import Process
+from django.http import HttpResponse, HttpResponseNotAllowed
 sys.path.append('../../modules')
-
-app = Flask(__name__)
 
 def handle_request(input_data):
     config = json.load(open('submission.json', 'r'))
@@ -29,7 +30,6 @@ def handle_request(input_data):
     }
 
     for module in config:
-        app.logger.debug(module)
         n = __import__(module)
         n.main(data)
 
@@ -41,21 +41,25 @@ def handle_request(input_data):
     r = requests.post(input_data['backping'], data=result, headers=headers)
     
 
-@app.route("/", methods=['POST'])
-def index():
+def analyze(request):
     
-    input_data = request.json
+    if request.method != 'POST':
+        return HttpResponseNotAllowed('Only get allowed')
+    
+    input_data = json.loads(request.raw_post_data)
     
     p = Process(target=handle_request, args=(input_data, ))
     p.start() 
 
     # error other than 0, message contains description of error
-    return json.dumps({
+    return HttpResponse(json.dumps({
         'errorcode': 0,
         'error': None
-    })
+    }), content_type='application/json')
 
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
 
    
+
+
+
+

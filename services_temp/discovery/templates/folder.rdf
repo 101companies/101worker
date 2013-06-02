@@ -1,0 +1,17 @@
+{% extends "base.rdf" %}
+{% block content %}
+
+
+    {% include "snippets/general.rdf" %}
+
+    {% include "snippets/parts.rdf" %}
+
+    {% if module and classifier == 'Namespace member' %}
+        <rdf:type rdf:resource="http://101companies.org/property/module"/>
+        {% include "snippets/moduleDescription.rdf" %}
+    {% endif %}
+
+
+
+    {% include "snippets/links.rdf" %}
+{% endblock %}

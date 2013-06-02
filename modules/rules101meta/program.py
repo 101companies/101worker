@@ -10,44 +10,36 @@ import tools101
 
 # Check rule for validity
 def validRule(rule):
-   return \
-      ("filename" in rule \
-      or "basename" in rule \
-      or "dirname" in rule \
-      or "suffix" in rule) \
-      and \
-      (not "predicate" in rule \
-       or not "fragment" in rule
-       or not "fpredicate" in rule)
+    return True
 
 # Normalize rule
 def normalizeRule(rule):
-   if not isinstance(rule["metadata"], list):
-      rule["metadata"] = [ rule["metadata"] ]
+    if not isinstance(rule["metadata"], list):
+        rule["metadata"] = [ rule["metadata"] ]
 
 # Gather metrics
 def countRule(rule):
-   
-   global suffixes
-   if "suffix" in rule:
-      suffix = rule["suffix"]
-      if not suffix in suffixes:
-         suffixes += [suffix]
-         
-   global predicates
-   if "predicate" in rule:
-      predicate = rule["predicate"]
-      if not predicate in predicates:
-         predicates[predicate] = []
-      if not "args" in rule:
-         args = []
-      else:
-         args = rule["args"]
-         if not isinstance(args, list):
-            args = [args]
-      for arg in args:
-         if not arg in predicates[predicate]:
-            predicates[predicate] += [arg]
+
+    global suffixes
+    if "suffix" in rule:
+        suffix = rule["suffix"]
+        if not suffix in suffixes:
+            suffixes += [suffix]
+
+    global predicates
+    if "predicate" in rule:
+        predicate = rule["predicate"]
+        if not predicate in predicates:
+            predicates[predicate] = []
+        if not "args" in rule:
+            args = []
+        else:
+            args = rule["args"]
+            if not isinstance(args, list):
+                args = [args]
+        for arg in args:
+            if not arg in predicates[predicate]:
+                predicates[predicate] += [arg]
 
 
 #
@@ -56,15 +48,15 @@ def countRule(rule):
 # Qualify rule with origin information.
 #
 def handleRule(rule):
-   countRule(rule)
-   if validRule(rule):
-      normalizeRule(rule)
-      entry = dict()
-      entry['filename'] = rFilename
-      entry['rule'] = rule
-      rules.append(entry)
-   else:
-      invalidFiles.append(rFilename)
+    countRule(rule)
+    if validRule(rule):
+        normalizeRule(rule)
+        entry = dict()
+        entry['filename'] = rFilename
+        entry['rule'] = rule
+        rules.append(entry)
+    else:
+        invalidFiles.append(rFilename)
 
 print "Gathering 101meta rules from 101repo."
 
@@ -93,27 +85,28 @@ dump["numbers"] = numbers
 
 # Main loop
 for root, dirs, files in os.walk(const101.sRoot):
-   for basename in fnmatch.filter(files, "*.101meta"):
-      filename = os.path.join(root, basename)
-      rFilename = filename[len(const101.sRoot)+1:] # relative file name
-      numberOfFiles += 1
+    for basename in fnmatch.filter(files, "*.101meta"):
+        filename = os.path.join(root, basename)
+        print filename
+        rFilename = filename[len(const101.sRoot)+1:] # relative file name
+        numberOfFiles += 1
 
-      # Shield against JSON encoding errors
-      try:        
-         jsonfile = open(filename, "r")
-         data = json.load(jsonfile)
- 
-         # Handle lists of rules
-         if isinstance(data, list):
-            for rule in data:
-               handleRule(rule)
-         else:
-            handleRule(data)
-         break
-         
-      except json.decoder.JSONDecodeError:
-         print "Unreadable file: " + rFilename + " (JSONDecodeError)"
-         unreadableFiles.append(rFilename)
+        # Shield against JSON encoding errors
+        try:
+            jsonfile = open(filename, "r")
+            data = json.load(jsonfile)
+
+            # Handle lists of rules
+            if isinstance(data, list):
+                for rule in data:
+                    handleRule(rule)
+            else:
+                handleRule(data)
+            break
+
+        except json.decoder.JSONDecodeError:
+            print "Unreadable file: " + rFilename + " (JSONDecodeError)"
+            unreadableFiles.append(rFilename)
 
 # Completion of dump
 numbers["numberOfRules"] = len(rules)

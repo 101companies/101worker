@@ -17,21 +17,19 @@ def derive(extractor, sFilename, tFilename):
    # Housekeeping for extractor
    #extractors.add(extractor)
    
-   print "Extract facts from " + sFilename + " with " + extractor + "."
+   #print "Extract facts from " + sFilename + " with " + extractor + "."
    # sFilename = input
    # tFilename = output
    command = "{0} < \"{1}\" > \"{2}\"".format(os.path.join(const101.sRoot, extractor), sFilename, tFilename)
 
    (status, output) = tools101.run(command)
 
-   # Result aggregation
-   result = dict()
-   result["extractor"] = extractor
-   result["command"] = command
-   result["status"] = status
-   result["output"] = output
-
-   return result
+   return {
+        'extractor': extractor,
+        'command': command,
+        'status': status,
+        'output': output
+    }
 
 def main(data):
     data = service_api.expand_data(data)

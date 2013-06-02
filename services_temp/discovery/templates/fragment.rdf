@@ -1,0 +1,14 @@
+{% extends "base.rdf" %}
+{% block content %}
+    <rdf:type rdf:resource="http://101companies.org/property/fragment"/>
+
+    {% include "snippets/general.rdf" %}
+
+    {% include "snippets/parts.rdf" %}
+
+    {% include "snippets/links.rdf" %}
+
+    {% include "snippets/people.rdf" %}
+
+    {% include "snippets/content.rdf" %}
+{% endblock %}

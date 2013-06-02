@@ -19,6 +19,8 @@ def match_file(file, rules, filter_function, append=False):
 
     for rule in rules:
         rule = rule['rule']
+        if not rule['metadata']:
+            continue
         
         if rule.has_key('basename'):
             if isinstance(rule['basename'], list):
@@ -62,22 +64,29 @@ def match_file(file, rules, filter_function, append=False):
             cmd += " \"" + file + "\""
             (status, output) = commands.getstatusoutput(cmd)
             if status != 0:
-                #print 'failed:', cmd, output
                 continue
 
         if rule.has_key('fpredicate'):
-            print 'fpredicate'
+            rule = copy.deepcopy(rule)
             fpredicate = rule['fpredicate']
             args = rule['args']
-            cmd = [os.path.join(const101.sRoot, predicate)]
+            cmd = [os.path.abspath(os.path.join(os.path.dirname(__file__), const101.sRoot, fpredicate))]
             cmd.append(pipes.quote(file))
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
-            result = json.loads(p.communicate(input=json.dumps(args)))
+            result = p.communicate(input=json.dumps(args))
+            result = result[0]
+            result = json.loads(result)
             for i, value in enumerate(result):
                 if not value:
                     rule['metadata'][i] = {}
                     
-            rule['metadata'] = filter(bool, rule['metadata'])
+            metadata = []
+            for meta in rule['metadata']:
+                for i in meta:
+                    if i:
+                        metadata.append(i)
+                    
+            rule['metadata'] = metadata
             
 
         matches.append({
@@ -103,6 +112,7 @@ def match_file(file, rules, filter_function, append=False):
 
 def apply_rules(files, rules, filter_function, append):
     rules = rules['results']['rules']
+    print files
     map(lambda file: match_file(file, rules, filter_function, append), files)
     
 def group_fast_predicates(rules):
@@ -145,7 +155,7 @@ def group_fast_predicates(rules):
     
     
 if __name__ == '__main__':
-    print group_fast_predicates(json.load(open('rules.json')))
+    print group_fast_predicates(json.load(open('/home/kevin/101web/data/dumps/rules.json')))
 
 
  

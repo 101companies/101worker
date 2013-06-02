@@ -17,13 +17,13 @@ def main(data):
     languages = []
     technologies = []
     concepts = []
+    features = []
     
     for f in data['data']:
         
         if os.path.exists(f + '.metadata.json'):
             metadata = json.load(open(f + '.metadata.json'))
             for m in metadata:
-                print m
                 if m.get('relevance', 'system') == 'system':
                     for unit in m['metadata']:
                         
@@ -35,7 +35,17 @@ def main(data):
    
                         elif unit.has_key('concept'):
                             concepts.append(unit['concept'])
+                            
+                        elif unit.has_key('feature'):
+                            features.append(unit['feature'])
    
+    print {
+        'languages' : list(set(languages)),
+        'technologies': list(set(technologies)),
+        'concepts': list(set(concepts)),
+        'features': list(set(features))
+    }
+    
     f = open(os.path.join(old_data['data'][0], 'summary.json'), 'w')
     json.dump({
         'languages' : list(set(languages)),

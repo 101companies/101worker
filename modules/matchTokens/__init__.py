@@ -16,6 +16,7 @@ from service_api import *
 
 
 def main(data):
+    print 'match tokens'
 
     logging.basicConfig(filename='matchSimpleRules.log',level=logging.DEBUG)
 

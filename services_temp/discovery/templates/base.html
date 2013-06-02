@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>101explorer</title>
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="{{ static_uri }}/static/discovery/style.css" type="text/css">
+
+	<meta charset="utf-8">
+</head>
+<body>
+
+<header class="header">
+    <a href="http://101companies.org/resources?format=html">
+        <div class="container">
+            <h1>101explorer</h1>
+        </div>
+    </a>
+</header>
+
+{% if not classifier == 'Namespace' %}
+    <div class="alert alert-success text-center position-indicator" style="padding-bottom: 10px;">
+        <b style="font-size: 115%;">Locator:</b>
+        <span id="locator-path">
+            {{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '').decode('utf_8') }}
+        </span>
+
+        <div id="relative-path" style="display: none; visibility: hidden;">
+            {% if not classifier == 'Namespace member' %}
+                {{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}
+            {% endif %}
+        </div>
+
+        <div id="with-absolute-markup" style="display: none; visibility: hidden;">
+            {%- if not classifier == 'Namespace member' -%}
+                {%- if classifier == 'Folder' -%}
+                   &lt;folder url="{{ uri.decode('utf_8') }}" /&gt;
+                {%- elif classifier == 'File' -%}
+                    &lt;file url="{{ uri.decode('utf_8') }}" /&gt;
+                {%- else -%}
+                    &lt;fragment url="{{ uri.decode('utf_8') }}" /&gt;
+                {%- endif -%}
+            {%- else -%}
+                &lt;folder url="{{ uri.decode('utf_8') }}" /&gt;
+            {%- endif -%}
+        </div>
+
+        <div id="with-relative-markup" style="display: none; visibility: hidden;">
+            {%- if not classifier == 'Namespace member' -%}
+                {%- if classifier == 'Folder' -%}
+                   &lt;folder url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
+                {%- elif classifier == 'File' -%}
+                    &lt;file url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
+                {%- else -%}
+                    &lt;fragment url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
+                {%- endif -%}
+            {%- else -%}
+                &lt;folder url="" /&gt;
+            {%- endif -%}
+        </div>
+
+        <div class="btn dropdown pull-right btn-mini">
+            <span class="dropdown-toggle" role="button" data-toggle="dropdown">Options<b class="caret"></b></span>
+            <ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop5">
+                <li role="presentation"><a id="copy-absolute" data-clipboard-target="locator-path" role="menuitem">Absolute locator</a></li>
+                <li role="presentation"><a id="copy-relative" data-clipboard-target="relative-path" role="menuitem">Relative locator</a></li>
+                <li role="presentation"><a id="copy-absolute-markup" data-clipboard-target="with-absolute-markup" role="menuitem">Absolute markup</a></li>
+                <li role="presentation"><a id="copy-relative-markup" data-clipboard-target="with-relative-markup" role="menuitem">Relative markup</a></li>
+            </ul>
+        </div>
+        <a title="Copy into Clipboard" id="copy" data-clipboard-target="locator-path" class="pull-right btn btn-mini"><i class="icon-share"></i></a>
+    </div>
+{% endif %}
+
+
+<div class="container">
+    <div id="content" class="row">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        <a href="http://101companies.org/wiki/@explorer">What's the 101explorer?</a> <br />
+        Switch from HTML format to <a href="{{ uri.decode('utf_8') }}">JSON format</a> or <a href="{{ uri.decode('utf_8') }}?format=rdf">RDF format</a>.<br />
+
+        Powered by <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a>,
+        <a href="http://jquery.com/">JQuery</a> and <a href="http://masonry.desandro.com/">Masonry</a>
+    </footer>
+
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+
+<script src="{{ static_uri }}/static/discovery/js/libs/jquery.masonry.min.js"></script>
+<script src="{{ static_uri }}/static/discovery/js/libs/ZeroClipboard.min.js"></script>
+<script src="{{ static_uri }}/static/discovery/js/base.js"></script>
+</body>
+</html>

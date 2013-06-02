@@ -1,0 +1,48 @@
+
+<div class="span5 box info-box green-yellow-top">
+    <div class="box-header">
+        Links
+    </div>
+    <div class="box-content">
+        {% if github %}
+            <div class="box-content-fragment">
+                <b>Github </b>
+				<a href="{{ github.decode('utf_8') }}">Link</a>
+            </div>
+        {% endif %}
+        {% if wiki %}
+			<div class="box-content-fragment">
+                <b>Wiki </b>
+                <a href="{{ wiki.decode('utf_8') }}">Link</a>
+            </div>
+        {% endif %}
+	    {% if sesame %}
+			<div class="box-content-fragment">
+                <b>Sesame</b>
+                <a href="{{ sesame.decode('utf_8') }}">Link</a>
+			</div>
+	    {% endif %}
+	    {% if endpoint %}
+			<div class="box-content-fragment">
+                <b>Endpoint</b>
+                <a href="{{ endpoint.decode('utf_8') }}">Link</a>
+			</div>
+	    {% endif %}
+    </div>
+</div>
+{#
+<div class="section">
+    <div class="headlinecontainer">
+        <h2>Links</h2>
+    </div>
+    <div class="section-content">
+        {% if endpoint %}
+            <p><a href="{{ endpoint.decode('utf_8') }}">Endpoint</a></p>
+        {% endif %}
+        {% if sesame %}
+            <p><a href="{{ sesame.decode('utf_8') }}">Sesame</a></p>
+        {% endif %}
+    </div>
+</div>
+
+<br> #}

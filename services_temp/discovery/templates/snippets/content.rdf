@@ -1,0 +1,3 @@
+{% if content %}
+    <co:content>{{ content.decode('utf_8') }}</co:content>
+{% endif %}

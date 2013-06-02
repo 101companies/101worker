@@ -1,0 +1,3 @@
+This file is only here so that Github recognises the folder.
+
+I'm curious what Github does with folder permissions, since this folder actually belongs to webserver

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    {% include "snippets/general.html" %}
+
+    {% include "snippets/parts.html" %}
+
+    {% if module and classifier == 'Namespace member' %}
+        {% include "snippets/moduleDescription.html" %}
+    {% endif %}
+
+    {% include "snippets/links.html" %}
+{% endblock %}
