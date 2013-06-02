@@ -6,6 +6,7 @@ results101 = "../../../101results"
 sRoot = "../../../101results/101repo" # the root for source files
 tRoot = "../../../101web/data/resources" # the root for target files
 dumps = "../../../101web/data/dumps" # the root for dumps
+views = "../../../101web/data/views" # the root for views
 rulesDump = os.path.join(dumps, "rules.json")
 matchesDump = os.path.join(dumps, "matches.json")
 predicatesDump = os.path.join(dumps, "predicates.json")
