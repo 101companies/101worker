@@ -79,7 +79,7 @@ def matchFile(phase, dirname, basename, rule):
 
     # ignore fpredicates
     if rule.has_key('fpredicate'):
-        continue    
+        return None    
     
     #
     # Check dirname constraint
