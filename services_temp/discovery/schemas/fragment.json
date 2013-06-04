@@ -1,0 +1,103 @@
+{
+	"title": "Fragment schema",
+	"type" : "object",
+	"properties": {
+		"wiki" : {
+			"type": "string",
+			"description": "link to the wiki page",
+            "required": true
+		},
+		"github" : {
+			"type": "string",
+			"description" : "link to the github page",
+            "required": true
+		},
+		"name" : {
+			"type": "string",
+			"description" : "name of the entity",
+            "required": true
+		},
+		"headline" : {
+			"type": "string",
+			"description": "headline from the wiki",
+            "required": true
+		},
+		"namespace" : {
+			"type": "string",
+			"description": "namespace this entity belongs to",
+            "required": true
+		},
+		"sesame" : {
+			"type": "string",
+			"description": "link to the sesame triplestore",
+            "required": true
+		},
+		"endpoint" : {
+			"type": "string",
+			"description": "link to the semantic endpoint triples",
+            "required": true
+		},
+		"classifier" : {
+			"type": "string",
+			"description": "classifier of this entity",
+            "required": true
+		},
+        "geshi" : {
+            "type" : ["string", "null"],
+            "description": "geshi code that can be used for highlighting",
+            "required": true
+        },
+        "language": {
+            "type" : "string",
+            "description" : "language in which this file is written",
+            "required": true
+        },
+        "content" : {
+            "type" : "string",
+            "description" : "content of the file",
+            "required": true
+        },
+        "people" : {
+            "type" : "array",
+            "items": {
+                "type" : "object",
+                "properties" : {
+                    "role" : {
+                        "type" : ["string", "null"],
+                        "description" : "assumed role of the person",
+                        "required": true
+                    },
+                    "name" : {
+                        "type" : "string",
+                        "description" : "name of the person",
+                        "required": true
+                    }
+                }
+            }
+        },
+		"fragments" : {
+			"type": "array",
+            "required": true,
+			"items": {
+				"type": "object",
+				"properties": {
+					"resource" : {
+						"type": "string",
+						"description": "link to the member resource",
+                        "required": true
+					},
+					"classifier" : {
+						"type": "string",
+						"description": "classifier of this member",
+                        "required": true
+					},
+					"name" : {
+						"type": "string",
+						"description": "name of this entity",
+                        "required": true
+					}
+				}
+            }
+		}
+	}
+}
