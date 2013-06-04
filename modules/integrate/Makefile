@@ -22,7 +22,7 @@ deploy:
 	python deployResources.py ;\
 	cp -r ${integrateDir}/data/summary ${modulesDir}/integrate
 	cp ${integrateDir}/data/allbooks/backlinks.json ${termResourcesDir}
-	cp ${integrateDir}/data/allbooks/mappings.json ${termResourcesDir}
+	cp ${integrateDir}/data/allbooks/mapping.json ${termResourcesDir}
 
 # Remove local temporary files, if any
 clean:  
