@@ -18,6 +18,6 @@
 
 {% if members %}
     {% for member in members %}
-		<co:isMember rdf:resource="{{ member.resource }}?format=rdf" {#  co:name="{{ member.name }}" co:classifier="{{ member.classifier }}"#}/>
+		<co:member rdf:resource="{{ member.resource }}?format=rdf" {#  co:name="{{ member.name }}" co:classifier="{{ member.classifier }}"#}/>
     {% endfor %}
 {% endif %}
