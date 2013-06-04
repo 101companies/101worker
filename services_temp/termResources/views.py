@@ -3,10 +3,10 @@ from models import lookup
 import json
 import os
 
-backlinks = os.path.join(os.path.dirname(__file__), 'backlinks.json')
-mappings = os.path.join(os.path.dirname(__file__), 'mapping.json')
-
 def serveResourceNames(request, format):
+    backlinks = os.path.join(os.path.dirname(__file__), 'backlinks.json')
+    mappings = os.path.join(os.path.dirname(__file__), 'mapping.json')
+
     isJsonp = request.GET.get('format', '') == 'jsonp'
     
     resources = json.load(open(backlinks))['resources']
@@ -16,6 +16,9 @@ def serveResourceNames(request, format):
     return HttpResponse(result, content_type='application/javascript' if isJsonp else 'text/json')
 
 def serveTerm(request, format, term, resource=""):
+    backlinks = os.path.join(os.path.dirname(__file__), 'backlinks.json')
+    mappings = os.path.join(os.path.dirname(__file__), 'mapping.json')
+
     isJsonp = request.GET.get('format', '') == 'jsonp'
     
     backlinksInfo = json.load(backlinks)
