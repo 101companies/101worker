@@ -38,7 +38,7 @@ def serveTerm(request, format, term, resource=""):
             result.append(cResult)
         result = json.dumps(result)
     if isJsonp:
-       result = params.get('callback', 'callback') + '(' + result + ')'
+       result = request.GET.get('callback', 'callback') + '(' + result + ')'
     return HttpResponse(result, content_type='application/javascript' if isJsonp else 'text/json')
 
 
