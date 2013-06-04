@@ -40,7 +40,7 @@ def calculateMetricsForContributions(blacklist=[]):
     contributionMetrics = {}
     debug = {}
 
-    contributions = loadPage('http://localhost/services/discovery/contributions')['members']
+    contributions = loadPage('http://101companies.org/resources/contributions')['members']
     for contribution in contributions:
         if contribution['name'] in blacklist:
             continue

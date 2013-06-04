@@ -15,7 +15,7 @@ def _extractFeatures(url):
     return features
 
 def deriveFeaturesForContributions(blacklist = []):
-    contributions = loadPage('http://localhost/services/discovery/contributions')['members']
+    contributions = loadPage('http://101companies.org/resources/contributions')['members']
     featuresContributions = {}
     missingFeatures = []
 
