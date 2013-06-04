@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from models import lookup
+import json
 
 def serveResourceNames(request, format):
     isJsonp = request.GET.get('format', '') == 'jsonp'
