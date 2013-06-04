@@ -21,7 +21,7 @@ def serveTerm(request, format, term, resource=""):
 
     isJsonp = request.GET.get('format', '') == 'jsonp'
     
-    backlinksInfo = json.load(backlinks)
+    backlinksInfo = json.load(open(backlinks))
     mapping = json.load(open(mappings))
     backlinks = backlinksInfo['backlinks']
     
