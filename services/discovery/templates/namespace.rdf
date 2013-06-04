@@ -1,6 +1,6 @@
 {% extends "base.rdf" %}
 {% block content %}
-     <rdf:type rdf:resource="http://101companies.org/property/namespace"/>
+    <rdf:type rdf:resource="http://101companies.org/property/Namespace"/>
 
     {% include "snippets/general.rdf" %}
 

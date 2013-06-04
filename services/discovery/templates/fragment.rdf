@@ -1,6 +1,6 @@
 {% extends "base.rdf" %}
 {% block content %}
-    <rdf:type rdf:resource="http://101companies.org/property/fragment"/>
+    <rdf:type rdf:resource="http://101companies.org/property/Fragment"/>
 
     {% include "snippets/general.rdf" %}
 

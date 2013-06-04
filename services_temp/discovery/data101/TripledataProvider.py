@@ -22,11 +22,11 @@ def getTriplesContaining(namespace, member):
 #react differently than when someone wants the concept "Monoid"
 def getEndpointLink(namespace, member):
     if member == '':
-        member = 'Concept'
+        member += 'Concept'
     if not namespace or namespace == '':
-        return "http://triples.101companies.org/org.softlang.semanticendpoint/doQuery?method=getResourceTriples&resource={}".format(member)
+        return "http://101companies.org/endpoint/{}/json".format(member)
     else:
-        return "http://triples.101companies.org/org.softlang.semanticendpoint/doQuery?method=getResourceTriples&resource={0}-3A{1}".format(namespace, member)
+        return "http://101companies.org/endpoint/{0}:{1}/json".format(namespace, member)
 
 def getSesameLink(namespace, member):
     if member == '':

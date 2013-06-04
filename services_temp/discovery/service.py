@@ -226,10 +226,10 @@ def serveAllNamespaces(request):
 
     if 'wikititle' in request.GET.keys():
         redirectUrl = discovery.createRedirectUrl(request.GET['wikititle'])
-        if 'format' in params:
-            redirectUrl += '?format=' + params['format']
-            if params.get('callback', ''):
-                redirectUrl += '&callback=' + params['callback']
+        if 'format' in request.GET.keys():
+            redirectUrl += '?format=' + request.GET['format']
+            if request.GET.get('callback', ''):
+                redirectUrl += '&callback=' + request.GET['callback']
         return redirect(redirectUrl)
 
 
