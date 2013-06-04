@@ -1,9 +1,10 @@
 {% for d in derived %}
-    {# apparently there are some troubles when i add headline and such as sub elements... #}
-    <co:derived co:link="{{ d.resource }}" co:name="{{ d.name }}"
-    {% if d.info %}
-        co:headline="{{ d.info.headline }}"
-        co:producedBy="{{ d.producedBy }}?format=rdf"
-    {% endif %}
-    />
+    <co:derived rdf:parseType="Resource">
+        <co:link>{{ d.resource }}</co:link>
+        <co:fileName>{{ d.name }}</co:fileName>
+        {% if d.info %}
+            <co:fileHeadline>{{ d.info.headline }}</co:fileHeadline>
+            {#  <co:producedBy rdf:resource="{{ d.producedBy }}?format=rdf"/> #}
+        {% endif %}
+    </co:derived>
 {% endfor %}
