@@ -1,5 +1,6 @@
 include ../Makefile.vars
 integrateDir = ${resultsdir}/repos/101integrate
+termResourcesDir = ../../services/termResources
 
 run:
 	make clean
@@ -20,6 +21,8 @@ deploy:
 	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate ;\
 	python deployResources.py ;\
 	cp -r ${integrateDir}/data/summary ${modulesDir}/integrate
+	cp ${integrateDir}/data/allbooks/backlinks.json ${termResourcesDir}
+	cp ${integrateDir}/data/allbooks/mappings.json ${termResourcesDir}
 
 # Remove local temporary files, if any
 clean:  
