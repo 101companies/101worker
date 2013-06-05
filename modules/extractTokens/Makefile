@@ -1,19 +1,8 @@
 include ../Makefile.vars
 
-run: ${pulled101RepoDir} ${dumpsDir} ${contrDir} ${matchesDump}
-	@./program.py
-	@test -e ${metricsDump}
+run: 
+	python -c 'from __init__ import *; main({ "type": "folders", "data": ["../../../101results/101repo"] })'
 
 # Remove local temporary files, if any
 clean:	
 	@#no-op
-
-# Remove files created by this module
-reset:
-	@rm -f ${metricsDump}
-	@find ${contrDir} -name "*.metrics.json" -exec rm -f {} \;
-	@find ${contrDir} -name "*.tokens.json" -exec rm -f {} \;
-# legacy
-	@find ${contrDir} -name "*.metrics.json.html" -exec rm -f {} \;
-	@find ${contrDir} -name "*.metr.tokens.json" -exec rm -f {} \;
-
