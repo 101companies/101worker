@@ -9,6 +9,7 @@ import os
 sys.path.append('../../libraries')
 from service_api import *
 
+
 inputFileExt = '.tokens.json'
 outputFileExt = '.refinedTokens.json'
 outputDebugFileExt = '.refinedTokens.debug.json'
@@ -22,6 +23,7 @@ def createMap(tokenized):
 			result[term] = 0
 		result[term] += 1
 	return result
+
 
 def refineTokens(data, debug = False, force = True):
 	#find all .tokens.json files
@@ -41,8 +43,9 @@ def refineTokens(data, debug = False, force = True):
 
 
 def main(data, debug = False, force = False):
+
     data = expand_data(data)
-    
+
     refineTokens(data, debug, force)
 
 def reset():

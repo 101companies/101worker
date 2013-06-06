@@ -148,9 +148,10 @@ def getUniqueFeatures(page, pages):
 
 
 def getThemeInstances(theme, pages):
-    #theme = getThemeName(theme)
-    techs = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceof::Theme:' + theme, p['page'].get('internal_links', [])))).to_list()
-    return techs
+    print 'instanceOf::Theme:' + theme
+    insts = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceOf::Theme:' + theme, p['page']['internal_links']))).to_list()
+    print insts
+    return insts
 
 def createMembers(theme, pages):
     instances = getThemeInstances(theme, pages)
@@ -294,7 +295,6 @@ def deleteEmptyCells(data):
 def toTex(list, file):
     with open (file, 'w') as f:
         f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
-
 
 for t in getThemeNames(themes):
     

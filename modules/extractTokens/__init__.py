@@ -10,6 +10,7 @@ import logging
 sys.path.append('../../libraries')
 from service_api import *
 
+
 #used for the incrementally stuff
 def testFile(sFilename, tFilename):
     return tools101.build(sFilename, tFilename)
@@ -22,6 +23,7 @@ def testEntry(entry):
         meta["relevance"] = [item for item in entry["metadata"] if "relevance" in item][0]['relevance']
     if any(["geshi" in item for item in entry["metadata"]]):
         meta["geshi"] = [item for item in entry["metadata"] if "geshi" in item][0]['geshi']
+
     return meta
 
 # Per-file functionality
@@ -31,6 +33,7 @@ def derive(info, rFilename, sFilename, tFilename1):
         tFilename2 = tFilename1[:-len(".metrics.json")]+".tokens.json"
         print "Process " + rFilename + " for GeSHi code " + info["geshi"] + "."
         command = "php " + os.path.join(os.path.dirname(__file__), 'helper.php') + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" \"" + info["geshi"] + "\" " + info["relevance"]
+
         (status, output) = tools101.run(command)
 
         # Result aggregation
@@ -110,6 +113,7 @@ def main(data):
     #dump = tools101.beforeMapMatches(const101.metricsDump)
    # if "geshicodes" in dump:
    #     geshicodes = set(dump["geshicodes"])
+
 
     # Loop over matches
     dump = mapMatches(data['data'], testEntry, testFile, ".metrics.json", derive)
