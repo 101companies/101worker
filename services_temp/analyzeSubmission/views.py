@@ -11,7 +11,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed
 sys.path.append('../../modules')
 
 def handle_request(input_data):
-    config = json.load(open(os.path.abspath(os.path.dirname(__file__), 'submission.json'), 'r'))
+    config = json.load(open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'submission.json')), 'r'))
 
     result = []
 
