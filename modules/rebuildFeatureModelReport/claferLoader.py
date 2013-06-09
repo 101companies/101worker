@@ -1,4 +1,5 @@
 import re
+import argparse
 import tripleLoader
 from termcolor import colored
 import json
@@ -23,7 +24,7 @@ def loadFeature(featURL, indent):
   optional = map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Optional_feature', triples)
   impliedFeatsTriples = filter(lambda t: t['predicate'] == basePropURL + 'implies' and t['direction'] == 'OUT' ,triples)
   impliedClaferFeats = map(lambda t:  tripleLoader.urlTourlName(tripleLoader.urlNameToClafer(t['node']),'Feature-3A'), impliedFeatsTriples)
-  print colored('=> (' + ','.join(impliedClaferFeats) + ')', 'cyan'),
+  print colored('=> (' + ', '.join(impliedClaferFeats) + ')', 'cyan'),
   for implied in impliedClaferFeats:
     implications.append([claferFeat, implied])
   if isLeaf:
@@ -51,9 +52,12 @@ def loadRequirement(reqURL, indent):
   return '\n' + ' ' * indent + claferReq + features + '\n'
 
 #main
+parser = argparse.ArgumentParser()
+parser.add_argument('-cf', required=True, help='file name of the clafer file to write output to')
+args = parser.parse_args()
 reqsTriples = filter(lambda t: t['predicate'] == basePropURL + 'isA',  tripleLoader.load('Requirement'))
 res = 'abstract FeatureSpec'
 res += '\n' + ''.join(map(lambda t: loadRequirement(t['node'],2), reqsTriples))
 res += '\n' + '\n'.join(map(lambda t: '[' + t[0] + ' => ' + t[1] + ']', implications))
-with open('features.clf', 'w+') as f:
+with open(args.cf, 'w+') as f:
   f.write(res)
