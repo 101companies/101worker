@@ -13,7 +13,7 @@ implications = []
 def loadFeature(featURL, indent):
   feat = tripleLoader.urlTourlName(featURL, 'Feature-3A')
   claferFeat = tripleLoader.urlNameToClafer(feat)
-  print ' ' * indent + 'Loading ' + claferFeat,
+  print ' ' * indent + claferFeat,
   if claferFeat in cache:
     print colored('~ DUPLICATE', 'yellow')
     return ''
@@ -45,7 +45,7 @@ def loadFeature(featURL, indent):
 def loadRequirement(reqURL, indent):
   req = tripleLoader.urlTourlName(reqURL, '')
   claferReq = tripleLoader.urlNameToClafer(req)
-  print 'Loading ' + claferReq + 's'
+  print claferReq + 's'
   triples = tripleLoader.load(req)
   reqTriples = filter(lambda t: t['node'].find('Feature-3A') != -1 and t['predicate'] == basePropURL + 'isA' and t['direction'] == 'IN', triples)
   features = ''.join(map(lambda t:  loadFeature(t['node'], indent + 2), reqTriples))
