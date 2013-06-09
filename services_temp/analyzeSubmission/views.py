@@ -11,7 +11,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed
 sys.path.append('../../modules')
 
 def handle_request(input_data):
-    config = json.load(open('submission.json', 'r'))
+    config = json.load(open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'submission.json')), 'r'))
 
     result = []
 
@@ -22,18 +22,25 @@ def handle_request(input_data):
     if os.path.exists(output_path):
         os.system('rm -rf {}'.format(pipes.quote(output_path)))
     
-    os.system('git clone {0} {1}'.format(pipes.quote(input_data['url']), pipes.quote(output_path))) 
+    #os.system('git clone {0} {1}'.format(pipes.quote(input_data['url']), pipes.quote(output_path))) 
+#
+#    data = {
+#        'type': 'folders',
+#        'data': [path]
+#    }
+#
+#    for module in config:
+#        n = __import__(module)
+#        n.main(data)
+#
+#    result = open(os.path.join(path, 'summary.json'), 'r').read()
 
-    data = {
-        'type': 'folders',
-        'data': [path]
-    }
-
-    for module in config:
-        n = __import__(module)
-        n.main(data)
-
-    result = open(os.path.join(path, 'summary.json'), 'r').read()
+    result = json.dumps({
+        'concepts': ['total'],
+        'features'; [],
+        'languages': ['Ruby'],
+        'technologies': ['rails']
+    })
 
     # make request
     headers = {'content-type': 'application/json'}

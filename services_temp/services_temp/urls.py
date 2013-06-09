@@ -26,6 +26,14 @@ urlpatterns = patterns('',
     (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)$', service.serveNamespaceMember),
     (r'^discovery/(?P<namespace>[^/]+)$', service.serveNamespace),
     (r'^discovery$', service.serveAllNamespaces ),
+
+    
+    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/(?P<fragment>.+)/$', service.serveFileFragment),
+    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/$', service.serveMemberFile),
+    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/$', service.serveMemberPath),
+    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/$', service.serveNamespaceMember),
+    (r'^discovery/(?P<namespace>[^/]+)/$', service.serveNamespace),
+    (r'^discovery/$', service.serveAllNamespaces ),
     
     (r'^hello$', helloWorld.hello),
     

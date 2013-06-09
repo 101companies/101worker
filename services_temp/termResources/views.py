@@ -1,20 +1,28 @@
 from django.http import HttpResponse
 from models import lookup
+import json
+import os
 
 def serveResourceNames(request, format):
-    isJsonp = request.GET.get('format', '') == 'jsonp'
+    backlinks = os.path.join(os.path.dirname(__file__), 'backlinks.json')
+    mappings = os.path.join(os.path.dirname(__file__), 'mapping.json')
+
+    isJsonp = format == 'jsonp'
     
-    resources = json.load(open('./backlinks.json'))['resources']
+    resources = json.load(open(backlinks))['resources']
     result = json.dumps({'availableResouces' : resources})
     if isJsonp:
-       result = params.get('callback', 'callback') + '(' + result + ')'
+       result = request.GET.get('callback', 'callback') + '(' + result + ')'
     return HttpResponse(result, content_type='application/javascript' if isJsonp else 'text/json')
 
 def serveTerm(request, format, term, resource=""):
-    isJsonp = request.GET.get('format', '') == 'jsonp'
+    backlinks = os.path.join(os.path.dirname(__file__), 'backlinks.json')
+    mappings = os.path.join(os.path.dirname(__file__), 'mapping.json')
+
+    isJsonp = format == 'jsonp'
     
-    backlinksInfo = json.load(open('./backlinks.json'))
-    mapping = json.load(open('./mapping.json'))
+    backlinksInfo = json.load(open(backlinks))
+    mapping = json.load(open(mappings))
     backlinks = backlinksInfo['backlinks']
     
     if resource:
@@ -30,7 +38,7 @@ def serveTerm(request, format, term, resource=""):
             result.append(cResult)
         result = json.dumps(result)
     if isJsonp:
-       result = params.get('callback', 'callback') + '(' + result + ')'
+       result = request.GET.get('callback', 'callback') + '(' + result + ')'
     return HttpResponse(result, content_type='application/javascript' if isJsonp else 'text/json')
 
 

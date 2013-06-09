@@ -1,0 +1,94 @@
+{
+	"title": "Folder schema",
+	"type" : "object",
+	"properties": {
+		"wiki" : {
+			"type": "string",
+			"description": "link to the wiki page",
+            "required": true
+		},
+		"github" : {
+			"type": ["string", "null"],
+			"description" : "link to the github page",
+            "required": true
+		},
+		"name" : {
+			"type": "string",
+			"description" : "name of the entity",
+            "required": true
+		},
+		"headline" : {
+			"type": "string",
+			"description": "headline from the wiki",
+            "required": true
+		},
+		"namespace" : {
+			"type": "string",
+			"description": "namespace this entity belongs to",
+            "required": true
+		},
+		"sesame" : {
+			"type": "string",
+			"description": "link to the sesame triplestore",
+            "required": true
+		},
+		"endpoint" : {
+			"type": "string",
+			"description": "link to the semantic endpoint triples",
+            "required": true
+		},
+		"classifier" : {
+			"type": "string",
+			"description": "classifier of this entity",
+            "required": true
+		},
+		"folders" : {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"resource" : {
+						"type": "string",
+						"description": "link to the member resource",
+                        "required": true
+					},
+					"classifier" : {
+						"type": "string",
+						"description": "classifier of this member",
+                        "required": true
+					},
+					"name" : {
+						"type": "string",
+						"description": "name of this entity",
+                        "required": true
+					}
+				}
+			},
+            "required": true
+		},
+        "files" : {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"resource" : {
+						"type": "string",
+						"description": "link to the member resource",
+                        "required": true
+					},
+					"classifier" : {
+						"type": "string",
+						"description": "classifier of this member",
+                        "required": true
+					},
+					"name" : {
+						"type": "string",
+						"description": "name of this entity",
+                        "required": true
+					}
+				}
+			},
+            "required": true
+		}
+	}
+}

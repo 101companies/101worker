@@ -22,6 +22,7 @@ def load(fileName, buffer=None):
     file.close()
     return buffer
 
+
 wordList = load('wordnet/index.adj')
 wordList = load('wordnet/index.adv', wordList)
 wordList = load('wordnet/index.noun', wordList)
@@ -31,3 +32,4 @@ wordList = load('wordnet/specific.txt', wordList)
 
 def isWord(term):
     return wordList.has_key(term.lower())
+

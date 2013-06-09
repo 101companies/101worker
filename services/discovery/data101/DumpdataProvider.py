@@ -142,15 +142,19 @@ def getDerivedFiles(filePath):
             summary = moduleSummary.get(ext, None)
             producedBy = None
             info = None
+            description = None
+            headline = None
             if summary:
                 producedBy = os.path.join('http://101companies.org/resources/modules', summary.get('name'))
-                info       = summary['info']
+                headline   = summary['info']['headline']
+                description= os.path.join(producedBy, 'module.json')
 
             result.append({
                 'name'      : str,
                 'resource'  : 'http://data.101companies.org/resources/{}'.format(os.path.join(os.path.dirname(filePath), str)),
                 'producedBy': producedBy,
-                'info'      : info
+                'headline'   : headline,
+                'description': description
             })
 
     return result

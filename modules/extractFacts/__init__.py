@@ -11,7 +11,6 @@ import tools101
 
 
 # Per-file functinonality
-
 def derive(extractor, sFilename, tFilename):
 
    # Housekeeping for extractor
@@ -47,4 +46,3 @@ def main(data):
 if __name__ == '__main__':
     main({'data': ['/tmp/jaxbExtension/contributions/jaxbExtension'], 'type': 'folders'})
 
-            

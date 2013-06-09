@@ -18,6 +18,8 @@ def getWikiData(namespace, member):
         member = 'Concept'
 
     for page in wiki['pages']:
+        if page['page'] == {}:
+            continue
         if page['page']['page']['p'] == namespace and page['page']['page']['n'] == member:
             url = 'http://101companies.org/wiki/'
             if namespace: url += namespace + ':' + member
