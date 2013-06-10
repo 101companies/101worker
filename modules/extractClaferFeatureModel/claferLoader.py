@@ -53,7 +53,8 @@ def loadRequirement(reqURL, indent):
 
 #main
 parser = argparse.ArgumentParser()
-parser.add_argument('-cf', required=True, help='file name of the clafer file to write output to')
+parser.add_argument('-cf', required=True, help='file to write clafer model to')
+parser.add_argument('-flatf', required=True, help='file to write flat list of clafer features to')
 args = parser.parse_args()
 reqsTriples = filter(lambda t: t['predicate'] == basePropURL + 'isA',  tripleLoader.load('Requirement'))
 res = 'abstract FeatureSpec'
@@ -61,3 +62,5 @@ res += '\n' + ''.join(map(lambda t: loadRequirement(t['node'],2), reqsTriples))
 res += '\n  ' + '\n  '.join(map(lambda t: '[' + t[0] + ' => ' + t[1] + ']', implications))
 with open(args.cf, 'w+') as f:
   f.write(res)
+with open(args.flatf, 'w+') as f:
+  f.write(json.dumps(cache))
