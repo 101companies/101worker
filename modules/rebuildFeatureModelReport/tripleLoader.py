@@ -3,6 +3,9 @@ import urllib2
 import json
 import re
 
+def urlToClafer(url, prefix):
+  return urlNameToClafer(urlTourlName(url, prefix))
+
 def urlTourlName(url, suffix):
   return re.sub("http://101companies.org/resource/" + suffix ,"", url)
 
