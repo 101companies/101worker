@@ -7,6 +7,7 @@ import json
 basePropURL = 'http://101companies.org/property/'
 baseResURL = 'http://101companies.org/resource/'
 
+leafs = []
 cache = []
 implications = []
 
@@ -28,6 +29,7 @@ def loadFeature(featURL, indent):
   for implied in impliedClaferFeats:
     implications.append([claferFeat, implied])
   if isLeaf:
+    leafs.append(claferFeat)
     print colored('~', 'green'),
     res += claferFeat
     if optional:
@@ -63,4 +65,4 @@ res += '\n  ' + '\n  '.join(map(lambda t: '[' + t[0] + ' => ' + t[1] + ']', impl
 with open(args.cf, 'w+') as f:
   f.write(res)
 with open(args.flatf, 'w+') as f:
-  f.write(json.dumps(cache))
+  f.write(json.dumps(leafs))
