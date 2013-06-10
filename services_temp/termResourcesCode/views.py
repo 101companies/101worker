@@ -5,6 +5,8 @@ from BeautifulSoup import BeautifulSoup
 from django.http import HttpResponse
 
 def serveCode(request, term, resName, cat, resIndex, codeIndex, format):
+  resIndex = int(resIndex)
+  codeIndex = int(codeIndex)
 
   termURL = 'http://worker.101companies.org/services/termResources/' + term + '.json'
   resData = json.load(urllib2.urlopen(termURL))
