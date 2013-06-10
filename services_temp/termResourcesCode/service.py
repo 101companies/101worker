@@ -31,5 +31,3 @@ def routes():
         ('/termResourcesCode/(?P<term>.+)/(?P<resName>.+)/(?P<cat>.+)#(?P<resIndex>.+)/(?P<codeIndex>.+)\.(?P<format>.+)', serveCode)
     ]
 
-serveCode(0, 'Fold', 'RWH', 'primary', 0, 0, 0)
-
