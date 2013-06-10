@@ -25,7 +25,7 @@ def serveCode(request, term, resName, cat, resIndex, codeIndex, format):
 
   if format == 'jsonp':
     result = request.GET.get('callback', 'callback') + '(' + result + ')'
-  return HttpResponse(result, content_type='application/javascript' if isJsonp else 'text/json')
+  return HttpResponse(result, content_type='application/javascript' if (format == 'jsonp') else 'text/json')
 
 
 
