@@ -43,7 +43,7 @@ urlpatterns = patterns('',
     ('^termResources/(?P<term>.+)/(?P<resource>.+)\.(?P<format>.+)$', termResources.serveTerm),
     ('^termResources/(?P<term>.+)\.(?P<format>.+)$', termResources.serveTerm),
     ('^termResources\.(?P<format>.+)$', termResources.serveResourceNames),
-    ('^termResourcesCode/(?P<term>.+)/(?P<resName>.+)/(?P<cat>.+)/(?P<resIndex>.+)/(?P<codeIndex>.+)\.(?P<format>.+)', termResourcesCode.serveCode),
+    ('^termResourcesCode/(?P<term>.+)/(?P<resName>.+)/(?P<cat>.+)/(?P<resIndex>.+)/(?P<codeIndex>.+)\.(?P<format>.+)$', termResourcesCode.serveCode),
     
     ('^analyzeSubmission$', analyzeSubmission.analyze)
 )
