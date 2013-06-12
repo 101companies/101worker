@@ -6,5 +6,5 @@
 
 	{% include "snippets/parts.rdf" %}
 
-    {% include "snippets/links.rdf" %}
+    {#{% include "snippets/links.rdf" %}#}
 {% endblock %}

@@ -8,5 +8,4 @@
 
     {% include "snippets/links.rdf" %}
 
-    <co:arbritary>some unknown fragment</co:arbritary>
 {% endblock %}
