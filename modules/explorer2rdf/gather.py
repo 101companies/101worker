@@ -60,7 +60,7 @@ def extract(url, followLinks = True):
     return g
 
 oneOhOne = extract('http://101companies.org/resources/101?format=rdf')
-open('oneOhOne.rdf', 'w').write(oneOhOne.serialize(format='rdf'))
+open('oneOhOne.rdf', 'w').write(oneOhOne.serialize())
 
 course = extract('http://101companies.org/resources/courses?format=rdf')
 open('course.rdf', 'w').write(course.serialize())
