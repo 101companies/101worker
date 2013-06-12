@@ -167,7 +167,6 @@
 
 	<rdf:Property rdf:about="http://101companies.org/property/fileHeadline">
 		<rdfs:range rdf:resource="Literal"/>
-		<rdfs:subPropertyOf rdf:resource="http://101companies.org/property/derived" />
 		<rdfs:label>file headline</rdfs:label>
 		<rdfs:comment>headline of a derived file</rdfs:comment>
 	</rdf:Property>
