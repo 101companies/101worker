@@ -1,100 +1,86 @@
 {
 	"title": "Fragment schema",
 	"type" : "object",
+    "required": ["wiki", "github", "name", "headline", "namespace", "sesame", "endpoint", "classifier", "geshi", "language", "content", "fragments"],
 	"properties": {
 		"wiki" : {
 			"type": "string",
-			"description": "link to the wiki page",
-            "required": true
+			"description": "link to the wiki page"
 		},
 		"github" : {
 			"type": "string",
-			"description" : "link to the github page",
-            "required": true
+			"description" : "link to the github page"
 		},
 		"name" : {
 			"type": "string",
-			"description" : "name of the entity",
-            "required": true
+			"description" : "name of the entity"
 		},
 		"headline" : {
 			"type": "string",
-			"description": "headline from the wiki",
-            "required": true
+			"description": "headline from the wiki"
 		},
 		"namespace" : {
 			"type": "string",
-			"description": "namespace this entity belongs to",
-            "required": true
+			"description": "namespace this entity belongs to"
 		},
 		"sesame" : {
 			"type": "string",
-			"description": "link to the sesame triplestore",
-            "required": true
+			"description": "link to the sesame triplestore"
 		},
 		"endpoint" : {
 			"type": "string",
-			"description": "link to the semantic endpoint triples",
-            "required": true
+			"description": "link to the semantic endpoint triples"
 		},
 		"classifier" : {
 			"type": "string",
-			"description": "classifier of this entity",
-            "required": true
-		},
+			"description": "classifier of this entity"
+        },
         "geshi" : {
             "type" : ["string", "null"],
-            "description": "geshi code that can be used for highlighting",
-            "required": true
+            "description": "geshi code that can be used for highlighting"
         },
         "language": {
             "type" : "string",
-            "description" : "language in which this file is written",
-            "required": true
+            "description" : "language in which this file is written"
         },
         "content" : {
             "type" : "string",
-            "description" : "content of the file",
-            "required": true
+            "description" : "content of the file"
         },
         "people" : {
             "type" : "array",
             "items": {
                 "type" : "object",
+                "required": ["role", "name"],
                 "properties" : {
                     "role" : {
                         "type" : ["string", "null"],
-                        "description" : "assumed role of the person",
-                        "required": true
+                        "description" : "assumed role of the person"
                     },
                     "name" : {
                         "type" : "string",
-                        "description" : "name of the person",
-                        "required": true
+                        "description" : "name of the person"
                     }
                 }
             }
         },
 		"fragments" : {
 			"type": "array",
-            "required": true,
 			"items": {
 				"type": "object",
+                "required": ["resource", "classifier", "name"],
 				"properties": {
 					"resource" : {
 						"type": "string",
-						"description": "link to the member resource",
-                        "required": true
+						"description": "link to the member resource"
 					},
 					"classifier" : {
 						"type": "string",
-						"description": "classifier of this member",
-                        "required": true
+						"description": "classifier of this member"
 					},
 					"name" : {
 						"type": "string",
-						"description": "name of this entity",
-                        "required": true
+						"description": "name of this entity"
 					}
 				}
             }

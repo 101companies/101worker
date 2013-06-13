@@ -1,94 +1,81 @@
 {
 	"title": "Folder schema",
 	"type" : "object",
+    "required": ["wiki", "github", "name", "headline", "namespace", "sesame", "endpoint", "classifier", "files", "folders"],
 	"properties": {
 		"wiki" : {
 			"type": "string",
-			"description": "link to the wiki page",
-            "required": true
+			"description": "link to the wiki page"
 		},
 		"github" : {
 			"type": ["string", "null"],
-			"description" : "link to the github page",
-            "required": true
+			"description" : "link to the github page"
 		},
 		"name" : {
 			"type": "string",
-			"description" : "name of the entity",
-            "required": true
+			"description" : "name of the entity"
 		},
 		"headline" : {
 			"type": "string",
-			"description": "headline from the wiki",
-            "required": true
+			"description": "headline from the wiki"
 		},
 		"namespace" : {
 			"type": "string",
-			"description": "namespace this entity belongs to",
-            "required": true
+			"description": "namespace this entity belongs to"
 		},
 		"sesame" : {
 			"type": "string",
-			"description": "link to the sesame triplestore",
-            "required": true
+			"description": "link to the sesame triplestore"
 		},
 		"endpoint" : {
 			"type": "string",
-			"description": "link to the semantic endpoint triples",
-            "required": true
+			"description": "link to the semantic endpoint triples"
 		},
 		"classifier" : {
 			"type": "string",
-			"description": "classifier of this entity",
-            "required": true
+			"description": "classifier of this entity"
 		},
 		"folders" : {
 			"type": "array",
 			"items": {
 				"type": "object",
+                "required": ["resource", "classifier", "name"],
 				"properties": {
 					"resource" : {
 						"type": "string",
-						"description": "link to the member resource",
-                        "required": true
+						"description": "link to the member resource"
 					},
 					"classifier" : {
 						"type": "string",
-						"description": "classifier of this member",
-                        "required": true
+						"description": "classifier of this member"
 					},
 					"name" : {
 						"type": "string",
-						"description": "name of this entity",
-                        "required": true
+						"description": "name of this entity"
 					}
 				}
-			},
-            "required": true
+			}
 		},
         "files" : {
 			"type": "array",
 			"items": {
 				"type": "object",
+                "required": ["resource", "classifier", "name"],
 				"properties": {
 					"resource" : {
 						"type": "string",
-						"description": "link to the member resource",
-                        "required": true
+						"description": "link to the member resource"
 					},
 					"classifier" : {
 						"type": "string",
-						"description": "classifier of this member",
-                        "required": true
+						"description": "classifier of this member"
 					},
 					"name" : {
 						"type": "string",
-						"description": "name of this entity",
-                        "required": true
+						"description": "name of this entity"
 					}
 				}
-			},
-            "required": true
+			}
 		}
 	}
 }
