@@ -5,7 +5,7 @@ data = open('input.json').read()
 
 headers = {'content-type': 'application/json'}
 
-r = requests.post("http://localhost:8000/analyzeSubmission", data=data, headers=headers)
+r = requests.post("http://localhost/services/analyzeSubmission", data=data, headers=headers)
 
 print r.text
 

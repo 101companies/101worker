@@ -16,8 +16,6 @@ from service_api import *
 
 def main(data):
 
-    logging.basicConfig(filename='matchSimpleRules.log',level=logging.DEBUG)
-
     data = expand_data(data)
 
     rules = json.load(open(const101.rulesDump))

@@ -22,30 +22,45 @@ def handle_request(input_data):
     if os.path.exists(output_path):
         os.system('rm -rf {}'.format(pipes.quote(output_path)))
     
-    #os.system('git clone {0} {1}'.format(pipes.quote(input_data['url']), pipes.quote(output_path))) 
-#
-#    data = {
-#        'type': 'folders',
-#        'data': [path]
-#    }
-#
-#    for module in config:
-#        n = __import__(module)
-#        n.main(data)
-#
-#    result = open(os.path.join(path, 'summary.json'), 'r').read()
+    os.system('git clone {0} {1}'.format(pipes.quote(input_data['url']), pipes.quote(output_path))) 
 
-    result = json.dumps({
-        'concepts': ['total'],
-        'features'; [],
-        'languages': ['Ruby'],
-        'technologies': ['rails']
-    })
+    data = {
+        'type': 'folders',
+        'data': [path]
+    }
+    
+    error = None
+
+    for module in config:
+        try:
+            n = __import__(module)
+            n.main(data)
+        except Exception, e:
+            error = e
+
+    if error:
+        result = {
+            'concepts': [],
+            'features': [],
+            'languages': [],
+            'technologies': []
+    }
+    else:
+        result = json.load(open(os.path.join(path, 'summary.json'), 'r'))
+
+    result['error'] = error
+
+    #result = json.dumps({
+    #    'concepts': ['total'],
+    #    'features'; [],
+    #    'languages': ['Ruby'],
+    #    'technologies': ['rails']
+    #})
 
     # make request
     headers = {'content-type': 'application/json'}
 
-    r = requests.post(input_data['backping'], data=result, headers=headers)
+    r = requests.post(input_data['backping'], data=json.dumps(result), headers=headers)
     
 
 def analyze(request):
