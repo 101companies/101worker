@@ -26,7 +26,8 @@ def derive(info, rFilename, sFilename, tFilename1):
       tFilename2 = tFilename1[:-len(".metrics.json")]+".tokens.json"
       print "Process " + rFilename + " for GeSHi code " + info["geshi"] + "."
       command = "php helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" \"" + info["geshi"] + "\" " + info["relevance"]
-      (status, output) = tools101.run(command)
+      print command
+      (status, output) = tools101.run(command) 
 
       # Result aggregation
       result = dict()
