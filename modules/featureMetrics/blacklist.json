@@ -6,5 +6,6 @@
     "trivialLb",
     "slicedLb",
     "mongodb",
-    "basicLb"
+    "basicLb",
+    "emf"
 ]
