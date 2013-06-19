@@ -14,6 +14,7 @@ from data101 import DumpdataProvider
 from data101 import WikidataProvider
 from data101 import TripledataProvider
 
+
 class DiscoveryException(Exception):
     def __init__(self, status, msg):
         self._status = status
@@ -30,11 +31,13 @@ class DiscoveryException(Exception):
     def __str__(self):
         return str(self.Status) + '\n\n' + self.ErrorMessage
 
+
 class ResourceNotFoundException(DiscoveryException):
     def __init__(self):
         DiscoveryException.__init__(self, '404 Not found', 'Requested resource not found')
 
 base_uri = ''
+
 
 def find(fragment, query, basePath=None):
     #recreate fragment path
@@ -52,6 +55,7 @@ def find(fragment, query, basePath=None):
         if x: return x, y
 
     return None, None
+
 
 def mapFragment(filePath, fragmentPath, fragment):
     resource = os.path.join(base_uri, filePath, fragmentPath)
@@ -71,10 +75,12 @@ def mapFragment(filePath, fragmentPath, fragment):
 
     return mapped
 
+
 def setWikidata(response, namespace, member):
     wikiUrl, headline = WikidataProvider.getWikiData(namespace,member)
     response['headline'] = headline
     response['wiki'] = wikiUrl
+
 
 def setCommitInfos(response, filePath):
     #TODO update, just a rudimentary implementation
@@ -90,6 +96,7 @@ def setCommitInfos(response, filePath):
 
         for c in contribList:
             response['people'].append({'name' : c, 'role' : None})
+
 
 def discoverFileFragment(namespace, member, path, file, fragment):
     filePath = os.path.join(namespace, member, path, file)
@@ -157,7 +164,6 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     return response
 
 
-
 def discoverMemberFile(namespace, member, path, file):
     filePath = os.path.join(namespace, member, path, file)
     if not DumpdataProvider.exists(filePath):
@@ -212,6 +218,7 @@ def discoverMemberFile(namespace, member, path, file):
 
     return response
 
+
 def discoverMemberPath(namespace, member, path):
     response = {
         'folders'   : [],
@@ -253,6 +260,7 @@ def discoverMemberPath(namespace, member, path):
     response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
+
 
 def discoverNamespaceMember(namespace, member):
     if not member.decode('utf_8') in DumpdataProvider.getMembers(namespace):
@@ -299,6 +307,7 @@ def discoverNamespaceMember(namespace, member):
 
     return response
 
+
 def discoverNamespace(namespace):
     if not wikifyNamespace(namespace) in DumpdataProvider.getMembers('') and not wikifyNamespace(namespace) == '':
         raise ResourceNotFoundException()
@@ -325,6 +334,7 @@ def discoverNamespace(namespace):
 
     return response
 
+
 def discoverAllNamespaces():
     response = {'classifier': 'Namespace', 'name': 'Namespace', 'members': [], 'github': DumpdataProvider.getGithub('', '')}
 
@@ -347,9 +357,13 @@ def discoverAllNamespaces():
 
     return response
 
+
 def createRedirectUrl(wikititle):
     if not ':' in wikititle:
-        ns = 'concepts'
+        if '@' in wikititle:
+            ns = '101'
+        else:
+            ns = 'concepts'
         member = wikititle
     else:
         parts = wikititle.split(':')
