@@ -13,12 +13,12 @@ class Run{
 
         println "OO Programming Language"
         def table = ""
-        sortedOOConcepts.each{ k, v -> def r = "<tr><td>${toLink(k)}</td><td>${v}</td><td>${!sortedFpConcepts.containsKey(k)}</td></tr>"; println r; table += r }
+        sortedOOConcepts.each{ k, v -> def r = "<tr><td style=\"border:1px solid\">${toLink(k)}</td><td style=\"border:1px solid\">${v}</td><td style=\"border:1px solid\">${!sortedFpConcepts.containsKey(k)}</td></tr>"; println r; table += r }
         new File("oo.html").withWriter {it << toHtml(table) }
 
         def table1 = ""
         println "FP Programming Language"
-        sortedFpConcepts.each{ k, v -> def r1 = "<tr><td>${toLink(k)}</td><td>${v}</td><td>${!sortedOOConcepts.containsKey(k)}</td></tr>"; println r1; table1 += r1  }
+        sortedFpConcepts.each{ k, v -> def r1 = "<tr><td style=\"border:1px solid\">${toLink(k)}</td><td style=\"border:1px solid\">${v}</td><td style=\"border:1px solid\">${!sortedOOConcepts.containsKey(k)}</td></tr>"; println r1; table1 += r1  }
         new File("fp.html").withWriter {it << toHtml(table1) }
 
         //def uniqueOOConcepts = ooConcepts.unique()
