@@ -2,6 +2,7 @@ from tools import loadPage
 from tools import dot
 import json
 
+
 def _extractFeatures(url):
     triples = loadPage(url)
     features = []
@@ -11,10 +12,14 @@ def _extractFeatures(url):
         object = triple[2]
 
         if predicate == 'http://101companies.org/property/implements':
-            features.append(object.replace('http:/101companies.org/resources/features/', ''))
+            if object == 'http://101companies.org/resources/features/Open_serialization' or object == 'http://101companies.org/resources/features/Closed_serialization':
+                features.append('Serialization')
+            else:
+                features.append(object.replace('http://101companies.org/resources/features/', ''))
     return features
 
-def deriveFeaturesForContributions(blacklist = []):
+
+def deriveFeaturesForContributions(blacklist=[]):
     contributions = loadPage('http://101companies.org/resources/contributions')['members']
     featuresContributions = {}
     missingFeatures = []
@@ -35,7 +40,6 @@ def deriveFeaturesForContributions(blacklist = []):
             featuresContributions[key]['contributions'].append(contribution['name'])
 
         dot()
-
 
     lst = sorted(featuresContributions.values(), key=lambda k: len(k['contributions']))
 

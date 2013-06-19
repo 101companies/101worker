@@ -6,14 +6,15 @@ import os
 import re
 from subprocess import Popen, PIPE
 
-def check(contribName):
+def check(contribName, allClaferFeatures, claferpath):
   try:
-    contribClafer = contribToClafer.contribToClafer(contribName)
+    contribClafer = contribToClafer.contribToClafer(contribName, allClaferFeatures)
   except Exception as e:
     return {'success': False, 'message': e.message}
-  tempClaferf = tempfile.NamedTemporaryFile(dir=".", delete=False)
-  shutil.copyfileobj(open("features.clf", "rb"), tempClaferf)
-  tempClaferf.write(contribClafer)
+  # concat concrete feature spec with feature model
+  tempClaferf = tempfile.NamedTemporaryFile(dir=".", delete=True)
+  shutil.copyfileobj(open(claferpath, "rb"), tempClaferf)
+  tempClaferf.write('\n' + contribClafer)
   tempClaferf.flush()
 
   # compile to alloy
@@ -28,7 +29,7 @@ def check(contribName):
     errorMessage = claferProcess.communicate()[1]
     m = re.search(r'(.*):(.*)', errorMessage)
     if m:
-      result['message'] = m.group(2).strip()
+      result['message'] = errorMessage
     else:
       result['message'] = errorMessage
   tempClaferf.close()

@@ -1,14 +1,14 @@
 include ../Makefile.vars
 
 run:
-	echo 'Building and cleaning...'
-	@make build
+	@echo 'Building and cleaning...'
+	@make javac
 	@make clean-deployment
-	echo 'Creating reports...'
-	python createReport.py ${contrDir}/fileindex.json ${webdir}/data/dumps/ featureModelReports/
+	@echo 'Creating reports...'
+	@python createReport.py ${dumpsDir}/claferFeaturesFlat.json ${dumpsDir}/features.clf ${contrDir}/fileindex.json ${webdir}/data/dumps/ featureModelReports/
 	@make clean
 
-build:
+javac:
 	@mkdir -p bin
 	@javac -d bin -sourcepath java-src -cp lib/alloy/alloy4.jar java-src/org/softlang/clafer/SimpleSatChecker.java
 

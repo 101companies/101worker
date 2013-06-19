@@ -1,4 +1,11 @@
 [
     "grails",
-    "xtext"
+    "xtext",
+    "modularLb",
+    "projectLb",
+    "trivialLb",
+    "slicedLb",
+    "mongodb",
+    "basicLb",
+    "emf"
 ]

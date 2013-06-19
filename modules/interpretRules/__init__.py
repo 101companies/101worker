@@ -13,6 +13,7 @@ import subprocess
 
 from asq.initiators import query
 
+
 def match_file(file, rules, filter_function, append=False):
     rules = filter(filter_function, rules)
     matches = []

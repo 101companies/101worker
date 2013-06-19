@@ -111,7 +111,7 @@ class Resource {
                     def obj = edge.getObject()
                     props['page'] = handlePageLabel(obj.label)
                     try {
-                        def url = 'http://101companies.org/api/pages/' + URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/summary'
+                        def url = 'http://101companies.org/endpoint/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/summary'
                         def json = getJSON(url)
                         if (json != null){
                             def sections = json.sections

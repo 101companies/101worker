@@ -1,0 +1,38 @@
+{
+    "title": "Module description schema",
+    "type" : "object",
+    "required": ["targets"],
+    "properties": {
+        "targets" : {
+            "type" : "array",
+            "items": {
+                "type": "object",
+                "required": ["headline", "classifier", "scope", "language"],
+                "properties": {
+                    "headline" : {
+                        "type": "string",
+                        "description": "Headline for this type of files"
+                    },
+                    "classifier" : {
+                        "type": "string",
+                        "enum": ["resource"]
+                    },
+                    "scope" : {
+                        "type": "string",
+                        "enum": ["file", "folder", "dump"]
+                    },
+                    "suffix" : {
+                        "type": "string"
+                    },
+                    "filename": {
+                        "type": "string"
+                    },
+                    "language" : {
+                        "type": "string",
+                        "enum": ["JSON", "RDF"]
+                    }
+                }
+            }
+        }
+    }
+}

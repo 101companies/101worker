@@ -270,6 +270,12 @@ def serveAllNamespaces(environ, start_response, params):
     try:
         response = discovery.discoverAllNamespaces()
 
+        import json
+        from jsonschema import validate
+
+        if params.get('validate', None):
+            validate(response, json.load(open('../../services_temp/discovery/schemas/namespace.json', 'r')))
+
         return respond(params.get('format', 'json'),
                        start_response=start_response,
                        environ = environ,

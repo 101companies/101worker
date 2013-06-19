@@ -1,6 +1,6 @@
 {% extends "base.rdf" %}
 {% block content %}
-    <rdf:type rdf:resource="http://101companies.org/property/Namespace"/>
+    <rdf:type rdf:resource="http://101companies.org/property/namespace"/>
 
     {% include "snippets/general.rdf" %}
 
@@ -8,5 +8,4 @@
 
     {% include "snippets/links.rdf" %}
 
-    <co:arbritary>some unknown fragment</co:arbritary>
 {% endblock %}

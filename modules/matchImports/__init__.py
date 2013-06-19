@@ -19,6 +19,7 @@ def main(data):
 
     fpredicate_rules = interpretRules.group_fast_predicates(rules)
 
+
     interpretRules.apply_rules(data['data'], fpredicate_rules, lambda rule: rule['rule']['fpredicate'] == "technologies/fpredicate_generic_platform/import.py", append=True)
 
 if __name__ == '__main__':
@@ -26,3 +27,4 @@ if __name__ == '__main__':
         'type': 'files',
         'data': ['/tmp/antlrParser/contributions/antlrParser/src/main/java/org/softlang/company/features/Total.java']
     })
+

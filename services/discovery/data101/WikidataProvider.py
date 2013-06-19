@@ -12,12 +12,14 @@ import const101
 
 def getWikiData(namespace, member):
     wiki = json.load(open(const101.wikiDump, 'r'))['wiki']
-    if namespace == '':
+    if namespace == '' or namespace == '101':
         namespace = None
     if member == '':
         member = 'Concept'
 
     for page in wiki['pages']:
+        if page['page'] == {}:
+            continue
         if page['page']['page']['p'] == namespace and page['page']['page']['n'] == member:
             url = 'http://101companies.org/wiki/'
             if namespace: url += namespace + ':' + member

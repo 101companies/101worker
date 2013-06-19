@@ -13,6 +13,7 @@ import const101
 opener = urllib2.build_opener()
 problems = []
 
+
 def loadPage(url):
     req = urllib2.Request(url)
     f = opener.open(req)
@@ -29,27 +30,11 @@ def getFileData(file):
         'content' : data.get('content', None)
     }
 
-def extractFilesFromFolder(folder, languages = []):
-    files = []
 
-    data = loadPage(folder['resource'])
-    for f in data.get('files', []):
-        fileData = getFileData(f)
-        if not languages or fileData['language'] in languages:
-            files.append({
-                'uri' : f['resource'],
-                'data': fileData
-            })
-
-    for d in data.get('folders', []):
-        files += extractFilesFromFolder(d)
-
-    return files
-
-def extractFilesFromContribution(member, languages = []):
+def extractFiles(entity, languages=[]):
     files = []
     try:
-        data = loadPage(member['resource'])
+        data = loadPage(entity['resource'])
 
         for f in data.get('files', []):
             fileData = getFileData(f)
@@ -60,12 +45,11 @@ def extractFilesFromContribution(member, languages = []):
                 })
 
         for d in data.get('folders', []):
-            files += extractFilesFromFolder(d)
-
+            files += extractFiles(d)
 
     except Exception as e:
         problems.append({
-            'member' : member,
+            'member' : entity,
             'problem': str(e)
         })
 
@@ -77,7 +61,7 @@ filesList = []
 contributions = loadPage('http://101companies.org/resources/contributions')
 #contributions = loadPage('http://localhost/services/discovery/contributions')
 for member in contributions['members']:
-    filesList += extractFilesFromContribution(member)
+    filesList += extractFiles(member)
     sys.stdout.write('.')
     sys.stdout.flush()
 

@@ -1,3 +1,5 @@
+*.idea
+*.*~
 modules/igraph/bin
 .classpath
 modules/.metadata
@@ -14,9 +16,6 @@ modules/wiki2tex/tex/content/data/technologies.tex
 utils.pyc
 pipeline.pyc
 document.pyc
-*.pyc
-*~
-*.zip
 modules/wikitools/tex/sources
 modules/wiki2json/.idea
 modules/wiki2json/target

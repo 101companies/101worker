@@ -1,12 +1,11 @@
 include ../Makefile.vars
-wiki = ${webdir}/data/dumps/Wiki101Full.json
 
 run:
 	@make generate
 	@make deploy
 
 generate:
-	python program.py ${wiki}
+	python program.py ${wikiDump}
 
 deploy:
 	@cp *.html *.css ${viewsDir}

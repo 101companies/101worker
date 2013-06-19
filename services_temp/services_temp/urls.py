@@ -4,6 +4,7 @@ from discovery import service
 from helloWorld import views as helloWorld
 from sourceLinks import views as sourceLinks
 from termResources import views as termResources
+from termResourcesCode import views as termResourcesCode
 from analyzeSubmission import views as analyzeSubmission
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -42,6 +43,7 @@ urlpatterns = patterns('',
     ('^termResources/(?P<term>.+)/(?P<resource>.+)\.(?P<format>.+)$', termResources.serveTerm),
     ('^termResources/(?P<term>.+)\.(?P<format>.+)$', termResources.serveTerm),
     ('^termResources\.(?P<format>.+)$', termResources.serveResourceNames),
+    ('^termResourcesCode/(?P<term>.+)/(?P<resName>.+)/(?P<cat>.+)/(?P<resIndex>.+)/(?P<codeIndex>.+)\.(?P<format>.+)$', termResourcesCode.serveCode),
     
     ('^analyzeSubmission$', analyzeSubmission.analyze)
 )

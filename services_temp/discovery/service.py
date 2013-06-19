@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from jsonschema import validate
+import json
+
 
 #helper which does some stuff that's always needed
 def initServeRequest(host):
@@ -13,9 +16,6 @@ def initServeRequest(host):
 
 def renderJSON(kwargs):
     response = kwargs['response']
-
-    import json
-
 
     return {
         'text': json.dumps(response),
@@ -126,6 +126,10 @@ def serveFileFragment(request, namespace, member, path, file, fragment):
     response = discovery.discoverFileFragment(namespace, member,
                                           path, file, fragment)
 
+    if request.GET.get('validate', None):
+        validate(response, json.load(open('schemas/fragment.json.json', 'r')))
+
+
     result = render(request.GET.get('format', 'json'),
                    request = request,
                    response=response,
@@ -146,6 +150,10 @@ def serveMemberFile(request, namespace, member, path, file):
 
     response = discovery.discoverMemberFile(namespace, member,
                                             path, file)
+
+    if request.GET.get('validate', None):
+        validate(response, json.load(open('schemas/file.json', 'r')))
+
 
     result = render(request.GET.get('format', 'json'),
                    response=response,
@@ -173,6 +181,10 @@ def serveMemberPath(request, namespace, member, path):
 
     response = discovery.discoverMemberPath(namespace, member,
                                             path)
+
+    if request.GET.get('validate', None):
+        validate(response, json.load(open('schemas/folder.json', 'r')))
+
 
     result = render(request.GET.get('format', 'json'),
                    request = request,
@@ -210,6 +222,11 @@ def serveNamespace(request, namespace):
     import discovery
 
     response = discovery.discoverNamespace(namespace)
+
+    if request.GET.get('validate', None):
+        validate(response, json.load(open('schemas/namespace.json', 'r')))
+
+
     result = render(request.GET.get('format', 'json'),
                    request = request,
                    response=response,
@@ -234,10 +251,13 @@ def serveAllNamespaces(request):
 
 
     response = discovery.discoverAllNamespaces()
-    
+
+    if request.GET.get('validate', None):
+        validate(response, json.load(open('schemas/namespace.json', 'r')))
+
     f = request.GET.get('format', 'json')
-    print f
-    
+
+
     result = render(f,
                    request = request,
                    response=response,

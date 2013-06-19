@@ -21,5 +21,5 @@ def visualize(toConsider, metrics, outputPath):
     plt.subplots_adjust(bottom=0.30)
     plt.xticks(ind+width/2.0, labels, rotation=90, fontsize='small')
     plt.ylabel('lines of code')
-    plt.title('Contributions of the same featureset compared by lines of code')
+
     plt.savefig(outputPath)

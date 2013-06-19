@@ -23,7 +23,7 @@
 	</rdfs:Class>
 
 	<rdf:Property rdf:about="http://101companies.org/property/headline">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Headline</rdfs:label>
 		<rdfs:comment>The headline that is used on the wiki</rdfs:comment>
 		
@@ -35,7 +35,7 @@
 	</rdf:Property>	
 	
 	<rdf:Property rdf:about="http://101companies.org/property/name">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>name</rdfs:label>
 		<rdfs:comment>name of the resource</rdfs:comment>
 		
@@ -47,7 +47,7 @@
 	</rdf:Property>
 	
 	<rdf:Property rdf:about="http://101companies.org/property/namespace">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Namespace</rdfs:label>
 		<rdfs:comment>The Namespace the resource belongs to</rdfs:comment>
 		
@@ -59,7 +59,7 @@
 	</rdf:Property>
 	
 	<rdf:Property rdf:about="http://101companies.org/property/classifier">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Classifier</rdfs:label>
 		<rdfs:comment>The classifier of that resource</rdfs:comment>		
 		
@@ -71,7 +71,7 @@
 	</rdf:Property>
 	
 	<rdf:Property rdf:about="http://101companies.org/property/geshi">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Geshi</rdfs:label>
 		<rdfs:comment>The geshi code used for rendering</rdfs:comment>
 		
@@ -80,7 +80,7 @@
 	</rdf:Property>
 	
 	<rdf:Property rdf:about="http://101companies.org/property/language">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Language</rdfs:label>
 		<rdfs:comment>The language of that File</rdfs:comment>
 		
@@ -89,7 +89,7 @@
 	</rdf:Property>
 	
 	<rdf:Property rdf:about="http://101companies.org/property/wiki">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Wiki link</rdfs:label>
 		<rdfs:comment>The link to the wiki</rdfs:comment>
 		
@@ -101,7 +101,7 @@
 	</rdf:Property>
 	
 	<rdf:Property rdf:about="http://101companies.org/property/github">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Github link</rdfs:label>
 		<rdfs:comment>The link to github where this instance resides</rdfs:comment>
 		
@@ -113,7 +113,7 @@
 	</rdf:Property>
 	
 	<rdf:Property rdf:about="http://101companies.org/property/sesame">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Sesame link</rdfs:label>
 		<rdfs:comment>Link to the triples of the Sesame Triple store</rdfs:comment>
 		
@@ -125,7 +125,7 @@
 	</rdf:Property>
 	
 	<rdf:Property rdf:about="http://101companies.org/property/endpoint">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Endpoint</rdfs:label>
 		<rdfs:comment>Link to the semantic endpoint</rdfs:comment>
 		
@@ -137,7 +137,7 @@
 	</rdf:Property>
 
 	<rdf:Property rdf:about="http://101companies.org/property/content">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>Content</rdfs:label>
 		<rdfs:comment>Content of that resource</rdfs:comment>	
 	
@@ -152,22 +152,21 @@
 	</rdf:Property>
 
 	<rdf:Property rdf:about="http://101companies.org/property/link">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:subPropertyOf rdf:resource="http://101companies.org/property/derived" />
 		<rdfs:label>link</rdfs:label>
 		<rdfs:comment>link to a derived file</rdfs:comment>
 	</rdf:Property>
 
 	<rdf:Property rdf:about="http://101companies.org/property/fileName">
-		<rdfs:range rdf:resource="Literal"/>
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:subPropertyOf rdf:resource="http://101companies.org/property/derived" />
 		<rdfs:label>fileName</rdfs:label>
 		<rdfs:comment>name of a derived file</rdfs:comment>
 	</rdf:Property>
 
 	<rdf:Property rdf:about="http://101companies.org/property/fileHeadline">
-		<rdfs:range rdf:resource="Literal"/>
-		<rdfs:subPropertyOf rdf:resource="http://101companies.org/property/derived" />
+		<rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
 		<rdfs:label>file headline</rdfs:label>
 		<rdfs:comment>headline of a derived file</rdfs:comment>
 	</rdf:Property>
