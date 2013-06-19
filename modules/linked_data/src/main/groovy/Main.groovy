@@ -89,7 +89,7 @@ class Repo101 {
                     it.outE('http://101companies.org/property/instanceOf').inV.filter{it == concept}.toList().size() > 0
                    }
         //println "# concepts: " + concepts.size()
-        //println "concepts: " + concepts
+        println "concepts: " + concepts
         //println "# unique concepts: " + concepts.unique().size()
         //println "unique concepts: " + concepts.unique()
         return concepts 

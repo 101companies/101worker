@@ -5,21 +5,21 @@ class Run{
         def m = new Repo101()
         def fpConcepts = m.examineConcepts('http://101companies.org/resources/concepts/Functional_programming_language')
         
-        def uniqueFpConcepts = fpConcepts.unique()
         def ooConcepts = m.examineConcepts('http://101companies.org/resources/concepts/OO_programming_language')
         
         def sortedOOConcepts = ooConcepts.countBy{it}.sort {a, b -> b.value <=> a.value}
         def sortedFpConcepts = fpConcepts.countBy{it}.sort {a, b -> b.value <=> a.value}
+        //print sortedFpConcepts
 
         println "OO Programming Language"
         def table = ""
         sortedOOConcepts.each{ k, v -> def r = "<tr><td>${toLink(k)}</td><td>${v}</td><td>${!sortedFpConcepts.containsKey(k)}</td></tr>"; println r; table += r }
         new File("oo.html").withWriter {it << toHtml(table) }
 
-        table = ""
+        def table1 = ""
         println "FP Programming Language"
-        sortedFpConcepts.each{ k, v -> def r = "<tr><td>${toLink(k)}</td><td>${v}</td><td>${!sortedOOConcepts.containsKey(k)}</td></tr>"; println r; table += r  }
-        new File("fp.html").withWriter {it << toHtml(table) }
+        sortedFpConcepts.each{ k, v -> def r1 = "<tr><td>${toLink(k)}</td><td>${v}</td><td>${!sortedOOConcepts.containsKey(k)}</td></tr>"; println r1; table1 += r1  }
+        new File("fp.html").withWriter {it << toHtml(table1) }
 
         //def uniqueOOConcepts = ooConcepts.unique()
         
