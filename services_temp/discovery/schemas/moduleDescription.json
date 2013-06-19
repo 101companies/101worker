@@ -7,7 +7,7 @@
             "type" : "array",
             "items": {
                 "type": "object",
-                "required": ["headline", "classifier", "scope", "suffix", "language"],
+                "required": ["headline", "classifier", "scope", "language"],
                 "properties": {
                     "headline" : {
                         "type": "string",
@@ -22,6 +22,9 @@
                         "enum": ["file", "folder", "dump"]
                     },
                     "suffix" : {
+                        "type": "string"
+                    },
+                    "filename": {
                         "type": "string"
                     },
                     "language" : {
