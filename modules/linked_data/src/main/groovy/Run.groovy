@@ -39,7 +39,7 @@ class Run{
     }   
 
     def toHtml(table){
-        def html = "<html><head></head><body><table style=\"border:1px solid black;border-collapse:collapse;\"><tr><th>Concept</th><th>#Occs</th><th>Unique</th></tr>${table}</table></body></html>"
+        def html = "<html><head></head><body><table style=\"border:1px solid black;border-collapse:collapse;\"><tr><th style=\"border:1px solid\">Concept</th><th style=\"border:1px solid\">#Occs</th><th style=\"border:1px solid\">Unique</th></tr>${table}</table></body></html>"
         return html 
     }
 }
