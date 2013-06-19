@@ -33,7 +33,8 @@ class Run{
 
     def toLink(v){
         def uri = v.getRawVertex().toString()
-        def concept = uri.replaceAll("http://101companies.org/resources/concepts/","").replaceAll("_"," ")
+        def concept = uri.replaceAll("http://101companies.org/resources/concepts/","")
+        concept = concept.replaceAll("_"," ")
         return "<a href=${uri}>${concept}</a>"
     }   
 
