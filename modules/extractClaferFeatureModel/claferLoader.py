@@ -22,7 +22,10 @@ def loadFeature(featURL, indent):
   triples = tripleLoader.load('Feature-3A' + feat)
   isLeaf = all(map(lambda t: t['predicate'] != basePropURL + 'isA' or t['direction'] != 'IN', triples))
   res = '\n' + ' ' * indent
-  optional = map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Optional_feature', triples)
+  optional = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Optional_feature', triples))
+  mandatory = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Mandatory_feature', triples))
+  alternative = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Alternative_feature', triples))
+  or_ = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Or_feature', triples))
   impliedFeatsTriples = filter(lambda t: t['predicate'] == basePropURL + 'implies' and t['direction'] == 'OUT' ,triples)
   impliedClaferFeats = map(lambda t:  tripleLoader.urlTourlName(tripleLoader.urlNameToClafer(t['node']),'Feature-3A'), impliedFeatsTriples)
   print colored('=> (' + ', '.join(impliedClaferFeats) + ')', 'cyan'),
@@ -38,8 +41,23 @@ def loadFeature(featURL, indent):
     print colored('LEAF', 'green')
     return res
   else:
-    print colored('~ NODE', 'blue')
-    res += 'mux ' + claferFeat
+    if optional:
+      print colored('~ OPTIONAL', 'blue'),
+      if alternative:
+        print colored('ALTERNATIVE (MUX)', 'blue'),
+        res += 'mux ' + claferFeat
+      if or_:
+        print colored('OR (ANY)', 'blue'),
+        res += 'any ' + claferFeat
+    if mandatory:
+      print colored('~ MANDATORY', 'blue'),
+      if alternative:
+        print colored('ALTERNATIVE (XOR)', 'blue'),
+        res += 'xor ' + claferFeat
+      if or_:
+        print colored('OR (OR)', 'blue'),
+        res += 'or ' + claferFeat
+    print colored('NODE', 'blue')
     subFeatTriples = filter(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'IN', triples)
     return res + ''.join(map(lambda t: loadFeature(t['node'], indent + 2), subFeatTriples))
 
