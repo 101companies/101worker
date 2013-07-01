@@ -1,7 +1,9 @@
 import os
 import copy
+import sys
 
 def expand_data(data, tmp=True):
+    print data
     data = copy.copy(data)
     if data['type'] == 'folders':
             folders = data['data']
