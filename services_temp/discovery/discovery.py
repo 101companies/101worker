@@ -266,7 +266,6 @@ def discoverNamespaceMember(namespace, member):
     if not member.decode('utf_8') in DumpdataProvider.getMembers(namespace):
         raise ResourceNotFoundException()
 
-
     response = {
         'folders'   : [],
         'files'     : [],
@@ -324,7 +323,7 @@ def discoverNamespace(namespace):
     members = DumpdataProvider.getMembers(namespace)
     for member in members:
         response['members'].append({
-            'resource': os.path.join(base_uri, namespace, member),
+            'resource': os.path.join(base_uri, namespace, member).replace(' ', '_'),
             'classifier': 'Namespace member',
             'name'    : member
         })
@@ -347,7 +346,7 @@ def discoverAllNamespaces():
     members = DumpdataProvider.getMembers('')
     for member in members:
         response['members'].append({
-            'resource'  : os.path.join(base_uri, dewikifyNamespace(member)),
+            'resource'  : os.path.join(base_uri, dewikifyNamespace(member)).replace(' ', '_'),
             'classifier': 'Namespace',
             'name'      : member
         })
