@@ -12,10 +12,10 @@ def _extractFeatures(url):
         object = triple[2]
 
         if predicate == 'http://101companies.org/property/implements':
-            if object == 'http://101companies.org/resources/features/Open serialization' or object == 'http://101companies.org/resources/features/Closed serialization':
+            if object == 'http://101companies.org/resources/features/Open_serialization' or object == 'http://101companies.org/resources/features/Closed_serialization':
                 features.append('Serialization')
             else:
-                features.append(object.replace('http:/101companies.org/resources/features/', ''))
+                features.append(object.replace('http://101companies.org/resources/features/', ''))
     return features
 
 

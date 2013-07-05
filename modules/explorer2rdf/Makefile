@@ -7,7 +7,7 @@ run:
 	@cp complete.rdf ${output}
 
 validate:
-	java -jar CIMValidate-20010909a.jar ${output} ../../services_temp/discovery/schemas/schema.rdfs
+	java -jar CIMValidate-20010909a.jar ${output} ../../services_temp/discovery/schemas/repo.rdfs
 
 clean:
 	rm -f ${output}
