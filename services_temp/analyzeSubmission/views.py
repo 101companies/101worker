@@ -15,7 +15,7 @@ def handle_request(input_data):
 
     result = []
 
-    path = '/tmp/' + os.path.basename(input_data['name']) + '/' + input_data['folder'])
+    path = '/tmp/' + os.path.basename(input_data['name']) + '/' + input_data['folder']
     
     output_path = '/tmp/' + os.path.basename(input_data['name'])
     
