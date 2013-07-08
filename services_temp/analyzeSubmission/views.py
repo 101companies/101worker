@@ -28,7 +28,6 @@ def handle_request(input_data):
         'type': 'folders',
         'data': [path]
     }
-<<<<<<< HEAD
     
     error = None
 
@@ -57,21 +56,6 @@ def handle_request(input_data):
     #    'languages': ['Ruby'],
     #    'technologies': ['rails']
     #})
-=======
-
-    for module in config:
-        n = __import__(module)
-        n.main(data)
-
-    result = open(os.path.join(path, 'summary.json'), 'r').read()
-
-#    result = json.dumps({
-#        'concepts': ['total'],
-#        'features'; [],
-#        'languages': ['Ruby'],
-#        'technologies': ['rails']
-#    })
->>>>>>> b83bfa9b6fead0d549a452052c4f93cef2310280
 
     # make request
     headers = {'content-type': 'application/json'}
