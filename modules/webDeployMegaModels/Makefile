@@ -2,7 +2,7 @@ include ../Makefile.vars
 repo = ${resultsdir}/101repo
 dev = ${resultsdir}/101dev
 geshi = ${resultsdir}/geshi
-xsdClasses = ${dev}/sandbox/m12/implementations/xsdClasses/docs
+xsdClasses = ${dev}/sandbox/m12/implementations/xsdClasses
 oxMapping = capabilities/Object_XML_mapping/MegaL/docs
 
 run: ${repo} ${geshi} ${xsdClasses} ${resultsdir}/101repo/${oxMapping}/report.pdf
@@ -28,6 +28,7 @@ geshify:
 
 xsdClasses:
 	@echo Publishing browsable megamodel for 101implementation:xsdClasses
+	@cp -r ${xsdClasses}/docs ${webdir}/MegaModels/implementations/xsdClasses
 	@cp -r ${xsdClasses} ${webdir}/MegaModels/implementations/xsdClasses
 
 oxMapping:
