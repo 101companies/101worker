@@ -30,6 +30,8 @@ xsdClasses:
 	@echo Publishing browsable megamodel for 101implementation:xsdClasses
 	@cp -r ${xsdClasses}/docs ${webdir}/MegaModels/implementations/xsdClasses
 	@cp -r ${xsdClasses} ${webdir}/MegaModels/implementations/xsdClasses
+	@cp -r ${xsdClasses}/docs ${webdir}/MegaModels/implementations/xsdClasses/xsdClasses
+	@cp -r ${xsdClasses} ${webdir}/MegaModels/implementations/xsdClasses/xsdClasses
 
 oxMapping:
 	@echo Publishing LaTeX-ed megamodel for capabilities/Object_XML_mapping
