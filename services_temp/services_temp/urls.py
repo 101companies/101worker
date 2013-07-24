@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 
-from discovery import service
+from explorer import service
 from helloWorld import views as helloWorld
 from sourceLinks import views as sourceLinks
 from termResources import views as termResources
