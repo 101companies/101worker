@@ -1,4 +1,0 @@
-{%- if content %}
-
-	co:content "{{content}}"
-{%- endif %}
