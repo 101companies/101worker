@@ -1,0 +1,85 @@
+<div class="span5 box info-box red-top">
+    <div class="box-header">
+        Parts
+        {% if not name == 'Namespace' %}
+            {% if classifier not in ['File', 'Folder', 'Namespace member', 'Namespace'] %}
+            {#  If we are looking at a fragment, we have to go two steps back (Total.java/class/Total => Total.java)  #}
+                <a href="{{ back(back( uri.decode('utf_8') )) }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
+            {% else %}
+                <a href="{{ back( uri.decode('utf_8') ) }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="box-content">
+
+        {% if fragments or fragments == [] %}
+            <div class="box-content-fragment">
+                <b>Fragments:</b>
+                {% if fragments == [] %}
+                    None
+                {% else %}
+                    <ul>
+                        {% for fragment in fragments %}
+                            <li>
+                                <a href="{{fragment.resource.decode('utf_8')}}?format=html">
+                                    {{fragment.name.decode('utf_8')}}
+                                    {% if fragment.has_key('index') %}
+                                        ({{fragment.index}})
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if folders or folders == [] %}
+            <div class="box-content-fragment">
+                <b>Folders </b>
+                {% if folders == [] %}
+                    None
+                {% else %}
+                    <ul>
+                        {% for folder in folders %}
+                            <li><a href="{{ folder.resource.decode('utf_8') }}?format=html">{{ folder.name.decode('utf_8') }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if files or files == [] %}
+            <div class="box-content-fragment">
+                <b>Files </b>
+                {% if files == [] %}
+                    None
+                {% else %}
+                    <ul>
+                        {% for file in files %}
+                            <li><a href="{{ file.resource.decode('utf_8') }}?format=html">{{ file.name.decode('utf_8') }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if members or members == [] %}
+            <div class="box-content">
+                <div class="box-content-fragment">
+                    <b>Members </b>
+                    {% if members == [] %}
+                        None
+                    {% else %}
+                        <ul>
+                            {% for member in members %}
+                                <li><a href="{{ member.resource }}?format=html">{{ member.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
