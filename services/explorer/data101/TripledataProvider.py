@@ -31,6 +31,8 @@ def getEndpointLink(namespace, member):
 def getSesameLink(namespace, member):
     #if member == '':
     #    member = 'Concept'
+    if namespace == '101':
+        namespace = '101s'
     return 'http://triples.101companies.org/openrdf-workbench/repositories/wiki2/explore?resource=%3Chttp%3A%2F%2F101companies.org%2Fresources%2F{}%2F{}%3E'.format(namespace, member)
 
     #if not namespace or namespace == '':
