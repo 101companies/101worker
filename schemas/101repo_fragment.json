@@ -5,11 +5,13 @@
 	"properties": {
 		"wiki" : {
 			"type": "string",
-			"description": "link to the wiki page"
+			"description": "link to the wiki page",
+            "format": "uri"
 		},
 		"github" : {
 			"type": "string",
-			"description" : "link to the github page"
+			"description" : "link to the github page",
+            "format": "uri"
 		},
 		"name" : {
 			"type": "string",
@@ -25,11 +27,13 @@
 		},
 		"sesame" : {
 			"type": "string",
-			"description": "link to the sesame triplestore"
+			"description": "link to the sesame triplestore",
+            "format": "uri"
 		},
 		"endpoint" : {
 			"type": "string",
-			"description": "link to the semantic endpoint triples"
+			"description": "link to the semantic endpoint triples",
+            "format": "uri"
 		},
 		"classifier" : {
 			"type": "string",
@@ -72,7 +76,8 @@
 				"properties": {
 					"resource" : {
 						"type": "string",
-						"description": "link to the member resource"
+						"description": "link to the member resource",
+                        "format": "uri"
 					},
 					"classifier" : {
 						"type": "string",
