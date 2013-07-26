@@ -1,87 +1,87 @@
 {
-	"title": "Folder schema",
-	"type" : "object",
+    "title": "Folder schema",
+    "type": "object",
     "required": ["wiki", "github", "name", "headline", "namespace", "sesame", "endpoint", "classifier", "files", "folders"],
-	"properties": {
-		"wiki" : {
-			"type": "string",
-			"description": "link to the wiki page",
+    "properties": {
+        "wiki": {
+            "type": "string",
+            "description": "link to the wiki page",
             "format": "uri"
-		},
-		"github" : {
-			"type": ["string", "null"],
-			"description" : "link to the github page",
+        },
+        "github": {
+            "type": ["string", "null"],
+            "description": "link to the github page",
             "format": "uri"
-		},
-		"name" : {
-			"type": "string",
-			"description" : "name of the entity"
-		},
-		"headline" : {
-			"type": "string",
-			"description": "headline from the wiki"
-		},
-		"namespace" : {
-			"type": "string",
-			"description": "namespace this entity belongs to"
-		},
-		"sesame" : {
-			"type": "string",
-			"description": "link to the sesame triplestore",
+        },
+        "name": {
+            "type": "string",
+            "description": "name of the entity"
+        },
+        "headline": {
+            "type": "string",
+            "description": "headline from the wiki"
+        },
+        "namespace": {
+            "type": "string",
+            "description": "namespace this entity belongs to"
+        },
+        "sesame": {
+            "type": "string",
+            "description": "link to the sesame triplestore",
             "format": "uri"
-		},
-		"endpoint" : {
-			"type": "string",
-			"description": "link to the semantic endpoint triples",
+        },
+        "endpoint": {
+            "type": "string",
+            "description": "link to the semantic endpoint triples",
             "format": "uri"
-		},
-		"classifier" : {
-			"type": "string",
-			"description": "classifier of this entity"
-		},
-		"folders" : {
-			"type": "array",
-			"items": {
-				"type": "object",
+        },
+        "classifier": {
+            "type": "string",
+            "description": "classifier of this entity"
+        },
+        "folders": {
+            "type": "array",
+            "items": {
+                "type": "object",
                 "required": ["resource", "classifier", "name"],
-				"properties": {
-					"resource" : {
-						"type": "string",
-						"description": "link to the member resource",
+                "properties": {
+                    "resource": {
+                        "type": "string",
+                        "description": "link to the member resource",
                         "format": "uri"
-					},
-					"classifier" : {
-						"type": "string",
-						"description": "classifier of this member"
-					},
-					"name" : {
-						"type": "string",
-						"description": "name of this entity"
-					}
-				}
-			}
-		},
-        "files" : {
-			"type": "array",
-			"items": {
-				"type": "object",
+                    },
+                    "classifier": {
+                        "type": "string",
+                        "description": "classifier of this member"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "name of this entity"
+                    }
+                }
+            }
+        },
+        "files": {
+            "type": "array",
+            "items": {
+                "type": "object",
                 "required": ["resource", "classifier", "name"],
-				"properties": {
-					"resource" : {
-						"type": "string",
-						"description": "link to the member resource",
+                "properties": {
+                    "resource": {
+                        "type": "string",
+                        "description": "link to the member resource",
                         "format": "uri"
-					},
-					"classifier" : {
-						"type": "string",
-						"description": "classifier of this member"
-					},
-					"name" : {
-						"type": "string",
-						"description": "name of this entity"
-					}
-				}
-			}
-		}
-	}
+                    },
+                    "classifier": {
+                        "type": "string",
+                        "description": "classifier of this member"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "name of this entity"
+                    }
+                }
+            }
+        }
+    }
 }
