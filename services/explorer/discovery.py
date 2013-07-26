@@ -159,7 +159,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     setCommitInfos(response, filePath)
 
     response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    response['sesame']   = TripledataProvider.getSesameLink(namespace, member)
 
     return response
 
@@ -212,7 +212,7 @@ def discoverMemberFile(namespace, member, path, file):
     setCommitInfos(response,filePath)
 
     response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    response['sesame']   = TripledataProvider.getSesameLink(namespace, member)
 
     response['derived'] = DumpdataProvider.getDerivedFiles(filePath)
 
@@ -257,7 +257,7 @@ def discoverMemberPath(namespace, member, path):
         })
 
     response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    response['sesame']   = TripledataProvider.getSesameLink(namespace, member)
 
     return response
 
@@ -299,7 +299,7 @@ def discoverNamespaceMember(namespace, member):
             })
 
     response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    response['sesame']   = TripledataProvider.getSesameLink(namespace, member)
 
     if namespace == 'modules':
         response['module'] = DumpdataProvider.getModuleDescription(member)
@@ -329,7 +329,7 @@ def discoverNamespace(namespace):
         })
 
     response['endpoint'] = TripledataProvider.getEndpointLink('Namespace', wikiNS)
-    response['sesame']   = TripledataProvider.getSesameLink('Namespace', wikiNS)
+    response['sesame']   = TripledataProvider.getSesameLink('namespaces', wikiNS)
 
     return response
 
@@ -352,7 +352,7 @@ def discoverAllNamespaces():
         })
 
     response['endpoint'] = TripledataProvider.getEndpointLink('Namespace', 'Namespace')
-    response['sesame']   = TripledataProvider.getSesameLink('Namespace', 'Namespace')
+    response['sesame']   = TripledataProvider.getSesameLink('namespaces', 'Namespace')
 
     return response
 

@@ -29,9 +29,11 @@ def getEndpointLink(namespace, member):
         return "http://101companies.org/endpoint/{0}:{1}/json".format(namespace, member)
 
 def getSesameLink(namespace, member):
-    if member == '':
-        member = 'Concept'
-    if not namespace or namespace == '':
-        return "http://triples.101companies.org/openrdf-workbench/repositories/wiki101/explore?resource=%3Chttp%3A%2F%2F101companies.org%2Fresource%2F{}%3E".format(member)
-    else:
-        return "http://triples.101companies.org/openrdf-workbench/repositories/wiki101/explore?resource=%3Chttp%3A%2F%2F101companies.org%2Fresource%2F{0}-3A{1}%3E".format(namespace, member)
+    #if member == '':
+    #    member = 'Concept'
+    return 'http://triples.101companies.org/openrdf-workbench/repositories/wiki2/explore?resource=%3Chttp%3A%2F%2F101companies.org%2Fresources%2F{}%2F{}%3E'.format(namespace, member)
+
+    #if not namespace or namespace == '':
+    #    return "http://triples.101companies.org/openrdf-workbench/repositories/wiki101/explore?resource=%3Chttp%3A%2F%2F101companies.org%2Fresource%2F{}%3E".format(member)
+    #else:
+    #    return "http://triples.101companies.org/openrdf-workbench/repositories/wiki101/explore?resource=%3Chttp%3A%2F%2F101companies.org%2Fresource%2F{0}-3A{1}%3E".format(namespace, member)
