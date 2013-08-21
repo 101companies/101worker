@@ -1,6 +1,52 @@
 $(document).ready(function(){
     init_masonry();
-    init_ZeroClipboard();
+
+    //normal copy button
+    $('#copy').zclip({
+        path:'http://www.steamdev.com/zclip/js/ZeroClipboard.swf',
+        copy: function() {
+            var targetId = $(this).attr('data-clipboard-target');
+            return document.getElementById(targetId).innerText;
+        },
+        afterCopy: function() {
+            var targetId = $(this).attr('data-clipboard-target');
+            var targetText = document.getElementById(targetId).innerText;
+            $('#locator').popover({trigger: 'manual', placement: 'bottom', content: 'copied data into clipboard'});
+            $('#locator').popover('show');
+
+            setTimeout(function() {
+                $('#locator').popover('hide');
+            }, 2000);
+        }
+    })
+
+    //necessary for dropdowns
+    function addZClip () {
+        $('.copy').each(function(){
+            if($(this).is(':visible')){
+                $(this).zclip({
+                    path:'http://www.steamdev.com/zclip/js/ZeroClipboard.swf',
+                    copy: function() {
+                        var targetId = $(this).attr('data-clipboard-target');
+                        return document.getElementById(targetId).innerText;
+                    },
+                    afterCopy: function() {
+                        var targetId = $(this).attr('data-clipboard-target');
+                        var targetText = document.getElementById(targetId).innerText;
+                        $('#locator').popover({trigger: 'manual', placement: 'bottom', content: 'copied data into clipboard'});
+                        $('#locator').popover('show');
+
+                        setTimeout(function() {
+                            $('#locator').popover('hide');
+                        }, 2000);
+                    }
+                });
+                clearInterval(check);
+            }
+        });
+    }
+
+    var check = setInterval(addZClip, 10);
 });
 
 function init_masonry(){
@@ -24,38 +70,5 @@ function init_masonry(){
             }
             return col;
         }
-    });
-}
-
-
-function init_ZeroClipboard() {
-    var clip = new ZeroClipboard( document.getElementById("copy"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
-    });
-
-    var clip1 = new ZeroClipboard( document.getElementById("copy-absolute"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
-    });
-
-    var clip2 = new ZeroClipboard( document.getElementById("copy-relative"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
-    });
-
-    var clip3 = new ZeroClipboard( document.getElementById("copy-absolute-markup"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
-    });
-
-    var clip4 = new ZeroClipboard( document.getElementById("copy-relative-markup"), {
-        moviePath: "http://worker.101companies.org/services/static/discovery/swf/libs/ZeroClipboard.swf",
-        trustedDomains: ['*'],
-        allowScriptAccess: "always"
     });
 }
