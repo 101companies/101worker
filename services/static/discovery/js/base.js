@@ -1,23 +1,26 @@
 $(document).ready(function(){
     init_masonry();
+    
+    var afterCopyCallback = function(){
+        var targetId = $(this).attr('data-clipboard-target');
+        var targetText = document.getElementById(targetId).innerText;
+        $('#locator').popover({trigger: 'manual', placement: 'bottom', content: 'copied data into clipboard'});
+        $('#locator').popover('show');
+        setTimeout(function() {
+            $('#locator').popover('hide');
+        }, 2000);
+    };
+    
+    var copyCallback = function(){
+        var targetId = $(this).attr('data-clipboard-target');
+        return document.getElementById(targetId).innerText;
+    }
 
     //normal copy button
     $('#copy').zclip({
         path:'http://www.steamdev.com/zclip/js/ZeroClipboard.swf',
-        copy: function() {
-            var targetId = $(this).attr('data-clipboard-target');
-            return document.getElementById(targetId).innerText;
-        },
-        afterCopy: function() {
-            var targetId = $(this).attr('data-clipboard-target');
-            var targetText = document.getElementById(targetId).innerText;
-            $('#locator').popover({trigger: 'manual', placement: 'bottom', content: 'copied data into clipboard'});
-            $('#locator').popover('show');
-
-            setTimeout(function() {
-                $('#locator').popover('hide');
-            }, 2000);
-        }
+        copy: copyCallback,
+        afterCopy: afterCopyCallback
     })
 
     //necessary for dropdowns
@@ -26,27 +29,19 @@ $(document).ready(function(){
             if($(this).is(':visible')){
                 $(this).zclip({
                     path:'http://www.steamdev.com/zclip/js/ZeroClipboard.swf',
-                    copy: function() {
-                        var targetId = $(this).attr('data-clipboard-target');
-                        return document.getElementById(targetId).innerText;
+                    copy: copyCallback,
+                    // remove hover class after clicking the element
+                    beforeCopy: function(){
+                        $(this).removeClass('hover');
                     },
-                    afterCopy: function() {
-                        var targetId = $(this).attr('data-clipboard-target');
-                        var targetText = document.getElementById(targetId).innerText;
-                        $('#locator').popover({trigger: 'manual', placement: 'bottom', content: 'copied data into clipboard'});
-                        $('#locator').popover('show');
-
-                        setTimeout(function() {
-                            $('#locator').popover('hide');
-                        }, 2000);
-                    }
+                    afterCopy: afterCopyCallback
                 });
                 clearInterval(check);
             }
         });
     }
 
-    var check = setInterval(addZClip, 10);
+    var check = setInterval(addZClip, 100);
 });
 
 function init_masonry(){
