@@ -53,6 +53,7 @@
         },
         "people": {
             "type": "array",
+            "description": "array of people that have some sort of relation to the file",
             "items": {
                 "type": "object",
                 "required": ["role", "name"],
@@ -70,6 +71,7 @@
         },
         "derived": {
             "type": "array",
+            "description": "array of all derived files",
             "items": {
                 "type": "object",
                 "required": ["headline", "resource", "name", "producedBy"],
@@ -97,6 +99,7 @@
         },
         "fragments": {
             "type": "array",
+            "description": "array of all fragments contained in this file",
             "items": {
                 "type": "object",
                 "required": ["resource", "classifier", "name"],
