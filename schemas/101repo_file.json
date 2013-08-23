@@ -40,7 +40,7 @@
             "description": "classifier of this entity"
         },
         "geshi": {
-            "type": ["string", "null"],
+            "type": "string",
             "description": "geshi code that can be used for highlighting"
         },
         "language": {
@@ -58,7 +58,7 @@
                 "required": ["role", "name"],
                 "properties": {
                     "role": {
-                        "type": ["string", "null"],
+                        "type": "string",
                         "description": "assumed role of the person"
                     },
                     "name": {
@@ -75,7 +75,7 @@
                 "required": ["headline", "resource", "name", "producedBy"],
                 "properties": {
                     "headline": {
-                        "type": ["string", "null"],
+                        "type": "string",
                         "description": "headline for the derived file"
                     },
                     "resource": {
@@ -88,7 +88,7 @@
                         "description": "name of the derived file"
                     },
                     "producedBy": {
-                        "type": ["string", "null"],
+                        "type": "string",
                         "description": "link to the module that produced the file",
                         "format": "uri"
                     }
