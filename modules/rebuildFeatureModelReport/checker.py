@@ -18,6 +18,7 @@ def check(contribName, allClaferFeatures, claferpath):
   tempClaferf.flush()
 
   # compile to alloy
+  print tempClaferf.name
   claferProcess = Popen(["clafer-tools-0.3/clafer", "--mode=alloy", tempClaferf.name], stdout=PIPE, stderr=PIPE)
   (pid, code) = os.waitpid(claferProcess.pid, 0)
   result = {'success': code == 0}
