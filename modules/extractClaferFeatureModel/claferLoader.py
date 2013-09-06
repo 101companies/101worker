@@ -11,7 +11,7 @@ leafs = []
 cache = []
 implications = []
 
-def loadFeature(feat, claferFeat, indent):
+def loadFeature(feat, claferFeat, indent, parentoptional):
   print ' ' * indent + claferFeat,
   if claferFeat in cache:
     print colored('~ DUPLICATE', 'yellow')
@@ -33,7 +33,7 @@ def loadFeature(feat, claferFeat, indent):
     leafs.append(claferFeat)
     print colored('~', 'green'),
     res += re.sub("Feature:", "", claferFeat)
-    if optional:
+    if optional or parentoptional:
       print colored( 'OPTIONAL', 'green'),
       res += ' ?'
     print colored('LEAF', 'green')
@@ -46,7 +46,7 @@ def loadFeature(feat, claferFeat, indent):
         res += 'mux ' + re.sub("Feature:", "", claferFeat)
       if or_:
         print colored('OR (ANY)', 'blue'),
-        res += 'any ' + re.sub("Feature:", "", claferFeat)
+        res += re.sub("Feature:", "", claferFeat)
     if mandatory:
       print colored('~ MANDATORY', 'blue'),
       if alternative:
@@ -62,7 +62,7 @@ def loadFeature(feat, claferFeat, indent):
     for ft in subFeatTriples:
       feat = tripleLoader.urlTourlName(ft['node'], 'Feature:')
       claferFeat = tripleLoader.urlNameToClafer(feat)
-      [subFeat, o] = loadFeature(feat, claferFeat, indent + 2)
+      [subFeat, o] = loadFeature(feat, claferFeat, indent + 2, optional and or_)
       if len(o) > 0:
         subOs[re.sub("Feature:", "", claferFeat)] = o
       subStr += subFeat
@@ -78,7 +78,7 @@ def loadRequirement(req, claferReq, indent):
   for rt in reqTriples:
     feat = tripleLoader.urlTourlName(rt['node'], 'Feature:')
     claferFeat = tripleLoader.urlNameToClafer(feat)
-    [f, o] = loadFeature(feat, claferFeat, indent + 2)
+    [f, o] = loadFeature(feat, claferFeat, indent + 2, False)
     features += f
     if len(o) > 0:
       featOs[re.sub("Feature:", "", claferFeat)] = o
