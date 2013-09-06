@@ -22,11 +22,10 @@ allClaferFeatures = map(lambda t : tripleLoader.urlToClafer(t['node'], 'Feature-
 claferTreeRaw = urllib2.urlopen('http://data.101companies.org/dumps/features.clf.json')
 claferTree = json.load(claferTreeRaw)
 # check all contributions
-for contribName in ["javaComposition"]:
+for contribName in contribNames:
   print 'Checking ' + contribName + '...',
   report = checker.check(contribName, claferTree, allSupportedClaferFeatures, sys.argv[2])
   print 'done.'
   writeReport(report, sys.argv[4] + sys.argv[5] + contribName)
   summary[contribName] = report
-print summary
 writeReport(summary, sys.argv[4] + 'featureModelReport')
