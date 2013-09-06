@@ -12,13 +12,13 @@ def check(contribName, claferTree, allClaferFeatures, claferpath):
   except Exception as e:
     return {'success': False, 'message': e.message}
   # concat concrete feature spec with feature model
-  tempClaferf = tempfile.NamedTemporaryFile(dir=".", delete=False)
+  tempClaferf = tempfile.NamedTemporaryFile(dir=".", delete=True)
   shutil.copyfileobj(open(claferpath, "rb"), tempClaferf)
   tempClaferf.write('\n' + contribClafer)
   tempClaferf.flush()
 
   # compile to alloy
-  claferProcess = Popen(["clafer", "--mode=alloy", tempClaferf.name], stdout=PIPE, stderr=PIPE)
+  claferProcess = Popen(["clafer-tools-0.3/clafer", "--mode=alloy", tempClaferf.name], stdout=PIPE, stderr=PIPE)
   (pid, code) = os.waitpid(claferProcess.pid, 0)
   result = {'success': code == 0}
   if code == 0:
