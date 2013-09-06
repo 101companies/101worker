@@ -33,7 +33,7 @@ def loadFeature(feat, claferFeat, indent):
     leafs.append(claferFeat)
     print colored('~', 'green'),
     res += re.sub("Feature:", "", claferFeat)
-    if optional:
+    if not mandatory:
       print colored( 'OPTIONAL', 'green'),
       res += ' ?'
     print colored('LEAF', 'green')

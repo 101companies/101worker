@@ -28,4 +28,5 @@ for contribName in ["javaComposition"]:
   print 'done.'
   writeReport(report, sys.argv[4] + sys.argv[5] + contribName)
   summary[contribName] = report
+print summary
 writeReport(summary, sys.argv[4] + 'featureModelReport')

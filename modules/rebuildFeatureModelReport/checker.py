@@ -12,7 +12,7 @@ def check(contribName, claferTree, allClaferFeatures, claferpath):
   except Exception as e:
     return {'success': False, 'message': e.message}
   # concat concrete feature spec with feature model
-  tempClaferf = tempfile.NamedTemporaryFile(dir=".", delete=True)
+  tempClaferf = tempfile.NamedTemporaryFile(dir=".", delete=False)
   shutil.copyfileobj(open(claferpath, "rb"), tempClaferf)
   tempClaferf.write('\n' + contribClafer)
   tempClaferf.flush()

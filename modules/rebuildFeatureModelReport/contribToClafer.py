@@ -12,7 +12,6 @@ def printIndent(o, indent, implemented):
     res += printIndent(o[k], indent + 1, implemented)
   return res
 
-
 def contribToClafer(contrib, claferTree, allFeatures):
   triples = tripleLoader.load( "Contribution-3A" + contrib)
   implementedTriples = filter(lambda t : t['predicate'] == "http://101companies.org/property/implements", triples)
@@ -22,9 +21,5 @@ def contribToClafer(contrib, claferTree, allFeatures):
   print printIndent(claferTree, 0, implemented)
   if not implemented:
     raise Exception("No implemented features specified.")
-  output = contrib.title() + " : FeatureSpec\n [ "
-  output += '\n   '.join(cf for cf in implemented)
-  output += '\n   ' + '\n   '.join('no ' + cf for cf in notImplemented)
-  output +=  "]"
-  return output
+  return contrib.title() + " : FeatureSpec\n [ \n" + printIndent(claferTree, 0, implemented) + '\n]'
 
