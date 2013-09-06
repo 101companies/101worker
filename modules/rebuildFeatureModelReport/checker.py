@@ -6,9 +6,9 @@ import os
 import re
 from subprocess import Popen, PIPE
 
-def check(contribName, allClaferFeatures, claferpath):
+def check(contribName, claferTree, allClaferFeatures, claferpath):
   try:
-    contribClafer = contribToClafer.contribToClafer(contribName, allClaferFeatures)
+    contribClafer = contribToClafer.contribToClafer(contribName, claferTree, allClaferFeatures)
   except Exception as e:
     return {'success': False, 'message': e.message}
   # concat concrete feature spec with feature model
@@ -18,7 +18,7 @@ def check(contribName, allClaferFeatures, claferpath):
   tempClaferf.flush()
 
   # compile to alloy
-  claferProcess = Popen(["clafer-tools-0.3/clafer", "--mode=alloy", tempClaferf.name], stdout=PIPE, stderr=PIPE)
+  claferProcess = Popen(["clafer", "--mode=alloy", tempClaferf.name], stdout=PIPE, stderr=PIPE)
   (pid, code) = os.waitpid(claferProcess.pid, 0)
   result = {'success': code == 0}
   if code == 0:

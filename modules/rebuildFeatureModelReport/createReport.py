@@ -1,5 +1,6 @@
 import sys
 import json
+import urllib2
 import checker
 import tripleLoader
 
@@ -18,10 +19,12 @@ instanceOfURL = 'http://101companies.org/property/instanceOf'
 namespaceURL = 'http://101companies.org/resource/Namespace-3ANamespace'
 featureTriples = filter(lambda t : t['predicate'] == instanceOfURL and (t['node'] != namespaceURL),  rawFeatureTriples)
 allClaferFeatures = map(lambda t : tripleLoader.urlToClafer(t['node'], 'Feature-3A'), featureTriples)
+claferTreeRaw = urllib2.urlopen('http://data.101companies.org/dumps/features.clf.json')
+claferTree = json.load(claferTreeRaw)
 # check all contributions
-for contribName in contribNames:
+for contribName in ["javaComposition"]:
   print 'Checking ' + contribName + '...',
-  report = checker.check(contribName, allSupportedClaferFeatures, sys.argv[2])
+  report = checker.check(contribName, claferTree, allSupportedClaferFeatures, sys.argv[2])
   print 'done.'
   writeReport(report, sys.argv[4] + sys.argv[5] + contribName)
   summary[contribName] = report

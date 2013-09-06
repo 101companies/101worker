@@ -17,54 +17,54 @@ def loadFeature(feat, claferFeat, indent):
     print colored('~ DUPLICATE', 'yellow')
     return ['', []]
   cache.append(claferFeat)
-  triples = tripleLoader.load('Feature-3A' + feat)
+  triples = tripleLoader.load(feat)
   isLeaf = all(map(lambda t: t['predicate'] != basePropURL + 'isA' or t['direction'] != 'IN', triples))
   res = '\n' + ' ' * indent
-  optional = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Optional_feature', triples))
-  mandatory = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Mandatory_feature', triples))
-  alternative = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Alternative_feature', triples))
-  or_ = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] == baseResURL + 'Or_feature', triples))
+  optional = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] ==  'Optional feature', triples))
+  mandatory = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] ==  'Mandatory feature', triples))
+  alternative = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] ==  'Alternative feature', triples))
+  or_ = any(map(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'OUT' and t['node'] ==  'Or feature', triples))
   impliedFeatsTriples = filter(lambda t: t['predicate'] == basePropURL + 'implies' and t['direction'] == 'OUT' ,triples)
-  impliedClaferFeats = map(lambda t:  tripleLoader.urlTourlName(tripleLoader.urlNameToClafer(t['node']),'Feature-3A'), impliedFeatsTriples)
+  impliedClaferFeats = map(lambda t:  tripleLoader.urlTourlName(tripleLoader.urlNameToClafer(t['node']),'Feature:'), impliedFeatsTriples)
   print colored('=> (' + ', '.join(impliedClaferFeats) + ')', 'cyan'),
   for implied in impliedClaferFeats:
     implications.append([claferFeat, implied])
   if isLeaf:
     leafs.append(claferFeat)
     print colored('~', 'green'),
-    res += claferFeat
+    res += re.sub("Feature:", "", claferFeat)
     if optional:
       print colored( 'OPTIONAL', 'green'),
       res += ' ?'
     print colored('LEAF', 'green')
-    return [res, claferFeat]
+    return [res, re.sub("Feature:", "", claferFeat)]
   else:
     if optional:
       print colored('~ OPTIONAL', 'blue'),
       if alternative:
         print colored('ALTERNATIVE (MUX)', 'blue'),
-        res += 'mux ' + claferFeat
+        res += 'mux ' + re.sub("Feature:", "", claferFeat)
       if or_:
         print colored('OR (ANY)', 'blue'),
-        res += 'any ' + claferFeat
+        res += 'any ' + re.sub("Feature:", "", claferFeat)
     if mandatory:
       print colored('~ MANDATORY', 'blue'),
       if alternative:
         print colored('ALTERNATIVE (XOR)', 'blue'),
-        res += 'xor ' + claferFeat
+        res += 'xor ' + re.sub("Feature:", "", claferFeat)
       if or_:
         print colored('OR (OR)', 'blue'),
-        res += 'or ' + claferFeat
+        res += 'or ' + re.sub("Feature:", "", claferFeat)
     print colored('NODE', 'blue')
     subFeatTriples = filter(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'IN', triples)
     subStr = ""
     subOs = {}
     for ft in subFeatTriples:
-      feat = tripleLoader.urlTourlName(ft['node'], 'Feature-3A')
+      feat = tripleLoader.urlTourlName(ft['node'], 'Feature:')
       claferFeat = tripleLoader.urlNameToClafer(feat)
       [subFeat, o] = loadFeature(feat, claferFeat, indent + 2)
       if len(o) > 0:
-        subOs[claferFeat] = o
+        subOs[re.sub("Feature:", "", claferFeat)] = o
       subStr += subFeat
     return [res + subStr, subOs]
 
@@ -72,11 +72,11 @@ def loadFeature(feat, claferFeat, indent):
 def loadRequirement(req, claferReq, indent):
   print claferReq + 's'
   triples = tripleLoader.load(req)
-  reqTriples = filter(lambda t: t['node'].find('Feature-3A') != -1 and t['predicate'] == basePropURL + 'isA' and t['direction'] == 'IN', triples)
+  reqTriples = filter(lambda t: t['node'].find('Feature:') != -1 and t['predicate'] == basePropURL + 'isA' and t['direction'] == 'IN', triples)
   features = ''
   featOs = {}
   for rt in reqTriples:
-    feat = tripleLoader.urlTourlName(rt['node'], 'Feature-3A')
+    feat = tripleLoader.urlTourlName(rt['node'], 'Feature:')
     claferFeat = tripleLoader.urlNameToClafer(feat)
     [f, o] = loadFeature(feat, claferFeat, indent + 2)
     features += f
