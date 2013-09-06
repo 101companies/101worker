@@ -11,13 +11,11 @@ leafs = []
 cache = []
 implications = []
 
-def loadFeature(featURL, indent):
-  feat = tripleLoader.urlTourlName(featURL, 'Feature-3A')
-  claferFeat = tripleLoader.urlNameToClafer(feat)
+def loadFeature(feat, claferFeat, indent):
   print ' ' * indent + claferFeat,
   if claferFeat in cache:
     print colored('~ DUPLICATE', 'yellow')
-    return ''
+    return ['', []]
   cache.append(claferFeat)
   triples = tripleLoader.load('Feature-3A' + feat)
   isLeaf = all(map(lambda t: t['predicate'] != basePropURL + 'isA' or t['direction'] != 'IN', triples))
@@ -39,7 +37,7 @@ def loadFeature(featURL, indent):
       print colored( 'OPTIONAL', 'green'),
       res += ' ?'
     print colored('LEAF', 'green')
-    return res
+    return [res, claferFeat]
   else:
     if optional:
       print colored('~ OPTIONAL', 'blue'),
@@ -59,17 +57,32 @@ def loadFeature(featURL, indent):
         res += 'or ' + claferFeat
     print colored('NODE', 'blue')
     subFeatTriples = filter(lambda t: t['predicate'] == basePropURL + 'isA' and t['direction'] == 'IN', triples)
-    return res + ''.join(map(lambda t: loadFeature(t['node'], indent + 2), subFeatTriples))
+    subStr = ""
+    subOs = {}
+    for ft in subFeatTriples:
+      feat = tripleLoader.urlTourlName(ft['node'], 'Feature-3A')
+      claferFeat = tripleLoader.urlNameToClafer(feat)
+      [subFeat, o] = loadFeature(feat, claferFeat, indent + 2)
+      if len(o) > 0:
+        subOs[claferFeat] = o
+      subStr += subFeat
+    return [res + subStr, subOs]
 
 
-def loadRequirement(reqURL, indent):
-  req = tripleLoader.urlTourlName(reqURL, '')
-  claferReq = tripleLoader.urlNameToClafer(req)
+def loadRequirement(req, claferReq, indent):
   print claferReq + 's'
   triples = tripleLoader.load(req)
   reqTriples = filter(lambda t: t['node'].find('Feature-3A') != -1 and t['predicate'] == basePropURL + 'isA' and t['direction'] == 'IN', triples)
-  features = ''.join(map(lambda t:  loadFeature(t['node'], indent + 2), reqTriples))
-  return '\n' + ' ' * indent + claferReq + features + '\n'
+  features = ''
+  featOs = {}
+  for rt in reqTriples:
+    feat = tripleLoader.urlTourlName(rt['node'], 'Feature-3A')
+    claferFeat = tripleLoader.urlNameToClafer(feat)
+    [f, o] = loadFeature(feat, claferFeat, indent + 2)
+    features += f
+    if len(o) > 0:
+      featOs[claferFeat] = o
+  return ('\n' + ' ' * indent + claferReq + features + '\n', featOs)
 
 #main
 parser = argparse.ArgumentParser()
@@ -78,9 +91,19 @@ parser.add_argument('-flatf', required=True, help='file to write flat list of cl
 args = parser.parse_args()
 reqsTriples = filter(lambda t: t['predicate'] == basePropURL + 'isA',  tripleLoader.load('Requirement'))
 res = 'abstract FeatureSpec'
-res += '\n' + ''.join(map(lambda t: loadRequirement(t['node'],2), reqsTriples))
+res += '\n'
+reqsObject = {}
+for rt in reqsTriples:
+  req = tripleLoader.urlTourlName(rt['node'], '')
+  claferReq = tripleLoader.urlNameToClafer(req)
+  [r, o] = loadRequirement(req, claferReq, 2)
+  res += r
+  if len(o) > 0:
+    reqsObject[claferReq] = o
 res += '\n  ' + '\n  '.join(map(lambda t: '[' + t[0] + ' => ' + t[1] + ']', implications))
 with open(args.cf, 'w+') as f:
   f.write(res)
 with open(args.flatf, 'w+') as f:
   f.write(json.dumps(leafs))
+with open(args.cf + '.json', 'w+') as f:
+  json.dump(reqsObject, f)
