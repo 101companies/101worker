@@ -8,6 +8,8 @@ def urlTourlName(url, suffix):
 
 def urlNameToClafer(url):
   raw = re.sub('-2D', '_', url)
+  raw = re.sub(' ', '_', raw)
+  raw = re.sub('-', '_', raw)
   return re.sub("([a-zA-Z])\_([a-zA-Z])",lambda pat: pat.group(1) + pat.group(2).upper(), raw)
 
 def load(resourcename):
