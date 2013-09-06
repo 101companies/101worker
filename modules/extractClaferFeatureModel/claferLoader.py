@@ -100,7 +100,7 @@ for rt in reqsTriples:
   res += r
   if len(o) > 0:
     reqsObject[claferReq] = o
-res += '\n  ' + '\n  '.join(map(lambda t: '[' + t[0] + ' => ' + t[1] + ']', implications))
+res += '\n  ' + '\n  '.join(map(lambda t: '[' + re.sub("Feature:", "", t[0]) + ' => ' + re.sub("Feature:", "", t[1]) + ']', implications))
 with open(args.cf, 'w+') as f:
   f.write(res)
 with open(args.flatf, 'w+') as f:
