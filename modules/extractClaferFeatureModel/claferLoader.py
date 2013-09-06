@@ -81,7 +81,7 @@ def loadRequirement(req, claferReq, indent):
     [f, o] = loadFeature(feat, claferFeat, indent + 2)
     features += f
     if len(o) > 0:
-      featOs[claferFeat] = o
+      featOs[re.sub("Feature:", "", claferFeat)] = o
   return ('\n' + ' ' * indent + claferReq + features + '\n', featOs)
 
 #main
