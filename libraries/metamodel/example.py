@@ -22,6 +22,7 @@ def extractFiles(folder):
 
 if __name__ == '__main__':
     #start at the contribution namespace and initialize a list that will later contain all files
+    #drop the 'namespace' from the identifier
     contributionsNamespace = Namespace('namespace/contributions')
     files = []
 

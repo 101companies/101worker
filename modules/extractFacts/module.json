@@ -5,7 +5,9 @@
       "classifier" : "resource",
       "scope" : "file",
       "suffix" : ".extractor.json",
-      "language" : "JSON"
+      "language" : "JSON",
+      "propertyName" : "extractor",
+      "className" : "Extractor"
     }
   ]
 }

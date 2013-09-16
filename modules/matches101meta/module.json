@@ -5,7 +5,9 @@
       "classifier" : "resource",
       "scope" : "file",
       "suffix" : ".matches.json",
-      "language" : "JSON"
+      "language" : "JSON",
+      "propertyName": "matches",
+      "className" : "Matches"
     }
   ]
 }

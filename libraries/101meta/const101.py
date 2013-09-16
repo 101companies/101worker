@@ -1,7 +1,9 @@
 import os
 
-url101wiki = "http://101companies.org/index.php/"
+url101wiki = "http://101companies.org/wiki/"
+url101explorer = "http://101companies.org/resources/"
 url101repo = "https://github.com/101companies/101repo/tree/master/"
+url101data = "http://data.101companies.org/"
 results101 = "../../../101results"
 sRoot = "../../../101results/101repo" # the root for source files
 tRoot = "../../../101web/data/resources" # the root for target files
@@ -22,6 +24,8 @@ resolutionDump = os.path.join(dumps, "resolution.json")
 wikiDump = os.path.join(dumps, "wiki.json")
 pullRepoDump = os.path.join(dumps, "PullRepo.json")
 moduleSummaryDump = os.path.join(dumps, 'ModuleSummaryDump.json')
+tModuleSummaryDump = os.path.join(dumps, 'tempModuleSummaryDump.json')
+
 
 def noMetrics():
     result = dict()
