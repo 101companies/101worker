@@ -9,7 +9,7 @@ baseResURL = 'http://101companies.org/resource/'
 
 leafs = []
 cache = []
-implications = []
+implications = {}
 
 def loadFeature(feat, claferFeat, indent, parentoptional):
   print ' ' * indent + claferFeat,
@@ -28,7 +28,10 @@ def loadFeature(feat, claferFeat, indent, parentoptional):
   impliedClaferFeats = map(lambda t:  tripleLoader.urlTourlName(tripleLoader.urlNameToClafer(t['node']),'Feature:'), impliedFeatsTriples)
   print colored('=> (' + ', '.join(impliedClaferFeats) + ')', 'cyan'),
   for implied in impliedClaferFeats:
-    implications.append([claferFeat, implied])
+    if claferFeat in implications:
+      implications[claferFeat].append(implied)
+    else:
+      implications[claferFeat] = [implied]
   if isLeaf:
     leafs.append(claferFeat)
     print colored('~', 'green'),
@@ -106,4 +109,4 @@ with open(args.cf, 'w+') as f:
 with open(args.flatf, 'w+') as f:
   f.write(json.dumps(leafs))
 with open(args.cf + '.json', 'w+') as f:
-  json.dump(reqsObject, f)
+  json.dump({'structure': reqsObject, 'implications' : implications}, f)
