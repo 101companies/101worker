@@ -60,6 +60,7 @@ cloneapiurl = "http://101companies.org/api/clones"
 clones = json.load(urllib2.urlopen(cloneapiurl))
 for clone in clones:
   if clone['status'] == 'in_preparation':
+    os.system('cd ' + repobase + '; git pull')
     print 'Preparing ' + clone['title']
     create(repobase, clone['title'], clone['original'], clone['minusfeatures'])
     os.system('cd ' + repobase + '; git add .; git commit -m "preparing clone \'' + clone['title'] + ' \' "; git push')
