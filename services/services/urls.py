@@ -4,7 +4,6 @@ from explorer import service
 from helloWorld import views as helloWorld
 from sourceLinks import views as sourceLinks
 from termResources import views as termResources
-from cloneCreation import views as cloneCreation
 from termResourcesCode import views as termResourcesCode
 from analyzeSubmission import views as analyzeSubmission
 from triggerCloneCreation import views as triggerCloneCreation
@@ -47,8 +46,6 @@ urlpatterns = patterns('',
     ('^termResources/(?P<term>.+)\.(?P<format>.+)$', termResources.serveTerm),
     ('^termResources\.(?P<format>.+)$', termResources.serveResourceNames),
     ('^termResourcesCode/(?P<term>.+)/(?P<resName>.+)/(?P<cat>.+)/(?P<resIndex>.+)/(?P<codeIndex>.+)\.(?P<format>.+)$', termResourcesCode.serveCode),
-
-    ('^cloneCreation$', cloneCreation.create),
 
     ('^analyzeSubmission$', analyzeSubmission.analyze)
 )
