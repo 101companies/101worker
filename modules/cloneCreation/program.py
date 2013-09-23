@@ -55,8 +55,8 @@ def create(repobase, title, original, features):
       f.truncate()
       f.close()
 
-repobase = '../../../101haskell/'
-cloneapiurl = "http://localhost:3000/api/clones"
+repobase = '../../../101results/gitdeps/101haskellclones/'
+cloneapiurl = "http://101companies.org/api/clones"
 clones = json.load(urllib2.urlopen(cloneapiurl))
 for clone in clones:
   if clone['status'] == 'in_preparation':
