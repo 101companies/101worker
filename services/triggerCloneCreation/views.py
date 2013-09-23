@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 import os
 
 def trigger(request):
