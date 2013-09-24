@@ -43,7 +43,7 @@ def create(repobase, title, original, features):
       print path
       print lines
       path = '/'.join(path.split('/')[0:1] + [title] + path.split('/')[2:])
-      f = open(repobase + path.replace(original, title), 'r+')
+      f = open(repobase + path, 'r+')
       filelines = f.read().splitlines()
       if lines['complete']:
         lines['start'] = 0
