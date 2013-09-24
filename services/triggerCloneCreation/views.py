@@ -1,8 +1,9 @@
 from django.http import HttpResponse
-import os
+import subprocess
 
 def trigger(request):
-    exitcode = os.system('cd ../../modules/cloneCreation; make run')
-    return HttpResponse(str(exitcode), content_type='text/plain')
+    output = subprocess.Popen(["make", "run"], cwd="../../modules/cloneCreation", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    result = output.stdout.read()
+    return HttpResponse(result, content_type='text/plain')
 
 
