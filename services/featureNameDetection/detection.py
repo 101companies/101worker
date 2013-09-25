@@ -1,4 +1,3 @@
-from course import Course
 from repo import Repo
 from contribution import Contribution
 import getpass

@@ -7,7 +7,6 @@ import re
 import unicodedata
 from termcolor import colored
 
-# a course with lectures
 class Contribution(WikiResource):
 
   def __init__(self, title, commitsha=None, loadfeatures=False):

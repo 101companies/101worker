@@ -1,4 +1,3 @@
-from course import Course
 from repo import Repo
 import detection
 import getpass
