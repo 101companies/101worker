@@ -15,6 +15,5 @@ def detect_all(contribname, sha):
   c = Contribution(contribname, loadfeatures=True, commitsha=sha)
   features.update(set(c.features.keys()))
   contributionso[c.rtitle] = {'features' : c.features}
-  with open("./detection.json", 'w') as outfile:
-    json.dump(contributionso, outfile)
+  return json.dump(contributionso)
 
