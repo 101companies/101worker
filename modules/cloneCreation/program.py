@@ -32,9 +32,9 @@ def aggregateCommentLines(source, features):
         commentLines.append(res)
   return commentLines
 
-def create(repobase, title, original, features):
-  originalpath = repobase + 'contributions/' + original
-  clonepath = repobase + 'contributions/' + title
+def create(repofrombase, repotobase, title, original, features):
+  originalpath = repofrombase + 'contributions/' + original
+  clonepath = repotobase + 'contributions/' + title
   if not os.path.exists(clonepath):
     shutil.copytree(originalpath, clonepath)
     liness = aggregateCommentLines(original, features)
@@ -42,26 +42,29 @@ def create(repobase, title, original, features):
       path = lines['path']
       print path
       print lines
-      path = '/'.join(path.split('/')[0:1] + [title] + path.split('/')[2:])
-      f = open(repobase + path, 'r+')
-      filelines = f.read().splitlines()
+      pathto = '/'.join(path.split('/')[0:1] + [title] + path.split('/')[2:])
+      f1 = open(repofrombase + path, 'r+')
+      f2 = open(repotobase + pathto, 'w+')
+      filelines = f1.read().splitlines()
+      f1.close()
       if lines['complete']:
         lines['start'] = 0
         lines['end'] = len(filelines)
       newlines = filelines[:lines['start']] + map(lambda l: '-- ' + l, filelines[lines['start']:lines['end']]) + filelines[lines['end']:]
-      f.seek(0)
+      f2.seek(0)
       for line in newlines:
-        f.write(line + '\n')
-      f.truncate()
-      f.close()
+        f2.write(line + '\n')
+      f2.truncate()
+      f2.close()
 
-repobase = '../../../101results/gitdeps/101haskellclones/'
-cloneapiurl = "http://101companies.org/api/clones"
+repofrombase = '../../../101results/gitdeps/101haskell/'
+repotobase = '../../../101results/gitdeps/101haskellclones/'
+cloneapiurl = "http://localhost:3000/api/clones"
 clones = json.load(urllib2.urlopen(cloneapiurl))
 for clone in clones:
   if clone['status'] == 'in_preparation':
-    os.system('cd ' + repobase + '; git pull')
+    os.system('cd ' + repotobase + '; git pull')
     print 'Preparing ' + clone['title']
-    create(repobase, clone['title'], clone['original'], clone['minusfeatures'])
-    os.system('cd ' + repobase + '; git add .; git commit -m "preparing clone \'' + clone['title'] + ' \' "; git push')
+    create(repofrombase, repotobase, clone['title'], clone['original'], clone['minusfeatures'])
+    os.system('cd ' + repotobase + '; git add .; git commit -m "preparing clone \'' + clone['title'] + ' \' "; git push')
 
