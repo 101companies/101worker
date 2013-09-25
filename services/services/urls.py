@@ -7,6 +7,7 @@ from termResources import views as termResources
 from termResourcesCode import views as termResourcesCode
 from analyzeSubmission import views as analyzeSubmission
 from triggerCloneCreation import views as triggerCloneCreation
+from featureNameDetection import views as featureNameDetection
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -39,6 +40,7 @@ urlpatterns = patterns('',
 
     (r'^hello$', helloWorld.hello),
     (r'^triggerCloneCreation$', triggerCloneCreation.trigger),
+    (r'^featureNameDetection$', featureNameDetection.detect),
 
     (r'^sourceLinks/(?P<name>.+)\.(?P<format>.+)$', sourceLinks.serveLink),
 
