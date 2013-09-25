@@ -59,7 +59,7 @@ def create(repofrombase, repotobase, title, original, features):
 
 repofrombase = '../../../101results/gitdeps/101haskell/'
 repotobase = '../../../101results/gitdeps/101haskellclones/'
-cloneapiurl = "http://localhost:3000/api/clones"
+cloneapiurl = "http://101companies.org/api/clones"
 clones = json.load(urllib2.urlopen(cloneapiurl))
 for clone in clones:
   if clone['status'] == 'in_preparation':
