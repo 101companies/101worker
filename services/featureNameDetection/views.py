@@ -25,7 +25,7 @@ def detect(request):
     set_worker(reponame, contribname, sha)
     features = detection.detect_all(contribname, sha)
     set_worker(reponame, contribname, 'master')
-    return HttpResponse(features, content_type='text/json')
+    return HttpResponse(json.dumps(features), content_type='text/json')
 
 
 
