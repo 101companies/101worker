@@ -4,6 +4,7 @@ import getpass
 import json
 import sys
 import subprocess
+from django.http import HttpResponse
 from termcolor import colored
 import pysftp
 
