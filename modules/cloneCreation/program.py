@@ -36,6 +36,7 @@ def create(repofrombase, repotobase, title, original, features):
   originalpath = repofrombase + 'contributions/' + original
   clonepath = repotobase + 'contributions/' + title
   if not os.path.exists(clonepath):
+    touched = []
     shutil.copytree(originalpath, clonepath)
     liness = aggregateCommentLines(original, features)
     for lines in liness:
@@ -43,14 +44,18 @@ def create(repofrombase, repotobase, title, original, features):
       print path
       print lines
       pathto = '/'.join(path.split('/')[0:1] + [title] + path.split('/')[2:])
-      f1 = open(repofrombase + path, 'r+')
-      f2 = open(repotobase + pathto, 'w+')
+      if path in touched:
+        f1 = open(repotobase + pathto, 'r+')
+      else:
+        f1 = open(repofrombase + path, 'r+')
       filelines = f1.read().splitlines()
       f1.close()
+      touched.append(path)
+      f2 = open(repotobase + pathto, 'w+')
       if lines['complete']:
         lines['start'] = 0
         lines['end'] = len(filelines)
-      newlines = filelines[:lines['start']] + map(lambda l: '-- ' + l, filelines[lines['start']:lines['end']]) + filelines[lines['end']:]
+      newlines = filelines[:lines['start']-1] + map(lambda l: '-- ' + l, filelines[lines['start']-1:lines['end']]) + filelines[lines['end']:]
       f2.seek(0)
       for line in newlines:
         f2.write(line + '\n')
