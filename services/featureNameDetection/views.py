@@ -10,10 +10,10 @@ import pysftp
 
 def set_worker(reponame, contribname, sha):
   print "Preparing worker for commit " + colored(sha, 'magenta')
-  subprocess.Popen(["git", "checkout " + sha], cwd="../../../101results/gitdeps/" + reponame, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+  subprocess.Popen(["git", "checkout " + sha], cwd="/home/worker/101results/gitdeps/" + reponame, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
   print "> " + colored(contribname, 'cyan')
-  subprocess.Popen(["rm", "-rf", contribname], cwd="../../../101results/101repo/contributions/" + reponame, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-  subprocess.Popen(["cp", "-r", "../../../101results/gitdeps/" + reponame + "/contributions/" + contribname, "../../../101results/101repo/contributions/"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+  subprocess.Popen(["rm", "-rf", contribname], cwd="/home/worker/101results/101repo/contributions/" + reponame, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+  subprocess.Popen(["cp", "-r", "/home/worker/101results/gitdeps/" + reponame + "/contributions/" + contribname, "/home/worker/101results/101repo/contributions/"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 
 def detect(request):
