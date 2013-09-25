@@ -20,11 +20,12 @@ def detect(request):
   reponame = request.GET.get('reponame', '').split('/')[0]
   contribname = request.GET.get('contribname', '').split('/')[0]
   sha = request.GET.get('sha', '').split('/')[0]
-  repo = Repo("101companies", reponame)
-  set_worker(reponame, contribname, sha)
-  features = detection.detect_all(contribname, sha)
-  set_worker(reponame, contribname, 'master')
-  return HttpResponse(features, content_type='text/json')
+  if len(contribname) > 0 and len(reponame) > 0 and len(sha) > 0:
+    repo = Repo("101companies", reponame)
+    set_worker(reponame, contribname, sha)
+    features = detection.detect_all(contribname, sha)
+    set_worker(reponame, contribname, 'master')
+    return HttpResponse(features, content_type='text/json')
 
 
 
