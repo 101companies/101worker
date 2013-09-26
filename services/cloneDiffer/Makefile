@@ -7,13 +7,13 @@ default:FeatureDiff.jar
 	@echo  FeatureDiff.jar has been created.
 
 FeatureDiff.jar: FeatureDiff.java JarMetaInfo.mf
-	javac $(CLASSPATH) FeatureDiff.java
+	javac $(CLASSPATH) FeatureDiff.java -Xlint:unchecked
 	jar cfm FeatureDiff.jar JarMetaInfo.mf FeatureDiff.class
-	$(RM) FeatureDiff.class	
+	$(RM) FeatureDiff.class
 
-clean: 	
+clean:
 	$(RM) FeatureDiff.jar *~
-	
-	
+
+
 
 
