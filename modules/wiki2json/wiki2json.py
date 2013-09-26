@@ -51,7 +51,7 @@ for p in db.pages.find():
 
   allPages.append(res)  
 
-with open('wiki.json', 'w') as f:
+with open('dump.json', 'w') as f:
   f.write(json.dumps({'wiki':{'pageCount':len(allPages), 'pages':allPages}}, sort_keys=False))
 
 #def url = 'http://101companies.org/endpoint/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/summary'
