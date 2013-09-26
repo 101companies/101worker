@@ -57,7 +57,7 @@ class Contribution(WikiResource):
     for ctriple in ctriples:
       self.features[ctriple.object.rtitle] = []
     clones = json.load(urllib2.urlopen('http://101companies.org/api/clones'))
-    clone = filter(lambda c : c['title'] == self.title, clones)
+    clone = filter(lambda c : c['title'] == self.title.replace('Contribution:', ''), clones)
     if len(clone) > 0:
      for minusfeature in clones[0]['minusfeatures']:
       self.features[minusfeature] = []
