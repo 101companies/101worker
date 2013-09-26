@@ -33,6 +33,7 @@ class Repo101 {
         public static DEVELOPED_BY = 'http://101companies.org/property/developedBy'
         public static REVIEWED_BY = 'http://101companies.org/property/reviewedBy'
         public static RELATES_TO = 'http://101companies.org/property/relatesTo'
+        public static MENTIONS = 'http://101companies.org/property/mentions'
         public static LABEL = 'http://www.w3.org/2000/01/rdf-schema#label'
         public static PAGE = 'http://semantic-mediawiki.org/swivt/1.0#page'
         public static TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
@@ -75,6 +76,7 @@ class Repo101 {
         println "developedBy:" + edges.findAll {it.label == Properties.DEVELOPED_BY}.size()
         println "reviewedBy:" + edges.findAll {it.label == Properties.REVIEWED_BY}.size()
         println "relatesTo:" + edges.findAll {it.label == Properties.RELATES_TO}.size()
+        println "mentions:" + edges.findAll {it.label == Properties.MENTIONS}.size()
     }
 
     public examineConcepts(ns) {

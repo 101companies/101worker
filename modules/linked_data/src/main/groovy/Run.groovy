@@ -28,7 +28,7 @@ class Run{
         //println overlappingConcepts
         //println "# overlapping concepts: " + overlappingConcepts.size()
   
-        //m.statistics()
+        m.statistics()
     }
 
     def toLink(v){
