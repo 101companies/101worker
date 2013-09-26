@@ -1,0 +1,15 @@
+1. Dependencies for Building & Running:
+
+Java Platform (JDK) , v6+
+
+2. Building 
+
+$ make clean
+$ make
+
+3. Usage
+
+java -jar FeatureDiff.jar <original file> <clone file> <output file>
+
+
+
