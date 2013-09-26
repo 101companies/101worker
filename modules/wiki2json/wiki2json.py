@@ -39,7 +39,7 @@ db.authenticate(os.environ['MONGODB_USER'], os.environ['MONGODB_PWD'])
 
 allPages = []
 for p in db.pages.find():
-  res = {}
+  res = {'headline':'n/a'}
   handle_page_name(p['title'], res)
 
   if 'used_links' in p:
