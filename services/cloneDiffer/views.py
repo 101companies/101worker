@@ -31,7 +31,7 @@ def diff(request):
   return HttpResponse(json.dumps({}), content_type='text/json')
   clonename = request.GET.get('clonename', '')
   if len(clonename) > 0:
-    clones = json.load(urllib2.urlopen('http://101companies.org/api/clones'))
+    clones = json.load(urllib2.urlopen('http://101companies.org/api/clones?no_update=Yes'))
     clone = filter(lambda x: x['title'] == clonename, clones)
     if len(clone) > 0:
       clone = clone[0]
