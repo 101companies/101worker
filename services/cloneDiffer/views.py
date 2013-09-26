@@ -17,7 +17,7 @@ def saveDetection(reponame, contribname, sha, filename):
     json.dump(features, outfile, indent=2)
 
 
-def diff(clonename):
+def diff(request):
   clonename = request.GET.get('clonename', '')
   if len(clonename) > 0:
     clones = json.load(urllib2.urlopen('http://101companies.org/api/clones'))
