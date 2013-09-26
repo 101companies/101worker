@@ -4,7 +4,7 @@ import json
 import urllib2
 import os
 
-def saveDetection(reponame, contribname, sha, filename):
+def saveDetection(reponame, contribname, sha):
   base = 'http://worker.101companies.org/services/featureNameDetection'
   parameters = "?reponame={0}&contribname={1}&sha={2}".format(reponame, contribname, sha)
   detectionUrl = base + parameters
@@ -13,8 +13,18 @@ def saveDetection(reponame, contribname, sha, filename):
   features = {}
   for feature, locations in (detection[title]['features']).items():
     features[feature] = map(lambda l: l['resource'].replace("http://101companies.org/resources/contributions/" + contribname, ''), locations)
-  with open(filename, 'w') as outfile:
-    json.dump(features, outfile, indent=2)
+  return features
+
+def diffFeatures(originalFeatures, clonedFeatures):
+  features = {}
+  for feature, locations in originalFeatures.items():
+    if not feature in clonedFeatures:
+      features[feature] = []
+    else:
+      diff = set(locations).intersection(set(clonedFeatures[feature]))
+      diff = sorted(map(lambda x: locations.index(x) + 1, diff))
+      features[feature] = diff
+  return features
 
 
 def diff(request):
@@ -25,17 +35,9 @@ def diff(request):
     if len(clone) > 0:
       clone = clone[0]
       if clone['clone_commit_sha']:
-        originalFileName = 'original.json'
-        cloneFileName = 'clone.json'
-        diffFileName = 'diff.json'
-        saveDetection('101haskell', clone['original'], clone['original_commit_sha'], originalFileName)
-        saveDetection('101haskellclones', clone['title'], clone['clone_commit_sha'], cloneFileName)
-        p = subprocess.Popen(["java", "-jar", "FeatureDiff.jar", originalFileName, cloneFileName, diffFileName], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        p.wait()
-        result = json.load(open(diffFileName))
-        os.remove(originalFileName)
-        os.remove(cloneFileName)
-        os.remove(diffFileName)
+        originalFeatures = saveDetection('101haskell', clone['original'], clone['original_commit_sha'])
+        clonedFeatures = saveDetection('101haskellclones', clone['title'], clone['clone_commit_sha'])
+        result = diffFeatures(originalFeatures, clonedFeatures)
       else:
         result = {'error': 'no clone commit found'}
     else:
