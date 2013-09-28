@@ -4,6 +4,8 @@ url101wiki = "http://101companies.org/wiki/"
 url101explorer = "http://101companies.org/resources/"
 url101repo = "https://github.com/101companies/101repo/tree/master/"
 url101data = "http://data.101companies.org/"
+url101endpoint = "http://101companies.org/endpoint/"
+
 results101 = "../../../101results"
 sRoot = "../../../101results/101repo" # the root for source files
 tRoot = "../../../101web/data/resources" # the root for target files

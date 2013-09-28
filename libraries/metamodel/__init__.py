@@ -31,6 +31,7 @@ import commands
 
 # state variable for HTTP/filesystem access
 import __builtin__
+
 __builtin__.USE_EXPLORER_SERVICE = False
 
 #importing other parts of metamodel API
@@ -47,83 +48,165 @@ from mediawiki import wikifyNamespace
 from mediawiki import dewikifyNamespace
 
 
+
+
 # Helper functions
-def use101Explorer():
+def useWebInterface():
     __builtin__.USE_EXPLORER_SERVICE = True
 
+class walk:
+    def __init__(self, root):
+        if isinstance(root, Namespace):
+            self.__stack = root.members
+        else:
+            self.__stack = [ root ]
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if len(self.__stack) == 0:
+            raise StopIteration
+
+        cur = self.__stack.pop(0)
+        self.__stack = cur.folders + self.__stack
+
+        return cur.folders, cur.files
 
 # normal API
 class Namespace:
-    def __init__(self, identifier):
-        parts = identifier.split('/')
-        if not parts[0] == 'namespace':
-            raise ValueError('Namespace identifiers must have the form "namespace/namespaceName"')
-
-        #ignore namespace/Namespace for now
-
+    def __init__(self, identifier, parent=None):
         self.__identifier = identifier
-        self.__name = wikifyNamespace(parts[1])
+        relPath = identifier
+        if identifier == 'namespaces':
+            relPath = ''
 
-        #create paths
-        self.__sPath = os.path.join(const101.sRoot, dewikifyNamespace(self.__name))
-        self.__tPath = os.path.join(const101.tRoot, dewikifyNamespace(self.__name))
+        if USE_EXPLORER_SERVICE:
+            self.__sPath = os.path.join(const101.url101explorer, relPath)
+            self.__loadFromWeb()
+        else:
+            self.__sPath = os.path.join(const101.sRoot, relPath)
+            self.__tPath = os.path.join(const101.tRoot, relPath)
+            if self.name != 'Namespace' and not self.name in json.load(open(os.path.join(const101.tRoot, 'members.json'), 'r')):
+                raise BadIdentifierException(self.identifier)
+
+    @property
+    def identifier(self):
+        return self.__identifier
 
     @property
     def name(self):
+        if not '_Namespace__name' in self.__dict__:
+            self.__name = wikifyNamespace(self.identifier)
         return self.__name
+
+    @property
+    def path(self):
+        return self.__sPath
 
     @property
     def classifier(self):
         return 'Namespace'
 
     @property
+    def parent(self):
+        if not '_Namespace__parent' in self.__dict__:
+            if self.identifier == 'namespaces':
+                self.__parent = None
+            else:
+                self.__parent = Namespace('namespaces')
+        return self.__parent
+
+    @property
     def headline(self):
         if not '_Namespace__headline' in self.__dict__:
-            self.__headline = helpers.extractHeadline('Namespace', self.name)
+            self.__headline = WikiDump().getHeadline('Namespace', self.name)
         return self.__headline
 
     @property
-    def wiki(self):
-        return const101.url101wiki + 'Namespace/{}'.format(self.name)
+    def endpointLink(self, format='json'):
+        if not '_Namespace__endpoint' in self.__dict__:
+            self.__endpoint = os.path.join(const101.url101endpoint, 'Namespace:' + self.name, format)
+        return self.__endpoint
+
+    @property
+    def wikiLink(self):
+        if not '_Namespace__wiki' in self.__dict__:
+            self.__wiki = os.path.join(const101.url101wiki, 'Namespace' + ':' + self.name)
+        return self.__wiki
 
     @property
     def github(self):
-        raise NotImplementedError('not implemented yet')
-
-    @property
-    def endpoint(self):
-        raise NotImplementedError('not implemented yet')
-
-    @property
-    def sesame(self):
-        raise NotImplementedError('do we really need this?')
+        if not '_Namespace__github' in self.__dict__:
+            relPath = self.identifier
+            if self.identifier == 'namespaces':
+                relPath = ''
+            self.__github = os.path.join(const101.url101repo, relPath)
+        return self.__github
 
     @property
     def members(self):
         if not '_Namespace__members' in self.__dict__:
-            path = os.path.join(self.__tPath, 'members.json')
-            self.__members = [Member(os.path.join(dewikifyNamespace(self.__name), x)) for x in json.load(open(path, 'r'))]
+            self.__members = []
+            if not '_Namespace__memberIds' in self.__dict__:
+                self.__memberIds = [os.path.join(self.identifier, mId) for mId in json.load(open(os.path.join(self.__tPath, 'members.json')))]
+            for id in self.__memberIds:
+                if self.identifier == 'namespaces':
+                    self.__members.append(Namespace(id, parent=self))
+                else:
+                    self.__members.append(Member(id, parent=self))
+
         return self.__members
+
+    def __loadFromWeb(self):
+        data = helpers.loadJSONFromUrl(self.path)
+
+        self.__wiki = data['wiki']
+        self.__github = data['github']
+        self.__headline = data['headline']
+        self.__endpoint = data['endpoint']
+
+        self.__memberIds = []
+        for id in data['members']:
+            if self.identifier == 'namespaces':
+                self.__memberIds.append(id['resource'].replace(const101.url101explorer, ''))
+            else:
+                self.__memberIds.append(id['resource'].replace(const101.url101explorer, ''))
 
     def __repr__(self):
         return self.__str__()
 
     def __str__(self):
-        return '(Namespace, {})'.format(self.name)
+        return '(Namespace, {})'.format(self.__identifier)
 
+    def __eq__(self, other):
+        if hasattr(other, 'identifier'):
+            return other.identifier == self.identifier
+        return NotImplemented
 
 class Folder:
-    def __init__(self, identifier):
+    def __init__(self, identifier, member=None, parent=None):
         self.__identifier = identifier
-        self.__name = identifier.rsplit("/", 1)[1]
+        parts = identifier.split('/')
 
-        #create paths
-        self._sPath = os.path.join(const101.sRoot, identifier)
-        self._tPath = os.path.join(const101.tRoot, identifier)
+        if USE_EXPLORER_SERVICE:
+            self.__sPath = os.path.join(const101.url101explorer, identifier)
+            try:
+                self.__loadFromWeb()
+            except urllib2.HTTPError:
+                raise BadIdentifierException(self.identifier)
+        else:
+            #create paths
+            self.__sPath = os.path.join(const101.sRoot, identifier)
+            self.__tPath = os.path.join(const101.tRoot, identifier)
 
-        if not isinstance(self, Member):
-            if not os.path.exists(self._sPath):
-                raise ValueError('Identifier does not exist')
+            if not isinstance(self, Member):
+                if not os.path.exists(self.__sPath):
+                    raise BadIdentifierException(identifier)
+                if len(parts) <= 2:
+                    raise BadIdentifierException(identifier, '{} doesn\'t identify a Folder, but rather a Member')
+
+        self.__name = parts[-1]
 
     @property
     def identifier(self):
@@ -134,16 +217,52 @@ class Folder:
         return self.__name
 
     @property
+    def path(self):
+        return self.__sPath
+
+    @property
     def classifier(self):
         return 'Folder'
+
+    @property
+    def member(self):
+        """
+        returns a backlink to the member this file belongs to
+        :return: instance of Member class
+        """
+        if not '_Folder__member' in self.__dict__:
+            self.__member = Member('/'.join(self.identifier.split('/')[0:2]))
+        return self.__member
+
+    @property
+    def parent(self):
+        """
+        returns a backlink to the folder this file belongs to
+        :return: instance of folder or member class, depending on where this file is sitting in the file tree
+        """
+        if not '_Folder__parent' in self.__dict__:
+            pIdentifier = self.identifier.rsplit('/', 1)[0]
+            if pIdentifier == self.member.identifier:
+                self.__parent = self.member
+            else:
+                self.__parent = Folder(pIdentifier)
+
+        return self.__parent
 
     @property
     def folders(self):
         if not '_Folder__folders' in self.__dict__:
             self.__folders = []
             if not hasattr(self, 'virtual') or not self.virtual:
-                self.__folders = [Folder(os.path.join(self.__identifier, o)) for o in os.listdir(self._sPath)
-                                  if os.path.isdir(os.path.join(self._sPath, o))]
+                if not '_Folder__folderIds' in self.__dict__:
+                    self.__folderIds = [os.path.join(self.identifier, o)
+                                        for o in os.listdir(self.path)
+                                        if os.path.isdir(os.path.join(self.path, o))
+                    ]
+
+                self.__folders = [Folder(identifier, member=self.member, parent=self.parent)
+                                  for identifier in self.__folderIds
+                ]
 
         return self.__folders
 
@@ -152,43 +271,85 @@ class Folder:
         if not '_Folder__files' in self.__dict__:
             self.__files = []
             if not hasattr(self, 'virtual') or not self.virtual:
-                self.__files = [File(os.path.join(self.__identifier, o)) for o in os.listdir(self._sPath)
-                                if os.path.isfile(os.path.join(self._sPath, o))]
+                if not '_Folder__fileIds' in self.__dict__:
+                    self.__fileIds = [os.path.join(self.identifier, o)
+                                      for o in os.listdir(self.path)
+                                      if os.path.isfile(os.path.join(self.path, o))
+                    ]
+
+                self.__files = [File(identifier, member=self.member, parent=self.parent)
+                                for identifier in self.__fileIds
+                ]
 
         return self.__files
+
+    @property
+    def derivatives(self):
+        return []
+
+    @property
+    def github(self):
+        if not '_Folder__github' in self.__dict__:
+            self.__github = self.parent.github + '/' + self.name
+
+        return self.__github
+
+    def __loadFromWeb(self):
+        data = helpers.loadJSONFromUrl(self.__sPath)
+
+        self.__github = data.get('github', None)
+        self.__folderIds = []
+        for folderId in data.get('folders', []):
+            self.__folderIds.append(folderId['resource'].replace(const101.url101explorer, ''))
+        self.__fileIds = []
+        for fileId in data.get('files', []):
+            self.__fileIds.append(fileId['resource'].replace(const101.url101explorer, ''))
+
+        if isinstance(self, Member):
+            self.__dict__['_Member__endpoint'] = data['endpoint']
+            self.__dict__['_Member__wiki'] = data['wiki']
+            self.__dict__['_Member__headline'] = data['headline']
 
     def __repr__(self):
         return self.__str__()
 
     def __str__(self):
-        return '(Folder, {})'.format(self.name)
+        return '(Folder, {})'.format(self.__identifier)
 
-#    def __getattr__(self, item):
-#        raise AttributeError, item
+    def __eq__(self, other):
+        if hasattr(other, 'identifier'):
+            return other.identifier == self.identifier
+        return NotImplemented
 
 
 class Member(Folder):
-    def __init__(self, identifier):
-        Folder.__init__(self, identifier)
-        self.__namespace = wikifyNamespace(identifier.split('/', 1)[0])
+    def __init__(self, identifier, parent=None):
+        Folder.__init__(self, identifier, member=self, parent=parent)
+        parts = identifier.split('/')
 
-        self.__virtual = not os.path.exists(self._sPath)
+        self.__namespace = wikifyNamespace(parts[0])
 
-        if not self.name in json.load(open(os.path.join(const101.tRoot, identifier.rsplit('/',1)[0], 'members.json'), 'r')):
-            raise ValueError('Identifier does not belong to a member')
+        if USE_EXPLORER_SERVICE:
+            self.__virtual = None != self.github
+        else:
+            self.__virtual = not os.path.exists(self.path)
+            if not self.name in json.load(open(os.path.join(const101.tRoot, parts[0], 'members.json'), 'r')):
+                raise BadIdentifierException(identifier, '{} does not belong to a member')
 
     @property
     def classifier(self):
         return 'Member'
 
     @property
-    def namespace(self):
-        return self.__namespace
+    def parent(self):
+        if not '_Member__parent' in self.__dict__:
+            self.__parent = Namespace(self.identifier.split('/')[0])
+        return self.__parent
 
     @property
     def headline(self):
         if not '_Member__headline' in self.__dict__:
-            self.__headline = helpers.extractHeadline(self.namespace, self.name)
+            self.__headline = WikiDump().getHeadline(self.__namespace, self.name)
         return self.__headline
 
     @property
@@ -196,16 +357,16 @@ class Member(Folder):
         return self.__virtual
 
     @property
-    def endpoint(self):
-        raise NotImplementedError('not implemented yet')
+    def endpointLink(self, format='json'):
+        if not '_Member__endpoint' in self.__dict__:
+            self.__endpoint = os.path.join(const101.url101endpoint, self.__namespace + ':' + self.name, format)
+        return self.__endpoint
 
     @property
-    def sesame(self):
-        raise NotImplementedError('do we really need this?')
-
-    @property
-    def wiki(self):
-        raise NotImplementedError('not yet implemented')
+    def wikiLink(self):
+        if not '_Member__wiki' in self.__dict__:
+            self.__wiki = os.path.join(const101.url101wiki, self.__namespace + ':' + self.name)
+        return self.__wiki
 
     @property
     def github(self):
@@ -214,7 +375,7 @@ class Member(Folder):
         return self.__github
 
     def __str__(self):
-        return '(Member, {})'.format(self.name)
+        return '(Member, {})'.format(self.identifier)
 
 
 #TODO: (File) implement "people" property
@@ -240,7 +401,7 @@ class File:
 
         if USE_EXPLORER_SERVICE:
             self.__sPath = os.path.join(const101.url101explorer, self.identifier)
-            self.__loadFromExplorer()
+            self.__loadFromWeb()
         else:
             self.__sPath = os.path.join(const101.sRoot, identifier)
             self.__tPath = os.path.join(const101.tRoot, identifier)
@@ -295,7 +456,7 @@ class File:
         :return: instance of folder or member class, depending on where this file is sitting in the file tree
         """
         if not '_File__parent' in self.__dict__:
-            pIdentifier = self.identifier.rsplit('/',1)[0]
+            pIdentifier = self.identifier.rsplit('/', 1)[0]
             if pIdentifier == self.member.identifier:
                 self.__parent = self.member
             else:
@@ -358,6 +519,30 @@ class File:
         return self.__geshi
 
     @property
+    def language(self):
+        if not '_File__language' in self.__dict__:
+            self.__language = None
+            matches = self.matches
+            if matches.exists:
+                self.__language = self.matches.select(lambda x: 'language' in x)
+                if self.__language:
+                    self.__language = self.__language['language']
+
+        return self.__language
+
+    @property
+    def features(self):
+        if not 'File__features' in self.__dict__:
+            self.__features = []
+            matches = self.matches
+            if matches.exists:
+                entries = self.matches.filter(lambda x: 'feature' in x)
+                for entry in entries:
+                    self.__features.append(entry['feature'])
+
+        return self.__features
+
+    @property
     def isReadable(self):
         """
         returns whether this file is readable or not
@@ -399,11 +584,12 @@ class File:
         """
         return []
 
-    def __loadFromExplorer(self):
+    def __loadFromWeb(self):
         data = helpers.loadJSONFromUrl(self.__sPath)
 
         self.__github = data['github']
         self.__geshi = data['geshi']
+        self.__language = data['language']
         if 'content' in data:
             self.__content = data['content']
 
@@ -464,7 +650,7 @@ class Fragment:
     @property
     def fragmentDescription(self):
         filePart = re.findall('.*\.[^/]*', self.identifier)[0]
-        return self.identifier.replace(filePart+'/', '')
+        return self.identifier.replace(filePart + '/', '')
 
     @property
     def name(self):
@@ -544,28 +730,12 @@ class Fragment:
 
         return self.__fragments
 
-
-        #if not '_File__fragments' in self.__dict__:
-        #self.__fragments = []
-        #if not '_File__fragmentIds' in self.__dict__:
-        #    self.__fragmentIds = []
-        #    if self.extractor.exists:
-        #        self.__fragmentIds = [
-        #            os.path.join(self.__identifier, x['classifier'], x['name']) if 'index' not in x else
-        #            os.path.join(self.__identifier, x['classifier'], x['name'], x['index'])
-        #            for x in self.extractor.rawData['fragments']
-        #        ]
-        #for id in self.__fragmentIds:
-        #    self.__fragments.append(Fragment(id))
-
-        #return self.__fragments
-
     @property
     def content(self):
         if not '_Fragment__content' in self.__dict__:
             lineFrom, lineTo = self.__lineRange()
             fp = open(self.file.path, 'r')
-            txt = [x for i, x in enumerate(fp) if i in range(lineFrom-1, lineTo)]
+            txt = [x for i, x in enumerate(fp) if i in range(lineFrom - 1, lineTo)]
             self.__content = ''.join(txt)
 
         return self.__content
@@ -589,7 +759,7 @@ class Fragment:
             data = json.loads(output)
             return data['from'], data['to']
 
-        raise Exception('no fragment locator found (actually, this should\'t be possible')
+        raise Exception('no fragment locator found (actually, this should\'t be possible)')
 
     def __loadFromWeb(self):
         data = helpers.loadJSONFromUrl(os.path.join(const101.url101explorer, self.identifier))
@@ -615,239 +785,48 @@ class Fragment:
         return NotImplemented
 
 
+def main():
+    #useWebInterface()
+
+    #languages = Namespace('languages')
+    #print languages.name
+    #print languages.headline
+    #print languages.endpointLink
+    #print languages.wikiLink
+    #print languages.github
+    #print languages.members
+
+    #parent = languages.parent
+    #print parent
+    #print parent.headline
+    #print parent.github
+
+    #help(File.geshi)
+
+    #for page in WikiDump():
+    #    print page
+
+    #member = Member('contributions/antlrLexer')
+    #print member.name
+    #print member.headline
+    #print member.endpointLink
+    #print member.wikiLink
+    #print member.parent
+
+    #f = File('contributions/antlrAcceptor/.gitignore')
+    #if f.isReadable:
+    #    print 'content:'
+    #    print f.content
+
+    folder = Folder('contributions/antlrLexer/src/test/java/org/softlang/company/tests')
+    file = folder.files[0]
+    print file.member
+    print file.metrics.ncloc
+    print file.fragments
+    print file.language
+    print file.features
+
 if __name__ == '__main__':
-    #use101Explorer()
-
-    f = File('contributions/antlrAcceptor/.gitignore')
-    if f.isReadable:
-        print 'content:'
-        print f.content
-
-    print "parent name {}".format(f.parent.name)
-    print f.member
-
-    print f.derivatives
-    print f.github
+    main()
 
 
-    #ns = Namespace(identifier='namespace/languages')
-    #print ns
-    #print ns.headline
-    #print ns.members
-
-    #for m in ns.members:
-    #   if m.name == 'Java':
-    #       print m.namespace
-    #       print m.headline
-    #       print m.folders
-    #       print m.files
-
-    #folder = Folder('contributions/antlrLexer/src/test/java/org/softlang')
-    #print folder.folders
-
-    file = File('contributions/aspectJ/org/softlang/features/Operations.java')
-    print file.geshi
-    print file.content
-
-    fragment = file.fragments[0]
-    print fragment.name
-    print fragment.classifier
-    print fragment.geshi
-
-    #print fragment.parent
-    #print fragment.file
-    #print fragment.member
-    print fragment.content
-
-
-
-
-
-# this was the first prototype of the idea:
-# def _parse101MetaType(fromFile, info):
-#     properties = info['properties']
-#     result = {}
-#     for entry in fromFile:
-#         metadata = entry['metadata']
-#         if not isinstance(metadata, types.ListType):
-#             metadata = [metadata]
-#
-#         for m in metadata:
-#             for key in m.keys():
-#                 if key in properties:
-#                     if properties[key].get('multiple', False):
-#                         if not key in result:
-#                             result[key] = []
-#                         if m[key] not in result[key]:
-#                             result[key].append(m[key])
-#                     else:
-#                         result[key] = m[key]
-#     return result
-#
-#
-# def _parseSimple(fromFile, info):
-#     properties = info['properties']
-#     result = {}
-#     for key in fromFile.keys():
-#         if key in properties:
-#             result[key] = fromFile[key]
-#
-#     return result
-#
-# def _parseMapToProperty(fromFile, info):
-#     result = {}
-#     for key in info['properties'].keys():
-#         result[key] = fromFile
-#
-#     return result
-#
-#
-# metadata = {
-#     '.matches.json': {
-#         'type' : '101meta',
-#         'properties': {
-#             'relevance': {
-#                 'default': 'system',
-#             },
-#             'language': {
-#             }
-#         }
-#     },
-#     '.predicates.json': {
-#         'type': '101meta',
-#         'properties': {
-#             'dependsOn': {
-#                 'multiple': True
-#             }
-#         }
-#     },
-#     '.metrics.json': {
-#         'type': 'simple',
-#         'properties': {
-#             'size' : {},
-#             'ncloc': {},
-#             'loc'  : {}
-#         }
-#     },
-#     '.refinedTokens.json': {
-#         'type': 'mapToProperty',
-#         'properties': {
-#             'tokens': {}
-#         }
-#     }
-# }
-#
-# parsing = {
-#     '101meta': _parse101MetaType,
-#     'simple' : _parseSimple,
-#     'mapToProperty': _parseMapToProperty
-# }
-#
-#
-# class Entity:
-#     def __init__(self, identifier):
-#         if identifier.endswith('/'):
-#             identifier = identifier[:-1]
-#         if identifier.startswith('/'):
-#             identifier = identifier[1:]
-#
-#         self.identifier = identifier
-#         self.name = identifier.split('/')[-1]
-#
-#     def __str__(self):
-#         return json.dumps(self.__dict__)
-#
-#     def __repr__(self):
-#         return self.__str__()
-#
-#     def _loadMetadataFile(self, extension):
-#         global metadata
-#         global parsing
-#         properties = metadata[extension]['properties']
-#
-#         #setting default values
-#         for propName in properties:
-#             if 'multiple' in properties[propName]:
-#                 self.__dict__[propName] = []
-#             if 'default' in properties[propName]:
-#                 self.__dict__[propName] = properties[propName]['default']
-#
-#         #loading file, calling parsing method
-#         filePath = os.path.join(const101.tRoot, self.identifier + extension)
-#         fromFile = json.load(open(filePath))
-#
-#         self.__dict__.update(parsing[metadata[extension]['type']](fromFile, metadata[extension]))
-#
-#     def __getattr__(self, item):
-#         global metadata
-#         for ext in metadata.keys():
-#             for property in metadata[ext]['properties']:
-#                 if property == item:
-#                     if not ext in self._loaded:
-#                         self._loaded.append(ext)
-#                         self._loadMetadataFile(ext)
-#
-#         if not item in self.__dict__:
-#             raise AttributeError(self.__class__.__name__ + ' has no attribute ' + item)
-#
-#         return self.__dict__.get(item, None)
-#
-#
-# class Folder(Entity):
-#     def __init__(self, identifier):
-#         Entity.__init__(self, identifier)
-#         self.classifier = 'Folder'
-#
-#     @property
-#     def Files(self):
-#         files = []
-#         filePath = os.path.join(const101.sRoot, self.identifier)
-#         for file in os.listdir(filePath):
-#             path = os.path.join(self.identifier, file)
-#             if os.path.isfile(os.path.join(const101.sRoot, path)):
-#                 files.append( File(path) )
-#
-#         return files
-#
-#     @property
-#     def Folders(self):
-#         folders = []
-#         filePath = os.path.join(const101.sRoot, self.identifier)
-#         for folder in os.listdir(filePath):
-#             path = os.path.join(self.identifier, folder)
-#             if os.path.isfile(os.path.join(const101.sRoot, path)):
-#                 folders.append( Folder(path) )
-#
-#         return folders
-#
-#
-# class File(Entity):
-#     def __init__(self, identifier):
-#         Entity.__init__(self, identifier)
-#         self.classifier = 'File'
-#         self._loaded = []
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-# if __name__ == '__main__':
-#     folder = Folder('contributions/antlrLexer/src/test/java/org/softlang/tests')
-#     for file in folder.Files:
-#         print file.name
-#         print '------------'
-#         print file.language
-#         print file.relevance
-#         print file.size
-#         print file.tokens
-#         print file.dependsOn

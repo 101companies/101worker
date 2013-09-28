@@ -5,7 +5,9 @@
       "classifier" : "resource",
       "scope" : "file",
       "suffix" : ".metrics.json",
-      "language" : "JSON"
+      "language" : "JSON",
+      "propertyName": "metrics",
+      "className" : "Metrics"
     },
     {
       "headline" : "Tokens",

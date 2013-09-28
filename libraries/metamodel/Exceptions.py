@@ -2,8 +2,8 @@ __author__ = 'martin'
 
 
 class BadIdentifierException(Exception):
-    def __init__(self, identifier):
-        self.value = 'Identifier {} does not exist'.format(identifier)
+    def __init__(self, identifier, message='Identifier {} does not exist'):
+        self.value = message.format(identifier)
 
     def __str__(self):
         return repr(self.value)

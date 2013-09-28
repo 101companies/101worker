@@ -17,7 +17,8 @@ import const101
 
 #abstract class
 class Derivative:
-    def __init__(self, relativePath):
+    def __init__(self, relativePath, *otherPaths):
+        self.__otherPaths = otherPaths
 
         if self.__class__.__name__ == 'Derivative':
             raise NotImplementedError('This class is abstract')
@@ -43,12 +44,18 @@ class Derivative:
             if not self.exists:
                 raise NonExistingPathException(self.path)
             self.__raw_data = json.load(open(self.path, 'r'))
+            if self.__otherPaths:
+                for p in self.__otherPaths:
+                    self.__raw_data += json.load(open(os.path.join(const101.tRoot, p), 'r'))
 
         return self.__raw_data
 
     def __loadFromWeb(self):
         try:
             self.__raw_data = helpers.loadJSONFromUrl(self.path)
+            for p in self.__otherPaths:
+                self.__raw_data += helpers.loadJSONFromUrl(os.path.join(const101.url101data, 'resources', p))
+            self.__exists = True
         except:
             self.__exists = False
 
@@ -63,6 +70,22 @@ class Metrics(Derivative):
     def __init__(self, identifier):
         Derivative.__init__(self, identifier + '.metrics.json')
 
+    @property
+    def size(self):
+        return self.rawData['size']
+
+    @property
+    def loc(self):
+        return self.rawData['loc']
+
+    @property
+    def ncloc(self):
+        return self.rawData['ncloc']
+
+    @property
+    def relevance(self):
+        return self.rawData.get('relevance', 'system')
+
 
 class Meta101(Derivative):
     def select(self, filterFunc):
@@ -74,10 +97,21 @@ class Meta101(Derivative):
                 if filterFunc(e):
                     return e
 
+    def filter(self, filterFunc):
+        results = []
+        for entry in self.rawData:
+            entry = entry['metadata']
+            if not isinstance(entry, types.ListType):
+                entry = [ entry ]
+            for e in entry:
+                if filterFunc(e):
+                    results.append(e)
+        return results
+
 
 class Matches(Meta101):
     def __init__(self, identifier):
-        Derivative.__init__(self, identifier + '.matches.json')
+        Derivative.__init__(self, identifier + '.matches.json', identifier + '.predicates.json')
 
 
 class Extractor(Derivative):

@@ -29,6 +29,7 @@
 		"modules" : "Module",
 		"services" : "Service",
 		"Namespace" : "Namespace",
+        "namespaces": "Namespace",
 		"information" : "Information",
 		"courses" : "Course",
 		"scripts" : "Script",
