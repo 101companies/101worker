@@ -63,9 +63,8 @@ class WikiDump(Dump):
         self.__maxPages = len(self.rawData['wiki']['pages'])
 
     def selectPage(self, namespace, title):
-        for entry in self.rawData['wiki']['pages']:
-            page = entry['page']
-            if page.get('page', {}).get('p', None) == namespace and page.get('page', {}).get('n', None) == title:
+        for page in self.rawData['wiki']['pages']:
+            if page.get('p', None) == namespace and page.get('n', None) == title:
                 return page
 
         return None
