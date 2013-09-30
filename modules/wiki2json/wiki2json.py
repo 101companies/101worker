@@ -22,7 +22,7 @@ def extract_properties(internal_links):
 def handle_page_name(name, props):
   if name.startswith('http'):
     return name
-
+  #print name
   n = name.split(':')
   if len(n) == 1:
     props['p'] = n[0]
@@ -30,7 +30,7 @@ def handle_page_name(name, props):
   else:
     props['p'] = n[0]
     props['n'] = n[1]
-  return props  
+  return props
 
 client = MongoClient('db.101companies.org', 27017)
 db = client['wiki_production']
@@ -39,8 +39,11 @@ db.authenticate(os.environ['MONGODB_USER'], os.environ['MONGODB_PWD'])
 
 allPages = []
 for p in db.pages.find():
+  if not p.has_key('page_title_namespace'):
+      print p['title']
+      continue
   res = {'headline':'n/a'}
-  handle_page_name(p['title'], res)
+  handle_page_name(p['page_title_namespace'], res)
 
   if 'used_links' in p:
     res['internal_links'] = p['used_links']
