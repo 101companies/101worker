@@ -11,7 +11,7 @@ import const101
 
 
 def getWikiData(namespace, member):
-    wiki = json.load(open(const101.wikiDump, 'r'))['wiki']
+    wiki = json.load(open(const101.wikiDump, 'r'))
     if namespace == '':
         namespace = None
     if member == '':
