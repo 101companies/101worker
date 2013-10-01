@@ -10,7 +10,7 @@ def saveDetection(reponame, contribname, sha):
   detectionUrl = base + parameters
   try:
     detection = json.load(urllib2.urlopen(detectionUrl))
-  except HTTPError:
+  except urllib2.HTTPError:
     return None
   title = detection.keys()[0]
   features = {}
@@ -36,7 +36,6 @@ def diff(request):
     clones = json.load(urllib2.urlopen('http://101companies.org/api/clones?no_update=Yes'))
     clone = filter(lambda x: x['title'] == clonename, clones)
     if len(clone) > 0:
-      return HttpResponse(json.dumps(clone), content_type='text/json')
       clone = clone[0]
       if clone['clone_commit_sha']:
         originalFeatures = saveDetection('101haskell', clone['original'], clone['original_commit_sha'])
@@ -51,4 +50,5 @@ def diff(request):
      result = {'error': 'clone not found'}
   else:
     result = {'error': 'no clone name given'}
-  return HttpResponse(json.dumps(result), content_type='text/json')
+  return json.dumps(result)
+
