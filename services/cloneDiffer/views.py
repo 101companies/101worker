@@ -10,7 +10,7 @@ def saveDetection(reponame, contribname, sha):
   detectionUrl = base + parameters
   try:
     detection = json.load(urllib2.urlopen(detectionUrl))
-  except urlib2.HTTPError:
+  except urllib2.HTTPError:
     return None
   title = detection.keys()[0]
   features = {}
