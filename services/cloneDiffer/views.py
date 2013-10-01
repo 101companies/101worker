@@ -36,6 +36,7 @@ def diff(request):
     clones = json.load(urllib2.urlopen('http://101companies.org/api/clones?no_update=Yes'))
     clone = filter(lambda x: x['title'] == clonename, clones)
     if len(clone) > 0:
+      return HttpResponse(json.dumps(clone), content_type='text/json')
       clone = clone[0]
       if clone['clone_commit_sha']:
         originalFeatures = saveDetection('101haskell', clone['original'], clone['original_commit_sha'])
