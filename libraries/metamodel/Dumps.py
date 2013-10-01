@@ -63,9 +63,8 @@ class WikiDump(Dump):
         self.__maxPages = len(self.rawData['wiki']['pages'])
 
     def selectPage(self, namespace, title):
-        for entry in self.rawData['wiki']['pages']:
-            page = entry['page']
-            if page.get('page', {}).get('p', None) == namespace and page.get('page', {}).get('n', None) == title:
+        for page in self.rawData['wiki']['pages']:
+            if page.get('p', None) == namespace and page.get('n', None) == title:
                 return page
 
         return None
@@ -91,13 +90,15 @@ class WikiDump(Dump):
 
 def main():
     #introducing the variable, as it's not available if i just debug this file
-    #global USE_EXPLORER_SERVICE
-    #USE_EXPLORER_SERVICE = True
+    global USE_EXPLORER_SERVICE
+    USE_EXPLORER_SERVICE = False
 
     #--------------------------
     #normal code
     for page in WikiDump():
         print page
+
+    print WikiDump().getHeadline('Contribution', 'antlrLexer')
 
 
 if __name__ == '__main__':

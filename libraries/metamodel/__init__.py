@@ -788,6 +788,9 @@ class Fragment:
 def main():
     #useWebInterface()
 
+    wikidump = WikiDump()
+    print wikidump.selectPage('Contribution', 'antlrLexer')
+
     #languages = Namespace('languages')
     #print languages.name
     #print languages.headline
@@ -818,13 +821,13 @@ def main():
     #    print 'content:'
     #    print f.content
 
-    folder = Folder('contributions/antlrLexer/src/test/java/org/softlang/company/tests')
-    file = folder.files[0]
-    print file.member
-    print file.metrics.ncloc
-    print file.fragments
-    print file.language
-    print file.features
+    #folder = Folder('contributions/antlrLexer/src/test/java/org/softlang/company/tests')
+    #file = folder.files[0]
+    #print file.member
+    #print file.metrics.ncloc
+    #print file.fragments
+    #print file.language
+    #print file.features
 
 if __name__ == '__main__':
     main()
