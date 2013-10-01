@@ -8,7 +8,10 @@ def saveDetection(reponame, contribname, sha):
   base = 'http://worker.101companies.org/services/featureNameDetection'
   parameters = "?reponame={0}&contribname={1}&sha={2}".format(reponame, contribname, sha)
   detectionUrl = base + parameters
-  detection = json.load(urllib2.urlopen(detectionUrl))
+  try:
+    detection = json.load(urllib2.urlopen(detectionUrl))
+  except HTTPError:
+    return None
   title = detection.keys()[0]
   features = {}
   for feature, locations in (detection[title]['features']).items():
@@ -37,7 +40,10 @@ def diff(request):
       if clone['clone_commit_sha']:
         originalFeatures = saveDetection('101haskell', clone['original'], clone['original_commit_sha'])
         clonedFeatures = saveDetection('101haskellclones', clone['title'], clone['clone_commit_sha'])
-        result = diffFeatures(originalFeatures, clonedFeatures)
+        if originalFeatures is not None and clonedFeatures is not None:
+          result = diffFeatures(originalFeatures, clonedFeatures)
+        else:
+          result = {'error': 'server error'}
       else:
         result = {'error': 'no clone commit found'}
     else:
