@@ -90,13 +90,15 @@ class WikiDump(Dump):
 
 def main():
     #introducing the variable, as it's not available if i just debug this file
-    #global USE_EXPLORER_SERVICE
-    #USE_EXPLORER_SERVICE = True
+    global USE_EXPLORER_SERVICE
+    USE_EXPLORER_SERVICE = False
 
     #--------------------------
     #normal code
     for page in WikiDump():
         print page
+
+    print WikiDump().getHeadline('Contribution', 'antlrLexer')
 
 
 if __name__ == '__main__':
