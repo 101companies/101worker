@@ -3,7 +3,7 @@ import json
 import urllib2
 import os
 
-orignalsrepo = Repo('101clonebot', '101haskelloriginals)
+orignalsrepo = Repo('101clonebot', '101haskelloriginals')
 clonerepo = Repo('tschmorleiz', '101haskellclones')
 clones = json.load(urllib2.urlopen('http://101companies.org/api/clones'))
 
