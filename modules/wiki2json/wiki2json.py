@@ -40,7 +40,6 @@ db.authenticate(os.environ['MONGODB_USER'], os.environ['MONGODB_PWD'])
 allPages = []
 for p in db.pages.find():
   if not p.has_key('page_title_namespace'):
-      print p['title']
       continue
   res = {'headline':'n/a'}
   handle_page_name(p['page_title_namespace'], res)
