@@ -7,7 +7,6 @@ orignalsrepo = Repo('101clonebot', '101haskelloriginals')
 clonerepo = Repo('tschmorleiz', '101haskellclones')
 clones = json.load(urllib2.urlopen('http://101companies.org/api/clones'))
 
-
 def prepareWorker(reponame, contribname, sha):
   #print 'cd ~/101results/gitdeps/' + reponame + '/; git checkout %s; cd ~'%sha
   os.popen('cd ~/101results/gitdeps/' + reponame + '/; git checkout %s; cd ~'%sha).read()
@@ -49,21 +48,47 @@ def replaceLines(contribname, path, lines, newcontent):
   with open(path, 'w') as f:
     f.write(newcontent)
 
+def mergePropagation(clone, history):
+  branch = history['inspection']['branch']
+  print ' > Merging propagation branch %s'%branch
+  commands = 'cd ~/101results/gitdeps/101haskellclones/;'
+  commands += 'git checkout master;'
+  commands += 'git pull;'
+  commands += 'git merge %s;'%branch
+  commands += 'git push;'
+  commands += 'cd ~'
+  os.popen(commands).read()
+
+
+def checkResponse(clone, history):
+  response = clone['propagation']['response']
+  print ' > Response was "%s"'%response
+  if response == 'accepted':
+    mergePropagation(clone, history)
+  history['done'].append(history['inspection'])
+  history.pop('inspection', None)
+  return history
+
 def check(clone, history):
-  if 'checked_sha' in clone:
-    lastChecked = clone['checked_sha']
+  if 'last_checked_sha' in clone:
+    lastChecked = clone['last_checked_sha']
   else:
     lastChecked = clone['original_commit_sha']
   if clone['title'] in history and type(history[clone['title']]) is dict:
     history = history[clone['title']]
   else:
     history = {'done': []}
-  if 'inspection' in history:
-    print 'Skipping %s, due to current inspection'%clone['title']
-    return history
+  if 'inspection' in history and history['inspection'] != None:
+    if 'propagation' in clone and 'response' in clone['propagation']:
+      print 'Checking response to propagation for %s'%clone['title']
+      return checkResponse(clone, history)
+    else:
+      print 'Skipping %s, due to current inspection'%clone['title']
+      return history
   print 'Checking "%s" at %s'%(clone['title'], lastChecked)
   lastCheckedDate = clonerepo.commit(lastChecked)['commit']['committer']['date']
   newcommits = orignalsrepo.commits_by_path_since('contributions/' + clone['original'], lastCheckedDate)
+  newcommits = filter(lambda c: c['sha'] != lastChecked, newcommits)
   print '> %d new commits found for original'%len(newcommits)
   if len(newcommits) > 0:
     try:
@@ -106,7 +131,7 @@ def check(clone, history):
         print '  > Pushing new branch '
         os.popen('cd ~/101results/gitdeps/101haskellclones/; git checkout %s ;git pull ; cd ~'%branchname)
         os.popen('cd ~/101results/gitdeps/101haskellclones/; git add . ; cd ~')
-        commitmessage = "new branch for propagating changes to %s from commit %s"%(clone['title'], commit['sha'])
+        commitmessage = 'propagating changes to %s from commit %s'%(clone['title'], commit['sha'])
         os.popen('cd ~/101results/gitdeps/101haskellclones/; git commit -m "%s"; cd ~'%commitmessage)
         os.popen('cd ~/101results/gitdeps/101haskellclones/; git push -u origin %s; cd ~'%branchname)
         os.popen('cd ~/101results/gitdeps/101haskellclones/contributions/%s; git checkout master; git checkout .; cd ~'%clone['title']).read()
@@ -119,15 +144,16 @@ def check(clone, history):
   return history
 
 os.popen('cd ~/101results/gitdeps/101haskellclones/; git pull; cd ~')
-historypath = "/home/worker/101web/data/dumps/clonehistory.json"
+historypath = '/home/worker/101web/data/dumps/clonehistory.json'
 try:
-  with open(historypath) as f:
-    history = json.load(f)
+  history = json.load(open(historypath))
 except IOError:
  history = {}
 for clone in clones:
-    if clone['status'] == 'created':
-      history[clone['title']] = check(clone, history)
-print history
+  if clone['status'] == 'created':
+    history[clone['title']] = check(clone, history)
+print '------'
+print 'New history:'
+print json.dumps(history, indent=2)
 with open(historypath, 'w') as f:
-    json.dump(history, f)
+  json.dump(history, f)
