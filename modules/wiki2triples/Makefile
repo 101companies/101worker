@@ -3,7 +3,7 @@ output = ${dumpsDir}/wikiLinks.json
 
 run:
 	./program.py
-	cp wikiLinks.json $output
+	cp wikiLinks.json ${output}
 
 clean:
 	rm -f ${output}
