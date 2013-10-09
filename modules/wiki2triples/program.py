@@ -2,6 +2,9 @@
 
 import sys
 import rdflib
+import urllib
+import httplib2
+from pysesame import pySesame
 
 sys.path.append('../../libraries')
 sys.path.append('../../libraries/101meta')
@@ -15,23 +18,60 @@ def refine(str):
 
 wiki = Dumps.WikiDump()
 
-propsNS = rdflib.Namespace('http://101companies.org/property/')
-resNS = rdflib.Namespace('http://101companies.org/')
+#general namespaces
+rdfNs = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 emptyNS = rdflib.Namespace('')
+
+#101companies specific namespaces
+propertiesNS = rdflib.Namespace('http://101companies.org/property/')
+resourcesNS = rdflib.Namespace('http://101companies.org/')
+classesNs = rdflib.Namespace('http://101companies.org/schemas/wiki#')
+
+
 graph = rdflib.Graph()
 
 for page in wiki:
-    subject = propsNS[ refine(page['p'] + ':' + page['n']) ]
+    subject = resourcesNS[ refine(page['p'] + ':' + page['n']) ]
+
+    #adding classes
+    for instance in page.get('instanceOf', []):
+        if instance['n']:
+            graph.add( (subject, rdfNs['type'], classesNs[instance['n']]))
+
     for link in page.get('internal_links', []):
         if '::' in link and link.count('::') == 1:
             predicate, object = link.split('::')
             predicate, object = refine(predicate), refine(object)
-            predicate = propsNS[predicate.replace(':', '-')]
+            predicate = propertiesNS[predicate.replace(':', '-')]
             if 'http://' in object:
+                if '.wikipedia.org' in object:
+                    #rewrite it to dbpedia
+                    object = object.replace('http://en.wikipedia.org/wiki/', 'http://dbpedia.org/page/')
                 object = emptyNS[object]
             else:
-                object = resNS[object]
+                object = resourcesNS[object]
 
             graph.add( (subject, predicate, object) )
 
 open('wikiLinks.rdf', 'w').write(graph.serialize())
+
+print "Wrote wikiLinks.rdf"
+
+repository = 'wiki2'#'ML_testing'
+graph      = 'http://101companies.org'
+filename   = 'wikiLinks.rdf'
+params     = { 'context': '<' + graph + '>' }
+
+#(response, content) = httplib2.Http().request('http://141.26.71.114/openrdf-sesame/repositories/ML_testing/clearRepository')
+#print response, content
+
+print "Trying to loading %s into %s in Sesame" % (filename, graph)
+endpoint = "http://141.26.71.114/openrdf-sesame/repositories/%s/statements?%s" % (repository, urllib.urlencode(params))
+data = open(filename, 'r').read()
+(response, content) = httplib2.Http().request(endpoint, 'PUT', body=data, headers={ 'content-type': 'application/rdf+xml' })
+
+if response.status == 204:
+    print "Success"
+else:
+    print "ERROR - Response %s" % response.status
+    print content

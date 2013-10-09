@@ -4,9 +4,9 @@
 #
 #      class    | state
 #   ------------+----------
-#   Namespace   | unfinished
-#   Folder      | unfinished
-#   Member      | unfinished
+#   Namespace   | documentation needed
+#   Folder      | documentation needed
+#   Member      | documentation needed
 #   File        | v1 FINISHED
 #   Fragment    | documentation needed
 #
@@ -532,7 +532,7 @@ class File:
 
     @property
     def features(self):
-        if not 'File__features' in self.__dict__:
+        if not '_File__features' in self.__dict__:
             self.__features = []
             matches = self.matches
             if matches.exists:
@@ -541,6 +541,18 @@ class File:
                     self.__features.append(entry['feature'])
 
         return self.__features
+
+    @property
+    def relevance(self):
+        if not '_File__relevance' in self.__dict__:
+            self.__relevance = 'system'
+            matches = self.matches
+            if matches.exists:
+                relevance = self.matches.select(lambda x: 'relevance' in x)
+                if relevance:
+                    self.__relevance = relevance['relevance']
+
+        return self.__relevance
 
     @property
     def isReadable(self):
