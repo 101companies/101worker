@@ -13,7 +13,7 @@ sys.path.append('../../libraries/101meta')
 from metamodel import *
 
 #add a cobol and python contribution
-featuresToInspect = ['total', 'cut']
+featuresToInspect = ['total', 'cut', 'hierarchical company']
 contributionWhitelist = [
     'pyFunctional', 'cobol', 'haskellSyb', 'haskellComposition','antlrLexer', 'jdom', 'javaStatic', 'javaComposition',
     'javaInheritance'
@@ -40,8 +40,8 @@ for feature in featuresToInspect:
     for file in featureIndex.get(feature, []):
         member = file.member
         if member.name in contributionWhitelist and file.metrics.exists and file.relevance == 'system' and not file in examinedFiles:
-#            if file.member.name == 'haskellSyb':
-#                print file.identifier, file.features, file.relevance
+            if file.member.name == 'haskellSyb':
+                print file.identifier, file.features, file.relevance
             contributionIndex[member.name] = contributionIndex.get(member.name, 0) + file.metrics.ncloc
             examinedFiles.append(file)
 

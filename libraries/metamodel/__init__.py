@@ -539,6 +539,7 @@ class File:
                 entries = self.matches.filter(lambda x: 'feature' in x)
                 for entry in entries:
                     self.__features.append(entry['feature'])
+            self.__features = set(self.__features)
 
         return self.__features
 
