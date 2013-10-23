@@ -53,6 +53,11 @@ for page in wiki:
 
             graph.add( (subject, predicate, object) )
 
+subject, predicate, object = resourcesNS['Language:ANTLR.Notation'], propertiesNS['PartOf'], resourcesNS['Technology:ANTLR']
+graph.add( (subject, predicate, object) )
+subject, predicate, object = resourcesNS['Technology:ANTLR.Generator'], propertiesNS['PartOf'], resourcesNS['Technology:ANTLR']
+graph.add( (subject, predicate, object) )
+
 open('wikiLinks.rdf', 'w').write(graph.serialize())
 
 print "Wrote wikiLinks.rdf"

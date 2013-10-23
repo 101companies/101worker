@@ -369,6 +369,17 @@ class Member(Folder):
         return self.__wiki
 
     @property
+    def implements(self):
+        if not '_Member__implements' in self.__dict__:
+            self.__implements = []
+            wikiTriples = helpers.loadJSONFromUrl(self.endpointLink)
+            for subject, predicate, object in wikiTriples:
+                if predicate == 'http://101companies.org/property/implements':
+                    self.__implements.append(object.replace('http://101companies.org/resources/features/', '').replace('_',' ').lower())
+
+        return self.__implements
+
+    @property
     def github(self):
         if not '_Member__github' in self.__dict__:
             self.__github = PullRepoDump().getGithubLink(self.name)

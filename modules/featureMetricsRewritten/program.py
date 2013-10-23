@@ -2,6 +2,7 @@
 
 import sys
 import matplotlib
+
 matplotlib.use('Agg')
 
 import numpy as np
@@ -12,13 +13,8 @@ sys.path.append('../../libraries/101meta')
 
 from metamodel import *
 
-#add a cobol and python contribution
-featuresToInspect = ['total', 'cut', 'hierarchical company']
-contributionWhitelist = [
-    'pyFunctional', 'cobol', 'haskellSyb', 'haskellComposition','antlrLexer', 'jdom', 'javaStatic', 'javaComposition',
-    'javaInheritance'
-]
-
+import config
+from config import validateAutomaticTagging
 
 
 #build "Feature" -> ["File 1", "File 2", ...] association
@@ -31,22 +27,30 @@ for folders, files in walk(contributions):
             featureIndex.setdefault(feature, []).append(file)
 
 
+#validation of results
+validateAutomaticTagging(featureIndex)
+#validate through wiki page
+for contribution in config.contributionWhitelist:
+    for f in contribution.implements:
+        if not any(file.member == contribution for file in
+                   featureIndex.get(f, [])) and not f in config.implicitlyImplemented.get(contribution.name, []):
+            print 'Warning: missing feature {} for contribution {}'.format(f, contribution.name)
 
 
 #build "contributionName" -> "ncloc" association
 contributionIndex = {}
 examinedFiles = []
-for feature in featuresToInspect:
+for feature in config.featuresToInspect:
     for file in featureIndex.get(feature, []):
         member = file.member
-        if member.name in contributionWhitelist and file.metrics.exists and file.relevance == 'system' and not file in examinedFiles:
-            if file.member.name == 'haskellSyb':
-                print file.identifier, file.features, file.relevance
+        if member in config.contributionWhitelist and file.metrics.exists and file.relevance == 'system' and not file in examinedFiles:
             contributionIndex[member.name] = contributionIndex.get(member.name, 0) + file.metrics.ncloc
             examinedFiles.append(file)
 
 
 
+
+#----------------------------------------------------------
 #visualize results
 bars = contributionIndex.values()
 labels = contributionIndex.keys()
@@ -56,7 +60,7 @@ width = 0.35
 
 ind = np.arange(len(bars))
 plt.bar(ind, bars)
-plt.xticks(ind+width/2.0, labels, rotation=15)
-plt.ylabel('lines of code')
+plt.xticks(ind + width / 2.0, labels, rotation=15)
+plt.ylabel('lines of code (ncloc)')
 
 plt.savefig('linesOfCode.png')
