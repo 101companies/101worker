@@ -31,7 +31,7 @@ for folders, files in walk(contributions):
 validateAutomaticTagging(featureIndex)
 #validate through wiki page
 for contribution in config.contributionWhitelist:
-    for f in contribution.implements:
+    for f in (set(contribution.implements) & config.featuresToInspect):
         if not any(file.member == contribution for file in
                    featureIndex.get(f, [])) and not f in config.implicitlyImplemented.get(contribution.name, []):
             print 'Warning: missing feature {} for contribution {}'.format(f, contribution.name)

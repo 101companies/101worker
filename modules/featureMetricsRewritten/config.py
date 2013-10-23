@@ -1,7 +1,7 @@
 import warnings
 from metamodel import *
 
-featuresToInspect = ['total', 'cut', 'hierarchical company']
+featuresToInspect = set(['total', 'cut', 'hierarchical company'])
 
 #include company and employee to java hierarchical company feature
 #check javastatic and javacomposition if they also implement depth
