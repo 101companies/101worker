@@ -16,6 +16,7 @@ __opener = urllib2.build_opener()
 
 
 def loadJSONFromUrl(url):
+    print 'trying {}'.format(url)
     def load(url):
         req = urllib2.Request(url)
         return json.load(__opener.open(req))
@@ -28,9 +29,27 @@ def loadJSONFromUrl(url):
         try:
             return load(url)
         except urllib2.HTTPError:
-            #third try - if this still fails, then something is really wrong
-            return load(url)
-
+            try:
+                #third try
+                return load(url)
+            except urllib2.HTTPError:
+                try:
+                    #fourth try
+                    return load(url)
+                except urllib2.HTTPError:
+                    try:
+                        #no 5
+                        return load(url)
+                    except urllib2.HTTPError:
+                        try:
+                            #no 6
+                            return load(url)
+                        except urllib2.HTTPError:
+                            try:
+                                #no 7
+                                return load(url)
+                            except urllib2.HTTPError:
+                                return load(url)
 
 
 def loadDerivativeNames(scope):

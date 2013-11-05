@@ -41,7 +41,7 @@ for page in wiki:
     for link in page.get('internal_links', []):
         if '::' in link and link.count('::') == 1:
             predicate, object = link.split('::')
-            predicate, object = refine(predicate), refine(object)
+            predicate, object = refine(predicate[0].lower() + predicate[1:]), refine(object)
             predicate = propertiesNS[predicate.replace(':', '-')]
             if 'http://' in object:
                 if '.wikipedia.org' in object:
