@@ -363,6 +363,12 @@ class Member(Folder):
         return self.__endpoint
 
     @property
+    def endpointData(self):
+        if not '_Member__endpointData' in self.__dict__:
+            self.__endpointData = helpers.loadJSONFromUrl(self.endpointLink)
+        return self.__endpointData
+
+    @property
     def wikiLink(self):
         if not '_Member__wiki' in self.__dict__:
             self.__wiki = os.path.join(const101.url101wiki, self.__namespace + ':' + self.name)
@@ -553,6 +559,18 @@ class File:
             self.__features = set(self.__features)
 
         return self.__features
+
+    @property
+    def dependsOn(self):
+        if not '_File__dependsOn' in self.__dict__:
+            self.__dependsOn = []
+            matches = self.matches
+            if matches.exists:
+                entries = self.matches.filter(lambda x: 'dependsOn' in x)
+                for entry in entries:
+                    self.__dependsOn.append(entry['dependsOn'])
+
+        return self.__dependsOn
 
     @property
     def relevance(self):
