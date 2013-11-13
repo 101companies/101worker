@@ -18,8 +18,8 @@ from mediawiki import remove_headline_markup
 output = os.path.join(const101.tRoot, 'themes')
 output = os.path.abspath(output)
 
-#json_path = sys.argv[1]
-json_path = "./wiki.json"
+json_path = sys.argv[1]
+#json_path = "./wiki.json"
 
 wiki = json.load(open(json_path, 'r'))['wiki']
 pages = wiki['pages']
