@@ -37,7 +37,7 @@ def render(d):
 def getRealFeature(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] == 'Feature' and p['page']['page']['n'].lower() == f.lower()
+        return p['page']['p'] == 'Feature' and p['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -51,7 +51,7 @@ def getRealFeature(f, pages):
 def getRealConcept(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] is None and p['page']['page']['n'].lower() == f.lower()
+        return p['page']['p'] is None and p['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -65,7 +65,7 @@ def getRealConcept(f, pages):
 def getRealTechnology(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['page']['p'] == 'Technology' and p['page']['page']['n'].lower() == f.lower()
+        return p['page']['p'] == 'Technology' and p['page']['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -77,20 +77,18 @@ def getRealTechnology(f, pages):
         }
 
 def getContributionNames(pages):
-    return map(lambda p: p['page']['page']['n'], pages)
+    return map(lambda p: p['page']['n'], pages)
 
 def getThemeName(theme):
     return theme.replace(' ', '_')
 
 def getThemeNames(themes):
     for p in themes:
-        t = p['page']
-        yield t['page']['n']
+        yield p['page']['n']
 
 def getAttr(pages, attr):
     s = []
     for p in pages:
-        p = p['page']
         s += p.get(attr, [])
     return s
 
@@ -98,8 +96,8 @@ def names(ps):
     return map(lambda p: p['n'], ps)
 
 def getLangs(pages):
-    langs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('uses::Language'), p['page'].get('internal_links', [])))) \
-        .select(lambda p: filter(lambda i: i.startswith('uses::Language'), p['page']['internal_links'])).to_list()
+    langs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('uses::Language'), p.get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: i.startswith('uses::Language'), p['internal_links'])).to_list()
     s = reduce(lambda a, b: a + b, langs) if langs else []
     return map(lambda n: n.replace('uses::Language:', ''), s)
 
@@ -110,8 +108,8 @@ def getUniqueLanguages(page, pages):
     return unique
     
 def getTechs(pages):
-    techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('uses::Technology'), p['page'].get('internal_links', [])))) \
-        .select(lambda p: filter(lambda i: i.startswith('uses::Technology'), p['page']['internal_links'])).to_list()
+    techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('uses::Technology'), p.get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: i.startswith('uses::Technology'), p['internal_links'])).to_list()
     s = reduce(lambda a, b: a + b, techs) if techs else []
     return map(lambda n: n.replace('uses::Technology:', ''), s)
 
@@ -122,8 +120,8 @@ def getUniqueTechs(page, pages):
     return unique
 
 def getConcepts(pages):
-    cs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page'].get('internal_links', [])))) \
-        .select(lambda p: filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['page']['internal_links'])).to_list()
+    cs = query(pages).where(lambda p: any(filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p.get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: re.match(r'^[a-zA-Z0-9 ]+$', i), p['internal_links'])).to_list()
     s = reduce(lambda a, b: a + b, cs) if cs else []
     return s
 
@@ -149,7 +147,7 @@ def getUniqueFeatures(page, pages):
 
 def getThemeInstances(theme, pages):
     print 'instanceOf::Theme:' + theme
-    insts = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceOf::Theme:' + theme, p['page']['internal_links']))).to_list()
+    insts = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceOf::Theme:' + theme, p['internal_links']))).to_list()
     print insts
     return insts
 
@@ -157,7 +155,7 @@ def createMembers(theme, pages):
     instances = getThemeInstances(theme, pages)
         
     for instance in instances:
-        name = instance['page'].get('page', {}).get('n', '')
+        name = instance['page'].get('n', '')
 
         unique_f = getUniqueFeatures([instance], instances)
         num_f = getFeatures([instance])
