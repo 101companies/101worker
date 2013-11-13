@@ -1,5 +1,6 @@
 *.idea
 *.*~
+modules/linked_data/demos.iml
 modules/igraph/bin
 .classpath
 modules/.metadata

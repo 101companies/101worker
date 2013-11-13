@@ -50,6 +50,8 @@ for p in db.pages.find():
     properties = extract_properties(res['internal_links']) 
     for k, v in properties.items():
       res[k] = v
+  else:
+    res['internal_links'] = {}
 
   allPages.append(res)  
 
