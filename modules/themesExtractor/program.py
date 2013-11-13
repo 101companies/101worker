@@ -148,7 +148,8 @@ def getUniqueFeatures(page, pages):
 
 def getThemeInstances(theme, pages):
     print 'instanceOf::Theme:' + theme
-    insts = query(pages).where(lambda p: any(filter(lambda i: i == 'instanceOf::Theme:' + theme, p['internal_links']))).to_list()
+    instances = query(pages).where(lambda p: ('instanceOf' in p)).to_list()
+    insts = query(instances).where(lambda p: any(filter(lambda i: 'n' in i and i['n'] == theme, p['instanceOf']))).to_list()
     print insts
     return insts
 
@@ -156,7 +157,7 @@ def createMembers(theme, pages):
     instances = getThemeInstances(theme, pages)
         
     for instance in instances:
-        name = instance['page'].get('n', '')
+        name = instance.get('n', '')
 
         unique_f = getUniqueFeatures([instance], instances)
         num_f = getFeatures([instance])
@@ -170,7 +171,7 @@ def createMembers(theme, pages):
         unique_c = getUniqueConcepts([instance], instances)
         num_c = list(set(getConcepts([instance])))
         
-        headline = remove_headline_markup(instance['page'].get('headline', ''))
+        headline = remove_headline_markup(instance.get('headline', ''))
         
         yield {
         
@@ -233,7 +234,7 @@ def createFeatures(theme, pages):
         contributions = getContributionsWithFeature(feature, theme_pages)
         headline = remove_headline_markup(rf['page'].get('headline', ''))
         contributions = getContributionNames(contributions)
-        resolved = bool(rf['page'].get('resolved', ''))
+        resolved = bool(rf.get('resolved', ''))
         
         yield {
             'name': feature,
