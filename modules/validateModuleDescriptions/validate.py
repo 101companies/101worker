@@ -10,14 +10,14 @@ json_dump = {
 	"invalid_description": []
 	}
 
-schema = json.load(open("moduleDescSchema.json","r"))
+schema = json.load(open("../../schemas/moduleDescription.json","r"))
 
 for moduleFolder in listdir("../"):
 	if not isfile(moduleFolder):
 		moduleDescPath = join("..",moduleFolder, "module.json")
 		if isfile(moduleDescPath):
 			try:
-				validate(moduleFolder, schema)
+				validate(json.load(open(moduleDescPath,"r")), schema)
 			except exceptions.ValidationError as error:
 				json_dump["invalid_description"].append({"name":moduleFolder, "error_message": error.message})
 		else:
