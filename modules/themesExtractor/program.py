@@ -22,7 +22,7 @@ json_path = sys.argv[1]
 
 wiki = json.load(open(json_path, 'r'))['wiki']
 pages = wiki['pages']
-themes = filter(lambda p: "Theme" == p['page'].get('p', ''), pages)
+themes = filter(lambda p: "Theme" == p.get('p', ''), pages)
 
 for d in os.listdir(output):
     if os.path.isdir(os.path.join(output, d)):
@@ -37,7 +37,7 @@ def render(d):
 def getRealFeature(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['p'] == 'Feature' and p['page']['n'].lower() == f.lower()
+        return p['p'] == 'Feature' and p['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
