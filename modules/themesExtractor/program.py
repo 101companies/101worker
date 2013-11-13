@@ -77,14 +77,14 @@ def getRealTechnology(f, pages):
         }
 
 def getContributionNames(pages):
-    return map(lambda p: p['page']['n'], pages)
+    return map(lambda p: p['n'], pages)
 
 def getThemeName(theme):
     return theme.replace(' ', '_')
 
 def getThemeNames(themes):
     for p in themes:
-        yield p['page']['n']
+        yield p['n']
 
 def getAttr(pages, attr):
     s = []
