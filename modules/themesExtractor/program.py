@@ -51,7 +51,7 @@ def getRealFeature(f, pages):
 def getRealConcept(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['p'] is None and p['page']['n'].lower() == f.lower()
+        return p['p'] is None and p['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -65,7 +65,7 @@ def getRealConcept(f, pages):
 def getRealTechnology(f, pages):
     f = f.replace('_', ' ')
     def filter_func(p):
-        return p['page']['p'] == 'Technology' and p['page']['n'].lower() == f.lower()
+        return p['p'] == 'Technology' and p['n'].lower() == f.lower()
 
     try:
         return filter(filter_func, pages)[0]
@@ -127,8 +127,8 @@ def getConcepts(pages):
 
 
 def getFeatures(pages):
-    techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('implements::Feature:'), p['page'].get('internal_links', [])))) \
-        .select(lambda p: filter(lambda i: i.startswith('implements::Feature:'), p['page']['internal_links'])).to_list()
+    techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('implements::Feature:'), p.get('internal_links', [])))) \
+        .select(lambda p: filter(lambda i: i.startswith('implements::Feature:'), p['internal_links'])).to_list()
     s = reduce(lambda a, b: a + b, techs) if techs else []
     return map(lambda n: n.replace('implements::Feature:', ''), s)
 
@@ -249,7 +249,7 @@ def createConcepts(theme, pages):
     for concept in concepts:
         rf = getRealConcept(concept, pages)
         contributions = getContributionsWithConcept(concept, theme_pages)
-        headline = remove_headline_markup(rf['page'].get('headline', ''))
+        headline = remove_headline_markup(rf.get('headline', ''))
         contributions = getContributionNames(contributions)
         resolved = bool(rf['page'].get('resolved', ''))
         
@@ -268,9 +268,9 @@ def createTechnologies(theme, pages):
     for tech in technologies:
         rf = getRealTechnology(tech, pages)
         contributions = getContributionsWithTechnology(tech, theme_pages)
-        headline = remove_headline_markup(rf['page'].get('headline', ''))
+        headline = remove_headline_markup(rf.get('headline', ''))
         contributions = getContributionNames(contributions)
-        resolved = bool(rf['page'].get('resolved', ''))
+        resolved = bool(rf.get('resolved', ''))
         
         yield {
             'name': tech,
