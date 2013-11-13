@@ -22,7 +22,7 @@ json_path = sys.argv[1]
 
 wiki = json.load(open(json_path, 'r'))['wiki']
 pages = wiki['pages']
-themes = filter(lambda p: "Theme" == p['page'].get('page', {}).get('p', ''), pages)
+themes = filter(lambda p: "Theme" == p['page'].get('p', ''), pages)
 
 for d in os.listdir(output):
     if os.path.isdir(os.path.join(output, d)):
