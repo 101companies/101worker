@@ -6,6 +6,18 @@
 import os
 import shutil
 
+def copytree(src, dst, symlinks=False, ignore=None):
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            copytree(s, d, symlinks, ignore)
+        else:
+            if not os.path.exists(d) or os.stat(src).st_mtime - os.stat(dst).st_mtime > 1:
+                shutil.copy2(s, d)
+
 def get_immediate_subdirectories(dir):
 	return [name for name in os.listdir(dir)
             if os.path.isdir(os.path.join(dir, name))]
@@ -16,7 +28,7 @@ themes = get_immediate_subdirectories('../../../101results/repos/101integrate/da
 
 baseResources = '../../../101web/data/resources/'
 for lang in languages:
-	shutil.copy2('../../../101results/repos/101integrate/data/languages/' + lang.strip() + '/coverage.html', baseResources + 'languages/' + lang.strip())
+	copytree('../../../101results/repos/101integrate/data/languages/' + lang.strip(), baseResources + 'languages/' + lang.strip())
 
 for theme in themes:
-	shutil.copy2('../../../101results/repos/101integrate/data/themes/' + theme.strip() + '/coverage.html', baseResources + 'themes/' + theme.strip())
+	copytree('../../../101results/repos/101integrate/data/themes/' + theme.strip(), baseResources + 'themes/' + theme.strip())
