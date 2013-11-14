@@ -28,7 +28,7 @@ themes = get_immediate_subdirectories('../../../101results/repos/101integrate/da
 
 baseResources = '../../../101web/data/resources/'
 for lang in languages:
-	shutil.copytree('../../../101results/repos/101integrate/data/languages/' + lang.strip(), baseResources + 'languages/' + lang.strip())
+	shutil.copytree('../../../101results/repos/101integrate/data/languages/' + lang.strip() + "/", baseResources + 'languages/' + lang.strip() + "/")
 
 for theme in themes:
-	shutil.copytree('../../../101results/repos/101integrate/data/themes/' + theme.strip(), baseResources + 'themes/' + theme.strip())
+	shutil.copytree('../../../101results/repos/101integrate/data/themes/' + theme.strip() + "/", baseResources + 'themes/' + theme.strip() + "/")
