@@ -13,6 +13,8 @@ def copytree(src, dst, symlinks=False, ignore=None):
         if os.path.isdir(s):
             shutil.copytree(s, d, symlinks, ignore)
         else:
+            if os.path.exists(d):
+                os.remove(d)
             shutil.copy2(s, d)
 
 def get_immediate_subdirectories(dir):
