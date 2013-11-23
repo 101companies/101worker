@@ -733,10 +733,6 @@ class File:
         @return: the geshi code as a string or None
         @rtype str or None
         """
-        """
-        returns the geshi code for this file (or None)
-        :return: a string representing the geshi code or None if there is no code
-        """
         if not '_File__geshi' in self.__dict__:
             self.__geshi = None
             matches = self.matches
@@ -805,7 +801,7 @@ class File:
     def relevance(self):
         """
         Returns the relevance of the file as queried through .matches.json or .predicate.json files. If no info is
-        available, this file is considered to be system code. Relevance values are: ["system", "generated", "reuse",
+        available, this file is considered to be system code. Relevance values are: ["system", "derive", "reuse",
         "test", "ignore"]
         @return: the relevance as a string
         @rtype str
@@ -879,7 +875,6 @@ class File:
         for fragment in data['fragments']:
             self.__fragmentIds.append(fragment['resource'].replace(const101.url101explorer, ''))
 
-
     def __repr__(self):
         return self.__str__()
 
@@ -908,6 +903,23 @@ class File:
 
 class Fragment:
     def __init__(self, identifier, member=None, file=None, parent=None):
+        """
+        The constructor for the Fragment class.
+        @param identifier: The unique identifier for the fragment - usually a file identifier plus a fragment
+        description.
+        @type identifier str
+        @param parent: optional parameter to set the parent of this fragment (leave out if you're instancing this class
+        directly)
+        @type parent File or Fragment
+        @param file: optional parameter to set the file of this fragment (leave out if you're instancing this class
+        directly)
+        @type file File
+        @param member: optional parameter to set the member of this fragment (leave out if you're instancing this class
+        directly)
+        @type member Member
+        @return: a instance of the Fragment class
+        @rtype Fragment
+        """
         self.__identifier = identifier
 
         if member:
@@ -927,15 +939,31 @@ class Fragment:
 
     @property
     def identifier(self):
+        """
+        Returns the identifier for this fragment.
+        @return: the identifier as a string
+        @rtype str
+        """
         return self.__identifier
 
     @property
-    def fragmentDescription(self):
+    def fragment_description(self):
+        """
+        Returns the fragment description of this fragment. This is the complete identfier minus the identifier for the
+        file.
+        @return: the fragment description as a string
+        @rtype str
+        """
         filePart = re.findall('.*\.[^/]*', self.identifier)[0]
         return self.identifier.replace(filePart + '/', '')
 
     @property
     def name(self):
+        """
+        Returns the name of the fragment.
+        @return: the name as a string
+        @rtype str
+        """
         if not '_Fragment__name' in self.__dict__:
             splitList = self.identifier.split('/')
             self.__classifier = splitList[-2]
@@ -949,21 +977,34 @@ class Fragment:
 
     @property
     def classifier(self):
+        """
+        Returns the classifier of the fragment ("method", "class", ...). Classifier are language specific!
+        @return: the classifier as a string
+        @rtype str
+        """
         if not '_Fragment__classifier' in self.__dict__:
             self.name
         return self.__classifier
 
     @property
     def index(self):
+        """
+        Returns the index
+        @return: the index as a int
+        @rtype int
+        @warning not implemented yet - will always return 0
+        """
+        #TODO: Fix me!
         if not '_Fragment__index' in self.__dict__:
-            self.name
+            self.__index = 0
         return self.__index
 
     @property
     def member(self):
         """
-        returns a backlink to the member this fragment belongs to
-        :return: instance of Member class
+        Returns the backlink to the member this fragment belongs to.
+        @return: the Member instance this fragment belongs to
+        @rtype Member
         """
         if not '_Fragment__member' in self.__dict__:
             self.__member = Member('/'.join(self.identifier.split('/')[0:2]))
@@ -971,6 +1012,11 @@ class Fragment:
 
     @property
     def file(self):
+        """
+        Returns the backlink to the file this fragment belongs to.
+        @return: the File instance this fragment is contained in
+        @rtype File
+        """
         if not '_Fragment__file' in self.__dict__:
             fIdentifier = re.findall('.*\.[^/]*', self.identifier)[0]
             self.__file = File(fIdentifier)
@@ -978,6 +1024,11 @@ class Fragment:
 
     @property
     def parent(self):
+        """
+        Returns the parent of this fragment. This can either be another fragment or a file.
+        @return: the parent (either Fragment or File)
+        @rtype Fragment or File
+        """
         if not '_Fragment__parent' in self.__dict__:
             splitList = self.identifier.split('/')
             pIdentifier = '/'.join(splitList[0:-2])
@@ -995,6 +1046,11 @@ class Fragment:
 
     @property
     def fragments(self):
+        """
+        Returns the sub-fragments contained in this fragment as a list.
+        @return: a list of Fragment instances
+        @rtype list of Fragment
+        """
         if not '_Fragment__fragments' in self.__dict__:
             self.__fragments = []
             if not '_Fragment__fragmentIds' in self.__dict__:
@@ -1014,8 +1070,14 @@ class Fragment:
 
     @property
     def content(self):
+        """
+        Returns the content of the fragment. This is dependent on the existence of a fragment locator for this
+        type of file.
+        @return: the content as a string
+        @rtype str
+        """
         if not '_Fragment__content' in self.__dict__:
-            lineFrom, lineTo = self.__lineRange()
+            lineFrom, lineTo = self.__line_range()
             fp = open(self.file.path, 'r')
             txt = [x for i, x in enumerate(fp) if i in range(lineFrom - 1, lineTo)]
             self.__content = ''.join(txt)
@@ -1024,9 +1086,14 @@ class Fragment:
 
     @property
     def geshi(self):
+        """
+        Returns the geshi code for this fragment (actually, it asks the file for the geshi code).
+        @return: the geshi code as a string
+        @rtype str
+        """
         return self.file.geshi
 
-    def __lineRange(self):
+    def __line_range(self):
         fragmentLocator = self.file.matches.select(lambda x: 'locator' in x)
         if fragmentLocator:
             fragmentLocator = os.path.join(const101.sRoot, fragmentLocator['locator'])
