@@ -54,6 +54,7 @@ from mediawiki import dewikifyNamespace
 def useWebInterface():
     __builtin__.USE_EXPLORER_SERVICE = True
 
+
 class walk:
     def __init__(self, root):
         if isinstance(root, Namespace):
@@ -73,9 +74,19 @@ class walk:
 
         return cur.folders, cur.files
 
+
 # normal API
 class Namespace:
     def __init__(self, identifier, parent=None):
+        """
+        constructor for the Namespace class
+        @param identifier: the identifier for the namespace, e.g. namespace/contributions
+        @type identifier: str
+        @param parent: optional parameter indicating the parent - don't use if you're instantiating the class yourself
+        @type parent Namespace
+        @return: an instance of this class
+        @rtype: Namespace
+        """
         self.__identifier = identifier
         relPath = identifier
         if identifier == 'namespaces':
@@ -92,24 +103,49 @@ class Namespace:
 
     @property
     def identifier(self):
+        """
+        describes the unique identifier for this namespace
+        @return: the identifier as a string
+        @rtype: str
+        """
         return self.__identifier
 
     @property
     def name(self):
+        """
+        describes the wikified name of this namespace (e.g. "Contribution")
+        @return: the name as a string
+        @rtype: str
+        """
         if not '_Namespace__name' in self.__dict__:
             self.__name = wikifyNamespace(self.identifier)
         return self.__name
 
     @property
     def path(self):
+        """
+        describes the path on the 101worker filesystem for this namespace
+        @return: the path as a string
+        @rtype: str
+        """
         return self.__sPath
 
     @property
     def classifier(self):
+        """
+        the classifier of this namespace (obviously, it's "Namespace")
+        @return: the classifier as a string
+        @rtype: str
+        """
         return 'Namespace'
 
     @property
     def parent(self):
+        """
+        describes the parent of this namespace. If the namespace is already the highest one, "None" will be returned
+        @return: an instance of namespace or None
+        @rtype: str
+        """
         if not '_Namespace__parent' in self.__dict__:
             if self.identifier == 'namespaces':
                 self.__parent = None
@@ -119,24 +155,47 @@ class Namespace:
 
     @property
     def headline(self):
+        """
+        query for the headline of the wiki page associated with this namespace. The markup will already be removed.
+        @return: the headline as a string
+        @rtype: str
+        """
         if not '_Namespace__headline' in self.__dict__:
             self.__headline = WikiDump().getHeadline('Namespace', self.name)
         return self.__headline
 
     @property
     def endpointLink(self, format='json'):
+        """
+        describes the link to the endpoint that can be used to access the wiki triples for this namespace
+        @param: format: the format of the triples
+        @type format str
+        @return: the link as a string
+        @rtype: str
+        @warning: The format is currently fixed at JSON
+        """
         if not '_Namespace__endpoint' in self.__dict__:
             self.__endpoint = os.path.join(const101.url101endpoint, 'Namespace:' + self.name, format)
         return self.__endpoint
 
     @property
     def wikiLink(self):
+        """
+        describes the link to the wiki page (the actual page - not the API page)
+        @return: the link as a string
+        @rtype: str
+        """
         if not '_Namespace__wiki' in self.__dict__:
             self.__wiki = os.path.join(const101.url101wiki, 'Namespace' + ':' + self.name)
         return self.__wiki
 
     @property
     def github(self):
+        """
+        describes the link to the github page for this namespace
+        @return: the link as a string
+        @rtype: str
+        """
         if not '_Namespace__github' in self.__dict__:
             relPath = self.identifier
             if self.identifier == 'namespaces':
@@ -146,10 +205,17 @@ class Namespace:
 
     @property
     def members(self):
+        """
+        returns the members of this namespace. This can either be a list of other Namespaces or a list of Member
+        instances.
+        @return: a list containing Member of Namespace instances
+        @rtype: list Member or Namespace
+        """
         if not '_Namespace__members' in self.__dict__:
             self.__members = []
             if not '_Namespace__memberIds' in self.__dict__:
-                self.__memberIds = [os.path.join(self.identifier, mId) for mId in json.load(open(os.path.join(self.__tPath, 'members.json')))]
+                self.__memberIds = [os.path.join(self.identifier, mId) for mId in
+                                    json.load(open(os.path.join(self.__tPath, 'members.json')))]
             for id in self.__memberIds:
                 if self.identifier == 'namespaces':
                     self.__members.append(Namespace(id, parent=self))
@@ -184,8 +250,22 @@ class Namespace:
             return other.identifier == self.identifier
         return NotImplemented
 
+
 class Folder:
     def __init__(self, identifier, member=None, parent=None):
+        """
+        Constructor for the Folder class.
+        @param identifier:
+        @type identifier str
+        @param member:  optional parameter to set the member of this folder (leave out if you're instancing this class
+        directly)
+        @type member Member
+        @param parent: optional parameter to set the parent of this folder (leave out if you're instancing this class
+        directly)
+        @type parent Folder
+        @return: a instance of the Folder class
+        @rtype: Folder
+        """
         self.__identifier = identifier
         parts = identifier.split('/')
 
@@ -210,25 +290,47 @@ class Folder:
 
     @property
     def identifier(self):
+        """
+        The identifier for this folder.
+        @return: the identifier
+        @rtype str
+        """
         return self.__identifier
 
     @property
     def name(self):
+        """
+        The name of this folder.
+        @return: the name
+        @rtype str
+        """
         return self.__name
 
     @property
     def path(self):
+        """
+        The path to this folder on 101worker relative to modules directory of 101worker.
+        @return: the relative path
+        @rtype str
+        """
         return self.__sPath
 
     @property
     def classifier(self):
+        """
+        The classifier of this folder (obviously "Folder").
+        @return: the classifier
+        @rtype str
+        @deprecated Marked for deletion - ask instead for name of the class (e.g. x.__class__.__name__)
+        """
         return 'Folder'
 
     @property
     def member(self):
         """
-        returns a backlink to the member this file belongs to
-        :return: instance of Member class
+        Returns a backlink to the member this file belongs to.
+        @return: the Member this folder belongs to
+        @rtype Member
         """
         if not '_Folder__member' in self.__dict__:
             self.__member = Member('/'.join(self.identifier.split('/')[0:2]))
@@ -237,9 +339,13 @@ class Folder:
     @property
     def parent(self):
         """
-        returns a backlink to the folder this file belongs to
-        :return: instance of folder or member class, depending on where this file is sitting in the file tree
+        Returns the parent of this folder, which is either a Member of another folder depending on where this folder is
+        in the filesystem tree. This is usually no problem, since a Member is only a special Folder and therefore
+        derived from it.
+        @return: the parent (Member or Folder instance)
+        @rtype Folder or Member
         """
+
         if not '_Folder__parent' in self.__dict__:
             pIdentifier = self.identifier.rsplit('/', 1)[0]
             if pIdentifier == self.member.identifier:
@@ -251,6 +357,11 @@ class Folder:
 
     @property
     def folders(self):
+        """
+        Returns a list of sub-folders, that this folder contains.
+        @return: a list of Folder instances
+        @rtype list of Folder
+        """
         if not '_Folder__folders' in self.__dict__:
             self.__folders = []
             if not hasattr(self, 'virtual') or not self.virtual:
@@ -268,6 +379,11 @@ class Folder:
 
     @property
     def files(self):
+        """
+        Returns a list of files that this folder contains.
+        @return: a list of file instances
+        @rtype list of File
+        """
         if not '_Folder__files' in self.__dict__:
             self.__files = []
             if not hasattr(self, 'virtual') or not self.virtual:
@@ -285,10 +401,22 @@ class Folder:
 
     @property
     def derivatives(self):
+        """
+        Returns a list of derived resources that exist for this Folder.
+        @return: a list of Derivative instances
+        @rtype list
+        @warning As no important derived resources for folders exist at the moment, this method will always return an
+        empty list.
+        """
         return []
 
     @property
     def github(self):
+        """
+        Returns the link to the Github repository that contains this folder.
+        @return: the link as a string
+        @rtype str
+        """
         if not '_Folder__github' in self.__dict__:
             self.__github = self.parent.github + '/' + self.name
 
@@ -324,6 +452,16 @@ class Folder:
 
 class Member(Folder):
     def __init__(self, identifier, parent=None):
+        """
+        The Constructor for the Member class.
+        @param identifier: the unique identifier for the member (e.g."contributions/antlrLexer")
+        @type identifier str
+        @param parent: optional parameter to set the parent of this member (leave out if you're instancing this class
+        directly)
+        @type parent Namespace
+        @return: a instance of Member
+        @rtype Member
+        """
         Folder.__init__(self, identifier, member=self, parent=parent)
         parts = identifier.split('/')
 
@@ -338,44 +476,89 @@ class Member(Folder):
 
     @property
     def classifier(self):
+        """
+        The classifier of this member (obviously "Member").
+        @return: the classifier
+        @rtype str
+        @deprecated Marked for deletion - ask instead for name of the class (e.g. x.__class__.__name__)
+        """
         return 'Member'
 
     @property
     def parent(self):
+        """
+        The parent of this member, which is a namespace.
+        @return: the parent namespace
+        @rtype Namespace
+        """
         if not '_Member__parent' in self.__dict__:
             self.__parent = Namespace(self.identifier.split('/')[0])
         return self.__parent
 
     @property
     def headline(self):
+        """
+        Queries for the headline of the wiki page that is associated with this member. The returned string will already
+        be removed of markup.
+        @return: the headline
+        @rtype str
+        """
         if not '_Member__headline' in self.__dict__:
             self.__headline = WikiDump().getHeadline(self.__namespace, self.name)
         return self.__headline
 
     @property
     def virtual(self):
+        """
+        Returns whether this member physically exists on the 101worker filesystem or not.
+        @return: a bool indicating physical existence
+        @rtype bool
+        """
         return self.__virtual
 
     @property
     def endpointLink(self, format='json'):
+        """
+        Describes the link to the endpoint that can be used to access the wiki triples for this member.
+        @param: format: the format of the triples
+        @type format str
+        @return: the link as a string
+        @rtype: str
+        @warning: The format is currently fixed at JSON
+        """
         if not '_Member__endpoint' in self.__dict__:
             self.__endpoint = os.path.join(const101.url101endpoint, self.__namespace + ':' + self.name, format)
         return self.__endpoint
 
     @property
     def endpointData(self):
+        """
+        Queries the endpoint for the actual wiki triples that exist for this member.
+        @return: a list of string triples [ [s1, p1, o1], ... ]
+        @rtype list
+        """
         if not '_Member__endpointData' in self.__dict__:
             self.__endpointData = helpers.loadJSONFromUrl(self.endpointLink)
         return self.__endpointData
 
     @property
     def wikiLink(self):
+        """
+        Describes the link to the actual wiki page (not the API link!).
+        @return: the link as a string
+        @rtype str
+        """
         if not '_Member__wiki' in self.__dict__:
             self.__wiki = os.path.join(const101.url101wiki, self.__namespace + ':' + self.name)
         return self.__wiki
 
     @property
     def implements(self):
+        """
+        Inspects the wiki triples for "implements" links and returns them with their namespace removed.
+        @return: the list of features
+        @rtype list of str
+        """
         if not '_Member__implements' in self.__dict__:
             self.__implements = []
             wikiTriples = helpers.loadJSONFromUrl(self.endpointLink)
@@ -387,6 +570,11 @@ class Member(Folder):
 
     @property
     def github(self):
+        """
+        Returns the link to the Github repository this member is contained in.
+        @return: the link as a string
+        @rtype str
+        """
         if not '_Member__github' in self.__dict__:
             self.__github = PullRepoDump().getGithubLink(self.name)
         return self.__github
@@ -395,17 +583,22 @@ class Member(Folder):
         return '(Member, {})'.format(self.identifier)
 
 
-#TODO: (File) implement "people" property
 class File:
     derivativesTable = helpers.loadDerivativeNames('file')
 
     def __init__(self, identifier, parent=None, member=None):
         """
-        constructor for file class
-        :param identifier: identifier for the file (e.g. "constributions/antlrAcceptor/.gitignore)
-        :param parent: optional pointer to the parent instance
-        :param member: optional pointer to the member instance
-        :raise: NonExistingIdentifierException if identifier variable doesn't exist
+        The Constructor for the File class.
+        @param identifier: the unique identifier for the member (e.g."contributions/antlrAcceptor/.gitignore")
+        @type identifier str
+        @param parent: optional parameter to set the parent of this file (leave out if you're instancing this class
+        directly)
+        @type parent Folder
+        @param member: optional parameter to set the member of this file (leave out if you're instancing this class
+        directly)
+        @type member Member
+        @return: a instance of File
+        @rtype File
         """
         self.__identifier = identifier
 
@@ -429,16 +622,18 @@ class File:
     @property
     def identifier(self):
         """
-        returns the identifier string
-        :return: a string representing the identifier
+        The identifier for this file.
+        @return the identifier as a string
+        @rtype str
         """
         return self.__identifier
 
     @property
     def name(self):
         """
-        returns the name of this file
-        :return: a string representing the filename (only name, not path)
+        The name of this file.
+        @return the name as a string
+        @rtype str
         """
         if not '_File__name' in self.__dict__:
             self.__name = self.identifier.rsplit('/', 1)[1]
@@ -447,20 +642,28 @@ class File:
     @property
     def path(self):
         """
-        returns the complete path or HTTP url (depending on web/filesystem access)  to this file
-        :return: a string representing the path or url
+        The path for this file relative to the directory of a module.
+        @return: The relative path as a string
+        @rtype str
         """
         return self.__sPath
 
     @property
     def classifier(self):
+        """
+        The classifier of this file (obviously "File").
+        @return: the classifier
+        @rtype str
+        @deprecated Marked for deletion - ask instead for name of the class (e.g. x.__class__.__name__)
+        """
         return 'File'
 
     @property
     def member(self):
         """
-        returns a backlink to the member this file belongs to
-        :return: instance of Member class
+        Returns the member of this file.
+        @return: the parent (Member instance)
+        @rtype Member
         """
         if not '_File__member' in self.__dict__:
             self.__member = Member('/'.join(self.identifier.split('/')[0:2]))
@@ -469,8 +672,11 @@ class File:
     @property
     def parent(self):
         """
-        returns a backlink to the folder this file belongs to
-        :return: instance of folder or member class, depending on where this file is sitting in the file tree
+        Returns the parent of this file, which is either a Member of another folder depending on where this folder is
+        in the filesystem tree. This is usually no problem, since a Member is only a special Folder and therefore
+        derived from it.
+        @return: the parent (Member or Folder instance)
+        @rtype Folder or Member
         """
         if not '_File__parent' in self.__dict__:
             pIdentifier = self.identifier.rsplit('/', 1)[0]
@@ -484,8 +690,9 @@ class File:
     @property
     def fragments(self):
         """
-        returns all known fragments this file has
-        :return: a list with instances of the Fragment class
+        Queries for fragments that are contained in this files based on .extractor.json files
+        @return: a list of Fragment instances
+        @rtype list of Fragment
         """
         if not '_File__fragments' in self.__dict__:
             self.__fragments = []
@@ -505,9 +712,11 @@ class File:
     @property
     def content(self):
         """
-        returns the content of the file (if readable, meaning that a geshi code is available)
-        :return: a string representing the content
-        :raise: NotReadableException if no geshi code is present
+        Returns the content of the file, if the file is readable. Readability is dependent on the presence of
+        a geshi code. If no code is available for this file, it is deemed unreadable.
+        @return: the content as a string
+        @rtype str
+        @raise NotReadableException if the file is considered unreadable
         """
         if not '_File__content' in self.__dict__:
             geshi = self.geshi
@@ -519,6 +728,11 @@ class File:
 
     @property
     def geshi(self):
+        """
+        Returns the geshi code for this file as queried through .matches.json files.
+        @return: the geshi code as a string or None
+        @rtype str or None
+        """
         """
         returns the geshi code for this file (or None)
         :return: a string representing the geshi code or None if there is no code
@@ -537,6 +751,11 @@ class File:
 
     @property
     def language(self):
+        """
+        Returns the language of this file as queried through .matches.json files.
+        @return: the language as a string or None
+        @rtype str or None
+        """
         if not '_File__language' in self.__dict__:
             self.__language = None
             matches = self.matches
@@ -549,6 +768,11 @@ class File:
 
     @property
     def features(self):
+        """
+        Returns a list of features for this file as queried through .matches.json or .predicates.json files.
+        @return: a list of features (represented as strings)
+        @rtype list of str
+        """
         if not '_File__features' in self.__dict__:
             self.__features = []
             matches = self.matches
@@ -562,6 +786,11 @@ class File:
 
     @property
     def dependsOn(self):
+        """
+        Returns the technologies, this file depends on as queried through .matches.json or .predicates.json files.
+        @return: a list of technologies (represented as strings)
+        @rtype: list of str
+        """
         if not '_File__dependsOn' in self.__dict__:
             self.__dependsOn = []
             matches = self.matches
@@ -574,6 +803,13 @@ class File:
 
     @property
     def relevance(self):
+        """
+        Returns the relevance of the file as queried through .matches.json or .predicate.json files. If no info is
+        available, this file is considered to be system code. Relevance values are: ["system", "generated", "reuse",
+        "test", "ignore"]
+        @return: the relevance as a string
+        @rtype str
+        """
         if not '_File__relevance' in self.__dict__:
             self.__relevance = 'system'
             matches = self.matches
@@ -587,17 +823,19 @@ class File:
     @property
     def isReadable(self):
         """
-        returns whether this file is readable or not
-        :return: boolean value indicating whether the content property can be used
+        Returns whether this file is readable or not.
+        @return: a bool indicating readability
+        @rtype bool
         """
         return None != self.geshi
 
     @property
     def derivatives(self):
         """
-        returns a list of all derivatives, that (at least in theory) should be there. You must check whether they are
-        actually there or not
-        :return: a list containing instances of various derivative classes
+        Returns a list of all derived files, that possibly exist for this file. Whether the derivative does really
+        exist has to be asked for each derivative individually.
+        @return: a list of concrete Derivative-subclasses instances
+        @rtype list of Derivative
         """
         for item in File.derivativesTable:
             clssName = File.derivativesTable[item]
@@ -610,8 +848,9 @@ class File:
     @property
     def github(self):
         """
-        returns the link to this file in a github repository
-        :return: a string containing the link to this file in a github repository
+        Returns the list to the Github repository that contains this file (direct link to file).
+        @return: the link as a string
+        @rtype str
         """
         if not '_File__github' in self.__dict__:
             self.__github = self.parent.github + '/' + self.name
@@ -620,9 +859,10 @@ class File:
     @property
     def people(self):
         """
-        returns a list of all people that are somehow connected to this file
-        currently returns an empty list
-        :return: a list with instances of the Person class
+        Returns a list of all people associated with this file.
+        @return: a list
+        @rtype list
+        @warning will currently always return an empty list, as no real information is avaible at the moment
         """
         return []
 
