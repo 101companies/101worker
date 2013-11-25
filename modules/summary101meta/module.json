@@ -1,0 +1,12 @@
+{
+  "targets" : [
+    {
+      "headline" : "Aggregate scattered metadata, metrics, et al. per file",
+      "classifier" : "resource",
+      "scope" : "file",
+      "suffix" : ".summary.json",
+      "language" : "JSON"
+    }
+  ]
+}
+
