@@ -24,8 +24,8 @@ if not os.path.exists(output):
 wikidump = json.load(open(sys.argv[1], 'r'))
 pages = wikidump['wiki']['pages']
 
-vocs = (query(pages).where(lambda page: page['page']['page']['p'] == 'Vocabulary')
-    .select(lambda p: p['page']['page']['n']).to_list())
+vocs = (query(pages).where(lambda page: page['p'] == 'Vocabulary')
+    .select(lambda p: p['n']).to_list())
 
 def toTex(list, file):
     with open (file, 'w') as f:
@@ -34,7 +34,7 @@ def toTex(list, file):
 for voc in vocs:
     voc_name = unicode('instanceOf::Vocabulary:' + voc).strip()
     
-    instances = (query(pages).where(lambda page: voc_name in page['page'].get('internal_links', [])).to_list())
+    instances = (query(pages).where(lambda page: voc_name in page.get('internal_links', [])).to_list())
 
     if not os.path.exists(os.path.join(output, voc)):
         os.mkdir(os.path.join(output, voc))
@@ -44,9 +44,9 @@ for voc in vocs:
 
     for instance in instances:
         data.append({
-            'name': instance['page']['page']['n'],
+            'name': instance['n'],
             #'namespace': instance['page']['page']['p'] or '',
-            'headline': remove_headline_markup(instance['page'].get('headline', ''))
+            'headline': remove_headline_markup(instance.get('headline', ''))
         })
 
     data = sorted(data, key=lambda s: s['name'])
