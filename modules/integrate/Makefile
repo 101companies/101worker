@@ -33,3 +33,11 @@ clean:
 reset:
 	rm -r ${modulesDir}/integrate
 	mkdir -p ${modulesDir}/integrate
+
+#installing und building 101-folder-structure
+setup:						#ls for debugging
+	mkdir -p ${modulesDir}/integrate
+	mkdir -p ${resultsdir}/repos
+	cd ${resultsdir}/repos; git clone https://github.com/101companies/101integrate; ls
+	cd ${resultsdir}/repos/101integrate; ls; cd src; ls; touch Makefile.vars ; ls # integrateDir undefined if not existens on starting time of this Makefile
+	cd ${resultsdir}/repos/101integrate ; make download-deps
