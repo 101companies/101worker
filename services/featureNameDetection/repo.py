@@ -15,7 +15,6 @@ class Repo:
     shas = []
     newones = self.get('/commits')
     while len(newones) > 1:
-      print len(newones)
       shas.extend(map(lambda x: x['sha'], newones))
       strr = '/commits?until=' + newones[-1]['commit']['committer']['date']
       newones = self.get(strr)

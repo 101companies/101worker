@@ -9,13 +9,16 @@ from termcolor import colored
 
 class Contribution(WikiResource):
 
-  def __init__(self, title, commitsha=None, loadfeatures=False):
+  def __init__(self, title, rules, commitsha=None, loadfeatures=False):
     self.commitsha = commitsha
     self.title = title
     WikiResource.__init__(self, "Contribution", title, load = True)
     self.rooturl = "http://101companies.org/resources/contributions/"
     self.baseresourceurl = self.rooturl + self.rtitle
-    self.getFeatures()
+    self.features = {}
+    for feature_name in rules.keys():
+      self.features[feature_name] = []
+    self.rules = rules
     if loadfeatures:
       self.getLocations()
 
@@ -25,9 +28,44 @@ class Contribution(WikiResource):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
-  def aggregate(self,path):
+  def pattern_matches(self, pattern, keywords, fragment_name):
+    if pattern == 'prefix':
+      return any(map(lambda keyword: fragment_name.lower().startswith(keyword.lower()), keywords))
+    elif pattern == 'postfix':
+      return any(map(lambda keyword: fragment_name.lower().endswith(keyword.lower()), keywords))
+    elif pattern == 'any':
+      return any(map(lambda keyword: keyword.lower() in fragment_name.lower(), keywords))
+    elif pattern == 'exact':
+      return any(map(lambda keyword: keyword.lower() == fragment_name.lower(), keywords))
+    return False
+
+
+  def is_candidate(self, fragment, feature_name):
+    feature_level = self.rules[feature_name]
+    language_level = None
+    if 'Haskell' in feature_level:
+      language_level = feature_level['Haskell']
+    elif '*' in feature_level:
+      language_level = feature_level['*']
+    if not language_level:
+      return False
+    classifier_level = None
+    if fragment['classifier'] in language_level:
+      classifier_level = language_level[fragment['classifier']]
+    elif '*' in language_level:
+      classifier_level = language_level['*']
+    if not classifier_level:
+      return False
+    for pattern in classifier_level:
+      if self.pattern_matches(pattern, classifier_level[pattern], fragment['name']):
+        return True
+    return False
+
+
+  def aggregate(self, path):
     simplepath = path.replace(self.rooturl, '')
     print "Operating in " + colored(simplepath, 'blue')
+    print path
     rawdata = urllib2.urlopen(path)
     data = json.load(rawdata)
     if 'folders' in data:
@@ -41,7 +79,7 @@ class Contribution(WikiResource):
         self.aggregate(folder['resource'])
     else:
       for feature in self.features:
-        candidates = filter(lambda f: feature.lower() in f['name'].lower(), data['fragments'])
+        candidates = filter(lambda f: self.is_candidate(f, feature), data['fragments'])
         for c in candidates:
           print " > Checking " + colored(c['name'], 'cyan') + ' (' + colored(c['classifier'] , 'cyan') + ')'
           self.features[feature] = filter(lambda r: r['resource'] not in c['resource'], self.features[feature])
@@ -50,14 +88,3 @@ class Contribution(WikiResource):
 
   def getLocations(self):
     self.aggregate(self.baseresourceurl)
-
-  def getFeatures(self):
-    ctriples = filter(lambda x: x.toInternal and x.predicate == "implements" and x.object.ns == "Feature" ,self.triples)
-    self.features = {}
-    for ctriple in ctriples:
-      self.features[ctriple.object.rtitle] = []
-    clones = json.load(urllib2.urlopen('http://101companies.org/api/clones'))
-    clone = filter(lambda c : c['title'] == self.title.replace('Contribution:', ''), clones)
-    if len(clone) > 0:
-     for minusfeature in clones[0]['minusfeatures']:
-      self.features[minusfeature] = []

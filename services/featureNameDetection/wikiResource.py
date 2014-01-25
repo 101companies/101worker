@@ -38,5 +38,6 @@ class WikiResource:
 
   def gettriples(self):
     tripleurl = "http://101companies.org/endpoint/" + self.ns + ":" + self.rtitle + "/json"
+    print tripleurl.replace(" ", "%20")
     self.triples = map(Triple, json.load(urllib2.urlopen(tripleurl.replace(" ", "%20"))))
 
