@@ -1,74 +1,38 @@
 #! /usr/bin/env python
+__author__ = 'Martin Leinberger'
 
-import os
+
 import sys
+import os
 import json
 
+sys.path.append('../../libraries')
 sys.path.append('../../libraries/101meta')
+
 import const101
-import tools101
+from metamodel import Dumps
 
-wikiDump = json.load(open(const101.wikiDump, 'r'))
-mappings = json.load(open('../../libraries/mediawiki/Mappings.json'))['wikify']
+mappings = json.load(open('../../libraries/mediawiki/Mappings.json'))['dewikify']
+problems = []
+namespaceMembers = dict([(ns, []) for ns in mappings.values()])
 
+for page in Dumps.WikiDump():
+    p, n = page.get('p', None), page.get('n', 'None')
+    if n.startswith('@'): p = '101'
+    elif not p: p = 'Concept'
+    if p and n:
+        dewikified = mappings.get(p, None)
+        if dewikified in namespaceMembers:
+            namespaceMembers[dewikified].append(n)
+        else:
+            problems.append('Unkown namespace: {} ({})'.format(p, n))
 
+for ns in namespaceMembers:
+    path = os.path.join(const101.tRoot, ns)
+    if not os.path.exists(path):
+        os.mkdir(path)
+    json.dump(namespaceMembers[ns], open(os.path.join(path, 'members.json'), 'w'), indent=4)
 
-
-
-# def findNamespaceMembers(instanceOf):
-#     members = []
-#     for page in wikiDump['wiki']['pages']:
-#         pageData = page['page']
-#         if instanceOf in pageData.get('instanceOf', []):
-#             members.append(pageData['page']['n'])
-#
-#     members.sort()
-#     return [s.encode('latin_1') for s in members]
-#
-# def findAndWrite(dirname, instanceOf):
-#     members = findNamespaceMembers(instanceOf)
-#     path = os.path.join(const101.tRoot, dirname, 'members.json')
-#     tools101.makedirs(os.path.dirname(path))
-#     json.dump(members, open(path, 'w'))
-#
-#
-# print "Trying to find namespaces..."
-# for folderName in mappings.keys():
-#     namespace = mappings[folderName]
-#     instanceOf = {'p' : 'Namespace', 'n' : namespace}
-#     if namespace == '':
-#         instanceOf = None
-#     findAndWrite(folderName, instanceOf)
-#
-# findAndWrite('', {'p': 'Namespace', 'n': 'Namespace'})
-
-
-# This is a bad interface... But I have no clue how to make it better
-def findNamespaceMembers(namespace, instanceof, nameRestriction):
-    members = []
-    for page in wikiDump['wiki']['pages']:
-        pageData = page['page']
-        if pageData['page']['p'] == namespace and not pageData['page']['n'] == namespace:
-            if (instanceof and instanceof in pageData.get('instanceOf',[])) or not instanceof:
-                if not nameRestriction or not pageData['page']['n'].startswith(nameRestriction):
-                    members.append(pageData['page']['n'])
-    members.sort()
-    return [s.encode('latin_1') for s in members]
-
-
-def findAndWrite(dirname, namespace, instanceof=None, nameRestriction=None):
-    members = findNamespaceMembers(namespace, instanceof, nameRestriction)
-    path = os.path.join(const101.tRoot, dirname, 'members.json')
-    tools101.makedirs(os.path.dirname(path))
-    json.dump(members, open(path, 'w'))
-
-for folderName in mappings.keys():
-    namespace = mappings[folderName]
-    if namespace == '':
-        findAndWrite(folderName, None, None,'@')
-    elif namespace == '101':
-        findAndWrite(folderName, None, {'p' : 'Namespace', 'n' : '101'})
-    else:
-        findAndWrite(folderName, namespace)
-
-findAndWrite('', 'Namespace', {'p': 'Namespace', 'n': 'Namespace'})
+if problems:
+    print 'The following problems occured:'
+    print json.dumps(problems, indent=4)
