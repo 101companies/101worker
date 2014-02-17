@@ -16,19 +16,17 @@ def testFile(sFilename, tFilename):
 def testEntry(entry):
 	meta = dict()
 	for m in entry["units"]:
-		if "locator" in m["metadata"]:
-			meta["locator"] = m["metadata"]["locator"]
 		if "geshi" in m["metadata"]:
 			meta["geshi"] = m["metadata"]["geshi"]
 	return meta
 
 # Per-file functionality
 def derive(info, rFilename, sFilename, tFilename1):
-   if "geshi" in info and "locator" in info:
+   if "geshi" in info:
       tFilename2 = tFilename1[:-len(".fragments.metrics.json")]+".fragments.tokens.json"
       extractorFile = tFilename1[:-len(".fragments.metrics.json")]+".extractor.json"
       print "Process fragments of " + rFilename + " for GeSHi code " + info["geshi"] + "."
-      command = "php ../metrics101meta/helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" \"" + info["geshi"] + "\" " + "system"+ " \"" + os.path.join(const101.sRoot, info["locator"]) + "\" \"" + extractorFile+ "\""
+      command = "php ../metrics101meta/helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" \"" + info["geshi"] + "\" \"" + "system"+ "\" \"" + extractorFile+ "\""
       print command
       (status, output) = tools101.run(command)
 
