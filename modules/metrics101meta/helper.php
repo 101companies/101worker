@@ -21,7 +21,7 @@ require_once 'megalib_leftover.php';
 $content = '';
 $result = array();
 
-if( count($argv) > 6 ) {   // This is the case in which metrics for fragments should be computed
+if( count($argv) > 5 ) {   // This is the case in which metrics for fragments should be computed
 
     $result['metrics'] = array();
     $result['tokens'] = array();
@@ -38,8 +38,9 @@ if( count($argv) > 6 ) {   // This is the case in which metrics for fragments sh
     $lines = file($ifilename);
 
     foreach ($subfragments as $fragment => $lineRange) {
-	$from = $lineRange->{'startLine'};
-        $to = $lineRange->{'endLine'};
+	print_r($lineRange);
+	$from = $lineRange['startLine'];
+        $to = $lineRange['endLine'];
 	$content = '';
 
 	for ($i = $from-1; $i < $to; $i++) {
@@ -98,7 +99,6 @@ function getFragments($fragments, $parentName, &$subfragments) {
 	if(array_key_exists('startLine', $fragment) && array_key_exists('endLine', $fragment)) {
            $lineRange = array('startLine' => $fragment['startLine'],
 			      'endLine' => $fragment['endLine']);
-
 	   $subfragments[$fragmentName] = $lineRange;
         }
 	if(array_key_exists('fragments', $fragment)) {
