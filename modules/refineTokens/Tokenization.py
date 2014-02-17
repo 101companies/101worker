@@ -109,23 +109,35 @@ def tokenizeToken(word):
 	for t1 in preProcessing:
 		firstStep = splitOnSeparators(t1)
 		for t2 in firstStep:
-			secondStep = splitOnUCLC(t2)
-			for t3 in secondStep:
-				result += refineUnknown(t3)
+			result += splitOnUCLC(t2)
+#			for t3 in secondStep:
+#				result += refineUnknown(t3)
 	return result
 
 
 #tokenize a whole .tokens file from 101companies
-def tokenizeFile(tokensFile, tokenClasses=None, endingToRemove='.tokens.json'):
-	if not tokenClasses: tokenClasses = ['de', 'me']
+def tokenizeFile(tokensFile, tokenClasses=None, fragments=False):
+    if not tokenClasses:
+        tokenClasses = ['de', 'me']
+
 	#tokenization of the content
-	tokens = json.load(open(tokensFile))
-	result = []
-	for token in tokens:
-		if token['class'] in tokenClasses: result += [ tokenizeToken(token['text']) ]
+    tokens = json.load(open(tokensFile))
 
-	#tokenization of the filename
-	head, tail = os.path.split(tokensFile)
-	result += [ tokenizeToken(tail.replace(endingToRemove, '')) ]
+    if fragments:
+        result = dict()
+        endingToRemove='.fragments.tokens.json'
+        for fragment, fTokens in tokens.iteritems():
+            fragmentResult = []
+            for token in fTokens:
+                if token['class'] in tokenClasses: fragmentResult += [ tokenizeToken(token['text']) ]
+            result[fragment] = fragmentResult
+    else:
+        result = []
+        endingToRemove='.tokens.json'
+        for token in tokens:
+		    if token['class'] in tokenClasses: result += [ tokenizeToken(token['text']) ]
+        #tokenization of the filename
+        head, tail = os.path.split(tokensFile)
+        result += [ tokenizeToken(tail.replace(endingToRemove, '')) ]
 
-	return result
+    return result
