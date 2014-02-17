@@ -38,7 +38,6 @@ if( count($argv) > 5 ) {   // This is the case in which metrics for fragments sh
     $lines = file($ifilename);
 
     foreach ($subfragments as $fragment => $lineRange) {
-	print_r($lineRange);
 	$from = $lineRange['startLine'];
         $to = $lineRange['endLine'];
 	$content = '';
