@@ -7,8 +7,7 @@ $ofilename1 = $argv[2];
 $ofilename2 = $argv[3];
 $language = $argv[4];
 $relevance = $argv[5];
-$locator = $argv[6];
-$factsfile = $argv[7];  // Maybe feed this file per standard in ?
+$factsfile = $argv[6];  // Maybe feed this file per standard in ?
 
 define('_MEGALIB','true');
 define('DEBUG',10);
@@ -100,7 +99,7 @@ function getFragments($fragments, $parentName, &$subfragments) {
            $lineRange = array('startLine' => $fragment['startLine'],
 			      'endLine' => $fragment['endLine']);
 
-	   $subfragments[$fragmentName] = $lineRange
+	   $subfragments[$fragmentName] = $lineRange;
         }
 	if(array_key_exists('fragments', $fragment)) {
            getFragments($fragment['fragments'], $fragmentName, $subfragments);
