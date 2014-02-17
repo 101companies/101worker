@@ -1,5 +1,6 @@
 run:
 	@./App.py
+	@./App.py -fragments
 
 debug:
 	@./App.py -debug
