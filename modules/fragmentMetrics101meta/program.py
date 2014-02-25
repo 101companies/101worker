@@ -61,4 +61,4 @@ dump = dict()
 dump["geshicodes"] = geshicodes
 dump["numbers"] = dict()
 dump["numbers"]["numberOfGeshicodes"] = len(geshicodes)
-tools101.afterMapMatches(dump, const101.metricsDump)
+tools101.afterMapMatches(dump, const101.fragmentMetricsDump)
