@@ -9,8 +9,8 @@ import tools101
 
 #used for the incrementally stuff
 def testFile(sFilename, tFilename):
-	#return tools101.build(sFilename, tFilename)
-    return True
+    return tools101.build(sFilename, tFilename)
+    # return True
 
 #accept files that have  a geshi code - but also add the relevance of a file with respect to the default relevance
 def testEntry(entry):
