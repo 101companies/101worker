@@ -84,7 +84,7 @@ dump["problems"] = problems
 dump["numbers"] = numbers
 
 # Main loop
-for root, dirs, files in os.walk(const101.sRoot):
+for root, dirs, files in os.walk(const101.sRoot, followlinks=True):
     for basename in fnmatch.filter(files, "*.101meta"):
         filename = os.path.join(root, basename)
         print filename

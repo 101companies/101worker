@@ -336,7 +336,7 @@ def matchAll(phase, suffix):
     pool = ThreadPool(4)
 
     print "Matching 101meta metadata on 101repo (phase \"" + str(phase)+ "\")."
-    for root, dirs, files in os.walk(os.path.join(const101.sRoot, "contributions")):
+    for root, dirs, files in os.walk(os.path.join(const101.sRoot, "contributions"), followlinks=True):
         if not root.startswith(os.path.join(const101.sRoot, ".git")+os.sep):
             for basename in files:
                 noFiles += 1

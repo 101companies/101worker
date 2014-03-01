@@ -10,7 +10,7 @@ def expand_data(data, tmp=True):
             folders = map(lambda folder: os.path.join(folder), folders)
             data['data'] = []
             for folder in folders:
-                for root, subFolders, files in os.walk(folder):
+                for root, subFolders, files in os.walk(folder, followlinks=True):
                     for file in files:
                         f = os.path.join(root,file)
                         data['data'].append(f)

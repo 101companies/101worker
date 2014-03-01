@@ -65,7 +65,7 @@ def run(debug = False, force = False, fragments=False):
 
 def reset():
 	print 'removing all ' + outputFileExt + ' files'
-	for (path, dirs, files) in os.walk(Helper.tRoot()):
+	for (path, dirs, files) in os.walk(Helper.tRoot(), followlinks=True):
 		for file in files:
 			if file.endswith(outputFileExt) or file.endswith(outputDebugFileExt):
 				os.remove(os.path.join(path, file))
