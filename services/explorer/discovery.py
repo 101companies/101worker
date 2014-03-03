@@ -114,15 +114,15 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     response = {
         'geshi'    : geshi,
         'fragments': [],
-        'github'   : DumpdataProvider.getGithub(namespace,member)
+#        'github'   : DumpdataProvider.getGithub(namespace,member)
     }
 
     if language:
         response['language'] = language
 
     #update github data
-    if response['github']:
-        response['github'] = os.path.join(response['github'], path, file)
+#    if response['github']:
+#        response['github'] = os.path.join(response['github'], path, file)
 
     #gather wiki data
     wikiNS = wikifyNamespace(namespace)
@@ -152,7 +152,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
         lines = DumpdataProvider.getFragment(filePath, fragment, locator)
         fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
         response['content'] = fragmentText
-        response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
+#        response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
         #except Exception as e:
         #    raise DiscoveryException('500 Internal Server Error', 'Fragment location failed:\n' + str(e))
 
@@ -177,15 +177,15 @@ def discoverMemberFile(namespace, member, path, file):
         'fragments' : [],
         'classifier': 'File',
         'name'      : file,
-        'github'    : DumpdataProvider.getGithub(namespace,member)
+#        'github'    : DumpdataProvider.getGithub(namespace,member)
     }
 
     if language:
         response['language'] = language
 
     #update github data
-    if response['github']:
-        response['github'] = os.path.join(response['github'], path, file)
+#    if response['github']:
+#        response['github'] = os.path.join(response['github'], path, file)
 
     #gather wiki data
     wikiNS = wikifyNamespace(namespace)
@@ -225,12 +225,12 @@ def discoverMemberPath(namespace, member, path):
         'files'     : [],
         'classifier': 'Folder',
         'name'      : os.path.basename(path),
-        'github'    : DumpdataProvider.getGithub(namespace, member)
+#        'github'    : DumpdataProvider.getGithub(namespace, member)
     }
 
     #update github data
-    if response['github']:
-        response['github'] = os.path.join(response['github'], path)
+#    if response['github']:
+#        response['github'] = os.path.join(response['github'], path)
 
     #gather wiki data
     wikiNS = wikifyNamespace(namespace)
@@ -271,7 +271,7 @@ def discoverNamespaceMember(namespace, member):
         'files'     : [],
         'classifier': 'Namespace member',
         'name'      : member,
-        'github'    : DumpdataProvider.getGithub(namespace, member)
+#        'github'    : DumpdataProvider.getGithub(namespace, member)
     }
 
     #gather wiki data
@@ -311,7 +311,7 @@ def discoverNamespace(namespace):
     if not wikifyNamespace(namespace) in DumpdataProvider.getMembers('') and not wikifyNamespace(namespace) == '':
         raise ResourceNotFoundException()
 
-    response = {'classifier': 'Namespace', 'name': namespace, 'members': [], 'github': DumpdataProvider.getGithub(namespace, '')}
+    response = {'classifier': 'Namespace', 'name': namespace, 'members': []}#, 'github': DumpdataProvider.getGithub(namespace, '')}
 
     #gather wiki data
     wikiNS = wikifyNamespace(namespace)
@@ -335,7 +335,7 @@ def discoverNamespace(namespace):
 
 
 def discoverAllNamespaces():
-    response = {'classifier': 'Namespace', 'name': 'Namespace', 'members': [], 'github': DumpdataProvider.getGithub('', '')}
+    response = {'classifier': 'Namespace', 'name': 'Namespace', 'members': []}#, 'github': DumpdataProvider.getGithub('', '')}
 
     #gather wiki data
     setWikidata(response,'Namespace','Namespace')
