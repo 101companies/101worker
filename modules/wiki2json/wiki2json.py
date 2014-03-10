@@ -53,6 +53,9 @@ for p in db.pages.find():
   else:
     res['internal_links'] = {}
 
+  if 'subresources' in p:
+    res['subresources'] = p['subresources']
+
   allPages.append(res)  
 
 with open('dump.json', 'w') as f:
