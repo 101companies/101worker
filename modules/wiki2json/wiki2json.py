@@ -54,7 +54,9 @@ for p in db.pages.find():
     res['internal_links'] = {}
 
   if 'subresources' in p:
-    res['subresources'] = p['subresources']
+    res['subresources'] = {}
+    for key in p['subresources']:
+        res['subresources'][key] = extract_properties(p['subresources'][key])
 
   allPages.append(res)  
 
