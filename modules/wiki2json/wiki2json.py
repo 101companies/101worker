@@ -58,6 +58,7 @@ for p in db.pages.find():
     for sr in p['subresources']:
         for key, value in sr.iteritems():
             res['subresources'][key] = extract_properties(value)
+            res['subresources'][key]['internal_links'] = value
 
   allPages.append(res)  
 
