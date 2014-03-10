@@ -55,8 +55,9 @@ for p in db.pages.find():
 
   if 'subresources' in p:
     res['subresources'] = {}
-    for key in p['subresources']:
-        res['subresources'][key] = extract_properties(p['subresources'][key])
+    for sr in p['subresources']:
+        for key, value in sr.iteritems():
+            res['subresources'][key] = extract_properties(value)
 
   allPages.append(res)  
 
