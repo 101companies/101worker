@@ -163,15 +163,15 @@ def matchFile(phase, dirname, basename, rule):
                 return None
         else:
         # this branch is will replace the upper branch as soon as all shell script import matchers (javaImport.sh, dotNETImport.sh) are replaced
-            mod_name,file_ext = os.path.splitext(os.path.split(predicatePath)[-1])
+            moduleName, file_ext = os.path.splitext(os.path.split(predicatePath)[-1])
 
             if file_ext.lower() == '.py':
-                py_mod = imp.load_source(mod_name, predicatePath)
+                predicateModule = imp.load_source(moduleName, predicatePath)
             elif file_ext.lower() == '.pyc':
-                py_mod = imp.load_compiled(mod_name, predicatePath)
+                predicateModule = imp.load_compiled(moduleName, predicatePath)
 
             try:
-                status = py_mod.run(args=args,filePath=os.path.join(const101.sRoot, filename))
+                status = predicateModule.run(args=args,filePath=os.path.join(const101.sRoot, filename))
             except:
                 return None
 
