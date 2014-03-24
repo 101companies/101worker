@@ -3,6 +3,8 @@ import sys
 import simplejson as json
 import commands
 import re
+import imp
+
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
@@ -138,21 +140,45 @@ def matchFile(phase, dirname, basename, rule):
         predicates.add(predicate)
         global noPredicateConstraints
         noPredicateConstraints += 1
+        global noPredicateConstraintsOk
+
         if "args" in rule:
             args = rule["args"]
             if not isinstance(args, list): args = [ args ]
         else:
             args = []
-        cmd = os.path.join(const101.sRoot, predicate)
-        for arg in args:
-            cmd += " \"" + arg + "\""
-        cmd += " \"" + os.path.join(const101.sRoot, filename) + "\""
-        (status, output) = commands.getstatusoutput(cmd)
-        if status == 0:
-            global noPredicateConstraintsOk
-            noPredicateConstraintsOk += 1
+
+        predicatePath = os.path.join(const101.sRoot, predicate)
+
+        # this branch is only needed as long as the shell script import matchers (javaImport.sh, dotNETImport.sh) aren't replaced yet
+        if predicate.endswith(".sh"):
+            cmd = predicatePath
+            for arg in args:
+                cmd += " \"" + arg + "\""
+            cmd += " \"" + os.path.join(const101.sRoot, filename) + "\""
+            (status, output) = commands.getstatusoutput(cmd)
+            if status == 0:
+                noPredicateConstraintsOk += 1
+            else:
+                return None
         else:
-            return None
+        # this branch is will replace the upper branch as soon as all shell script import matchers (javaImport.sh, dotNETImport.sh) are replaced
+            mod_name,file_ext = os.path.splitext(os.path.split(predicatePath)[-1])
+
+            if file_ext.lower() == '.py':
+                py_mod = imp.load_source(mod_name, predicatePath)
+            elif file_ext.lower() == '.pyc':
+                py_mod = imp.load_compiled(mod_name, predicatePath)
+
+            try:
+                status = py_mod.run(args=args,filePath=os.path.join(const101.sRoot, filename))
+            except:
+                return None
+
+            if status==True:
+                noPredicateConstraintsOk += 1
+            else:
+                return None
 
     #
     # Locate fragment, if present.
