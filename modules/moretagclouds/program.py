@@ -8,6 +8,8 @@ from jinja2 import *
 # Load 101wiki into memory
 
 wiki = json.loads(open(sys.argv[1], 'r').read())['wiki']
+#wiki = json.loads(open('wiki.json', 'r').read())['wiki']
+
 
 # Write .json and .html file -- the latter as a tag cloud
 def writeFiles(counts, label, prefix):
