@@ -55,8 +55,8 @@ def writeFiles(counts, label, prefix):
 
 pages = wiki['pages']
 
-contributions = filter(lambda p: "Contribution" == p['page'].get('page', {}).get('p', ''), pages)
-contributions = [p['page'] for p in contributions ]
+contributions = filter(lambda p: "Contribution" == p.get('p', ''), pages)
+#contributions = [p['page'] for p in contributions ]
 
 uses = [p.get('uses', []) for p in contributions]
 uses = [p for use in uses for p in use]
