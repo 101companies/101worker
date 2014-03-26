@@ -98,6 +98,8 @@ developedBy = reduce(lambda a, b: a+b, developedBy)
 developedBy = filter(lambda o: o['p'] == 'Contributor', developedBy)
 developedBy = map(lambda o: o['n'], developedBy)
 
+developedBy = filter(lambda n: n is not None, developedBy)
+
 developedBy = [d.replace('_', ' ') for d in developedBy]
 #developedBy = [ d.decode('utf8') for d in developedBy]
 
