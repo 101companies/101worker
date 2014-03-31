@@ -125,7 +125,7 @@ def queryIndex(resource, index, model, freqDict, names, stopWords=None, resultCo
     return result
 
 def createFileDump(suffix):
-    stopWords = ["impport", "java", "org", "softlang"]
+    stopWords = ["import", "java", "org", "softlang"]
     names, texts = createFileDocuments(suffix, stopWords)
     index, model, freqDict = generateIndex(texts)
     simDump = dict()
@@ -142,7 +142,7 @@ def createFileDump(suffix):
 
 
 def createFragmentDump(suffix):
-    stopWords = ["impport", "java", "org", "softlang"]
+    stopWords = ["import", "java", "org", "softlang"]
     names, texts = createFragmentDocuments(suffix, stopWords)
     index, model, freqDict = generateIndex(texts)
     simDump = dict()
@@ -168,7 +168,7 @@ def contrDetectionSamples():
     testResource = const101.tRoot+"/contributions/jsf/jsf/src/java/company/classes/Department.java.refinedTokens.json"
     #testResource = const101.tRoot+"/contributions/jgralab/src/de/uni_koblenz/oneoonecompanies/CompanyServices.java.refinedTokens.json"
     #testResource = const101.tRoot+"/contributions/jdbc/org/softlang/features/Cut.java.refinedTokens.json"
-    stopWords = ["impport", "java", "org", "softlang"]
+    stopWords = ["import", "java", "org", "softlang"]
     names, texts = createFileDocuments(".java", stopWords)
     index, model, freqDict = generateIndex(texts)
     resourceContent = json.load(open(testResource))
@@ -193,7 +193,7 @@ def fragmentDetectionSamples():
     tokenFile = json.load(open(os.path.join(filename+suffix+".fragments.refinedTokens.json")))
     resourceContent = tokenFile[fragmentname]
 
-    stopWords = ["impport", "java", "org", "softlang"]
+    stopWords = ["import", "java", "org", "softlang"]
     names, texts = createFragmentDocuments(suffix, stopWords)
     index, model, freqDict = generateIndex(texts)
     queryResult = queryIndex(resourceContent, index, model, freqDict, names, stopWords=stopWords, resultCount=11)
