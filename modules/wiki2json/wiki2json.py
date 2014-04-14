@@ -25,8 +25,8 @@ def handle_page_name(name, props):
   #print name
   n = name.split(':')
   if len(n) == 1:
-    props['p'] = n[0]
-    props['n'] = None
+    props['p'] = None
+    props['n'] = n[0]
   else:
     props['p'] = n[0]
     props['n'] = n[1]
