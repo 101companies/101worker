@@ -29,6 +29,7 @@ ignored_keys_in_subresources = ['internal_links']
 ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'linksTo', 'isA', 'identifies', 'subresources']
 
 
+
 def clear_sesame_graph(uri):
     endpoint = os.path.join(uri, 'statements')
     data = "update=CLEAR ALL"
