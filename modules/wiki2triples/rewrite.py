@@ -127,6 +127,8 @@ def make_general_resource(page, graph):
 
     # Add types
     graph.add( (uri, rdf['type'], encodeOntology(page['p'] + 'Page')) )
+    graph.add( (uri, rdf['type'], encodeOntology(page['p'])) )
+
     for type in page.get('instanceOf', []):
         target_uri = type['n']
         graph.add( (uri, rdf['type'], encodeOntology(target_uri)) )
