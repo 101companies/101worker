@@ -52,7 +52,7 @@ def collect(wiki):
 
 
 def encode(s):
-    return urllib.quote(s.replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue'))
+    return urllib.quote(s.replace(unichr(252), 'ue').replace(unichr(228), 'ae').replace(unichr(246), 'oe'))
 
 
 def encodeOntology(s):
