@@ -165,6 +165,7 @@ def main():
 
     print 'Adding data from wiki pages'
     for page in collect(wiki):
+        print "dealing with page {}".format(page)
         mapping_func = mapping_rules[page['p']]
         mapping_func(page, graph)
 
