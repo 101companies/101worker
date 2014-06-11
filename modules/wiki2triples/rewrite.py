@@ -24,9 +24,11 @@ rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
 
 # Keys to be ignored for general mapping - they might however be processed in a more specific part of the code
-ignored_keys_in_contributions = ['p', 'n', 'instanceOf', 'internal_links', 'headline', 'identifies', 'subresources', 'linksTo']
+ignored_keys_in_contributions = ['p', 'n', 'instanceOf', 'internal_links', 'headline', 'identifies', 'subresources',
+                                 'similarTo', 'linksTo', 'sameAs']
 ignored_keys_in_subresources = ['internal_links']
-ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'linksTo', 'isA', 'identifies', 'subresources']
+ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'linksTo', 'isA', 'identifies',
+                        'subresources', 'similarTo', 'sameAs']
 
 
 
@@ -97,6 +99,16 @@ def make_contribution_resource(page, graph):
     graph.add( (uri, rdf['type'], encodeOntology('Contribution')) )
     graph.add( (uri, rdf['type'], encodeOntology('ContributionPage')) )
 
+    # Convert linksTo
+    for link in page.get('linksTo', []):
+        graph.add( (uri, encodeOntology('linksTo'), URIRef(urllib.quote(link))) )
+
+    for link in page.get('similarTo', []):
+        graph.add( (uri, encodeOntology('similarTo'), URIRef(urllib.quote(link))) )
+
+    for link in page.get('sameAs', []):
+        graph.add( (uri, encodeOntology('sameAs'), URIRef(urllib.quote(link))) )
+
     # Add remaining predicates
     for key in filter(lambda x: x not in ignored_keys_in_contributions, page):
         predicate = encodeOntology(key)
@@ -137,6 +149,12 @@ def make_general_resource(page, graph):
     # Convert linksTo
     for link in page.get('linksTo', []):
         graph.add( (uri, encodeOntology('linksTo'), URIRef(urllib.quote(link))) )
+
+    for link in page.get('similarTo', []):
+        graph.add( (uri, encodeOntology('similarTo'), URIRef(urllib.quote(link))) )
+
+    for link in page.get('sameAs', []):
+        graph.add( (uri, encodeOntology('sameAs'), URIRef(urllib.quote(link))) )
 
     # Add remaining predicates
     for key in filter(lambda x: x not in ignored_keys_general, page):
