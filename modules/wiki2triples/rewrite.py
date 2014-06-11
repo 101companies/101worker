@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-
+# -*- coding: utf-8 -*-
 __author__ = 'Martin Leinberger'
 
 import os
@@ -10,7 +10,6 @@ from rdflib import URIRef
 from rdfalchemy.sparql.sesame2 import SesameGraph
 import urllib
 import httplib2
-
 sys.path.append('../../libraries')
 sys.path.append('../../libraries/101meta')
 
