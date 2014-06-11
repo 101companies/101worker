@@ -41,10 +41,13 @@ def clear_sesame_graph(uri):
 
 def collect(wiki):
     collection = []
-    interesting_pages = json.load(open('pages.json', 'r'))
+    namespace_of_interest = json.load(open('interesting_namespaces.json', 'r'))
+    blacklist = json.load(open('pages.json', 'r'))
+    #interesting_pages = json.load(open('pages.json', 'r'))
     for page in wiki:
-        name = page['p'] + ":" + page['n'].replace(' ', '_')
-        if name in interesting_pages:
+        if page['p'] in namespace_of_interest and not (page['p'] + ":" + page['n'].replace(' ', '_')) in blacklist:
+        # name = page['p'] + ":" + page['n'].replace(' ', '_')
+        # if name in interesting_pages:
             collection.append(page)
     return collection
 
