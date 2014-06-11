@@ -182,7 +182,8 @@ def main():
         'Technology': make_general_resource,
         'Language': make_general_resource,
         'Concept': make_general_resource,
-        'Feature': make_general_resource
+        'Feature': make_general_resource,
+        'Contributor': make_general_resource,
     }
 
     # Starting to add stuff
@@ -192,8 +193,11 @@ def main():
     print 'Adding data from wiki pages'
     for page in collect(wiki):
         print "dealing with page {}".format(page)
-        mapping_func = mapping_rules[page['p']]
-        mapping_func(page, graph)
+        if page['p'] in mapping_rules:
+            mapping_func = mapping_rules[page['p']]
+            mapping_func(page, graph)
+        else:
+            make_general_resource(page, graph)
 
     #print graph.serialize(format='n3')
 
