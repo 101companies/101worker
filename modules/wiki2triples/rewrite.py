@@ -45,10 +45,11 @@ def collect(wiki):
     blacklist = json.load(open('pages.json', 'r'))
     #interesting_pages = json.load(open('pages.json', 'r'))
     for page in wiki:
-        if page['p'] in namespace_of_interest and not (page['p'] + ":" + page['n'].replace(' ', '_')) in blacklist:
+        collection.append(page)
+        #if page['p'] in namespace_of_interest and not (page['p'] + ":" + page['n'].replace(' ', '_')) in blacklist:
         # name = page['p'] + ":" + page['n'].replace(' ', '_')
         # if name in interesting_pages:
-            collection.append(page)
+        #    collection.append(page)
     return collection
 
 
