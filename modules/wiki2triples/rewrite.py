@@ -24,7 +24,7 @@ rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
 
 # Keys to be ignored for general mapping - they might however be processed in a more specific part of the code
-ignored_keys_in_contributions = ['p', 'n', 'instanceOf', 'internal_links', 'headline', 'identifies', 'subresources']
+ignored_keys_in_contributions = ['p', 'n', 'instanceOf', 'internal_links', 'headline', 'identifies', 'subresources', 'linksTo']
 ignored_keys_in_subresources = ['internal_links']
 ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'linksTo', 'isA', 'identifies', 'subresources']
 
