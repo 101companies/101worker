@@ -52,7 +52,12 @@ def collect(wiki):
 
 
 def encode(s):
-    return urllib.quote(s.replace(unichr(252), 'ue').replace(unichr(228), 'ae').replace(unichr(246), 'oe'))
+    return urllib.quote(s.replace(unichr(252), 'ue').replace(unichr(228), 'ae').replace(unichr(246), 'oe')
+                        .replace(unichr(232), 'e').replace(unichr(233), 'e').replace(unichr(234), 'e')
+                        .replace(unichr(244), 'o').replace(unichr(249), 'u').replace(unichr(251), 'u')
+                        .replace(unichr(252), 'o').replace(unichr(225), 'a').replace(unichr(237, 'i'))
+                        .replace(unichr(241), 'n').replace(unichr(243), 'o').replace(unichr(250), 'u')
+                        .replace(unichr(252), 'u'))
 
 
 def encodeOntology(s):
