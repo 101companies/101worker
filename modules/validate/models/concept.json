@@ -1,0 +1,52 @@
+ {
+  "@context": {
+     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+     "owl": "http://www.w3.org/2002/07/owl#",
+     "onto": "http://101companies.org/ontology#",
+     "res": "http://101companies.org/resources#"
+    },
+
+  "@id": "onto:Concept",
+  "@type": "owl:Class",
+   "properties": [
+       {
+           "property": "partOf",
+           "range": "onto:Concept",
+           "minCardinality": "0"
+       },
+       {
+           "property": "mentions",
+           "range": "onto:Concept" ,
+           "minCardinality": "0"
+       },
+       {
+           "property": "sameAs",
+           "range": "rdfs:Literal",
+           "minCardinality": "0"
+       },
+       {
+           "property": "similarTo",
+           "range": "rdfs:Literal",
+           "minCardinality": "0"
+       },
+       {
+           "property": "linksTo",
+           "range": "rdfs:Literal",
+           "minCardinality": "0"
+       },
+       {
+           "property": "memberOf",
+           "range": "onto:Vocabulary",
+           "minCardinality": "0"
+       },
+       {
+           "property": "dependsOn",
+           "range": "onto:Concept",
+           "minCardinality": "0"
+       }
+   ]
+
+ }
+
+

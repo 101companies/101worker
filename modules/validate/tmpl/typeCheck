@@ -1,0 +1,12 @@
+SELECT * WHERE {
+  {
+   ?x rdf:type onto:{{ontoClassX}} .
+   ?x onto:{{relationship}} ?y .
+  }
+  MINUS
+  {
+   ?x rdf:type onto:{{ontoClassX}} .
+   ?x onto:{{relationship}} ?y.
+   ?y rdf:type onto:{{ontoClassY}} .
+  }
+}

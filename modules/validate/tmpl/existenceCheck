@@ -1,0 +1,4 @@
+SELECT DISTINCT ?x WHERE {
+  ?x rdf:type onto:{{ ontoClass }} .
+  { FILTER NOT EXISTS { ?x onto:{{ relationship }} ?y . } }
+}
