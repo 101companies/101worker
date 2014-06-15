@@ -1,7 +1,8 @@
 include ../Makefile.vars
 output = ${ontoDir}
 
-run: cp models ${output}
+run:
+    cp models ${output}
 
 # Remove local temporary files, if any
 clean:
