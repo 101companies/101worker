@@ -1,6 +1,9 @@
 include ../Makefile.vars
 output = ${ontoDir}
 
+all:
+	make run
+
 run:
     cp models ${output}
 
