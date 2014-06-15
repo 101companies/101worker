@@ -5,7 +5,7 @@ all:
 	make run
 
 run:
-    cp models ${output}
+	cp models ${output}
 
 # Remove local temporary files, if any
 clean:
