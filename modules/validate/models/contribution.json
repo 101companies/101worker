@@ -1,0 +1,53 @@
+ {
+  "@context": {
+     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+     "owl": "http://www.w3.org/2002/07/owl#",
+     "onto": "http://101companies.org/ontology#",
+     "res": "http://101companies.org/resources#"
+    },
+  "@id": "onto:Contribution",
+  "@type": "onto:Concept",
+  "properties": [
+      {
+          "property": "uses",
+          "someValuesFrom": "['onto:Language', 'onto:Technology']",
+          "minCardinality": "1"
+      },
+      {
+          "property": "implementedBy",
+          "range": "onto:Contributor",
+          "minCardinality": "1"
+      },
+      {
+          "property": "reviewedBy",
+          "range": "onto:Contributor",
+          "minCardinality": "0"
+      },
+      {
+          "property": "implements",
+          "range": "onto:Feature",
+          "minCardinality": "1"
+      },
+      {
+          "property": "memberOf",
+          "range": "onto:Theme",
+          "minCardinality": "0"
+      },
+      {
+          "property": "uses",
+          "range": "onto:Concept",
+          "minCardinality": "0"
+      },
+      {
+          "property": "moreComplexThan",
+          "range": "onto:Contribution",
+          "minCardinality": "0"
+      },
+      {
+          "property": "varies",
+          "range": "onto:Contribution",
+          "minCardinality": "0"
+      }
+  ]
+}
