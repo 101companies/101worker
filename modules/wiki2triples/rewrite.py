@@ -90,6 +90,7 @@ def make_ontology_classes(graph):
         graph.add( (page, rdf['type'], rdfs['Class']) )
         graph.add( (page, rdfs['subClassOf'], wikipage))
 
+
 def make_contribution_resource(page, graph):
     # Make unique name for this contribution
     uri = encodeResource(page['n'])
@@ -127,11 +128,13 @@ def make_general_resource(page, graph):
 
     # Add types
     graph.add( (uri, rdf['type'], encodeOntology(page['p'] + 'Page')) )
-    graph.add( (uri, rdf['type'], encodeOntology(page['p'])) )
+    if not page['p'] == 'Concept':
+        graph.add( (uri, rdf['type'], encodeOntology(page['p'])) )
 
     for type in page.get('instanceOf', []):
         target_uri = type['n']
         graph.add( (uri, rdf['type'], encodeOntology(target_uri)) )
+
 
     # Add subclass relationships
     for isA in page.get('isA', []):
