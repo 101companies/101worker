@@ -187,9 +187,10 @@ def make_general_resource(page, graph):
             graph.add((uri, predicate, encodeResource(target_uri)))
     l = ""
 
+    # Error check
     for key in page:
-    if not key in allowed_relations[page['p'].lower()]:
-        erroneous_pages.append({'page':page[p]+':'+page['n'], 'invalid relation':key})
+        if not key in allowed_relations[page['p'].lower()]:
+            erroneous_pages.append({'page':page[p]+':'+page['n'], 'invalid relation':key})
 
 
 
