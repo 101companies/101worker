@@ -232,5 +232,5 @@ def main():
 if __name__ == '__main__':
     print 'Starting process'
     main()
-    print 'Finished... Error list:\n'
-    print json.dump(erroneous_pages, open('./erroneous_pages.json'))
+    print 'Finished... '
+    json.dump(erroneous_pages, open('./erroneous_pages.json', 'w'))
