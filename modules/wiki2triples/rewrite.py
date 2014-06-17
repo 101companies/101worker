@@ -30,6 +30,19 @@ ignored_keys_in_subresources = ['internal_links']
 ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'linksTo', 'isA', 'identifies',
                         'subresources', 'similarTo', 'sameAs', 'relatesTo']
 
+# Hacking in the allowed relations real quick:
+
+
+models = ["concept", "contribution", "contributor", "feature", "language",
+          "technology", "vocabulary"]
+allowed_relations = {}
+erroneous_pages = []
+
+for model in models:
+    allowed_relations[model] = []
+    x = json.load(urllib.urlopen("http://worker.101companies.org/data/onto/models/"+model+".json"))
+    for property in x.get('properties',[]):
+        allowed_relations[model].append(property['property'])
 
 
 def clear_sesame_graph(uri):
@@ -117,6 +130,11 @@ def make_contribution_resource(page, graph):
             target_uri = encodeResource(p['n'])
             graph.add((uri, predicate, target_uri))
 
+    # Error check
+    for key in page:
+        if not key in allowed_relations['contribution']:
+            erroneous_pages.append({'page':page[p]+':'+page['n'], 'invalid relation':key})
+
 
 def make_general_resource(page, graph):
     # Make unique name for this resource
@@ -167,6 +185,12 @@ def make_general_resource(page, graph):
         for p in page[key]:
             target_uri = p['n']
             graph.add((uri, predicate, encodeResource(target_uri)))
+    l = ""
+
+    for key in page:
+    if not key in allowed_relations[page['p'].lower()]:
+        erroneous_pages.append({'page':page[p]+':'+page['n'], 'invalid relation':key})
+
 
 
 def main():
@@ -195,7 +219,7 @@ def main():
 
     print 'Adding data from wiki pages'
     for page in collect(wiki):
-        print "dealing with page {}".format(page)
+        #print "dealing with page {}".format(page)
         if page['p'] in mapping_rules:
             mapping_func = mapping_rules[page['p']]
             mapping_func(page, graph)
@@ -208,4 +232,5 @@ def main():
 if __name__ == '__main__':
     print 'Starting process'
     main()
-    print 'Finished'
+    print 'Finished... Error list:\n'
+    print json.dumps(erroneous_pages)
