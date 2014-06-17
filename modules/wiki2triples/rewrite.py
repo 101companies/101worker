@@ -133,7 +133,7 @@ def make_contribution_resource(page, graph):
     # Error check
     for key in page:
         if not key in allowed_relations['contribution']:
-            erroneous_pages.append({'page':page[p]+':'+page['n'], 'invalid relation':key})
+            erroneous_pages.append({'page':(page['p']+':'+page['n']), 'invalid relation':key})
 
 
 def make_general_resource(page, graph):
@@ -190,7 +190,7 @@ def make_general_resource(page, graph):
     # Error check
     for key in page:
         if not key in allowed_relations[page['p'].lower()]:
-            erroneous_pages.append({'page':page[p]+':'+page['n'], 'invalid relation':key})
+            erroneous_pages.append({'page':(page['p']+':'+page['n']), 'invalid relation':key})
 
 
 
