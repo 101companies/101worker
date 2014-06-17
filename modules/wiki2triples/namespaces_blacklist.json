@@ -3,5 +3,7 @@
     "Namespace",
     "Course",
     "Script",
-    "Tag"
+    "Tag",
+    "Service",
+    "Module"
 ]
