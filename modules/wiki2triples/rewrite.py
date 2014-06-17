@@ -133,7 +133,7 @@ def make_contribution_resource(page, graph):
     # Error check
     for key in page:
         if not key in allowed_relations['contribution']:
-            erroneous_pages.append({'page':(page['p']+':'+page['n']), 'invalid relation':key})
+            erroneous_pages.append({'page': (page['p']+':'+page['n']), 'invalid relation': key})
 
 
 def make_general_resource(page, graph):
@@ -185,12 +185,11 @@ def make_general_resource(page, graph):
         for p in page[key]:
             target_uri = p['n']
             graph.add((uri, predicate, encodeResource(target_uri)))
-    l = ""
 
     # Error check
     for key in page:
         if not key in allowed_relations[page['p'].lower()]:
-            erroneous_pages.append({'page':(page['p']+':'+page['n']), 'invalid relation':key})
+            erroneous_pages.append({'page': (page['p']+':'+page['n']), 'invalid relation': key})
 
 
 
@@ -234,4 +233,4 @@ if __name__ == '__main__':
     print 'Starting process'
     main()
     print 'Finished... Error list:\n'
-    print json.dumps(erroneous_pages)
+    print json.dump(erroneous_pages, open('./erroneous_pages.json'))
