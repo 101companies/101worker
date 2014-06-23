@@ -29,6 +29,7 @@ ignored_keys_in_contributions = ['p', 'n', 'instanceOf', 'internal_links', 'head
 ignored_keys_in_subresources = ['internal_links']
 ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'linksTo', 'isA', 'identifies',
                         'subresources', 'similarTo', 'sameAs', 'relatesTo']
+ignored_keys_for_validation  = ['p', 'n', 'headline', 'internal_links', 'subresources']
 
 # Hacking in the allowed relations real quick:
 
@@ -131,7 +132,7 @@ def make_contribution_resource(page, graph):
             graph.add((uri, predicate, target_uri))
 
     # Error check
-    for key in page:
+    for key in filter(lambda x: x not in ignored_keys_for_validation, page):
         if not key in allowed_relations['contribution']:
             erroneous_pages.append({'page': (page['p']+':'+page['n']), 'invalid relation': key})
 
@@ -187,7 +188,7 @@ def make_general_resource(page, graph):
             graph.add((uri, predicate, encodeResource(target_uri)))
 
     # Error check
-    for key in page:
+    for key in filter(lambda x: x not in ignored_keys_for_validation, page):
         if not key in allowed_relations[page['p'].lower()]:
             erroneous_pages.append({'page': (page['p']+':'+page['n']), 'invalid relation': key})
 
