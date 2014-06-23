@@ -91,15 +91,18 @@ def make_ontology_classes(graph):
     wikipage = encodeOntology('WikiPage')
     graph.add( (wikipage, rdf['type'], rdfs['Class']) )
     # TODO What's the point of this
-    one_oh_one_thing = encodeOntology('OneOhOneThing')
-    graph.add( (one_oh_one_thing, rdf['type'], rdfs['Class']) )
+    concept = encodeOntology('Concept')
+    conceptPage = encodeOntology('ConceptPage')
+    graph.add( (concept, rdf['type'], rdfs['Class']) )
+    graph.add( (conceptPage, rdf['type'], rdfs['Class']) )
+    graph.add( (conceptPage, rdfs['subClassOf'], wikipage))
 
-    for ns in ['Contribution', 'Technology', 'Language', 'Concept', 'Feature']:
+    for ns in ['Contribution', 'Technology', 'Language', 'Feature']:
         thing = encodeOntology(ns)
         page = encodeOntology(ns+'Page')
 
         graph.add( (thing, rdf['type'], rdfs['Class']) )
-        graph.add( (thing, rdfs['subClassOf'], one_oh_one_thing))
+        graph.add( (thing, rdfs['subClassOf'], concept))
 
         graph.add( (page, rdf['type'], rdfs['Class']) )
         graph.add( (page, rdfs['subClassOf'], wikipage))
