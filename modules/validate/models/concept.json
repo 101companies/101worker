@@ -11,37 +11,42 @@
   "@type": "owl:Class",
    "properties": [
        {
-           "property": "partOf",
+         "property": "onto:instanceOf",
+         "range": "onto:Concept",
+         "minCardinality": "0"
+       },
+       {
+           "property": "onto:partOf",
            "range": "onto:Concept",
            "minCardinality": "0"
        },
        {
-           "property": "mentions",
+           "property": "onto:mentions",
            "range": "onto:Concept" ,
            "minCardinality": "0"
        },
        {
-           "property": "sameAs",
+           "property": "onto:sameAs",
            "range": "rdfs:Literal",
            "minCardinality": "0"
        },
        {
-           "property": "similarTo",
+           "property": "onto:similarTo",
            "range": "rdfs:Literal",
            "minCardinality": "0"
        },
        {
-           "property": "linksTo",
+           "property": "onto:linksTo",
            "range": "rdfs:Literal",
            "minCardinality": "0"
        },
        {
-           "property": "memberOf",
+           "property": "onto:memberOf",
            "range": "onto:Vocabulary",
            "minCardinality": "0"
        },
        {
-           "property": "dependsOn",
+           "property": "onto:dependsOn",
            "range": "onto:Concept",
            "minCardinality": "0"
        }

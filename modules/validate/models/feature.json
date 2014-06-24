@@ -10,12 +10,12 @@
     "@type": "onto:Concept",
     "properties": [
         {
-            "property": "varies",
+            "property": "onto:varies",
             "range": "onto:Feature",
             "minCardinality": "0"
         },
         {
-            "property": "implies",
+            "property": "onto:implies",
             "range": "onto:Feature",
             "minCardinality": "0"
         }

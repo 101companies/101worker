@@ -10,17 +10,17 @@
     "@type": "onto:Concept",
     "properties": [
         {
-            "property": "uses",
+            "property": "onto:uses",
             "range": "onto:Technology",
             "minCardinality": "0"
         },
         {
-            "property": "supports",
+            "property": "onto:supports",
             "range": "onto:Protocol",
             "minCardinality": "0"
         },
         {
-            "property": "implements",
+            "property": "onto:implements",
             "range": "onto:Specification",
             "minCardinality": "0"
         }

@@ -10,42 +10,42 @@
   "@type": "onto:Concept",
   "properties": [
       {
-          "property": "uses",
+          "property": "onto:uses",
           "someValuesFrom": "['onto:Language', 'onto:Technology']",
           "minCardinality": "1"
       },
       {
-          "property": "implementedBy",
+          "property": "onto:developedBy",
           "range": "onto:Contributor",
           "minCardinality": "1"
       },
       {
-          "property": "reviewedBy",
+          "property": "onto:reviewedBy",
           "range": "onto:Contributor",
           "minCardinality": "0"
       },
       {
-          "property": "implements",
+          "property": "onto:implements",
           "range": "onto:Feature",
           "minCardinality": "1"
       },
       {
-          "property": "memberOf",
+          "property": "onto:memberOf",
           "range": "onto:Theme",
           "minCardinality": "0"
       },
       {
-          "property": "uses",
+          "property": "onto:uses",
           "range": "onto:Concept",
           "minCardinality": "0"
       },
       {
-          "property": "moreComplexThan",
+          "property": "onto:moreComplexThan",
           "range": "onto:Contribution",
           "minCardinality": "0"
       },
       {
-          "property": "varies",
+          "property": "onto:varies",
           "range": "onto:Contribution",
           "minCardinality": "0"
       }
