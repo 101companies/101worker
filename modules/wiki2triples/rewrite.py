@@ -29,7 +29,7 @@ ignored_keys_in_contributions = ['p', 'n', 'instanceOf', 'internal_links', 'head
 ignored_keys_in_subresources = ['internal_links']
 ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'linksTo', 'isA', 'identifies',
                         'subresources', 'similarTo', 'sameAs', 'relatesTo']
-ignored_keys_for_validation  = ['p', 'n', 'headline', 'internal_links', 'subresources']
+ignored_keys_for_validation  = ['p', 'n', 'headline', 'internal_links', 'subresources', 'isA']
 
 # Hacking in the allowed relations real quick:
 
@@ -42,8 +42,12 @@ erroneous_pages = []
 for model in models:
     allowed_relations[model] = []
     x = json.load(urllib.urlopen("http://worker.101companies.org/data/onto/models/"+model+".json"))
-    for property in x.get('properties',[]):
+    for property in x.get('properties', []):
         allowed_relations[model].append(property['property'])
+
+    # Other models inherit from the concept model
+    for y in filter(lambda x: x not in ['concept'], allowed_relations.keys()):
+        allowed_relations[y] += (allowed_relations['concept'])
 
 
 def clear_sesame_graph(uri):
