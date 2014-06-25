@@ -1,4 +1,4 @@
 SELECT DISTINCT ?x (COUNT(?y) AS ?count) WHERE {
-  ?x rdf:type onto:{{ontoClass}} .
-  ?x onto:{{relationship}} ?y .
+  ?x rdf:type {{ontoClass}} .
+  ?x {{relationship}} ?y .
 } GROUP BY ?x

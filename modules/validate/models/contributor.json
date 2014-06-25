@@ -10,7 +10,7 @@
     "@type": "onto:Concept",
     "properties": [
         {
-            "property": "profile",
+            "property": "onto:profile",
             "range": "rdfs:Literal",
             "minCardinality": "1"
         }
