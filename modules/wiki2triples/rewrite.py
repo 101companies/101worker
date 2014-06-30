@@ -79,7 +79,7 @@ def encode(s):
                         .replace(unichr(244), 'o').replace(unichr(249), 'u').replace(unichr(251), 'u')
                         .replace(unichr(252), 'o').replace(unichr(225), 'a').replace(unichr(237), 'i')
                         .replace(unichr(241), 'n').replace(unichr(243), 'o').replace(unichr(250), 'u')
-                        .replace(unichr(252), 'u'))
+                        .replace(unichr(252), 'u').replace(' ', '_'))
 
 
 def encodeOntology(s):
