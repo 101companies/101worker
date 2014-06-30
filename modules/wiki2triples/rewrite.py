@@ -94,9 +94,10 @@ def make_ontology_classes(graph):
     # Add highest level classes
     wikipage = encodeOntology('WikiPage')
     graph.add( (wikipage, rdf['type'], rdfs['Class']) )
-    # TODO What's the point of this
+
     concept = encodeOntology('Concept')
     conceptPage = encodeOntology('ConceptPage')
+
     graph.add( (concept, rdf['type'], rdfs['Class']) )
     graph.add( (conceptPage, rdf['type'], rdfs['Class']) )
     graph.add( (conceptPage, rdfs['subClassOf'], wikipage))
