@@ -145,6 +145,7 @@ def make_contribution_resource(page, graph):
 
 
 def make_general_resource(page, graph):
+    print page['n']
     # Make unique name for this resource
     if 'isA' in page:
         uri = encodeOntology( page['n'] )
