@@ -138,6 +138,13 @@ def make_contribution_resource(page, graph):
             target_uri = encodeResource(p['n'])
             graph.add((uri, predicate, target_uri))
 
+    # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
+    # Loop over internal links for mentions statements
+    for internal_link in page.get('internal_links', []):
+        if not '::' in internal_link:
+            p, n = internal_link.split(':')[0], internal_link.split(':')[1]
+            graph.add( (uri, encodeOntology('mentions'), encodeResource(n)) )
+
     # Error check
     for key in filter(lambda x: x not in ignored_keys_for_validation, page):
         if not ('onto:'+key) in allowed_relations['contribution']:
@@ -193,6 +200,13 @@ def make_general_resource(page, graph):
         for p in page[key]:
             target_uri = p['n']
             graph.add((uri, predicate, encodeResource(target_uri)))
+
+    # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
+    # Loop over internal links for mentions statements
+    for internal_link in page.get('internal_links', []):
+        if not '::' in internal_link:
+            p, n = internal_link.split(':')[0], internal_link.split(':')[1]
+            graph.add( (uri, encodeOntology('mentions'), encodeResource(n)) )
 
     # Error check
     for key in filter(lambda x: x not in ignored_keys_for_validation, page):
