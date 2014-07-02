@@ -144,7 +144,10 @@ def make_contribution_resource(page, graph):
     # Loop over internal links for mentions statements
     for internal_link in page.get('internal_links', []):
         if not '::' in internal_link:
-            p, n = internal_link.split(':')[0], internal_link.split(':')[1]
+            if ':' in internal_link:
+                p, n = internal_link.split(':')[0], internal_link.split(':')[1]
+            else:
+                n = internal_link
             graph.add( (uri, encodeOntology('mentions'), encodeResource(n)) )
 
     # Error check
@@ -207,7 +210,10 @@ def make_general_resource(page, graph):
     # Loop over internal links for mentions statements
     for internal_link in page.get('internal_links', []):
         if not '::' in internal_link:
-            p, n = internal_link.split(':')[0], internal_link.split(':')[1]
+            if ':' in internal_link:
+                p, n = internal_link.split(':')[0], internal_link.split(':')[1]
+            else:
+                n = internal_link
             graph.add( (uri, encodeOntology('mentions'), encodeResource(n)) )
 
     # Error check
