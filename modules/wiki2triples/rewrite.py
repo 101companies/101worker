@@ -32,8 +32,6 @@ ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'l
 ignored_keys_for_validation  = ['p', 'n', 'headline', 'internal_links', 'subresources', 'isA']
 
 # Hacking in the allowed relations real quick:
-
-
 models = ["concept", "contribution", "contributor", "feature", "language",
           "technology", "vocabulary"]
 allowed_relations = {}
@@ -58,6 +56,7 @@ def clear_sesame_graph(uri):
                                                             'accept': 'application/sparql-update'})
     print response
     assert response['status'] == '204'
+
 
 def collect(wiki):
     collection = []
@@ -162,7 +161,6 @@ def make_general_resource(page, graph):
         target_uri = type['n']
         graph.add( (uri, rdf['type'], encodeOntology(target_uri)) )
 
-
     # Add subclass relationships
     for isA in page.get('isA', []):
         target_uri = isA['n']
@@ -201,13 +199,13 @@ def make_general_resource(page, graph):
             erroneous_pages.append({'page': (page['p']+':'+page['n']), 'invalid relation': key})
 
 
-
 def main():
     #uri = 'http://triples.101companies.org/openrdf-sesame/repositories/ML_testing'
     uri = 'http://triples.101companies.org/openrdf-sesame/repositories/Testing_2'
-    clear_sesame_graph(uri)
+    #clear_sesame_graph(uri)
 
-    graph = SesameGraph(uri)
+    #graph = SesameGraph(uri)
+    graph = rdflib.Graph()
     wiki = Dumps.WikiDump()
 
     mapping_rules = {
@@ -235,8 +233,8 @@ def main():
         else:
             make_general_resource(page, graph)
 
+    graph.serialize(destination='./graph.n3', format='n3')
     #print graph.serialize(format='n3')
-
 
 if __name__ == '__main__':
     print 'Starting process'
