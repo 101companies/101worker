@@ -113,6 +113,8 @@ def make_ontology_classes(graph):
 
 
 def make_contribution_resource(page, graph):
+    print page['n']
+
     # Make unique name for this contribution
     uri = encodeResource(page['n'])
 
