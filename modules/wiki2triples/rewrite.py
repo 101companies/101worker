@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Martin Leinberger'
 
+
+
 import os
 import sys
 import json
@@ -226,9 +228,11 @@ def main():
     #uri = 'http://triples.101companies.org/openrdf-sesame/repositories/ML_testing'
     uri = 'http://triples.101companies.org/openrdf-sesame/repositories/Testing_2'
     #clear_sesame_graph(uri)
-
     #graph = SesameGraph(uri)
     graph = rdflib.Graph()
+    graph.bind('onto', 'http://101companies.org/ontology#')
+    graph.bind('res', 'http://101companies.org/resources#')
+
     wiki = Dumps.WikiDump()
 
     mapping_rules = {
