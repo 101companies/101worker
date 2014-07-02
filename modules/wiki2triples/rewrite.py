@@ -234,7 +234,21 @@ def main():
         else:
             make_general_resource(page, graph)
 
-    graph.serialize(destination='./graph.n3', format='n3')
+    print 'Writing graph.rdf...'
+    open('graph.rdf', 'w').write(graph.serialize())
+
+    print 'Clearing Sesame...'
+    clear_sesame_graph(uri)
+
+    print 'Uploading serialized file...'
+    params     = { 'context': '<' + 'http://101companies.org' + '>' }
+    endpoint = "http://141.26.71.114/openrdf-sesame/repositories/Testing_2/statements?%s" % (urllib.urlencode(params))
+    data = open('graph,rdf', 'r').read()
+    (response, content) = httplib2.Http().request(endpoint, 'PUT', body=data, headers={ 'content-type': 'application/rdf+xml' })
+    print 'Response was {}'.format(response)
+    print content
+
+    #graph.serialize(destination='./graph.n3', format='n3')
     #print graph.serialize(format='n3')
 
 if __name__ == '__main__':
