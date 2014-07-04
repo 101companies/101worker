@@ -61,7 +61,7 @@ class Entity:
         res = connection.query(query)
         x = list()
         for r in res:
-            t = (r['a']['value'], r['b']['value'], r['c']['value'])
+            t = ("Base: " + r['a']['value'], "Instance: " + r['b']['value'], "Wrong instance: " + r['c']['value'])
             #print "%s %s %s" % t
             if not t in x:
                 x.append(t)
