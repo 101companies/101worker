@@ -6,6 +6,7 @@ all:
 
 run:
 	cp -r models ${output}
+	./pysesame.py
 	mv subtyping_errors.json ${dumpsDir}
 
 # Remove local temporary files, if any
