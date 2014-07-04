@@ -61,8 +61,11 @@ class Entity:
         res = connection.query(query)
         x = list()
         for r in res:
-            t = ("Base: " + r['a']['value'], "First Child: " + r['b']['value'], "Second Child: " + r['c']['value'])
-            #print "%s %s %s" % t
+            print r
+            if not r.has_key('c'):
+                t = ("Base: " + r['a']['value'], "First Child: " + r['b']['value'])
+            else:
+                t = ("Base: " + r['a']['value'], "First Child: " + r['b']['value'], "Second Child: " + r['c']['value'])
             if not t in x:
                 x.append(t)
         print x
