@@ -49,6 +49,11 @@
            "property": "onto:dependsOn",
            "range": "onto:Concept",
            "minCardinality": "0"
+       },
+       {
+           "property": "onto:carries",
+           "range": "onto:Tag",
+           "minCardinality": "0"
        }
    ]
 
