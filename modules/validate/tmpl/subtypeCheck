@@ -1,0 +1,5 @@
+SELECT * WHERE {
+ ?a rdfs:subClassOf onto:Concept .
+ ?b rdf:type ?a .
+ ?c rdf:type ?b
+}
