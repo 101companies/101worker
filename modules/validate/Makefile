@@ -1,10 +1,6 @@
 include ../Makefile.vars
 output = ${ontoDir}
 
-run:
-	./rewrite.py
-	cp erroneous_pages.json ${output}
-
 all:
 	make run
 
