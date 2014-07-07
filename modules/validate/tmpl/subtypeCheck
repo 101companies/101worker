@@ -1,0 +1,18 @@
+SELECT * WHERE
+{
+ {
+  SELECT * WHERE {
+   ?a rdfs:subClassOf onto:Concept .
+   ?b rdf:type ?a .
+   ?c rdf:type ?b
+  }
+ } 
+ UNION 
+ {
+  SELECT * WHERE {
+   ?a rdfs:subClassOf onto:Concept .
+   ?b rdfs:subClassOf onto:Concept .
+   ?a rdf:type ?b
+  }
+ }
+}

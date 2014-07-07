@@ -68,6 +68,8 @@ if __name__=='__main__':
         entity = Entity(os.path.join(os.path.dirname(__file__), 'models', file))
         entity.checkCardinality()
 
+    entity.checkHirerarchy()
+
     #env = Environment(loader=FileSystemLoader('tmpl'))
     #c = Connection('http://triples.101companies.org/openrdf-sesame/')
     #c.use_repository('ML_testing')
