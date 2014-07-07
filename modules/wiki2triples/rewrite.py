@@ -96,19 +96,19 @@ def make_ontology_classes(graph):
     wikipage = encodeOntology('WikiPage')
     graph.add( (wikipage, rdf['type'], rdfs['Class']) )
 
-    concept = encodeOntology('Concept')
-    conceptPage = encodeOntology('ConceptPage')
+    entity = encodeOntology('Entity')
+    entityPage = encodeOntology('EntityPage')
 
-    graph.add( (concept, rdf['type'], rdfs['Class']) )
-    graph.add( (conceptPage, rdf['type'], rdfs['Class']) )
-    graph.add( (conceptPage, rdfs['subClassOf'], wikipage))
+    graph.add( (entity, rdf['type'], rdfs['Class']) )
+    graph.add( (entityPage, rdf['type'], rdfs['Class']) )
+    graph.add( (entityPage, rdfs['subClassOf'], wikipage))
 
-    for ns in ['Contribution', 'Technology', 'Language', 'Feature']:
+    for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature']:
         thing = encodeOntology(ns)
         page = encodeOntology(ns+'Page')
 
         graph.add( (thing, rdf['type'], rdfs['Class']) )
-        graph.add( (thing, rdfs['subClassOf'], concept))
+        graph.add( (thing, rdfs['subClassOf'], entity))
 
         graph.add( (page, rdf['type'], rdfs['Class']) )
         graph.add( (page, rdfs['subClassOf'], wikipage))
