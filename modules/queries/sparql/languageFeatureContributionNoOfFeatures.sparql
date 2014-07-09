@@ -1,4 +1,4 @@
-SELECT DISTINCT ?language ?feature ?contribution (COUNT(DISTINCT ?all_features) AS ?noOfFeatures) WHERE {
+SELECT DISTINCT ?language ?feature ?contribution (COUNT(DISTINCT ?all_features) AS ?no_of_features) WHERE {
  ?language rdf:type onto:Language .
  ?feature rdf:type onto:Feature .
  ?contribution rdf:type onto:Contribution .

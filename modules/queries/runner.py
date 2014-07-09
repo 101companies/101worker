@@ -27,7 +27,13 @@ if __name__=='__main__':
         with open(os.path.join(os.path.dirname(__file__), 'sparql', query_file)) as f:
             query = f.read()
             #print query
-            res = connection.query(query)
+            infer = js.get('infer', True)
+
+            if not infer:
+                res = connection.query(query, inference=False)
+            else:
+                res = connection.query(query)
+
             print res
 
             template = env.get_template(template_file)
