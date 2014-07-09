@@ -2,6 +2,7 @@ include ../Makefile.vars
 output = ${ontoDir}
 
 all:
+	mkdir -p output
 	mkdir -p ${dumpsDir}/sparql_queries
 	make run
 
