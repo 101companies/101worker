@@ -9,6 +9,7 @@ all:
 run:
 	cp -r specs ${dumpsDir}/sparql_queries
 	cp -r templates ${dumpsDir}/sparql_queries
+	cp -r sparql ${dumpsDir}/sparql_queries
 	python runner.py
 	cp -r output ${dumpsDir}/sparql_queries
 
