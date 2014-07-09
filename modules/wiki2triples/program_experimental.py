@@ -6,20 +6,24 @@ sys.path.append('../../libraries')
 sys.path.append('../../libraries/101meta')
 import urllib
 import json
+import os
 
-models = ["concept", "contribution", "contributor", "feature", "language",
-          "technology", "vocabulary"]
+
+
 allowed_relations = {}
 erroneous_pages = []
 
+models = os.listdir('./../validate/models')
+print models
 for model in models:
-    allowed_relations[model] = []
-    x = json.load(urllib.urlopen("http://worker.101companies.org/data/onto/models/"+model+".json"))
+    model_name = model.replace('.json', '')
+    allowed_relations[model_name] = []
+    x = json.load(open('../validate/models/' + model, 'r'))
     for property in x.get('properties', []):
-        allowed_relations[model].append(property['property'])
-
-    for y in filter(lambda x: x not in ['concept'], allowed_relations.keys()):
-        allowed_relations[y] += (allowed_relations['concept'])
+        allowed_relations[model_name].append(property['property'])
+print allowed_relations
+for y in filter(lambda x: x not in ['entity'], allowed_relations.keys()):
+    allowed_relations[y] += allowed_relations['entity']
 
 
 print json.dumps(allowed_relations, indent=4)
