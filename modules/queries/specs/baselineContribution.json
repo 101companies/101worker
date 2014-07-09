@@ -1,0 +1,6 @@
+{
+    "objective":"",
+    "output":"",
+    "query": "baselineContribution.sparql",
+    "template": "baselineContribution.tmpl"
+}

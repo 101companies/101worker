@@ -1,0 +1,13 @@
+SELECT DISTINCT ?contribution (COUNT(DISTINCT ?language) AS ?no_of_langs) (COUNT(DISTINCT ?technology) AS ?no_of_techs) (COUNT(DISTINCT ?concept) AS ?no_of_concepts) (COUNT(DISTINCT ?feature) AS ?no_of_features) WHERE {
+  ?contribution rdf:type onto:Contribution .
+  ?contribution onto:uses ?language .
+  ?contribution onto:uses ?technology .
+  ?contribution onto:implements ?feature .
+  ?contribution ?p ?concept .
+
+  ?language rdf:type onto:Language .
+  ?technology rdf:type onto:Technology .
+  ?feature rdf:type onto:Feature .
+  ?concept rdf:type onto:Concept .
+}
+GROUP BY ?contribution
