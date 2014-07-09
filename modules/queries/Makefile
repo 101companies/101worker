@@ -3,6 +3,7 @@ output = ${ontoDir}
 
 all:
 	mkdir -p output
+	rm -r ${dumpsDir}/sparql_queries
 	mkdir -p ${dumpsDir}/sparql_queries
 	make run
 
