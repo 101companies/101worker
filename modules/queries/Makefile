@@ -2,12 +2,16 @@ include ../Makefile.vars
 output = ${ontoDir}
 
 all:
+	mkdir -p output
+	mkdir -p ${dumpsDir}/sparql_queries
 	make run
 
 run:
-	cp -r models ${output}
+	cp -r specs ${dumpsDir}/sparql_queries
+	cp -r templates ${dumpsDir}/sparql_queries
+	cp -r sparql ${dumpsDir}/sparql_queries
 	python runner.py
-	mv output ${dumpsDir}/sparql_queries
+	cp -r output ${dumpsDir}/sparql_queries
 
 # Remove local temporary files, if any
 clean:
@@ -15,4 +19,4 @@ clean:
 
 # Remove files created by this module
 reset:
-	@#no-op
+	mkdir -p ${dumpsDir}/sparql_queries
