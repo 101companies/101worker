@@ -7,7 +7,7 @@ all:
 run:
 	cp -r models ${output}
 	python runner.py
-	# mv subtyping_errors.json ${dumpsDir}
+	mv output ${dumpsDir}/sparql_queries
 
 # Remove local temporary files, if any
 clean:

@@ -1,5 +1,6 @@
 {
     "objective":"",
     "output":"",
-    "query": "languageFeatureContributionNoOfFeatures.sparql"
+    "query": "languageFeatureContributionNoOfFeatures.sparql",
+    "template": "languageFeatureContributionNoOfFeatures.tmpl"
 }

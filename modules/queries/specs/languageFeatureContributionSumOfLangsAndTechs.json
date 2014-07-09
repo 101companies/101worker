@@ -1,5 +1,6 @@
 {
     "objective":"",
     "output":"",
-    "query": "languageFeatureContributionSumOfLangsAndTechs.sparql"
+    "query": "languageFeatureContributionSumOfLangsAndTechs.sparql",
+    "template": "languageFeatureContributionSumOfLangsAndTechs.tmpl"
 }
