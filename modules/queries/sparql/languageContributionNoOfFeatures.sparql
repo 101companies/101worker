@@ -1,0 +1,10 @@
+SELECT DISTINCT ?language ?contribution (COUNT(DISTINCT ?feature) as ?number_of_features) ?more_complex_version WHERE {
+ ?language rdf:type onto:Language .
+ ?contribution rdf:type onto:Contribution .
+
+ ?contribution onto:uses ?language .
+ ?contribution onto:implements ?feature .
+ OPTIONAL { ?contribution onto:moreComplexThan ?more_complex_version . }
+}
+GROUP BY ?language ?contribution ?more_complex_version
+ORDER BY DESC(?number_of_features)

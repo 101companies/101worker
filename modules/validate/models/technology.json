@@ -1,6 +1,6 @@
 {
     "@id": "onto:Technology",
-    "@type": "onto:Concept",
+    "@type": "onto:Entity",
     "properties": [
         {
             "property": "onto:uses",

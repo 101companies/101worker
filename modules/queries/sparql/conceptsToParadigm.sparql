@@ -1,0 +1,12 @@
+SELECT ?paradigm ?concept (COUNT(?concept) AS ?number_of_occurences) WHERE {
+  ?contribution ?p ?concept .
+  ?contribution onto:uses ?language .
+
+  ?contribution rdf:type onto:Contribution .
+  ?concept rdf:type onto:Concept .
+  ?language rdf:type onto:Language .
+  ?language rdf:type ?paradigm .
+  ?paradigm rdfs:subClassOf onto:Programming_paradigm .
+}
+GROUP BY ?paradigm ?concept
+ORDER BY DESC(?number_of_occurences)

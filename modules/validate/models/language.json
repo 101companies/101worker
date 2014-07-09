@@ -1,4 +1,4 @@
 {
     "@id": "onto:Language",
-    "@type": "onto:Concept"
+    "@type": "onto:Entity"
 }

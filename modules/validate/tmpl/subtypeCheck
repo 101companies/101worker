@@ -10,9 +10,9 @@ SELECT * WHERE
  UNION 
  {
   SELECT * WHERE {
+   ?a rdf:type ?b .
    ?a rdfs:subClassOf onto:Concept .
-   ?b rdfs:subClassOf onto:Concept .
-   ?a rdf:type ?b
+   ?b rdfs:subClassOf onto:Concept
   }
  }
 }

@@ -1,4 +1,4 @@
 {
     "@id": "onto:Vocabulary",
-    "@type": "onto:Concept"
+    "@type": "onto:Entity"
 }

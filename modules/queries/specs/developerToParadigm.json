@@ -1,0 +1,5 @@
+{
+    "objective":"The query should identify the paradigms of different developers",
+    "output":"A simple matrix showing developers in one dimension and paradigms in the other dimension. In this manner, we also cater for multi-paradigm developers",
+    "query": "developerToParadigm.sparql"
+}

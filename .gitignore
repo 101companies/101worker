@@ -227,4 +227,5 @@ dump.json
 *.pyc
 
 
+/modules/validate/subtyping_errors.json
 /libraries/mediawiki/.goutputstream-KX73TW

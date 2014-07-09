@@ -1,0 +1,14 @@
+SELECT ?language_or_technology (COUNT(DISTINCT ?developer) AS ?count) WHERE {
+ ?contribution rdf:type onto:Contribution .
+ ?contribution onto:developedBy ?developer .
+ ?contribution onto:uses ?language_or_technology .
+
+ { SELECT ?language_or_technology WHERE {
+   { ?language_or_technology rdf:type onto:Language . }
+     UNION
+   { ?language_or_technology rdf:type onto:Technology . }
+  }
+ }
+}
+GROUP BY ?language_or_technology
+ORDER BY DESC(?count)

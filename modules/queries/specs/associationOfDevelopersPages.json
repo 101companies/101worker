@@ -1,0 +1,5 @@
+{
+    "objective":"If we maintained a “status” property for each page (such as “needs work”), then we could try to find developers who would be likely able to improve content on the grounds of their contribution pages referring to the wiki pages. Some fairness would need to be applied to we try to spread work over multiple people (subject to email invitation)",
+    "output":"A simple version: Associate a developer with a stub page based on the number of references of that developer’s contribution pages to this page",
+    "query": "associationOfDevelopersPages.sparql"
+}
