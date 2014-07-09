@@ -28,10 +28,11 @@ if __name__=='__main__':
             query = f.read()
             #print query
             res = connection.query(query)
+            print res
 
             template = env.get_template(template_file)
             output = template.render(data=res)
-            print output
+            #print output
 
             with open(os.path.join(os.path.dirname(__file__), 'output', template_file.replace('.tmpl', '.txt')), "w") as output_file:
                 output_file.write(output)

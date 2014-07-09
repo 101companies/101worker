@@ -1,0 +1,5 @@
+language contribution number_of_features more_complex_version
+-------------------
+{% for x in data %}
+{{ x['language']['value'] }};{{ x['contribution']['value'] }};{{ x['number_of_features']['value'] }};{% if more_complex_version in x %} {{ x['more_complex_version']['value'] }} {% endif %}
+{% endfor %}
