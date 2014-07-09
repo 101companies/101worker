@@ -16,4 +16,4 @@ clean:
 
 # Remove files created by this module
 reset:
-	@#no-op
+	mkdir -p ${dumpsDir}/sparql_queries
