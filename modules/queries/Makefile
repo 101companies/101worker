@@ -6,7 +6,7 @@ all:
 
 run:
     mkdir -p ${dumpsDir}/sparql_queries
-	cp -r specs ${dumpsDir}/sparql_queries/specs
+	cp -r specs ${dumpsDir}/sparql_queries
 	python runner.py
 	mv output ${dumpsDir}/sparql_queries
 
