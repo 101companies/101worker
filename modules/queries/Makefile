@@ -10,7 +10,7 @@ run:
 	cp -r specs ${dumpsDir}/sparql_queries
 	cp -r templates ${dumpsDir}/sparql_queries
 	python runner.py
-	mv output ${dumpsDir}/sparql_queries
+	cp -r output ${dumpsDir}/sparql_queries
 
 # Remove local temporary files, if any
 clean:
