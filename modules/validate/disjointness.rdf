@@ -1,0 +1,28 @@
+
+<rdf:RDF ...>
+
+<rdf:Description rdf:about="http://101companies.org/onto#Entity">
+<rdf:type rdf:resource="http://...#Class"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://...#Language">
+<rdfs:subClassOf rdf:resource="http://...#Entity"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://...#Technology">
+<rdfs:subClassOf rdf:resource="http://...#Entity"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://...#Concept">
+<rdfs:subClassOf rdf:resource="http://...#Entity"/>
+</rdf:Description>
+
+<owl:AllDisjointClasses>
+<owl:members rdf:parseType="Collection">
+<owl:class rdf:about="http://...#Language"/>
+<owl:class rdf:about="http://...#Technology"/>
+<owl:class rdf:about="http://...#Concept"/>
+</owl:members>
+</owl:AllDisjointClasses>
+
+</rdf:RDF>

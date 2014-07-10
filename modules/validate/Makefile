@@ -7,8 +7,10 @@ all:
 run:
 	cp -r models ${output}
 	cp disjointness.txt ${output}
+    cp disjointness.rdf ${output}
 	python pysesame.py
 	mv subtyping_errors.json ${dumpsDir}
+	cp -r tmpl ${output}/queries
 
 # Remove local temporary files, if any
 clean:
