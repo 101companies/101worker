@@ -1,6 +1,7 @@
 {
-    "objective":"",
+    "objective":"Find the contribution that uses a given language and exercises a given concept such that there is no other contribution with less features, languages, technologies, and concepts involved",
     "output":"",
     "query": "baselineContribution.sparql",
+    "infer": false,
     "template": "baselineContribution.tmpl"
 }

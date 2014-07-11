@@ -1,0 +1,5 @@
+language feature contribution no_of_features
+-------------------
+{% for x in data %}
+{{ x['language']['value'] }};{{ x['feature']['value'] }};{{ x['contribution']['value'] }}; {{ x['no_of_features']['value'] }}
+{% endfor %}

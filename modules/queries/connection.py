@@ -1,5 +1,3 @@
-__author__ = 'avaranovich'
-
 from urllib import quote_plus, urlencode, quote
 import urllib2, types
 import json as simplejson
@@ -18,7 +16,6 @@ SPOC = {
     'p': 'pred',
     'c': 'context'
 }
-
 
 class Connection:
     def __init__(self, url):
@@ -79,9 +76,13 @@ class Connection:
     def use_repository(self, r):
         self.repository = r
 
-    def query(self, q, atype=SPJSON):
+    def query(self, q, atype=SPJSON, inference=True):
         # print "LENGTH", len(self.sparql_prefix+q)
-        q = 'repositories/' + self.repository + '?query=' + quote_plus(self.sparql_prefix + q)
+        if inference:
+            q = 'repositories/' + self.repository + '?query=' + quote_plus(self.sparql_prefix + q)
+        else:
+            q = 'repositories/' + self.repository + '?query=' + quote_plus(self.sparql_prefix + q) + "&infer=false"
+
         #print "Q",q
         return self.__getsparql__(atype, q)
 

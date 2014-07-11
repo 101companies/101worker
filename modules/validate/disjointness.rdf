@@ -1,0 +1,32 @@
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:onto="http://101companies.org/ontology#"
+         xmlns:res="http://101companies.org/resources#">
+
+<rdf:Description rdf:about="http://101companies.org/ontology#Entity">
+ <rdf:type rdf:resource="http://101companies.org/ontology#Class"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://101companies.org/ontology#Language">
+ <rdfs:subClassOf rdf:resource="http://101companies.org/ontology#Entity"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://101companies.org/ontology#Technology">
+ <rdfs:subClassOf rdf:resource="http://101companies.org/ontology#Entity"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://101companies.org/ontology#Concept">
+ <rdfs:subClassOf rdf:resource="http://101companies.org/ontology#Entity"/>
+</rdf:Description>
+
+<owl:AllDisjointClasses>
+ <owl:members rdf:parseType="Collection">
+  <owl:class rdf:about="http://101companies.org/ontology#Language"/>
+  <owl:class rdf:about="http://101companies.org/ontology#Technology"/>
+  <owl:class rdf:about="http://101companies.org/ontology#Concept"/>
+ </owl:members>
+</owl:AllDisjointClasses>
+
+</rdf:RDF>
