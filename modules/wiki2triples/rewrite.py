@@ -48,6 +48,8 @@ for y in filter(lambda x: x not in ['entity'], allowed_relations.keys()):
     allowed_relations[y] += allowed_relations['entity']
 
 
+print json.dumps(allowed_relations, indent=4)
+
 def clear_sesame_graph(uri):
     endpoint = os.path.join(uri, 'statements')
     data = "update=CLEAR ALL"
@@ -101,7 +103,7 @@ def make_ontology_classes(graph):
     graph.add( (entityPage, rdf['type'], rdfs['Class']) )
     graph.add( (entityPage, rdfs['subClassOf'], wikipage))
 
-    for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature']:
+    for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature', 'Script', 'Course']:
         thing = encodeOntology(ns)
         page = encodeOntology(ns+'Page')
 

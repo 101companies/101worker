@@ -14,7 +14,6 @@ allowed_relations = {}
 erroneous_pages = []
 
 models = os.listdir('./../validate/models')
-print models
 for model in models:
     model_name = model.replace('.json', '')
     allowed_relations[model_name] = []
