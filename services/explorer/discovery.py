@@ -142,6 +142,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
                     response['classifier'] = selected['classifier']
                     response['name'] = selected['name']
                     if 'startLine' in selected and 'endLine' in selected:
+                        raise Exception('Trying to read startLine and endLine with values of {} and {}'.format(selected['startLine'], selected['endLine']))
                         lineNumbers = {'from':selected['startLine'], 'to':selected['endLine']}
                     for f2 in selected.get('fragments',[]):
                         response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
