@@ -3,6 +3,7 @@
 
 import os
 import sys
+import json
 
 os.chdir(os.path.dirname(__file__))
 
@@ -139,11 +140,10 @@ def discoverFileFragment(namespace, member, path, file, fragment):
         for f1 in extractedFacts['fragments']:
             selected, fragmentPath = find(f1, fragment)
             if selected:
-                raise Exception(str(selected))
                 response['classifier'] = selected['classifier']
                 response['name'] = selected['name']
                 if 'startLine' in selected:
-                    raise Exception('Trying to read startLine and endLine with values of {} and {}'.format(selected['startLine'], selected['endLine']))
+                    raise Exception(json.dumps(selected, indent=4))
                     lineNumbers = {'from':selected['startLine'], 'to':selected['endLine']}
                 for f2 in selected.get('fragments',[]):
                     response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
