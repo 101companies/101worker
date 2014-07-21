@@ -151,8 +151,8 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     #gather content
     if lineNumbers or locator:
-    if not lineNumbers:
-        lineNumbers = DumpdataProvider.getFragment(filePath, fragment, locator)
+        if not lineNumbers:
+            lineNumbers = DumpdataProvider.getFragment(filePath, fragment, locator)
 
         fragmentText = DumpdataProvider.read(filePath, range(lineNumbers['from'] - 1, lineNumbers['to']))
         response['content'] = fragmentText
