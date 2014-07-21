@@ -143,8 +143,8 @@ def discoverFileFragment(namespace, member, path, file, fragment):
                 response['classifier'] = selected['classifier']
                 response['name'] = selected['name']
                 if 'startLine' in selected:
-                    raise Exception(json.dumps(selected, indent=4))
                     lineNumbers = {'from':selected['startLine'], 'to':selected['endLine']}
+                    raise Exception(json.dumps(lineNumbers, indent=4))
                 for f2 in selected.get('fragments',[]):
                     response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
                 break
