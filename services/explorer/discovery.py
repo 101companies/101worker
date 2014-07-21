@@ -131,6 +131,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     response['namespace'] = wikiNS
 
     #gather member data
+    lineNumbers = None
     if extractor:
         try:
             extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
@@ -140,6 +141,8 @@ def discoverFileFragment(namespace, member, path, file, fragment):
                 if selected:
                     response['classifier'] = selected['classifier']
                     response['name'] = selected['name']
+                    if 'startLine' in selected and 'endLine' in selected:
+                        lineNumbers = {'from':selected['startLine'], 'to':selected['endLine']}
                     for f2 in selected.get('fragments',[]):
                         response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
                     break
@@ -147,13 +150,14 @@ def discoverFileFragment(namespace, member, path, file, fragment):
             pass
 
     #gather content
-    if locator:
-        #try:
-        lines = DumpdataProvider.getFragment(filePath, fragment, locator)
-        fragmentText = DumpdataProvider.read(filePath, range(lines['from'] - 1, lines['to']))
-        response['content'] = fragmentText
-        response['github'] += '#L{0}-{1}'.format(lines['from'], lines['to'])
-        #except Exception as e:
+    if lineNumbers or locator:
+    if not lineNumbers:
+        lineNumbers = DumpdataProvider.getFragment(filePath, fragment, locator)
+
+    fragmentText = DumpdataProvider.read(filePath, range(lineNumbers['from'] - 1, lineNumbers['to']))
+    response['content'] = fragmentText
+    response['github'] += '#L{0}-{1}'.format(lineNumbers['from'], lineNumbers['to'])
+    #except Exception as e:
         #    raise DiscoveryException('500 Internal Server Error', 'Fragment location failed:\n' + str(e))
 
     setCommitInfos(response, filePath)
