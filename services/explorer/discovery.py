@@ -154,9 +154,9 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     if not lineNumbers:
         lineNumbers = DumpdataProvider.getFragment(filePath, fragment, locator)
 
-    fragmentText = DumpdataProvider.read(filePath, range(lineNumbers['from'] - 1, lineNumbers['to']))
-    response['content'] = fragmentText
-    response['github'] += '#L{0}-{1}'.format(lineNumbers['from'], lineNumbers['to'])
+        fragmentText = DumpdataProvider.read(filePath, range(lineNumbers['from'] - 1, lineNumbers['to']))
+        response['content'] = fragmentText
+        response['github'] += '#L{0}-{1}'.format(lineNumbers['from'], lineNumbers['to'])
     #except Exception as e:
         #    raise DiscoveryException('500 Internal Server Error', 'Fragment location failed:\n' + str(e))
 
