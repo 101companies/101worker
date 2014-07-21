@@ -139,6 +139,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
             for f1 in extractedFacts['fragments']:
                 selected, fragmentPath = find(f1, fragment)
                 if selected:
+                    raise Exception(str(selected))
                     response['classifier'] = selected['classifier']
                     response['name'] = selected['name']
                     if 'startLine' in selected:
