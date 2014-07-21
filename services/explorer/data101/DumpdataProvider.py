@@ -4,6 +4,7 @@ import json
 import commands
 import os
 import codecs
+import urllib
 import sys
 #sys.path.append('../../../libraries/101meta')
 import const101
@@ -100,13 +101,17 @@ def getMembers(dir):
     return []
 
 def getGithub(namespace, member):
-    pullRepoDump = json.load(open(const101.pullRepoDump, 'r'))
-    if member in pullRepoDump:
-        return pullRepoDump[member]
+    response = urllib.urlopen('http://101companies.org/pullRepo.json') #json.load(open(const101.pullRepoDump, 'r'))
+    pullRepoDump = json.loads(response.read())
+    if namespace in pullRepoDump:
+        if member in pullRepoDump[namespace]:
+            return pullRepoDump[namespace][member]
+    #if member in pullRepoDump:
+    #    return pullRepoDump[member]
 
-    path = os.path.join(namespace, member)
-    if os.path.exists(os.path.join(const101.sRoot,path)):
-        return os.path.join(const101.url101repo, path)
+    #path = os.path.join(namespace, member)
+    #if os.path.exists(os.path.join(const101.sRoot,path)):
+    #    return os.path.join(const101.url101repo, path)
     return None
 
 def read(filePath, lines=None):

@@ -177,7 +177,7 @@ def discoverMemberFile(namespace, member, path, file):
         'fragments' : [],
         'classifier': 'File',
         'name'      : file,
-#        'github'    : DumpdataProvider.getGithub(namespace,member)
+        'github'    : DumpdataProvider.getGithub(namespace,member)
     }
 
     if language:
