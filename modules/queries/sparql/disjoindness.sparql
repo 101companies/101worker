@@ -1,0 +1,16 @@
+SELECT DISTINCT ?s WHERE {
+ {
+  ?s rdf:type onto:Language .
+  ?s rdf:type onto:Technology .
+ }
+ UNION
+ {
+  ?s rdf:type onto:Concept .
+  ?s rdf:type onto:Technology .
+ }
+ UNION
+ {
+  ?s rdf:type onto:Language .
+  ?s rdf:type onto:Concept .
+ }
+}
