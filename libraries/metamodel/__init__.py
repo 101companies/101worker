@@ -28,6 +28,7 @@ import sys
 import types
 import re
 import commands
+from connection import Connection
 
 # state variable for HTTP/filesystem access
 import __builtin__
@@ -561,10 +562,16 @@ class Member(Folder):
         """
         if not '_Member__implements' in self.__dict__:
             self.__implements = []
-            wikiTriples = helpers.loadJSONFromUrl(self.endpointLink)
-            for subject, predicate, object in wikiTriples:
-                if predicate == 'http://101companies.org/property/implements':
-                    self.__implements.append(object.replace('http://101companies.org/resources/features/', '').replace('_',' ').lower())
+
+            connection = Connection('http://triples.101companies.org/openrdf-sesame/')
+            connection.use_repository('Testing_2')
+
+            connection.addnamespace('onto', 'http://101companies.org/ontology#')
+            connection.addnamespace('res', 'http://101companies.org/resources#')
+            res = connection.query('SELECT DISTINCT ?feature WHERE { <http://101companies.org/resources#'+self.name+'> <http://101companies.org/ontology#implements> ?feature }')
+            for feature in res:
+                val = feature['feature']['value'].replace('http://101companies.org/resources#','').replace('_',' ')
+                self.__implements.append(val)
 
         return self.__implements
 
@@ -1137,8 +1144,8 @@ class Fragment:
 def main():
     #useWebInterface()
 
-    wikidump = WikiDump()
-    print wikidump.selectPage('Contribution', 'antlrLexer')
+    #wikidump = WikiDump()
+    #print wikidump.selectPage('Contribution', 'antlrLexer')
 
     #languages = Namespace('languages')
     #print languages.name
@@ -1158,12 +1165,13 @@ def main():
     #for page in WikiDump():
     #    print page
 
-    #member = Member('contributions/antlrLexer')
-    #print member.name
-    #print member.headline
-    #print member.endpointLink
-    #print member.wikiLink
-    #print member.parent
+    member = Member('contributions/antlrLexer')
+    print member.name
+    print member.headline
+    print member.endpointLink
+    print member.wikiLink
+    print member.parent
+    print member.implements
 
     #f = File('contributions/antlrAcceptor/.gitignore')
     #if f.isReadable:
