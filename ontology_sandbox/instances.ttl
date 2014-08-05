@@ -1,0 +1,44 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl11: <http://www.w3.org/2006/12/owl11#> .
+@prefix res: <http://101companies.org/resources#> .
+@prefix onto: <http://101companies.org/ontology#> .
+@prefix : <http://101companies.org/resources#> .
+
+
+:Java rdf:type onto:Language ;
+	onto:hasName "Java"^^xsd:string .
+
+:Hibernate rdf:type onto:Entity ;
+	rdf:type onto:Technology ;
+	onto:hasName "Hibernate"^^xsd:string .
+
+:hibernateJava rdf:type onto:Entity ;
+	rdf:type onto:Contribution ;
+	onto:hasName "Hibernate with Java"^^xsd:string ;
+	onto:usesLanguage :Java ;
+	onto:usesTechnology :Hibernate .  
+
+<http://101companies.org/resources#hibernateJava/src/Main.java> 
+	onto:isPartOf :hibernateJava ; 
+	onto:hasSuffix ".java" . 
+
+:myTestHybrid rdf:type onto:Entity ;
+	rdf:type onto:Language ;
+	rdf:type onto:Technology ;
+	onto:hasName "Test entry that is both language and technology"^^xsd:string .
+
+:myTestContribution rdf:type onto:Entity ;
+	rdf:type onto:Contribution ;
+	onto:hasName "Test contribution without technology"^^xsd:string ;
+	onto:usesLanguage :Java . 
+
+:myTestBadThing rdf:type onto:Entity ;
+	onto:hasName "My basic hybrid thing with inference" . 
+
+:myOtherTestContribution rdf:type onto:Entity ;
+	onto:usesLanguage :myTestBadThing ;
+	onto:usesTechnology :myTestBadThing . 
