@@ -44,7 +44,8 @@ for feature in config.featuresToInspect:
     for file in featureIndex.get(feature, []):
         member = file.member
         if member in config.contributionWhitelist and file.metrics.exists and file.relevance == 'system' and not file in examinedFiles:
-            contributionIndex[member.name] = contributionIndex.get(member.name, 0) + file.metrics.ncloc
+            print member.name
+	    contributionIndex[member.name] = contributionIndex.get(member.name, 0) + file.metrics.ncloc
             examinedFiles.append(file)
 
 

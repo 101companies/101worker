@@ -268,7 +268,7 @@ def main():
 
     print 'Uploading serialized file...'
     params     = { 'context': '<' + 'http://101companies.org' + '>' }
-    endpoint = "http://141.26.71.114/openrdf-sesame/repositories/Testing_2/statements?%s" % (urllib.urlencode(params))
+    endpoint = "http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/statements?%s" % (urllib.urlencode(params))
     data = open('graph.rdf', 'r').read()
     (response, content) = httplib2.Http().request(endpoint, 'PUT', body=data, headers={ 'content-type': 'application/rdf+xml' })
     print 'Response was {}'.format(response)
