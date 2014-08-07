@@ -1,0 +1,21 @@
+:onto:Technology rdf:type onto:Entity .
+
+ onto:uses rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Technology 
+
+
+ onto:supports rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Protocol 
+
+
+ onto:implements rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Specification 
