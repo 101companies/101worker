@@ -1,5 +1,5 @@
  {
   "@id": "onto:Concept",
-  "@type": "owl:Entity"
+  "@type": "owl:Instrument"
  }
 

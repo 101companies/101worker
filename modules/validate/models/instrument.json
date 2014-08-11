@@ -1,0 +1,12 @@
+{
+    "@id": "onto:Instrument",
+    "@type": "onto:Entity",
+     "properties": [
+       {
+         "property": "onto:supports",
+         "range": "onto:Concept",
+         "minCardinality": "0",
+         "comment": "Instruments can support concepts by different measn"
+       }
+     ]
+}
