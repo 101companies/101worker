@@ -25,7 +25,10 @@ if __name__=='__main__':
         with open(os.path.join(os.path.dirname(__file__), 'sparql', query_file)) as f:
             query = f.read()
             #print query
-            infer = True #js.get('infer', True)
+            if query_file == 'baselineContribution.sparql':
+                infer = True #js.get('infer', True)
+            else:
+                infer = False
 
             if not infer:
                 res = connection.query(query, inference=False)
