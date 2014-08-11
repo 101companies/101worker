@@ -1,6 +1,0 @@
-{
-    "objective":"Show what languages and technologies are used together",
-    "output":"A graph with languages and technologies as nodes where all edges mean that the source and target are used by at least one contribution. The size of the edge could also show the frequency of togetherness usage",
-    "query": "togetherness.sparql",
-    "template": "togetherness.tmpl"
-}

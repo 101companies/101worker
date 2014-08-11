@@ -13,21 +13,19 @@ if __name__=='__main__':
     connection.addnamespace('onto', 'http://101companies.org/ontology#')
     connection.addnamespace('res', 'http://101companies.org/resources#')
 
-    relevant_path = os.path.join(os.path.dirname(__file__), 'specs')
-    included_extenstions = ['json']
+    relevant_path = os.path.join(os.path.dirname(__file__), 'sparql')
+    included_extenstions = ['sparql']
     file_names = [fn for fn in os.listdir(relevant_path) if any([fn.endswith(ext) for ext in included_extenstions])]
 
-    for file in file_names:
-        js = json.load(open(os.path.join(os.path.dirname(__file__), 'specs', file)))
-        query_file = js['query']
-        template_file = js['template']
+    for query_file in file_names:
+        template_file = query_file.replace('sparql', 'tmpl')
         if query_file == '' or template_file == '':
             continue
         print query_file
         with open(os.path.join(os.path.dirname(__file__), 'sparql', query_file)) as f:
             query = f.read()
             #print query
-            infer = js.get('infer', True)
+            infer = True #js.get('infer', True)
 
             if not infer:
                 res = connection.query(query, inference=False)
