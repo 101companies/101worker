@@ -12,7 +12,7 @@ run:
 	cp -r sparql ${dumpsDir}/sparql_queries
 	python runner.py
 	cp -r output ${dumpsDir}/sparql_queries
-	cd tex; make index
+	cd tex; make
 	cp tex/index.pdf ${dumpsDir}/sparql_queries
 
 # Remove local temporary files, if any
