@@ -37,11 +37,16 @@ if __name__=='__main__':
 
             print res
 
+
+            file_to_save = template_file
+            if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'templates', template_file)):
+                template_file = "default.tmpl"
+
             template = env.get_template(template_file)
             output = template.render(data=res)
             #print output
 
-            with open(os.path.join(os.path.dirname(__file__), 'output', template_file.replace('.tmpl', '.txt')), "w") as output_file:
+            with open(os.path.join(os.path.dirname(__file__), 'output', file_to_save.replace('.tmpl', '.txt')), "w") as output_file:
                 output_file.write(output)
 
             #print res

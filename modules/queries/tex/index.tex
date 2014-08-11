@@ -1,8 +1,14 @@
 \documentclass{article}
 
+\usepackage{listings}
 
 \newcommand*{\Objective}[1]{\emph{Objective:} #1}
 \newcommand*{\Output}[1]{\emph{Output:} #1}
+
+\newcommand*{\Result}[1]{
+
+    \lstinputlisting{output/#1.txt}
+}
 
 \begin{document}
 
