@@ -2,5 +2,5 @@
     "objective":"The query returns disjoindness violations",
     "output":"The list of instances that violate disjoindness constraints",
     "query": "disjoindness.sparql",
-    "template": "disjoindness.tmpl"
+    "template": "disjointness.tmpl"
 }
