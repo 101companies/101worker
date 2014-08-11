@@ -13,8 +13,8 @@ SELECT DISTINCT ?script ?contribution WHERE {
      ?c onto:moreComplexThan* ?contribution . 
    } MINUS {
    	{
-   		?previousLecture onto:mentions ?c2 . 
-   		?c2 rdf:type onto:Contribution . 
+   		?previousLecture onto:mentions ?contribution . 
+   		?contribution rdf:type onto:Contribution . 
    	} UNION {
    		?script onto:mentions ?contribution .
    	}
