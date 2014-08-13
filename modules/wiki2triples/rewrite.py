@@ -36,7 +36,7 @@ ignored_keys_for_validation  = ['p', 'n', 'headline', 'internal_links', 'subreso
 allowed_relations = {}
 erroneous_pages = []
 
-models = os.listdir('./../validate/models')
+models = filter(lambda x: '.json' in x, os.listdir('./../validate/models'))
 for model in models:
     model_name = model.replace('.json', '')
     allowed_relations[model_name] = []
@@ -205,7 +205,10 @@ def make_general_resource(page, graph):
     for key in filter(lambda x: x not in ignored_keys_general, page):
         predicate = encodeOntology(key)
         for p in page[key]:
-            target_uri = p['n']
+            if isinstance(p, basestring):
+                target_uri = p
+            else:
+                target_uri = p['n']
             graph.add((uri, predicate, encodeResource(target_uri)))
 
     # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
