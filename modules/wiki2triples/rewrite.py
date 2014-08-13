@@ -23,6 +23,12 @@ resources = rdflib.Namespace('http://101companies.org/resources#')
 rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
+namespace_cache = {}
+
+def get_namespace(namespace_name):
+    if not namespace_name in namespace_cache:
+        namespace_cache[namespace_name] = rdflib.Namespace('http://101companies.org/resources/'+namespace_name+'#')
+    return namespace_cache[namespace_name]
 
 
 # Keys to be ignored for general mapping - they might however be processed in a more specific part of the code
@@ -87,8 +93,9 @@ def encodeOntology(s):
     return ontology[ encode(s) ]
 
 
-def encodeResource(s):
-    return resources[ encode(s) ]
+def encodeResource(namespace, s):
+    if not namespace: namespace = 'Concept'
+    return get_namespace(namespace)[ encode(s) ]
 
 
 def make_ontology_classes(graph):
@@ -118,7 +125,7 @@ def make_contribution_resource(page, graph):
     print page['n']
 
     # Make unique name for this contribution
-    uri = encodeResource(page['n'])
+    uri = encodeResource(page['p'], page['n'])
 
     # Add types to URI (Contributions are instances of the Contribution class and of the contribution page)
     # TODO: Are there any other classes that need to be considered?
@@ -139,7 +146,7 @@ def make_contribution_resource(page, graph):
     for key in filter(lambda x: x not in ignored_keys_in_contributions, page):
         predicate = encodeOntology(key)
         for p in page[key]:
-            target_uri = encodeResource(p['n'])
+            target_uri = encodeResource(page['p'], p['n'])
             graph.add((uri, predicate, target_uri))
 
     # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
@@ -149,8 +156,8 @@ def make_contribution_resource(page, graph):
             if ':' in internal_link:
                 p, n = internal_link.split(':')[0], internal_link.split(':')[1]
             else:
-                n = internal_link
-            graph.add( (uri, encodeOntology('mentions'), encodeResource(n)) )
+                p, n = 'no_ns', internal_link
+            graph.add( (uri, encodeOntology('mentions'), encodeResource(p,n)) )
 
     # Error check
     for key in filter(lambda x: x not in ignored_keys_for_validation, page):
@@ -164,7 +171,7 @@ def make_general_resource(page, graph):
     if 'isA' in page:
         uri = encodeOntology( page['n'] )
     else:
-        uri = encodeResource( page['n'] )
+        uri = encodeResource( page['p'], page['n'] )
 
 
     # Add types
@@ -188,8 +195,8 @@ def make_general_resource(page, graph):
         for key in filter(lambda x: x not in ignored_keys_in_subresources, sub_resource):
             predicate = encodeOntology(key)
             for p in sub_resource[key]:
-                target_uri = p['n']
-                graph.add( (sub_resource_uri, predicate, encodeResource(target_uri)) )
+                ns,target_uri = p['p'],p['n']
+                graph.add( (sub_resource_uri, predicate, encodeResource(ns,target_uri)) )
 
     # Convert linksTo
     for link in page.get('linksTo', []):
@@ -206,10 +213,10 @@ def make_general_resource(page, graph):
         predicate = encodeOntology(key)
         for p in page[key]:
             if isinstance(p, basestring):
-                target_uri = p
+                ns,target_uri = 'no_ns',p
             else:
-                target_uri = p['n']
-            graph.add((uri, predicate, encodeResource(target_uri)))
+                ns,target_uri = p['p'],p['n']
+            graph.add((uri, predicate, encodeResource(ns,target_uri)))
 
     # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
     # Loop over internal links for mentions statements
@@ -218,8 +225,8 @@ def make_general_resource(page, graph):
             if ':' in internal_link:
                 p, n = internal_link.split(':')[0], internal_link.split(':')[1]
             else:
-                n = internal_link
-            graph.add( (uri, encodeOntology('mentions'), encodeResource(n)) )
+                p, n = 'no_ns',internal_link
+            graph.add( (uri, encodeOntology('mentions'), encodeResource(p,n)) )
 
     # Error check
     for key in filter(lambda x: x not in ignored_keys_for_validation, page):
