@@ -1,0 +1,115 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl11: <http://www.w3.org/2006/12/owl11#> .
+@prefix res: <http://101companies.org/resources#> .
+@prefix onto: <http://101companies.org/ontology#> .
+@prefix : <http://101companies.org/ontology#> .
+
+### Base Classes
+
+:Entity rdf:type owl:Class . 
+
+:Language rdf:type owl:Class ;
+	rdfs:subClassOf :Entity ;
+	rdfs:label "A artificial language" .
+
+:Technology rdf:type owl:Class ;
+	rdfs:subClassOf :Entity ;
+	rdfs:label "A technology" .
+
+:Contribution rdf:type owl:Class ;
+	rdfs:subClassOf :Entity ;
+	rdfs:label "A contribution";
+	rdfs:subClassOf 
+		[ owl:onProperty :usesLanguage ; owl:minCardinality 1 ] ,
+		[ owl:onProperty :usesTechnology ; owl:minCardinality 1 ] .
+
+:File rdf:type owl:Class ;
+	rdfs:label "A file on the filesystem" ;
+	owl:disjointWith :Folder .
+
+:Folder rdf:type owl:Class ;
+	rdfs:label "A folder on the filesystem" ;
+	owl:disjointWith :File .
+
+### Properties
+
+:hasName rdf:type owl:ObjectProperty ;
+	rdfs:label "Name of the entity" ;
+	rdfs:comment "Has a name" ;
+	rdfs:domain :Entity ;
+	rdfs:range rdfs:Literal . 
+
+:usesLanguage rdf:type owl:ObjectProperty ;
+	rdfs:label "Uses a language" ;
+	rdfs:domain :Contribution ;
+	rdfs:range :Language .
+
+:usesTechnology rdf:type owl:ObjectProperty ;
+	rdfs:label "Uses a technology" ;
+	rdfs:domain :Contribution ;
+	rdfs:range :Technology .
+
+:isPartOf rdf:type owl:ObjectProperty ;
+	rdf:type owl:TransitiveProperty ;
+	rdfs:label "PartOf relation" ;
+	### rdfs:domain :File ;
+	### rdfs:domain :Folder ;
+	rdfs:range :Contribution ;
+	owl:inverseOf :hasPart .
+
+:hasPart rdf:type owl:ObjectProperty ;
+	rdf:type owl:TransitiveProperty ;
+	rdfs:label "Inverse partOf" ;
+	rdfs:domain :Contribution ;
+	### rdfs:range :File ;
+	owl:inverseOf :isPartOf . 
+
+:hasSuffix rdf:type owl:DatatypeProperty ;
+	rdf:type owl:FunctionalProperty ;
+	rdfs:label "Has Suffix" ;
+	rdfs:comment "Indicates that a file has a certain suffix" ;
+	rdfs:domain :File ;
+	rdfs:range rdfs:Literal .
+
+### Rules
+[] rdf:type owl:AllDisjointClasses ;
+	owl:members ( :Language :Technology :Contribution ) .
+
+:JavaSourceFile rdf:type owl:Class ;
+	:elementOf :Java ; ### :Java is an instance!
+	owl:equivalen
+	tClass
+		[	rdf:type owl:Restriction ;
+			owl:onProperty :hasSuffix ;
+			owl:hasValue ".java"
+		] .
+
+### Option 2:
+:Java rdf:type owl:Class ; ### same :Java as in option 1
+	owl:equivalentClass
+		[	rdf:type owl:Restriction ;
+			owl:onProperty :hasSuffix ;
+			owl:hasValue ".java"
+		] .
+
+
+### Option 3:
+elementOf:Java rdf:type owl:Class ; ### Java is a class
+	owl:equivalentClass
+		[	rdf:type owl:Restriction ;
+			owl:onProperty :hasSuffix ;
+			owl:hasValue ".java"
+		] .
+
+### Option 4:
+elementOf:Java rdf:type owl:Class ; 
+	owl:sameAs onto:Java ;
+	owl:equivalentClass
+		[	rdf:type owl:Restriction ;
+			owl:onProperty :hasSuffix ;
+			owl:hasValue ".java"
+		] .

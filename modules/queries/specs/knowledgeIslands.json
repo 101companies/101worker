@@ -1,6 +1,0 @@
-{
-    "objective":"Determine technologies or languages that seem to be associated with one dominant knowledge holder",
-    "output":"Show technologies and languages that seem to have such a dominant knowledge holder. Should this be a matrix or just a plain flat table? We need to discuss this some more. Perhaps we could add some extra metrics to show, for example, how severe this knowledge island is in terms of affected contributions or lack of any secondary knowledge holder",
-    "query": "knowledgeIslands.sparql",
-    "template": "knowledgeIslands.tmpl"
-}

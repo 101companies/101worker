@@ -1,0 +1,7 @@
+:onto:Script rdf:type onto:Entity .
+
+ onto:memberOf rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Course 

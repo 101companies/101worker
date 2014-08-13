@@ -1,0 +1,77 @@
+:onto:Contribution rdf:type onto:Entity .
+
+ onto:uses rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Language 
+
+
+ onto:uses rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Technology 
+
+
+ onto:developedBy rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Contributor 
+
+
+ onto:reviewedBy rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Contributor 
+
+
+ onto:implements rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Feature 
+
+
+ onto:memberOf rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Theme 
+
+
+ onto:uses rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Concept 
+
+
+ onto:moreComplexThan rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Contribution 
+
+
+ onto:varies rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Contribution 
+
+
+ onto:basedOn rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Contribution 
+
+
+ onto:moreComplexThan rdf:type owl:ObjectProperty ; 
+ rdfs:label "Name of the entity" ; 
+ rdfs:comment "Comment" ; 
+ rdfs:domain onto:Entity ; 
+ rdfs:range onto:Contribution 

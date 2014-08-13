@@ -185,7 +185,7 @@ def checkByKey(
 # Loop over all 101repo files
 def loopOverFiles(fun, topdown):
     for root, dirs, files1 in \
-            os.walk(os.path.join(const101.sRoot, "contributions"), topdown, None, False):
+            os.walk(os.path.join(const101.sRoot, "contributions"), topdown, None, True):
         if not root.startswith(os.path.join(const101.sRoot, ".git")+os.sep):
             dirname = root[len(const101.sRoot)+1:]
             files = [ f for f in files1 if not f in [".gitignore"] ]

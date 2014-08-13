@@ -1,6 +1,6 @@
 {
     "@id": "onto:Technology",
-    "@type": "onto:Entity",
+    "@type": "onto:Instrument",
     "properties": [
         {
             "property": "onto:uses",

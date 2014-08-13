@@ -1,0 +1,5 @@
+SELECT DISTINCT ?language ?paradigm WHERE {
+  ?language rdf:type ?type_of_language . 
+  ?type_of_language onto:supports ?paradigm . 
+  ?paradigm rdfs:subClassOf onto:Programming_paradigm . 
+}
