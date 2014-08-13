@@ -156,7 +156,7 @@ def make_contribution_resource(page, graph):
             if ':' in internal_link:
                 p, n = internal_link.split(':')[0], internal_link.split(':')[1]
             else:
-                p, n = 'no_ns', internal_link
+                p, n = 'Concept', internal_link
             graph.add( (uri, encodeOntology('mentions'), encodeResource(p,n)) )
 
     # Error check
@@ -213,10 +213,11 @@ def make_general_resource(page, graph):
         predicate = encodeOntology(key)
         for p in page[key]:
             if isinstance(p, basestring):
-                ns,target_uri = 'no_ns',p
+                target_uri = p
+                graph.add((uri, predicate, target_uri)
             else:
                 ns,target_uri = p['p'],p['n']
-            graph.add((uri, predicate, encodeResource(ns,target_uri)))
+                graph.add((uri, predicate, encodeResource(ns,target_uri)))
 
     # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
     # Loop over internal links for mentions statements
@@ -225,7 +226,7 @@ def make_general_resource(page, graph):
             if ':' in internal_link:
                 p, n = internal_link.split(':')[0], internal_link.split(':')[1]
             else:
-                p, n = 'no_ns',internal_link
+                p, n = 'Concept',internal_link
             graph.add( (uri, encodeOntology('mentions'), encodeResource(p,n)) )
 
     # Error check
@@ -270,6 +271,9 @@ def main():
         else:
             make_general_resource(page, graph)
 
+    for key in namespace_cache.keys():
+        graph.bind(key, namespace_cache[key])
+
     print 'Writing graph.rdf...'
     open('graph.rdf', 'w').write(graph.serialize())
 
@@ -278,7 +282,7 @@ def main():
 
     print 'Uploading serialized file...'
     params     = { 'context': '<' + 'http://101companies.org' + '>' }
-    endpoint = "http://141.26.71.114/openrdf-sesame/repositories/Testing_2/statements?%s" % (urllib.urlencode(params))
+    endpoint = "http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/statements?%s" % (urllib.urlencode(params))
     data = open('graph.rdf', 'r').read()
     (response, content) = httplib2.Http().request(endpoint, 'PUT', body=data, headers={ 'content-type': 'application/rdf+xml' })
     print 'Response was {}'.format(response)
