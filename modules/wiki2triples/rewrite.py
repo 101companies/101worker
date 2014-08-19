@@ -169,7 +169,9 @@ def make_general_resource(page, graph):
     print page['n']
     # Make unique name for this resource
     if 'isA' in page:
-        uri = encodeOntology( page['n'] )
+        uri = resources[ encode(page['n']) ]
+        graph.add((encodeOntology(page['n']), rdf['type'], rdfs['Class']))
+        graph.add((uri, rdf['type'], encodeOntology(page['n'])))
     else:
         uri = encodeResource( page['p'], page['n'] )
 
@@ -261,6 +263,13 @@ def main():
     # Starting to add stuff
     print 'Adding ontology classes'
     make_ontology_classes(graph)
+
+    print 'Building class cache'
+    for page in wiki:
+        if 'isA' in page:
+            page[''] = encodeOntology(page['n'])
+        else:
+            page[''] = encodeResource(page.get('p', None), page['n'])
 
     print 'Adding data from wiki pages'
     for page in collect(wiki):
