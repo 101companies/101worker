@@ -216,12 +216,12 @@ def make_general_resource(page, graph):
         for p in page[key]:
             if isinstance(p, basestring):
                 target_uri = p
-                graph.add((uri, predicate, target_uri)
+                graph.add((uri, predicate, target_uri))
             else:
                 ns,target_uri = p['p'],p['n']
                 graph.add((uri, predicate, encodeResource(ns,target_uri)))
 
-    # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
+     # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
     # Loop over internal links for mentions statements
     for internal_link in page.get('internal_links', []):
         if not '::' in internal_link:
