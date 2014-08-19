@@ -26,8 +26,6 @@ rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 namespace_cache = {}
 
 def get_namespace(namespace_name):
-    namespace_name = ''
-
     if not namespace_name in namespace_cache:
         namespace_cache[namespace_name] = rdflib.Namespace('http://101companies.org/resources/'+namespace_name.strip()+'#')
     return namespace_cache[namespace_name]
@@ -179,7 +177,11 @@ def make_general_resource(page, graph):
 
 
     # Add types
-    graph.add( (uri, rdf['type'], encodeOntology(page['p'] + 'Page')) )
+    if 'isA' in page:
+        graph.add( (encodeOntology(page['n']), rdf['type'], encodeOntology(page['p'] + 'Page')) )
+    else:
+        graph.add( (uri, rdf['type'], encodeOntology(page['p'] + 'Page')) )
+
     if not page['p'] == 'Concept':
         graph.add( (uri, rdf['type'], encodeOntology(page['p'])) )
 
@@ -190,7 +192,7 @@ def make_general_resource(page, graph):
     # Add subclass relationships
     for isA in page.get('isA', []):
         target_uri = isA['n']
-        graph.add( (uri, rdfs['subClassOf'], encodeOntology(target_uri)) )
+        graph.add( (encodeOntology(page['n']), rdfs['subClassOf'], encodeOntology(target_uri)) )
 
     # Deal with subresources
     for sub_resource_name in page.get('subresources',{}):
