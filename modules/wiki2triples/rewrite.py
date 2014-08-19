@@ -146,7 +146,7 @@ def make_contribution_resource(page, graph):
     for key in filter(lambda x: x not in ignored_keys_in_contributions, page):
         predicate = encodeOntology(key)
         for p in page[key]:
-            target_uri = encodeResource(page['p'], p['n'])
+            target_uri = encodeResource(page.get('p', None), p['n'])
             graph.add((uri, predicate, target_uri))
 
     # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
