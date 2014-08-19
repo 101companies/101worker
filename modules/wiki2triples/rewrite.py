@@ -264,13 +264,6 @@ def main():
     print 'Adding ontology classes'
     make_ontology_classes(graph)
 
-    print 'Building class cache'
-    for page in wiki:
-        if 'isA' in page:
-            page[''] = encodeOntology(page['n'])
-        else:
-            page[''] = encodeResource(page.get('p', None), page['n'])
-
     print 'Adding data from wiki pages'
     for page in collect(wiki):
         #print "dealing with page {}".format(page)
