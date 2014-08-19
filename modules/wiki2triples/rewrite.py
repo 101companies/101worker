@@ -26,8 +26,10 @@ rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 namespace_cache = {}
 
 def get_namespace(namespace_name):
+    namespace_name = ''
+
     if not namespace_name in namespace_cache:
-        namespace_cache[namespace_name] = rdflib.Namespace('http://101companies.org/resources/'+namespace_name+'#')
+        namespace_cache[namespace_name] = rdflib.Namespace('http://101companies.org/resources/'+namespace_name.strip()+'#')
     return namespace_cache[namespace_name]
 
 
