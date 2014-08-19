@@ -215,7 +215,7 @@ def make_general_resource(page, graph):
         predicate = encodeOntology(key)
         for p in page[key]:
             if isinstance(p, basestring):
-                target_uri = p
+                target_uri = rdflib.URIRef(p)
                 graph.add((uri, predicate, target_uri))
             else:
                 ns,target_uri = p['p'],p['n']
