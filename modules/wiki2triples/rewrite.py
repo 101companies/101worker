@@ -100,6 +100,29 @@ def encodeResource(namespace, s):
     if not namespace: namespace = 'Concept'
     return get_namespace(namespace)[ encode(s) ]
 
+def disambiguate(p):
+    if isinstance(p, basestring):
+        return URIRef(urllib.quote(p))
+
+    namespace, name = p.get('p', 'Concept'), p['n']
+    if name in classes_in_wiki or (namespace+':'+name) in classes_in_wiki:
+        return resources[encode(name)]
+    else:
+        return encodeResource(namespace, name)
+            # if isinstance(p, basestring):
+            #     target_uri = rdflib.URIRef(p)
+            #     graph.add((uri, predicate, target_uri))
+            # else:
+            #     ns, target_uri = p['p'], p['n']
+            #     if not ns: t_ns = 'Concept'
+            #     else: t_ns = ns
+            #     if target_uri in classes_in_wiki or (t_ns+':'+target_uri) in classes_in_wiki:
+            #         if 'OO programming' in target_uri: debug.append({'in_class':True,'ns':ns,'t_ns':t_ns,'target':target_uri})
+            #         graph.add((uri, predicate, resources[encode(target_uri)]))
+            #     else:
+            #         graph.add((uri, predicate, encodeResource(ns,target_uri)))
+
+
 
 def make_ontology_classes(graph):
     # Add highest level classes
@@ -137,13 +160,13 @@ def make_contribution_resource(page, graph):
 
     # Convert linksTo
     for link in page.get('linksTo', []):
-        graph.add( (uri, encodeOntology('linksTo'), URIRef(urllib.quote(link))) )
+        graph.add( (uri, encodeOntology('linksTo'), disambiguate(link)) )
 
     for link in page.get('similarTo', []):
-        graph.add( (uri, encodeOntology('similarTo'), URIRef(urllib.quote(link))) )
+        graph.add( (uri, encodeOntology('similarTo'), disambiguate(link)) )
 
     for link in page.get('sameAs', []):
-        graph.add( (uri, encodeOntology('sameAs'), URIRef(urllib.quote(link))) )
+        graph.add( (uri, encodeOntology('sameAs'), disambiguate(link)) )
 
     # Add remaining predicates
     for key in filter(lambda x: x not in ignored_keys_in_contributions, page):
@@ -204,35 +227,25 @@ def make_general_resource(page, graph):
         for key in filter(lambda x: x not in ignored_keys_in_subresources, sub_resource):
             predicate = encodeOntology(key)
             for p in sub_resource[key]:
-                ns,target_uri = p['p'],p['n']
-                graph.add( (sub_resource_uri, predicate, encodeResource(ns,target_uri)) )
+                target = disambiguate(p)
+                graph.add( (sub_resource_uri, predicate, target) )
 
     # Convert linksTo
     for link in page.get('linksTo', []):
-        graph.add( (uri, encodeOntology('linksTo'), URIRef(urllib.quote(link))) )
+        graph.add( (uri, encodeOntology('linksTo'), disambiguate(link)) )
 
     for link in page.get('similarTo', []):
-        graph.add( (uri, encodeOntology('similarTo'), URIRef(urllib.quote(link))) )
+        graph.add( (uri, encodeOntology('similarTo'), disambiguate(link)) )
 
     for link in page.get('sameAs', []):
-        graph.add( (uri, encodeOntology('sameAs'), URIRef(urllib.quote(link))) )
+        graph.add( (uri, encodeOntology('sameAs'), disambiguate(link)) )
 
     # Add remaining predicates
     for key in filter(lambda x: x not in ignored_keys_general, page):
         predicate = encodeOntology(key)
         for p in page[key]:
-            if isinstance(p, basestring):
-                target_uri = rdflib.URIRef(p)
-                graph.add((uri, predicate, target_uri))
-            else:
-                ns, target_uri = p['p'], p['n']
-                if not ns: t_ns = 'Concept' 
-                else: t_ns = ns
-                if target_uri in classes_in_wiki or (t_ns+':'+target_uri) in classes_in_wiki:
-                    if 'OO programming' in target_uri: debug.append({'in_class':True,'ns':ns,'t_ns':t_ns,'target':target_uri})
-                    graph.add((uri, predicate, resources[encode(target_uri)]))
-                else:
-                    graph.add((uri, predicate, encodeResource(ns,target_uri)))
+            target = disambiguate(p)
+            graph.add((uri, predicate, target))
 
      # Sorry, I know this is ugly, but I don't have time to properly refactor this stuff
     # Loop over internal links for mentions statements
@@ -242,10 +255,9 @@ def make_general_resource(page, graph):
                 p, n = internal_link.split(':')[0], internal_link.split(':')[1]
             else:
                 p, n = 'Concept',internal_link
-            if (p+':'+n) in classes_in_wiki:
-                graph.add( (uri, encodeOntology('mentions'), resources[encode(n)]) )
-            else:
-                graph.add( (uri, encodeOntology('mentions'), encodeResource(p,n)) )
+            target = disambiguate({'p':p, 'n':n})
+            graph.add( (uri, encodeOntology('mentions'), target) )
+
 
     # Error check
     for key in filter(lambda x: x not in ignored_keys_for_validation, page):
