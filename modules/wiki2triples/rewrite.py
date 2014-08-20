@@ -105,24 +105,11 @@ def disambiguate(p):
         return URIRef(urllib.quote(p))
 
     namespace, name = p.get('p', 'Concept'), p['n']
+    if not namespace: namespace = 'Concept'
     if name in classes_in_wiki or (namespace+':'+name) in classes_in_wiki:
         return resources[encode(name)]
     else:
         return encodeResource(namespace, name)
-            # if isinstance(p, basestring):
-            #     target_uri = rdflib.URIRef(p)
-            #     graph.add((uri, predicate, target_uri))
-            # else:
-            #     ns, target_uri = p['p'], p['n']
-            #     if not ns: t_ns = 'Concept'
-            #     else: t_ns = ns
-            #     if target_uri in classes_in_wiki or (t_ns+':'+target_uri) in classes_in_wiki:
-            #         if 'OO programming' in target_uri: debug.append({'in_class':True,'ns':ns,'t_ns':t_ns,'target':target_uri})
-            #         graph.add((uri, predicate, resources[encode(target_uri)]))
-            #     else:
-            #         graph.add((uri, predicate, encodeResource(ns,target_uri)))
-
-
 
 def make_ontology_classes(graph):
     # Add highest level classes
