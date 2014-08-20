@@ -24,6 +24,8 @@ rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
 namespace_cache = {}
+classes_in_wiki = []
+
 
 def get_namespace(namespace_name):
     if not namespace_name in namespace_cache:
@@ -222,10 +224,10 @@ def make_general_resource(page, graph):
                 target_uri = rdflib.URIRef(p)
                 graph.add((uri, predicate, target_uri))
             else:
-                ns,target_uri = p['p'],p['n']
+                ns, target_uri = p['p'], p['n']
                 graph.add((uri, predicate, encodeResource(ns,target_uri)))
 
-     # Sorry, I know this is ugly, but I don't ahve time to properly refactor this stuff
+     # Sorry, I know this is ugly, but I don't have time to properly refactor this stuff
     # Loop over internal links for mentions statements
     for internal_link in page.get('internal_links', []):
         if not '::' in internal_link:
@@ -267,6 +269,12 @@ def main():
     # Starting to add stuff
     print 'Adding ontology classes'
     make_ontology_classes(graph)
+
+    for page in wiki:
+        if 'isA' in page:
+            if not page.get('p', None): link = page['p'] + ':' + page['n']
+            else: link = page['n']
+            classes_in_wiki.append(link)
 
     print 'Adding data from wiki pages'
     for page in collect(wiki):
