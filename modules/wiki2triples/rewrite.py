@@ -225,7 +225,10 @@ def make_general_resource(page, graph):
                 graph.add((uri, predicate, target_uri))
             else:
                 ns, target_uri = p['p'], p['n']
-                graph.add((uri, predicate, encodeResource(ns,target_uri)))
+                if target_uri in classes_in_wiki or (ns+':'+target_uri) in classes_in_wiki:
+                    graph.add((uri, predicate, resources[encode(target_uri)]))
+                else:
+                    graph.add((uri, predicate, encodeResource(ns,target_uri)))
 
      # Sorry, I know this is ugly, but I don't have time to properly refactor this stuff
     # Loop over internal links for mentions statements
@@ -235,7 +238,10 @@ def make_general_resource(page, graph):
                 p, n = internal_link.split(':')[0], internal_link.split(':')[1]
             else:
                 p, n = 'Concept',internal_link
-            graph.add( (uri, encodeOntology('mentions'), encodeResource(p,n)) )
+            if (p+':'+n) in classes_in_wiki:
+                graph.add( (uri, encodeOntology('mentions'), resources[encode(n)]) )
+            else:
+                graph.add( (uri, encodeOntology('mentions'), encodeResource(p,n)) )
 
     # Error check
     for key in filter(lambda x: x not in ignored_keys_for_validation, page):
@@ -273,7 +279,7 @@ def main():
     for page in wiki:
         if 'isA' in page:
             if not page.get('p', None): link = page['p'] + ':' + page['n']
-            else: link = page['n']
+            else: link = 'Concept:' page['n']
             classes_in_wiki.append(link)
 
     print 'Adding data from wiki pages'
