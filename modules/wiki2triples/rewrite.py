@@ -25,6 +25,7 @@ rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
 namespace_cache = {}
 classes_in_wiki = []
+debug = []
 
 
 def get_namespace(namespace_name):
@@ -225,7 +226,10 @@ def make_general_resource(page, graph):
                 graph.add((uri, predicate, target_uri))
             else:
                 ns, target_uri = p['p'], p['n']
-                if target_uri in classes_in_wiki or (ns+':'+target_uri) in classes_in_wiki:
+                if not ns: t_ns = 'Concept' 
+                else: t_ns = ns
+                if target_uri in classes_in_wiki or (t_ns+':'+target_uri) in classes_in_wiki:
+                    if 'OO programming' in target_uri: debug.append({'in_class':True,'ns':ns,'t_ns':t_ns,'target':target_uri})
                     graph.add((uri, predicate, resources[encode(target_uri)]))
                 else:
                     graph.add((uri, predicate, encodeResource(ns,target_uri)))
@@ -279,7 +283,7 @@ def main():
     for page in wiki:
         if 'isA' in page:
             if not page.get('p', None): link = page['p'] + ':' + page['n']
-            else: link = 'Concept:' page['n']
+            else: link = 'Concept:' + page['n']
             classes_in_wiki.append(link)
 
     print 'Adding data from wiki pages'
@@ -315,4 +319,6 @@ if __name__ == '__main__':
     print 'Starting process'
     main()
     print 'Finished... '
+    json.dump(classes_in_wiki, open('./classes.json', 'w'), indent=4)
+    json.dump(debug, open('./debug.json', 'w'), indent=4)
     json.dump(erroneous_pages, open('./erroneous_pages.json', 'w'))
