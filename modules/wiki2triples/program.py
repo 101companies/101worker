@@ -92,9 +92,11 @@ def encode_resource(namespace, s):
 
 def disambiguate(p):
     if 'http://' in p:
-        print p
-        return URIRef('http://example.org')#URIRef(urllib.quote(p.replace(' ','_').replace('-',' ')))
-
+        try:
+            return URIRef(urllib.quote(encode(p)))
+        except:
+            return URIRef('http://failedConversion.com')
+        
     if ':' in p:
         namespace, name = p.split(':')[0], p.split(':')[1]
     else:
@@ -181,14 +183,15 @@ def map_instance(page, graph):
     for link in page.get('internal_links', []):
         # Determine predicate
         if '::' in link:
-            predicate = encode_predicate(link.split('::')[0])
+            predicate = link.split('::')[0]
             obj = disambiguate(link.split('::')[1])
         else:
-            predicate = encode_predicate('mentions')
+            predicate = 'mentions'
             obj = disambiguate(link)
 
-        triple = uri, predicate, obj
-        graph.add(triple)
+        if predicate not in ignored_keys_in_instances:
+            triple = uri, encode_predicate(predicate), obj
+            graph.add(triple)
 
 
 def map_page(page, graph):
