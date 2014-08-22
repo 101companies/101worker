@@ -211,7 +211,7 @@ def map_class(page, graph):
         triple = onto_entity, rdfs['subClassOf'], encode_ontology(o['n'])
         graph.add(triple)
 
-    triple = onto_entity, encode_ontology('classifies'), get_namespace('Concept')[page['n']]
+    triple = onto_entity, encode_ontology('classifies'), get_namespace('Concept')[encode(page['n'])]
     graph.add(triple)
 
     # Normal instance part
@@ -241,6 +241,7 @@ def map_class(page, graph):
 
 
 def map_page(page, graph):
+    print 'Converting {}:{}'.format(page['p'],page['n'])
     is_instance = not 'isA' in page
 
     if is_instance:
