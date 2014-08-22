@@ -177,7 +177,7 @@ def map_instance(page, graph):
     graph.add(triple)
 
     for o in page.get('instanceOf', []):
-        triple = uri, rdf['type'], encode_ontology(o)
+        triple = uri, rdf['type'], encode_ontology(o['n'])
         graph.add(triple)
 
     #TODO handle sub resources
@@ -194,7 +194,7 @@ def map_instance(page, graph):
             predicate = 'mentions'
             obj = disambiguate(link)
 
-        if predicate not in ignored_keys_in_instances:
+        if (predicate[0].lower() + predicate[1:]) not in ignored_keys_in_instances:
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
 
@@ -239,7 +239,7 @@ def map_class(page, graph):
             predicate = 'mentions'
             obj = disambiguate(link)
 
-        if predicate not in ignored_keys_in_classes:
+        if (predicate[0].lower() + predicate[1:]) not in ignored_keys_in_classes:
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
 

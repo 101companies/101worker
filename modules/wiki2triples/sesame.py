@@ -15,8 +15,7 @@ def clear_graph(uri):
 
 
 def upload(uri, path):
-    params = { 'context': '<' + 'http://101companies.org' + '>' }
-    endpoint = "http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/statements?%s" % (urllib.urlencode(params))
+    endpoint = "http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/statements"
     data = open(path, 'r').read()
     (response, content) = httplib2.Http().request(endpoint, 'PUT', body=data, headers={ 'content-type': 'application/rdf+xml' })
     response, content

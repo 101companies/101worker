@@ -2,9 +2,9 @@ include ../Makefile.vars
 output = ${dumpsDir}/erroneous_pages.json
 
 run:
-	./rewrite.py
-	cp erroneous_pages.json ${output}
+	./program.py
+	#cp erroneous_pages.json ${output}
 
 clean:
 	rm -f ${output}
-	rm -f erroneous_pages.json
+	#rm -f erroneous_pages.json
