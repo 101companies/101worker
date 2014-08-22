@@ -1,5 +1,9 @@
+{# note: disabled template because the query does not return anything
+
 language feature contribution sum_of_langs_and_techs
 -------------------
 {% for x in data %}
 {{ x['language']['value'] }};{{ x['feature']['value'] }};{{ x['contribution']['value'] }}; {{ x['sum_of_langs_and_techs']['value'] }}
 {% endfor %}
+
+#}
