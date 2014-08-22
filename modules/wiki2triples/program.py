@@ -176,6 +176,10 @@ def map_instance(page, graph):
     triple = uri, rdf['type'], encode_ontology(clss)
     graph.add(triple)
 
+    for o in page.get('instanceOf', []):
+        triple = uri, rdf['type'], encode_ontology(o)
+        graph.add(triple)
+
     #TODO handle sub resources
     for sub in page.get('subresources', []):
         pass
