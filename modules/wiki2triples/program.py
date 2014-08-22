@@ -48,6 +48,7 @@ erroneous_pages = []
 
 ignored_keys_validation = ['p', 'n', 'headline', 'internal_links', 'subresources', 'isA']
 ignored_keys_in_instances = ['p', 'n', 'instanceOf', 'isA', 'headline', 'internal_links', 'subresources']
+ignored_keys_in_classes = ignored_keys_in_instances
 
 models = filter(lambda x: '.json' in x, os.listdir('./../validate/models'))
 for model in models:
@@ -56,7 +57,7 @@ for model in models:
     x = json.load(open('../validate/models/' + model, 'r'))
     for property in x.get('properties', []):
         allowed_relations[model_name].append(property['property'])
-print allowed_relations
+#print allowed_relations
 for y in filter(lambda x: x not in ['entity'], allowed_relations.keys()):
     allowed_relations[y] += allowed_relations['entity']
 
@@ -96,28 +97,28 @@ def disambiguate(p):
             return URIRef(urllib.quote(encode(p)))
         except:
             return URIRef('http://failedConversion.com')
-        
+
     if ':' in p:
         namespace, name = p.split(':')[0], p.split(':')[1]
     else:
         namespace, name = 'Concept', p
     if name in classes_in_wiki or (namespace+':'+name) in classes_in_wiki:
-        return resources[encode(name)]
+        return encode_resource('Concept', name)
     else:
         return encode_resource(namespace, name)
 
 
 def make_ontology_classes(graph):
     # Add highest level classes
-    wikipage = encode_ontology('WikiPage')
-    graph.add( (wikipage, rdf['type'], rdfs['Class']) )
+    wiki_page = encode_ontology('WikiPage')
+    graph.add( (wiki_page, rdf['type'], rdfs['Class']) )
 
     entity = encode_ontology('Entity')
-    entityPage = encode_ontology('EntityPage')
+    entity_page = encode_ontology('EntityPage')
 
     graph.add( (entity, rdf['type'], rdfs['Class']) )
-    graph.add( (entityPage, rdf['type'], rdfs['Class']) )
-    graph.add( (entityPage, rdfs['subClassOf'], wikipage))
+    graph.add( (entity_page, rdf['type'], rdfs['Class']) )
+    graph.add( (entity_page, rdfs['subClassOf'], wiki_page))
 
     for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature', 'Script', 'Course']:
         thing = encode_ontology(ns)
@@ -127,7 +128,7 @@ def make_ontology_classes(graph):
         graph.add( (thing, rdfs['subClassOf'], entity))
 
         graph.add( (page, rdf['type'], rdfs['Class']) )
-        graph.add( (page, rdfs['subClassOf'], wikipage))
+        graph.add( (page, rdfs['subClassOf'], wiki_page))
 
 
 def hardcoded_classes(graph):
@@ -193,12 +194,59 @@ def map_instance(page, graph):
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
 
+def map_class(page, graph):
+    # I dislike this - I should really make this call map_instance for the instance part
+    onto_entity = encode_ontology(page['n'])
+
+    triple = onto_entity, rdf['type'], rdfs['Class']
+    graph.add(triple)
+
+    triple = onto_entity, rdf['type'], encode_ontology('Classifier')
+    graph.add(triple)
+
+    triple = onto_entity, rdf['type'], encode_ontology('WikiPage')
+    graph.add(triple)
+
+    for o in page.get('isA', []):
+        triple = onto_entity, rdfs['subClassOf'], encode_ontology(o['n'])
+        graph.add(triple)
+
+    triple = onto_entity, encode_ontology('classifies'), get_namespace('Concept')[page['n']]
+    graph.add(triple)
+
+    # Normal instance part
+    clss = 'Concept'
+    uri = encode_resource(clss, page['n'])
+
+    triple = uri, rdf['type'], encode_ontology(clss)
+    graph.add(triple)
+
+    #TODO handle sub resources
+    for sub in page.get('subresources', []):
+        pass
+
+    #Remaining predicates should all be in internal links
+    for link in page.get('internal_links', []):
+        # Determine predicate
+        if '::' in link:
+            predicate = link.split('::')[0]
+            obj = disambiguate(link.split('::')[1])
+        else:
+            predicate = 'mentions'
+            obj = disambiguate(link)
+
+        if predicate not in ignored_keys_in_classes:
+            triple = uri, encode_predicate(predicate), obj
+            graph.add(triple)
+
 
 def map_page(page, graph):
     is_instance = not 'isA' in page
 
     if is_instance:
         map_instance(page, graph)
+    else:
+        map_class(page, graph)
 
 def main():
     uri = 'http://triples.101companies.org/openrdf-sesame/repositories/Testing_2'
