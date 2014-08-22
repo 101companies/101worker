@@ -43,7 +43,7 @@ if __name__=='__main__':
                 template_file = "default.tmpl"
 
             template = env.get_template(template_file)
-            output = template.render(data=res)
+            output = template.render(data=res, strip101=lambda x: x.replace('http://101companies.org/', ''))
             #print output
 
             with open(os.path.join(os.path.dirname(__file__), 'output', file_to_save.replace('.tmpl', '.txt')), "w") as output_file:
