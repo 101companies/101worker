@@ -91,11 +91,14 @@ def encode_resource(namespace, s):
 
 
 def disambiguate(p):
-    if isinstance(p, basestring):
-        return URIRef(urllib.quote(p))
+    if 'http://' in p:
+        print p
+        return URIRef('http://example.org')#URIRef(urllib.quote(p.replace(' ','_').replace('-',' ')))
 
-    namespace, name = p.get('p', 'Concept'), p['n']
-    if not namespace: namespace = 'Concept'
+    if ':' in p:
+        namespace, name = p.split(':')[0], p.split(':')[1]
+    else:
+        namespace, name = 'Concept', p
     if name in classes_in_wiki or (namespace+':'+name) in classes_in_wiki:
         return resources[encode(name)]
     else:
