@@ -2,14 +2,11 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Martin Leinberger'
 
-
-
 import os
 import sys
 import json
 import rdflib
 from rdflib import URIRef
-from rdfalchemy.sparql.sesame2 import SesameGraph
 import urllib
 import sesame
 sys.path.append('../../libraries')
@@ -25,7 +22,7 @@ rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
 namespace_cache = {}
 classes_in_wiki = []
-debug = []
+debug = {}
 
 
 def get_namespace(namespace_name):
@@ -35,13 +32,6 @@ def get_namespace(namespace_name):
 
 
 # Keys to be ignored for general mapping - they might however be processed in a more specific part of the code
-ignored_keys_in_contributions = ['p', 'n', 'instanceOf', 'internal_links', 'headline', 'identifies', 'subresources',
-                                 'similarTo', 'linksTo', 'sameAs', 'relatesTo']
-ignored_keys_in_subresources = ['internal_links']
-ignored_keys_general = ['p', 'n', 'instanceOf', 'headline', 'internal_links', 'linksTo', 'isA', 'identifies',
-                        'subresources', 'similarTo', 'sameAs', 'relatesTo']
-ignored_keys_for_validation  = ['p', 'n', 'headline', 'internal_links', 'subresources', 'isA']
-
 allowed_relations = {}
 erroneous_pages = []
 
@@ -49,6 +39,8 @@ erroneous_pages = []
 ignored_keys_validation = ['p', 'n', 'headline', 'internal_links', 'subresources', 'isA']
 ignored_keys_in_instances = ['p', 'n', 'instanceOf', 'isA', 'headline', 'internal_links', 'subresources']
 ignored_keys_in_classes = ignored_keys_in_instances
+ignored_keys_in_subresources = ['internal_links']
+
 
 models = filter(lambda x: '.json' in x, os.listdir('./../validate/models'))
 for model in models:
@@ -96,6 +88,7 @@ def disambiguate(p):
         try:
             return URIRef(urllib.quote(encode(p)))
         except:
+            debug.setdefault('non_convertable_uris', list).append(p)
             return URIRef('http://failedConversion.com')
 
     if ':' in p:
@@ -159,8 +152,6 @@ def hardcoded_classes(graph):
         s = encode_ontology(s)
         triple = (s, rdfs['subClassOf'], entity)
         graph.add(triple)
-        #TODO What about wiki pages?
-
 
 def map_instance(page, graph):
     def class_for_page():
@@ -181,8 +172,14 @@ def map_instance(page, graph):
         graph.add(triple)
 
     #TODO handle sub resources
-    for sub in page.get('subresources', []):
-        pass
+    for sub_resource_name in page.get('subresources',{}):
+        sub_resource_uri = uri + '#' + encode(sub_resource_name)
+        sub_resource = page['subresources'][sub_resource_name]
+        for key in filter(lambda x: x not in ignored_keys_in_subresources, sub_resource):
+            predicate = encode_ontology(key)
+            for p in sub_resource[key]:
+                target = disambiguate(p)
+                graph.add( (sub_resource_uri, predicate, target) )
 
     #Remaining predicates should all be in internal links
     for link in page.get('internal_links', []):
@@ -197,6 +194,7 @@ def map_instance(page, graph):
         if (predicate[0].lower() + predicate[1:]) not in ignored_keys_in_instances:
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
+
 
 def map_class(page, graph):
     # I dislike this - I should really make this call map_instance for the instance part
@@ -253,6 +251,7 @@ def map_page(page, graph):
     else:
         map_class(page, graph)
 
+
 def main():
     uri = 'http://triples.101companies.org/openrdf-sesame/repositories/Testing_2'
     serialized_version = 'graph.rdf'
@@ -287,13 +286,15 @@ def main():
         graph.bind(key, namespace_cache[key])
 
     print 'Serializing graph...'
-    open('graph.rdf', 'w').write(graph.serialize())
+    open(serialized_version, 'w').write(graph.serialize())
 
     print 'Clearing Sesame...'
-    sesame.clear_graph(uri)
+    response, content = sesame.clear_graph(uri)
+    assert response['status'] == '204'
 
     print 'Uploading serialized file...'
-    sesame.upload(uri, 'graph.rdf')
+    response, content = sesame.upload(uri, serialized_version)
+
 
 if __name__ == '__main__':
     print 'Starting process'
