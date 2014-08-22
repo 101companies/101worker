@@ -1,0 +1,4 @@
+SELECT DISTINCT ?language WHERE {
+  ?language rdf:type onto:Language .
+} ORDER BY ?language
+
