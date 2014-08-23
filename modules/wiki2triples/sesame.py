@@ -10,7 +10,7 @@ def clear_graph(uri):
     (response, content) = httplib2.Http().request(endpoint, 'POST', body=data,
                                                   headers={ 'content-type': 'application/x-www-form-urlencoded',
                                                             'accept': 'application/sparql-update'})
-    response, content
+    return response, content
     #assert response['status'] == '204'
 
 
@@ -18,5 +18,5 @@ def upload(uri, path):
     endpoint = os.path.join(uri, 'statements')
     data = open(path, 'r').read()
     (response, content) = httplib2.Http().request(endpoint, 'PUT', body=data, headers={ 'content-type': 'application/rdf+xml' })
-    response, content
+    return response, content
     #print 'Response was {}'.format(response)
