@@ -101,27 +101,27 @@ def disambiguate(p):
         return encode_resource(namespace, name)
 
 
-def make_ontology_classes(graph):
-    # Add highest level classes
-    wiki_page = encode_ontology('WikiPage')
-    graph.add( (wiki_page, rdf['type'], rdfs['Class']) )
-
-    entity = encode_ontology('Entity')
-    entity_page = encode_ontology('EntityPage')
-
-    graph.add( (entity, rdf['type'], rdfs['Class']) )
-    graph.add( (entity_page, rdf['type'], rdfs['Class']) )
-    graph.add( (entity_page, rdfs['subClassOf'], wiki_page))
-
-    for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature', 'Script', 'Course']:
-        thing = encode_ontology(ns)
-        page = encode_ontology(ns+'Page')
-
-        graph.add( (thing, rdf['type'], rdfs['Class']) )
-        graph.add( (thing, rdfs['subClassOf'], entity))
-
-        graph.add( (page, rdf['type'], rdfs['Class']) )
-        graph.add( (page, rdfs['subClassOf'], wiki_page))
+# def make_ontology_classes(graph):
+#     # Add highest level classes
+#     wiki_page = encode_ontology('WikiPage')
+#     graph.add( (wiki_page, rdf['type'], rdfs['Class']) )
+#
+#     entity = encode_ontology('Entity')
+#     entity_page = encode_ontology('EntityPage')
+#
+#     graph.add( (entity, rdf['type'], rdfs['Class']) )
+#     graph.add( (entity_page, rdf['type'], rdfs['Class']) )
+#     graph.add( (entity_page, rdfs['subClassOf'], wiki_page))
+#
+#     for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature', 'Script', 'Course']:
+#         thing = encode_ontology(ns)
+#         page = encode_ontology(ns+'Page')
+#
+#         graph.add( (thing, rdf['type'], rdfs['Class']) )
+#         graph.add( (thing, rdfs['subClassOf'], entity))
+#
+#         graph.add( (page, rdf['type'], rdfs['Class']) )
+#         graph.add( (page, rdfs['subClassOf'], wiki_page))
 
 
 def hardcoded_classes(graph):
@@ -224,8 +224,14 @@ def map_class(page, graph):
     graph.add(triple)
 
     #TODO handle sub resources
-    for sub in page.get('subresources', []):
-        pass
+    for sub_resource_name in page.get('subresources',{}):
+        sub_resource_uri = uri + '#' + encode(sub_resource_name)
+        sub_resource = page['subresources'][sub_resource_name]
+        for key in filter(lambda x: x not in ignored_keys_in_subresources, sub_resource):
+            predicate = encode_ontology(key)
+            for p in sub_resource[key]:
+                target = disambiguate(p)
+                graph.add( (sub_resource_uri, predicate, target) )
 
     #Remaining predicates should all be in internal links
     for link in page.get('internal_links', []):
@@ -241,6 +247,9 @@ def map_class(page, graph):
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
 
+    for key in filter(lambda x: x not in ignored_keys_validation, page):
+        if not ('onto:'+key) in allowed_relations[page['p'].lower()]:
+            erroneous_pages.append({'page': (page['p']+':'+page['n']), 'invalid relation': key})
 
 def map_page(page, graph):
     print 'Converting {}:{}'.format(page['p'],page['n'])
@@ -265,9 +274,9 @@ def main():
     wiki = filter_pages(Dumps.WikiDump())
 
     print 'Adding hardcoded (ontology) classes'
-
-    print 'Adding ontology classes'
-    make_ontology_classes(graph)
+    hardcoded_classes(graph)
+    #print 'Adding ontology classes'
+    #make_ontology_classes(graph)
 
     # Building up cache to determine whether the relation is to a class or a instance
     # Do I really need this?
@@ -300,4 +309,4 @@ if __name__ == '__main__':
     print 'Starting process'
     main()
     print 'Finished... '
-    #json.dump(erroneous_pages, open('./erroneous_pages.json', 'w'))
+    json.dump(erroneous_pages, open('./erroneous_pages.json', 'w'))
