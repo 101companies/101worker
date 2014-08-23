@@ -94,7 +94,11 @@ def disambiguate(p):
     if ':' in p:
         namespace, name = p.split(':')[0], p.split(':')[1]
     else:
-        namespace, name = 'Concept', p
+        if isinstance(p, basestring):
+            namespace, name = 'Concept', p
+        else:
+            namespace, name = p['p'], p['n']
+            if not namespace: namespace = 'Concept'
     if name in classes_in_wiki or (namespace+':'+name) in classes_in_wiki:
         return encode_resource('Concept', name)
     else:
