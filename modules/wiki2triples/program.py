@@ -88,7 +88,7 @@ def disambiguate(p):
         try:
             return URIRef(urllib.quote(encode(p)))
         except:
-            debug.setdefault('non_convertable_uris', list).append(p)
+            debug.setdefault('non_convertable_uris', []).append(p)
             return URIRef('http://failedConversion.com')
 
     if ':' in p:
