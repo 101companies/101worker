@@ -1,0 +1,4 @@
+SELECT DISTINCT ?concept WHERE {
+  ?concept rdf:type onto:Concept .
+} ORDER BY ?concept
+
