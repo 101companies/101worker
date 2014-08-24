@@ -1,6 +1,56 @@
 \documentclass{article}
 
+\usepackage{tikz}
+\usepackage{boxedminipage}
 \usepackage{listings}
+\usepackage{lstsparql}
+\usepackage{lstcsv}
+\usepackage{comment}
+\usepackage{xcolor}
+
+\newcommand{\todo}[2]{\noindent{}TODO (#1): #2}
+\newcommand{\solasote}{{\itshape\textsf{SoLaSoTe}}}
+
+\definecolor{codebackground}{rgb}{0.97,0.97,0.97}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{keyword}{rgb}{0.5,0.0,0.5}
+\definecolor{comment}{rgb}{0.3,0.5,0.3}
+\definecolor{code}{rgb}{0.0,0.0,0.3}
+\definecolor{ncode}{rgb}{0.0,0.3,0.3}
+\definecolor{scode}{rgb}{0.3,0.0,0.3}
+\definecolor{static}{rgb}{0.0,0.0,0.3}
+
+\lstset{%
+numbers=none,
+basicstyle=\sffamily\color{ncode}\small\itshape,%
+frame=single,
+columns=fullflexible,
+sensitive,%
+%  fontadjust=true,%
+  showstringspaces=false,%
+  keywordstyle=\color{keyword},%
+  commentstyle=\color{comment}\normalfont\small,%
+%  tabsize=2,
+%  numbers=left,                   % where to put the line-numbers
+%  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  backgroundcolor=\color{codebackground},
+ %breaklines=true
+  morestring=[b]"'%
+}
+
+\newcommand{\sparql}[1]{%
+\medskip
+\lstinputlisting[language=SPARQL]{../sparql/#1.sparql}
+\medskip
+}
+
+\newcommand{\partialOutput}[2]{%
+\medskip
+\lstinputlisting[language=CSV,lastline=#1]{../output/#2.txt}
+...
+\medskip
+}
+
 
 \newcommand*{\Objective}[1]{\emph{Objective:} #1}
 \newcommand*{\Output}[1]{\emph{Output:} #1}
@@ -10,7 +60,83 @@
     \lstinputlisting{../output/#1.txt}
 }
 
+\title{Exploring the \solasote{} ontology\\
+(Draft as of \today)}
+
+\author{Ralf L\"ammel \and Martin Leinberger \and Andrei Varanovich\\
+Fachbereich Informatik, Universit\"at Koblenz-Landau, Germany}
+
 \begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Format of this document}
+
+\todo{Ralf}{Write this section.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Query/output series}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Entities of \solasote}
+
+\solasote{} covers software languages. The following SPARQL query
+retrieves all languages of the ontology:
+
+\sparql{listOfLanguages}
+
+\noindent
+Here is the first few languages--alphabetically sorted:
+
+\partialOutput{7}{listOfLanguages}
+
+\noindent
+\solasote{} covers software technologies, too. Here, is a SPARQL query
+that retrieves all technologies of the ontology:
+
+\sparql{listOfTechnologies}
+
+\noindent
+Here is the first few technologies--alphabetically sorted:
+
+\partialOutput{7}{listOfTechnologies}
+
+\noindent
+\solasote{} covers software concepts, too. Here, is a SPARQL query
+that retrieves all concepts of the ontology:
+
+\sparql{listOfConcepts}
+
+\noindent
+Here is the first few concepts--alphabetically sorted:
+
+\partialOutput{7}{listOfConcepts}
+
+\todo{Ralf}{What to do about names starting in `101'.}
+
+\todo{Ralf}{Clearly, some of the listed names are not proper concept names.}
+
+Likewise, other types of entities may be explored, e.g.:
+
+\begin{itemize}
+\item Features
+\item Contributions
+\item Contributors
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Consistency of \solasote}
+
+\todo{Ralf}{Write this section.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{comment}
 
 \input{associationOfDevelopersPages}
 
@@ -35,5 +161,7 @@
 \input{technologyContributionNoOfFeatures}
 
 \input{togetherness}
+
+\end{comment}
 
 \end{document}

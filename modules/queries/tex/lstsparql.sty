@@ -1,0 +1,20 @@
+\NeedsTeXFormat{LaTeX2e}%
+\ProvidesPackage{lstsparql}[2014/08/08 SPARQL support for Listings]%
+\RequirePackage{listings}%
+%
+\lstdefinelanguage{SPARQL}%
+{
+numbers=none,
+ keywords={
+  SELECT,
+  DISTINCT,
+  WHERE,
+  AS,
+  COUNT,
+  GROUP,
+  ORDER,
+  BY,
+  DESC
+  },%
+   morecomment=[l]\#,%
+  }[keywords,comments,strings]%

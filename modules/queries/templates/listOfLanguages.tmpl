@@ -1,4 +1,3 @@
-language
-{% for x in data %}
-{{ x['language']['value'] }}
+{% for x in data -%}
+{{ strip101(x['language']['value']) }}
 {% endfor %}
