@@ -1,0 +1,4 @@
+SELECT ?supertype {
+  onto:OO_programming_language rdfs:subClassOf ?supertype
+}
+ORDER BY ?supertype

@@ -253,6 +253,31 @@ is a proper classifier of languages (just as much as
 \item[\uri{rdfs:Resource}] This is the root type of all resources
   based on RDFS' underlying type system.
 \end{description}
+%
+We can also query the supertypes of a given type. For instance, let's
+query the supertypes of \uri{onto:OO\_programming\_language}, as we
+have encountered this type previously:
+
+\sparql{supertypesOfOoProgrammingLanguage}
+
+\noindent
+These are all the supertypes of \uri{onto:OO\_programming\_language};
+please note that all the types but \uri{onto:Programming\_language}
+are inferred and that inference clearly assumes reflexivity, since
+\uri{onto:OO\_programming\_language} is returned as a supertype of itself:
+
+\completeOutput{supertypesOfOoProgrammingLanguage}
+
+\noindent
+Alternatively, we can also query for all the instances of a certain
+class. For instance, we can ask for all the OO programming languages:
+
+\sparql{instancesOfOoProgrammingLanguage}
+
+\noindent
+These are some of the OO programming languages:
+
+\partialOutput{7}{instancesOfOoProgrammingLanguage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
