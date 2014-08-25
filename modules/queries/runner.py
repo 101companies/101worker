@@ -5,6 +5,8 @@ import os
 from connection import Connection
 from jinja2 import Environment, FileSystemLoader
 
+SPATXT = 'text/boolean'
+
 if __name__=='__main__':
     env = Environment(loader=FileSystemLoader('templates'))
     connection = Connection('http://triples.101companies.org/openrdf-sesame/')
@@ -12,6 +14,7 @@ if __name__=='__main__':
 
     connection.addnamespace('onto', 'http://101companies.org/ontology#')
     connection.addnamespace('res', 'http://101companies.org/resources#')
+    connection.addnamespace('lang', 'http://101companies.org/resources/Language#')
 
     relevant_path = os.path.join(os.path.dirname(__file__), 'sparql')
     included_extenstions = ['sparql']
@@ -33,8 +36,10 @@ if __name__=='__main__':
             if not infer:
                 res = connection.query(query, inference=False)
             else:
-                res = connection.query(query)
-
+                if "ASK" in query:
+                  res = connection.query(query, SPATXT)
+                else:
+                    res = connection.query(query)
             print res
 
 

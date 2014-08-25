@@ -36,7 +36,7 @@ class Connection:
         else:
             req = urllib2.Request(self.baseurl + method)
         req.add_header('Accept', atype)
-        req.add_header('Accept', 'application/sparql-results+json')
+        #req.add_header('Accept', 'application/sparql-results+json')
         #NEEDED to SET above to get sensible results.
         #req.add_header('Accept', 'application/rdf+xml')
         #req.add_header('Accept', 'application/sparql-results+xml')
