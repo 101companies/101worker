@@ -1,0 +1,3 @@
+{% for x in data -%}
+{{ strip101(x['domain']['value']) }}; {{ x['property']['value'] }}; {{ x['range']['value'] }}
+{% endfor %}

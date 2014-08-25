@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{fancyvrb}
 \usepackage{tikz}
 \usepackage{boxedminipage}
 \usepackage{listings}
@@ -7,7 +8,10 @@
 \usepackage{lstcsv}
 \usepackage{comment}
 \usepackage{xcolor}
+\usepackage{hyperref}
 
+\newcommand{\uri}[1]{\textsf{#1}}
+\newcommand{\ooo}[1]{\textsf{101#1}}%
 \newcommand{\todo}[2]{\noindent{}TODO (#1): #2}
 \newcommand{\solasote}{{\itshape\textsf{SoLaSoTe}}}
 \newcommand{\sparqlnote}[1]{
@@ -47,7 +51,7 @@ sensitive,%
 
 \noindent
 \begin{boxedminipage}{\hsize}
-\hfill{}SPARQL query \emph{#1}
+\hfill{}Query \underline{#1.sparql}
 \lstinputlisting[language=SPARQL]{../sparql/#1.sparql}
 \end{boxedminipage}
 \medskip
@@ -59,12 +63,25 @@ sensitive,%
 
 \noindent
 \begin{boxedminipage}{\hsize}
-\hfill{}Output of SPARQL query \emph{#2} (first few rows)
+\hfill{}Output of query \underline{#2.sparql} (first few rows)
 \lstinputlisting[language=CSV,lastline=#1]{../output/#2.txt}
 {\large{}...}
 \end{boxedminipage}
 \medskip
 }
+
+\newcommand{\completeOutput}[1]{%
+
+\medskip
+
+\noindent
+\begin{boxedminipage}{\hsize}
+\hfill{}Output of query \underline{#1.sparql}
+\lstinputlisting[language=CSV]{../output/#1.txt}
+\end{boxedminipage}
+\medskip
+}
+
 
 
 \newcommand*{\Objective}[1]{\emph{Objective:} #1}
@@ -85,6 +102,12 @@ Fachbereich Informatik, Universit\"at Koblenz-Landau, Germany}
 
 \maketitle
 
+\begin{abstract}
+\todo{Ralf}{Write abstract.}
+\end{abstract}
+
+\tableofcontents
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Format of this document}
@@ -102,36 +125,36 @@ Fachbereich Informatik, Universit\"at Koblenz-Landau, Germany}
 \solasote{} covers software languages. The following SPARQL query
 retrieves all languages of the ontology:
 
-\sparql{listOfLanguages}
+\sparql{languages}
 
 \sparqlnote{\todo{Ralf}{Explain new SPARQL constructs.}}
 
 \noindent
 Here is the first few languages sorted alphabetically:
 
-\partialOutput{7}{listOfLanguages}
+\partialOutput{7}{languages}
 
 \noindent
 \solasote{} covers software technologies, too. Here, is a SPARQL query
 that retrieves all technologies of the ontology:
 
-\sparql{listOfTechnologies}
+\sparql{technologies}
 
 \noindent
 Here is the first few technologies sorted alphabetically:
 
-\partialOutput{7}{listOfTechnologies}
+\partialOutput{7}{technologies}
 
 \noindent
 \solasote{} covers software concepts, too. Here, is a SPARQL query
 that retrieves all concepts of the ontology:
 
-\sparql{listOfConcepts}
+\sparql{concepts}
 
 \noindent
 Here is the first few concepts sorted alphabetically:
 
-\partialOutput{7}{listOfConcepts}
+\partialOutput{7}{concepts}
 
 \todo{Ralf}{What to do about names starting in `101'.}
 
@@ -144,6 +167,112 @@ Likewise, other types of entities may be explored, e.g.:
 \item Contributions
 \item Contributors
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Classification of \solasote's entities}
+
+\solasote{} organizes classifiers for software languages,
+technologies, and concepts. In fact, it uses a class hierarchy (in the
+sense of rdfs:subClassOf) with instances at the leaves (in these of
+rdf:type) for classification.
+
+Here is how we ask whether \uri{lang:Java} is a (software) language:
+
+\sparql{askJavaOfTypeLanguage}
+
+\noindent
+Evaluation of this query literally returns `true':
+
+\completeOutput{askJavaOfTypeLanguage}
+
+\noindent
+Instead, we may also ask for all types of \uri{lang:Java}:
+
+\sparql{typesOfJava}
+
+\noindent
+\uri{lang:Java} has indeed a number of types:
+
+\completeOutput{typesOfJava}
+
+\noindent
+These types can be explained in the following way:
+%
+\begin{description}
+%
+\item[\uri{onto:Language}] This type stems from the entity's namespace
+  on the \ooo{wiki}. That is, `Java' belongs to \ooo{wiki}'s namespace
+  `Language' and thus, it gets associated with the type \uri{onto:Language}
+  by the mapping from \ooo{wiki} to \solasote
+%
+\item[\uri{onto:OO\_programming\_language}] This type stems from a
+  semantic property stated on \ooo{wiki}'s page for \uri{lang:Java}. That
+  is, the
+  page\footnote{\url{http://101companies.org/wiki/Language:Java}}
+  contains markup for a relevant semantic property as follows:
+\begin{center}
+\begin{BVerbatim}
+[[instanceOf::OO programming language]]
+\end{BVerbatim}
+\end{center}
+\noindent
+In this manner, the wiki directly declares `Java' to be of type `OO
+programming language'.
+%
+\item[\uri{onto:Instrument}, \uri{onto:Entity}] These are supertypes
+  of \uri{onto:Language}, as declared explicitly by the general class
+  hierarchy for \solasote. Thus, these types are listed because they
+  are inferred by the \emph{rdfs:subClassOf} hierarchy of \solasote.
+%
+\item[\uri{onto:Software\_language}, \uri{onto:Programming\_language}]
+  These are supertypes of \uri{onto:OO\_programming\_language}, as
+  declared by semantic `isA' properties on the \ooo{wiki}. For
+  instance, the
+  page for \uri{onto:OO\_programming\_language}\footnote{\url{http://101companies.org/wiki/OO_programming_language}}
+  contains markup for a relevant semantic property as follows:
+\begin{center}
+\begin{BVerbatim}
+[[isA::Programming language]]
+\end{BVerbatim}
+\end{center}
+\noindent
+Thus, these types are listed because they are inferred by the
+\emph{rdfs:subClassOf} hierarchy of \solasote. Here, the type
+\uri{onto:Software\_language} is merely an alias for the type
+\uri{onto:Language}, whereas the type \uri{onto:Programming\_language}
+is a proper classifier of languages (just as much as
+\uri{onto:OO\_programming\_language}).
+%
+\item[\uri{onto:WikiPage}] This type conveys that the resource at hand
+  corresponds to a wiki page on the \ooo{wiki}. This is basically
+  true for all resources of type \uri{onto:Entity}. The type factors
+  all more representational properties of entities; see
+  \S\ref{S:mapping}.
+%
+\item[\uri{rdfs:Resource}] This is the root type of all resources
+  based on RDFS' underlying type system.
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Mapping from \ooo{wiki} to \solasote}
+\label{S:mapping}
+
+\todo{Ralf}{Write this section.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{The schema of \solasote}
+
+\todo{Ralf}{Write this section.}
+
+\sparql{properties}
+
+\todo{Martin and Andrei}{Integrate 101's properties into
+  triplestore. This requires a mapping from the DSL to RDFS/Owl.}
+
+\partialOutput{7}{properties}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -170,7 +299,15 @@ certain kind (such as languages, technologies, or concepts).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Consistency of \solasote}
+\subsection{Validation of \solasote}
+
+\todo{Ralf}{Write this section.}
+
+\todo{Martin}{Complete sandbox upload on 101worker.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Concluding remarks}
 
 \todo{Ralf}{Write this section.}
 

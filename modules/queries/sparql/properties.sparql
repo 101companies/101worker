@@ -1,0 +1,4 @@
+SELECT ?domain ?property ?range {
+  ?domain rdfs:domain ?property .
+  ?range rdfs:range ?property .
+}

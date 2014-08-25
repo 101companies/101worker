@@ -1,0 +1,4 @@
+SELECT ?type {
+  lang:Java rdf:type ?type
+}
+ORDER BY ?type
