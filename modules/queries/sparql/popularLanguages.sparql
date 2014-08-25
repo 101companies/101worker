@@ -1,0 +1,8 @@
+SELECT ?language (COUNT(DISTINCT ?contribution) AS ?count)
+WHERE {
+  ?language rdf:type onto:Language .
+  ?contribution rdf:type onto:Contribution .
+  ?contribution ?predicate ?language .
+}
+GROUP BY ?language
+ORDER BY DESC(?count)

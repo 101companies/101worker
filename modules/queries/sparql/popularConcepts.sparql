@@ -1,13 +1,8 @@
-#
-# Sort all concepts by popularity in terms of different
-# contributions referring (in any way) to the concept
-#
-SELECT ?concept
-       (COUNT(DISTINCT ?contribution) AS ?number_of_occurences)
+SELECT ?concept (COUNT(DISTINCT ?contribution) AS ?count)
 WHERE {
   ?concept rdf:type onto:Concept .
   ?contribution rdf:type onto:Contribution .
-  ?contribution ?p ?concept .
+  ?contribution ?predicate ?concept .
 }
 GROUP BY ?concept
-ORDER BY DESC(?number_of_occurences)
+ORDER BY DESC(?count)

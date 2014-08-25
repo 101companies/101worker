@@ -10,6 +10,9 @@
 
 \newcommand{\todo}[2]{\noindent{}TODO (#1): #2}
 \newcommand{\solasote}{{\itshape\textsf{SoLaSoTe}}}
+\newcommand{\sparqlnote}[1]{
+\paragraph{A note on SPARQL} #1
+}
 
 \definecolor{codebackground}{rgb}{0.97,0.97,0.97}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -23,7 +26,8 @@
 \lstset{%
 numbers=none,
 basicstyle=\sffamily\color{ncode}\small\itshape,%
-frame=single,
+%frame=single,
+frame=none,
 columns=fullflexible,
 sensitive,%
 %  fontadjust=true,%
@@ -40,14 +44,25 @@ sensitive,%
 
 \newcommand{\sparql}[1]{%
 \medskip
+
+\noindent
+\begin{boxedminipage}{\hsize}
+\hfill{}SPARQL query \emph{#1}
 \lstinputlisting[language=SPARQL]{../sparql/#1.sparql}
+\end{boxedminipage}
 \medskip
 }
 
 \newcommand{\partialOutput}[2]{%
+
 \medskip
+
+\noindent
+\begin{boxedminipage}{\hsize}
+\hfill{}Output of SPARQL query \emph{#2} (first few rows)
 \lstinputlisting[language=CSV,lastline=#1]{../output/#2.txt}
-...
+{\large{}...}
+\end{boxedminipage}
 \medskip
 }
 
@@ -89,8 +104,10 @@ retrieves all languages of the ontology:
 
 \sparql{listOfLanguages}
 
+\sparqlnote{\todo{Ralf}{Explain new SPARQL constructs.}}
+
 \noindent
-Here is the first few languages--alphabetically sorted:
+Here is the first few languages sorted alphabetically:
 
 \partialOutput{7}{listOfLanguages}
 
@@ -101,7 +118,7 @@ that retrieves all technologies of the ontology:
 \sparql{listOfTechnologies}
 
 \noindent
-Here is the first few technologies--alphabetically sorted:
+Here is the first few technologies sorted alphabetically:
 
 \partialOutput{7}{listOfTechnologies}
 
@@ -112,7 +129,7 @@ that retrieves all concepts of the ontology:
 \sparql{listOfConcepts}
 
 \noindent
-Here is the first few concepts--alphabetically sorted:
+Here is the first few concepts sorted alphabetically:
 
 \partialOutput{7}{listOfConcepts}
 
@@ -127,6 +144,29 @@ Likewise, other types of entities may be explored, e.g.:
 \item Contributions
 \item Contributors
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Popularity of \solasote's entities}
+
+We may be interested in the popularity of different kinds of entities
+in the ontology. For instance, we may use the number of distinct
+contributions referring to an entity for ranking all entities of a
+certain kind (such as languages, technologies, or concepts). 
+
+\sparql{popularLanguages}
+
+\sparqlnote{\todo{Ralf}{Explain new SPARQL constructs.}}
+
+\partialOutput{7}{popularLanguages}
+
+\sparql{popularTechnologies}
+
+\partialOutput{7}{popularTechnologies}
+
+\sparql{popularConcepts}
+
+\partialOutput{7}{popularConcepts}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
