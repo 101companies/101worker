@@ -7,7 +7,7 @@ all:
 run:
 	python json2ttl.py
 	cp -r models ${output}
-    cp -r ttl ${output}
+	cp -r ttl ${output}
 
 # Remove local temporary files, if any
 clean:
