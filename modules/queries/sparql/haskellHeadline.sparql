@@ -1,0 +1,3 @@
+SELECT ?headline {
+  lang:Haskell onto:hasHeadline ?headline
+}

@@ -225,7 +225,7 @@ programming language'.
   hierarchy for \solasote. Thus, these types are listed because they
   are inferred by the \emph{rdfs:subClassOf} hierarchy of \solasote.
 %
-\item[\uri{onto:Software\_language}, \uri{onto:Programming\_language}]
+\item[\uri{onto:Language}, \uri{onto:Programming\_language}]
   These are supertypes of \uri{onto:OO\_programming\_language}, as
   declared by semantic `isA' properties on the \ooo{wiki}. For
   instance, the
@@ -238,10 +238,10 @@ programming language'.
 \end{center}
 \noindent
 Thus, these types are listed because they are inferred by the
-\emph{rdfs:subClassOf} hierarchy of \solasote. Here, the type
-\uri{onto:Software\_language} is merely an alias for the type
-\uri{onto:Language}, whereas the type \uri{onto:Programming\_language}
-is a proper classifier of languages (just as much as
+\emph{rdfs:subClassOf} hierarchy of \solasote. The type
+\uri{onto:Language} is a shorthand for what is called `software
+language' on the wiki. The type \uri{onto:Programming\_language} is a
+proper classifier of (software) languages (just as much as
 \uri{onto:OO\_programming\_language}).
 %
 \item[\uri{onto:WikiPage}] This type conveys that the resource at hand
@@ -250,13 +250,16 @@ is a proper classifier of languages (just as much as
   all more representational properties of entities; see
   \S\ref{S:mapping}.
 %
-\item[\uri{rdfs:Resource}] This is the root type of all resources
-  based on RDFS' underlying type system.
+%\item[\uri{rdfs:Resource}] This is the root type of all resources
+%  based on RDFS' underlying type system.
 \end{description}
 %
 We can also query the supertypes of a given type. For instance, let's
 query the supertypes of \uri{onto:OO\_programming\_language}, as we
 have encountered this type previously:
+
+\todo{Martin}{Once the name mapping of 26 Aug is in place, then
+  uri{rdfs:Resource} should be gone from the output; ditto \uri{onto:Software\_language}.}
 
 \sparql{supertypesOfOoProgrammingLanguage}
 
@@ -285,6 +288,14 @@ These are some of the OO programming languages:
 \label{S:mapping}
 
 \todo{Ralf}{Write this section.}
+
+\sparql{haskellHeadline}
+
+\sparql{haskellWikiLink}
+
+\completeOutput{haskellHeadline}
+
+\completeOutput{haskellWikiLink}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

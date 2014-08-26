@@ -1,0 +1,3 @@
+SELECT ?wikilink {
+  lang:Haskell onto:hasWikiLink ?wikilink
+}
