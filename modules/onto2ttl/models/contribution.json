@@ -1,0 +1,61 @@
+ {
+  "@id": "onto:Contribution",
+  "@type": "onto:Entity",
+  "properties": [
+      {
+          "property": "onto:uses",
+          "range": "onto:Language",
+          "minCardinality": "1"
+      },
+      {
+          "property": "onto:uses",
+          "range": "onto:Technology",
+          "minCardinality": "0"
+      },
+      {
+          "property": "onto:developedBy",
+          "range": "onto:Contributor",
+          "minCardinality": "1"
+      },
+      {
+          "property": "onto:reviewedBy",
+          "range": "onto:Contributor",
+          "minCardinality": "0"
+      },
+      {
+          "property": "onto:implements",
+          "range": "onto:Feature",
+          "minCardinality": "1"
+      },
+      {
+          "property": "onto:memberOf",
+          "range": "onto:Theme",
+          "minCardinality": "0"
+      },
+      {
+          "property": "onto:uses",
+          "range": "onto:Concept",
+          "minCardinality": "0"
+      },
+      {
+          "property": "onto:moreComplexThan",
+          "range": "onto:Contribution",
+          "minCardinality": "0"
+      },
+      {
+          "property": "onto:varies",
+          "range": "onto:Contribution",
+          "minCardinality": "0"
+      },
+      {
+         "property": "onto:basedOn",
+         "range": "onto:Contribution",
+          "minCardinality": "0"
+      },
+      {
+         "property": "onto:moreComplexThan",
+         "range": "onto:Contribution",
+          "minCardinality": "0"
+      }
+  ]
+}

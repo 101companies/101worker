@@ -15,22 +15,23 @@ if __name__ == '__main__':
             m = json.load(json_data)
             id = m['@id']
             t = m['@type']
-            # :Entity rdf:type owl:Class .
-            s = ":%s rdf:type %s ." % (id, t)
+            # :Entity rdfs:subclassOf owl:Class .
+            s = ":%s rdfs:subclassOf %s ." % (id, t)
             print(s)
             if 'properties' in m:
                 for prop in m['properties']:
                     print prop
-                    s += "\n\n %s rdf:type owl:ObjectProperty ; \n" \
-                         " rdfs:label \"Name of the entity\" ; \n" \
-                         " rdfs:comment \"Comment\" ; \n" \
+                    # TODO: comments are missing in the models
+                    # " rdfs:label \"Name of the entity\" ; \n" \
+                    # " rdfs:comment \"Comment\" ; \n" \
+                    s += "\n\n %s rdfs:type owl:ObjectProperty ; \n" \
                          " rdfs:domain %s ; \n" \
-                         " rdfs:range %s \n" % (prop['property'], t, prop['range'])
+                         " rdfs:range %s . \n" % (prop['property'], t, prop['range'])
 
                     print s
 
                 # write output into ttl file
-                with open(os.path.join(os.path.dirname(__file__), 'models', file.replace('.json','.ttl')), 'w') as f:
+                with open(os.path.join(os.path.dirname(__file__), 'ttl', file.replace('.json','.ttl')), 'w') as f:
                     f.write(s)
 
 

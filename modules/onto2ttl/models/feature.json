@@ -1,0 +1,21 @@
+{
+    "@id": "onto:Feature",
+    "@type": "onto:Entity",
+    "properties": [
+        {
+            "property": "onto:varies",
+            "range": "onto:Feature",
+            "minCardinality": "0"
+        },
+        {
+            "property": "onto:implies",
+            "range": "onto:Feature",
+            "minCardinality": "0"
+        },
+        {
+            "property": "onto:illustrates",
+            "range": "onto:Concept",
+            "minCardinality": "0"
+        }
+    ]
+}
