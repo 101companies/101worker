@@ -31,8 +31,8 @@ if __name__ == '__main__':
                     print s
 
                 # write output into ttl file
-                with open(os.path.join(os.path.dirname(__file__), 'ttl', file.replace('.json','.ttl')), 'w') as f:
-                    f.write(s)
+            with open(os.path.join(os.path.dirname(__file__), 'ttl', file.replace('.json','.ttl')), 'w') as f:
+                f.write(s)
 
 
 

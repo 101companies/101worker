@@ -51,11 +51,6 @@
          "property": "onto:basedOn",
          "range": "onto:Contribution",
           "minCardinality": "0"
-      },
-      {
-         "property": "onto:moreComplexThan",
-         "range": "onto:Contribution",
-          "minCardinality": "0"
       }
   ]
 }
