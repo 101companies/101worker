@@ -174,10 +174,26 @@ Likewise, other types of entities may be explored, e.g.:
 
 \solasote{} organizes classifiers for software languages,
 technologies, and concepts. In fact, it uses a class hierarchy (in the
-sense of rdfs:subClassOf) with instances at the leaves (in these of
-rdf:type) for classification.
+sense of rdfs:subClassOf) with instances at the leaves (in the sense
+of rdf:type) for classification.
 
-Here is how we ask whether \uri{lang:Java} is a (software) language:
+All classifiers are concepts, but not all concepts are
+classifiers. Each classifier is associated with a concept of the same
+name with a different prefix. We see this situation by looking at the
+first few concept in alphabetical order as well as the first few
+classifiers, again in alphabetical order and with associated concepts: 
+
+\sparql{concepts}
+
+\partialOutput{7}{concepts}
+
+\sparql{classifiers}
+
+\partialOutput{7}{classifiers}
+
+\noindent
+Let us see now how classifiers are instantiated. Here is how we ask
+whether \uri{lang:Java} is a (software) language:
 
 \sparql{askJavaOfTypeLanguage}
 

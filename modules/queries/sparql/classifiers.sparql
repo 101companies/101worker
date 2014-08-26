@@ -1,0 +1,5 @@
+SELECT ?classifier ?concept WHERE {
+  ?classifier rdf:type onto:Classifier .
+  ?classifier onto:classifies ?concept .
+}
+ORDER BY ?classifier
