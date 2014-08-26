@@ -14,10 +14,17 @@ if __name__ == '__main__':
         with open(os.path.join(os.path.dirname(__file__), 'models', file)) as json_data:
             m = json.load(json_data)
             id = m['@id']
-            t = m['@type']
+            if m.has_key('@type'):
+                t = m['@type']
+                s = ":%s rdfs:subclassOf %s ." % (id, t)
+                print(s)
+            elif m.has_key('@instance'):
+                t = m['@instance']
+                s = ":%s rdf:type %s ." % (id, t)
+                print(s)
+
             # :Entity rdfs:subclassOf owl:Class .
-            s = ":%s rdfs:subclassOf %s ." % (id, t)
-            print(s)
+
             if 'properties' in m:
                 for prop in m['properties']:
                     print prop

@@ -8,7 +8,7 @@
     },
 
   "@id": "onto:Entity",
-  "@type": "rdfs:Class",
+  "@instance": "rdfs:Class",
      "properties": [
        {
          "property": "onto:instanceOf",
