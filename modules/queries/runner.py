@@ -1,9 +1,10 @@
 __author__ = 'avaranovich'
 
-import json
 import os
 from connection import Connection
 from jinja2 import Environment, FileSystemLoader
+import urllib2
+from json import loads
 
 SPATXT = 'text/boolean'
 
@@ -15,6 +16,21 @@ if __name__=='__main__':
     connection.addnamespace('onto', 'http://101companies.org/ontology#')
     connection.addnamespace('res', 'http://101companies.org/resources#')
     connection.addnamespace('lang', 'http://101companies.org/resources/Language#')
+
+    req = urllib2.Request('http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/namespaces')
+    req.add_header('Accept', 'application/sparql-results+json')
+    req.add_header('Content-Type', 'application/x-www-form-urlencoded')
+    sock = urllib2.urlopen(req)
+    #print "INFO", sock.info()
+    data = sock.read()
+    #print "DATA", data
+    sock.close()
+    prefixes = dict()
+
+    for b in loads(data)['results']['bindings']:
+        prefix = b['prefix']['value']
+        ns = b['namespace']['value']
+        prefixes[ns] = prefix
 
     relevant_path = os.path.join(os.path.dirname(__file__), 'sparql')
     included_extenstions = ['sparql']
@@ -48,7 +64,14 @@ if __name__=='__main__':
                 template_file = "default.tmpl"
 
             template = env.get_template(template_file)
-            output = template.render(data=res, strip101=lambda x: x.replace('http://101companies.org/', ''))
+
+            def strip101(x):
+                for ns in prefixes:
+                    if ns in x:
+                        x = x.replace(ns, prefixes[ns]+':')
+                return x
+
+            output = template.render(data=res, strip101=lambda x: strip101(x))
             #print output
 
             with open(os.path.join(os.path.dirname(__file__), 'output', file_to_save.replace('.tmpl', '.txt')), "w") as output_file:
