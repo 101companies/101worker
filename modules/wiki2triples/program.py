@@ -74,6 +74,7 @@ def encode(s):
 def encode_predicate(p):
     return encode_ontology(p[0].lower() + p[1:])
 
+
 def encode_ontology(s):
     return ontology[ encode(s) ]
 
@@ -82,6 +83,13 @@ def encode_resource(namespace, s):
     if not namespace: namespace = 'Concept'
     return get_namespace(namespace)[ encode(s) ]
 
+
+def make_wiki_link(p):
+    wiki_uri = 'http://www.101companies.org/wik/'
+    if p['p']:
+        return wiki_uri + p['p'] + ':' + p['n']
+    else:
+        return wiki_uri + p['n']
 
 def disambiguate(p):
     if 'http://' in p:
@@ -103,29 +111,6 @@ def disambiguate(p):
         return encode_resource('Concept', name)
     else:
         return encode_resource(namespace, name)
-
-
-# def make_ontology_classes(graph):
-#     # Add highest level classes
-#     wiki_page = encode_ontology('WikiPage')
-#     graph.add( (wiki_page, rdf['type'], rdfs['Class']) )
-#
-#     entity = encode_ontology('Entity')
-#     entity_page = encode_ontology('EntityPage')
-#
-#     graph.add( (entity, rdf['type'], rdfs['Class']) )
-#     graph.add( (entity_page, rdf['type'], rdfs['Class']) )
-#     graph.add( (entity_page, rdfs['subClassOf'], wiki_page))
-#
-#     for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature', 'Script', 'Course']:
-#         thing = encode_ontology(ns)
-#         page = encode_ontology(ns+'Page')
-#
-#         graph.add( (thing, rdf['type'], rdfs['Class']) )
-#         graph.add( (thing, rdfs['subClassOf'], entity))
-#
-#         graph.add( (page, rdf['type'], rdfs['Class']) )
-#         graph.add( (page, rdfs['subClassOf'], wiki_page))
 
 
 def hardcoded_classes(graph):
@@ -210,8 +195,7 @@ def map_class(page, graph):
     triple = onto_entity, rdf['type'], encode_ontology('Classifier')
     graph.add(triple)
 
-    triple = onto_entity, rdf['type'], encode_ontology('WikiPage')
-    graph.add(triple)
+
 
     for o in page.get('isA', []):
         triple = onto_entity, rdfs['subClassOf'], encode_ontology(o['n'])
@@ -225,6 +209,15 @@ def map_class(page, graph):
     uri = encode_resource(clss, page['n'])
 
     triple = uri, rdf['type'], encode_ontology(clss)
+    graph.add(triple)
+
+    triple = uri, rdf['type'], encode_ontology('WikiPage')
+    graph.add(triple)
+
+    triple = uri, encode_ontology('hasHeadline'), rdflib.Literal(page['headline'])
+    graph.add(triple)
+
+    triple = uri, encode_ontology('hasWikiLink'), rdflib.Literal(make_wiki_link(page))
     graph.add(triple)
 
     #TODO handle sub resources
