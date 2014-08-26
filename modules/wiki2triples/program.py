@@ -86,7 +86,7 @@ def encode_resource(namespace, s):
 
 def make_wiki_link(p):
     wiki_uri = 'http://www.101companies.org/wik/'
-    if p['p']:
+    if p['p'] and not p['p'] == 'Concept':
         return wiki_uri + p['p'] + ':' + p['n']
     else:
         return wiki_uri + p['n']
@@ -142,6 +142,7 @@ def hardcoded_classes(graph):
         triple = (s, rdfs['subClassOf'], entity)
         graph.add(triple)
 
+
 def map_instance(page, graph):
     def class_for_page():
         if page['p']: return page['p']
@@ -154,6 +155,12 @@ def map_instance(page, graph):
     graph.add(triple)
 
     triple = uri, rdf['type'], encode_ontology(clss)
+    graph.add(triple)
+
+    triple = uri, encode_ontology('hasHeadline'), rdflib.Literal(page['headline'])
+    graph.add(triple)
+
+    triple = uri, encode_ontology('hasWikiLink'), rdflib.Literal(make_wiki_link(page))
     graph.add(triple)
 
     for o in page.get('instanceOf', []):
