@@ -85,7 +85,7 @@ def encode_resource(namespace, s):
 
 
 def make_wiki_link(p):
-    wiki_uri = 'http://www.101companies.org/wik/'
+    wiki_uri = 'http://www.101companies.org/wiki/'
     if p['p'] and not p['p'] == 'Concept':
         return wiki_uri + p['p'] + ':' + p['n']
     else:
