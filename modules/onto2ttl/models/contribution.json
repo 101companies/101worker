@@ -4,13 +4,8 @@
   "properties": [
       {
           "property": "onto:uses",
-          "range": "onto:Language",
+          "range": "onto:Instrument",
           "minCardinality": "1"
-      },
-      {
-          "property": "onto:uses",
-          "range": "onto:Technology",
-          "minCardinality": "0"
       },
       {
           "property": "onto:developedBy",
@@ -30,11 +25,6 @@
       {
           "property": "onto:memberOf",
           "range": "onto:Theme",
-          "minCardinality": "0"
-      },
-      {
-          "property": "onto:uses",
-          "range": "onto:Concept",
           "minCardinality": "0"
       },
       {

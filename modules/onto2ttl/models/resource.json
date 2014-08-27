@@ -4,21 +4,9 @@
    "properties": [
     {
         "property": "onto:describes",
-        "range": "onto:Language",
+        "range": "onto:Instrument",
         "minCardinality": "0",
         "comment": "Something defines a language"
-    },
-    {
-        "property": "onto:describes",
-        "range": "onto:Technology",
-        "minCardinality": "0",
-        "comment": "Something defines a technology"
-    },
-    {
-        "property": "onto:describes",
-        "range": "onto:Concept",
-        "minCardinality": "0",
-        "comment": "Something defines a concept"
     }
   ]
 }

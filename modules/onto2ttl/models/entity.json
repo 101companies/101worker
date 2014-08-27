@@ -9,28 +9,26 @@
 
   "@id": "onto:Entity",
   "@instance": "rdfs:Class",
+     "mapping" : [
+      {
+         "property": "instanceOf",
+         "mapsTo": "rdfs:type",
+       },
+       {
+         "property": "isA",
+         "range": "rdfs:subclassOf"
+       },
+     ],
      "properties": [
        {
-         "property": "onto:instanceOf",
-         "range": "onto:Concept",
-         "minCardinality": "0",
-         "comment": "Something being an instance of something"
-       },
-       {
-         "property": "onto:isA",
-         "range": "onto:Concept",
-         "minCardinality": "0",
-         "comment": "A concept being a specialization"
-       },
-       {
            "property": "onto:partOf",
-           "range": "onto:Concept",
+           "range": "onto:Entity",
            "minCardinality": "0",
            "comment": "Whole-part relationship"
        },
        {
            "property": "onto:mentions",
-           "range": "onto:Concept",
+           "range": "onto:Entity",
            "minCardinality": "0",
            "comment": "Nonspecific reference to a concept"
        },
@@ -57,7 +55,7 @@
        },
        {
            "property": "onto:dependsOn",
-           "range": "onto:Concept",
+           "range": "onto:Entity",
            "minCardinality": "0"
        },
        {

@@ -4,17 +4,12 @@
     "properties": [
         {
             "property": "onto:uses",
-            "range": "onto:Technology",
-            "minCardinality": "0"
-        },
-        {
-            "property": "onto:supports",
-            "range": "onto:Protocol",
+            "range": "onto:Instrument",
             "minCardinality": "0"
         },
         {
             "property": "onto:implements",
-            "range": "onto:Specification",
+            "range": "onto:Resource",
             "minCardinality": "0"
         }
     ]
