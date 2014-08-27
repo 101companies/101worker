@@ -32,7 +32,7 @@ if __name__ == '__main__':
             id = m['@id']
             if m.has_key('@type'):
                 t = m['@type']
-                s += ":%s rdfs:subClassOf %s ." % (id, t)
+                s += "%s rdfs:subClassOf %s ." % (id, t)
                 print(s)
             elif m.has_key('@instance'):
                 t = m['@instance']
