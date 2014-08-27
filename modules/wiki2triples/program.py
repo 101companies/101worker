@@ -278,7 +278,7 @@ def main():
 
     print 'Adding hardcoded (ontology) classes'
     path_to_ontology = '../../../101web/data/onto/ttl'
-    for ont_def in filter(lambda x: '.tll' in x, os.listdir(path_to_ontology)):
+    for ont_def in filter(lambda x: '.ttl' in x, os.listdir(path_to_ontology)):
         print 'Parsing ' + ont_def
         graph.parse(os.path.join(path_to_ontology, ont_def), format='turtle')
     graph.add((encode_ontology('WikiPage'), rdf['type'], rdfs['Class']))
