@@ -1,7 +1,0 @@
-:onto:Contributor rdf:type onto:Entity .
-
- onto:profile rdf:type owl:ObjectProperty ; 
- rdfs:label "Name of the entity" ; 
- rdfs:comment "Comment" ; 
- rdfs:domain onto:Entity ; 
- rdfs:range rdfs:Literal 
