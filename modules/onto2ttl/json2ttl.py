@@ -31,7 +31,7 @@ if __name__ == '__main__':
                     # TODO: comments are missing in the models
                     # " rdfs:label \"Name of the entity\" ; \n" \
                     # " rdfs:comment \"Comment\" ; \n" \
-                    s += "\n\n %s rdfs:type owl:ObjectProperty ; \n" \
+                    s += "\n\n %s rdfs:type rdfs:property ; \n" \
                          " rdfs:domain %s ; \n" \
                          " rdfs:range %s . \n" % (prop['property'], t, prop['range'])
 
