@@ -11,16 +11,32 @@ if __name__ == '__main__':
 
     for file in file_names:
         print file
+        s = \
+            "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns> . \n\
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> . \n\
+@prefix onto: <http://101companies.org/ontology#> . \n\
+@prefix res: <http://101companies.org/resources#> . \n\
+@prefix tech:<http://101companies.org/resources/Technology#> . \n\
+@prefix lang:<http://101companies.org/resources/Language#> . \n\
+@prefix concept:<http://101companies.org/resources/Concept#> . \n\
+@prefix feature:<http://101companies.org/resources/Feature#> . \n\
+@prefix contrib:<http://101companies.org/resources/Contribution#> . \n\
+@prefix contributor:<http://101companies.org/resources/Contributor#> . \n\
+@prefix voc:<http://101companies.org/resources/Vocabulary#> . \n\
+@prefix theme:<http://101companies.org/resources/Theme#> . \n\
+@prefix course:<http://101companies.org/resources/Course#> . \n\
+@prefix script:<http://101companies.org/resources/Script#> . \n\n"
+
         with open(os.path.join(os.path.dirname(__file__), 'models', file)) as json_data:
             m = json.load(json_data)
             id = m['@id']
             if m.has_key('@type'):
                 t = m['@type']
-                s = ":%s rdfs:subclassOf %s ." % (id, t)
+                s += ":%s rdfs:subClassOf %s ." % (id, t)
                 print(s)
             elif m.has_key('@instance'):
                 t = m['@instance']
-                s = ":%s rdf:type %s ." % (id, t)
+                s += "%s rdf:type %s ." % (id, t)
                 print(s)
 
             # :Entity rdfs:subclassOf owl:Class .
@@ -31,14 +47,14 @@ if __name__ == '__main__':
                     # TODO: comments are missing in the models
                     # " rdfs:label \"Name of the entity\" ; \n" \
                     # " rdfs:comment \"Comment\" ; \n" \
-                    s += "\n\n %s rdfs:type rdfs:property ; \n" \
+                    s += "\n\n %s rdfs:type rdfs:Property ; \n" \
                          " rdfs:domain %s ; \n" \
                          " rdfs:range %s . \n" % (prop['property'], id, prop['range'])
 
                     print s
 
-                # write output into ttl file
-            with open(os.path.join(os.path.dirname(__file__), 'ttl', file.replace('.json','.ttl')), 'w') as f:
+                    # write output into ttl file
+            with open(os.path.join(os.path.dirname(__file__), 'ttl', file.replace('.json', '.ttl')), 'w') as f:
                 f.write(s)
 
 

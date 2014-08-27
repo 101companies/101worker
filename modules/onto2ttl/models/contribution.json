@@ -1,6 +1,6 @@
  {
   "@id": "onto:Contribution",
-  "@type": "onto:Entity",
+  "@type": "onto:System",
   "properties": [
       {
           "property": "onto:uses",

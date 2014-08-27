@@ -1,0 +1,16 @@
+{
+   "@id": "onto:System",
+   "@type": "onto:Entity",
+   "properties": [
+      {
+         "property": "onto:implements",
+         "range": "onto:Description",
+         "minCardinality": "0"
+      },
+      {
+        "property": "onto:uses",
+        "range": "onto:Instrument",
+        "minCardinality": "0"
+      }
+   ]
+}

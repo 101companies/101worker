@@ -1,4 +1,4 @@
 {
     "@id": "onto:Theme",
-    "@type": "onto:Entity"
+    "@type": "onto:Container"
 }

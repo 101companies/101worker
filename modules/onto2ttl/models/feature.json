@@ -1,6 +1,6 @@
 {
     "@id": "onto:Feature",
-    "@type": "onto:Entity",
+    "@type": "onto:Description",
     "properties": [
         {
             "property": "onto:varies",

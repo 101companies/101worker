@@ -1,6 +1,6 @@
  {
-  "@id": "onto:Resource",
-  "@type": "owl:Entity",
+  "@id": "onto:Document",
+  "@type": "onto:Description",
    "properties": [
     {
         "property": "onto:describes",

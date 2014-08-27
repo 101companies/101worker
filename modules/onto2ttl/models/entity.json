@@ -56,6 +56,11 @@
            "property": "onto:carries",
            "range": "onto:Tag",
            "minCardinality": "0"
+       },
+       {
+           "property": "onto:memberOf",
+           "range": "onto:Container",
+           "minCardinality": "0"
        }
    ]
  }
