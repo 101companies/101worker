@@ -33,7 +33,7 @@ if __name__ == '__main__':
                     # " rdfs:comment \"Comment\" ; \n" \
                     s += "\n\n %s rdfs:type rdfs:property ; \n" \
                          " rdfs:domain %s ; \n" \
-                         " rdfs:range %s . \n" % (prop['property'], t, prop['range'])
+                         " rdfs:range %s . \n" % (prop['property'], id, prop['range'])
 
                     print s
 
