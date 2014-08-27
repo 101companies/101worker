@@ -1,6 +1,6 @@
 {
     "@id": "onto:Contributor",
-    "@type": "onto:Entity",
+    "@type": ["onto:Entity", "foaf:Person"],
     "properties": [
         {
             "property": "onto:profile",

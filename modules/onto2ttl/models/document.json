@@ -1,6 +1,6 @@
  {
   "@id": "onto:Document",
-  "@type": "onto:Description",
+  "@type": ["onto:Description", "foaf:Document"],
    "properties": [
     {
         "property": "onto:describes",
