@@ -7,6 +7,11 @@
          "range": "onto:Concept",
          "minCardinality": "0",
          "comment": "Instruments can support concepts by different means"
+       },
+       {
+           "property": "onto:memberOf",
+           "range": "onto:Vocabulary",
+           "minCardinality": "0"
        }
      ]
 }

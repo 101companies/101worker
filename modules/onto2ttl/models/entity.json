@@ -6,18 +6,17 @@
      "onto": "http://101companies.org/ontology#",
      "res": "http://101companies.org/resources#"
     },
-
   "@id": "onto:Entity",
   "@instance": "rdfs:Class",
      "mapping" : [
       {
          "property": "instanceOf",
-         "mapsTo": "rdfs:type",
+         "mapsTo": "rdfs:type"
        },
        {
          "property": "isA",
          "range": "rdfs:subclassOf"
-       },
+       }
      ],
      "properties": [
        {
@@ -46,11 +45,6 @@
        {
            "property": "onto:linksTo",
            "range": "rdfs:Literal",
-           "minCardinality": "0"
-       },
-       {
-           "property": "onto:memberOf",
-           "range": "onto:Vocabulary",
            "minCardinality": "0"
        },
        {
