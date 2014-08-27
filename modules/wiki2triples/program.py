@@ -202,8 +202,6 @@ def map_class(page, graph):
     triple = onto_entity, rdf['type'], encode_ontology('Classifier')
     graph.add(triple)
 
-
-
     for o in page.get('isA', []):
         triple = onto_entity, rdfs['subClassOf'], encode_ontology(o['n'])
         graph.add(triple)
@@ -255,6 +253,7 @@ def map_class(page, graph):
         if not ('onto:'+key) in allowed_relations[page['p'].lower()]:
             erroneous_pages.append({'page': (page['p']+':'+page['n']), 'invalid relation': key})
 
+
 def map_page(page, graph):
     print 'Converting {}:{}'.format(page['p'],page['n'])
     is_instance = not 'isA' in page
@@ -278,7 +277,13 @@ def main():
     wiki = filter_pages(Dumps.WikiDump())
 
     print 'Adding hardcoded (ontology) classes'
-    hardcoded_classes(graph)
+    path_to_ontology = '../../../101web/data/onto/ttl'
+    for ont_def in filter(lambda x: '.tll' in x, os.listdir(path_to_ontology)):
+        print 'Parsing ' + ont_def
+        graph.parse(os.path.join(path_to_ontology, ont_def), format='turtle')
+    graph.add((encode_ontology('WikiPage'), rdf['type'], rdfs['Class']))
+    
+    #hardcoded_classes(graph)
     #print 'Adding ontology classes'
     #make_ontology_classes(graph)
 
