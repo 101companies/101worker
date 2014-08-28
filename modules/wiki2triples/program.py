@@ -76,11 +76,26 @@ def encode_predicate(p):
 
 
 def encode_ontology(s):
+    map = {
+        'software language' : 'Language',
+        'software technology': 'Technology',
+        'software concept' : 'Concept',
+        'software feature' : 'Feature'
+    }
+    if s.lower() in map:
+        print 'Mapping {} to {}'.format(s, map[s])
+        s = map[s]
     return ontology[ encode(s) ]
 
 
 def encode_resource(namespace, s):
     if not namespace: namespace = 'Concept'
+    map = {
+        'software concept' : 'Concept'
+    }
+    if s.lower() in map:
+        print 'Mapping {} to {}'.format(s, map[s])
+        s = map[s]
     return get_namespace(namespace)[ encode(s) ]
 
 
@@ -90,6 +105,7 @@ def make_wiki_link(p):
         return wiki_uri + p['p'] + ':' + p['n']
     else:
         return wiki_uri + p['n']
+
 
 def disambiguate(p):
     if 'http://' in p:
@@ -289,7 +305,7 @@ def main():
         premodeled_classes.append(ont_def[0].upper() + ont_def[1:])
         print 'Parsing ' + ont_def
         graph.parse(os.path.join(path_to_ontology, ont_def), format='turtle')
-    graph.parse('additional_triples.ttl', format='turtle')
+    #graph.parse('additional_triples.ttl', format='turtle')
     graph.add((encode_ontology('WikiPage'), rdf['type'], rdfs['Class']))
     
     #hardcoded_classes(graph)
