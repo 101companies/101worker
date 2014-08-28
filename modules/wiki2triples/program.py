@@ -83,8 +83,8 @@ def encode_ontology(s):
         'software feature' : 'Feature'
     }
     if s.lower() in map:
-        print 'Mapping {} to {}'.format(s, map[s])
-        s = map[s]
+        print 'Mapping {} to {}'.format(s, map[s.lower()])
+        s = map[s.lower()]
     return ontology[ encode(s) ]
 
 
@@ -94,8 +94,8 @@ def encode_resource(namespace, s):
         'software concept' : 'Concept'
     }
     if s.lower() in map:
-        print 'Mapping {} to {}'.format(s, map[s])
-        s = map[s]
+        print 'Mapping {} to {}'.format(s, map[s.lower()])
+        s = map[s.lower()]
     return get_namespace(namespace)[ encode(s) ]
 
 
