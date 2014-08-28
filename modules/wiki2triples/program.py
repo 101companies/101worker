@@ -23,7 +23,7 @@ rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 namespace_cache = {}
 classes_in_wiki = []
 debug = {}
-
+premodeled_classes = []
 
 def get_namespace(namespace_name):
     if not namespace_name in namespace_cache:
@@ -166,8 +166,8 @@ def map_instance(page, graph):
     for o in page.get('instanceOf', []):
         triple = uri, rdf['type'], encode_ontology(o['n'])
         graph.add(triple)
-        triple = encode_ontology(clss), rdf['type'], encode_ontology('Classifier')
-        if not triple in graph and not o['p']:
+        triple = encode_ontology(o['n']), rdf['type'], encode_ontology('Classifier')
+        if not triple in graph and not o['p'] and not o['n'] in premodeled_classes:
             print 'Adding additional rdf:type onto:Classifier statement for {}'.format(o['n'])
             graph.add(triple)
 
@@ -286,6 +286,7 @@ def main():
     print 'Adding hardcoded (ontology) classes'
     path_to_ontology = '../../../101web/data/onto/ttl'
     for ont_def in filter(lambda x: '.ttl' in x, os.listdir(path_to_ontology)):
+        premodeled_classes.append(ont_def[0].upper() + ont_def[1:])
         print 'Parsing ' + ont_def
         graph.parse(os.path.join(path_to_ontology, ont_def), format='turtle')
     graph.parse('additional_triples.ttl', format='turtle')
