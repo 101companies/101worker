@@ -1,9 +1,10 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix onto: <http://101companies.org/ontology#> .
+@prefix concept:<http://101companies.org/resources/Concept#> .
 
 onto:Software_language rdf:type onto:Language .
 onto:Software_technology rdf:type onto:Technology .
 onto:Software_concept rdf:type onto:Concept ;
     rdf:type concept:Concept .
-Software_feature rdf:type onto:Feature .
+onto:Software_feature rdf:type onto:Feature .

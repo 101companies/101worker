@@ -157,11 +157,6 @@ def map_instance(page, graph):
     triple = uri, rdf['type'], encode_ontology(clss)
     graph.add(triple)
 
-    triple = encode_ontology(clss), rdf['type'], encode_ontology('Classifier')
-    if not triple in graph:
-        print 'Adding additional rdf:type onto:Classifier statement for {}'.format(clss)
-        graph.add(triple)
-
     triple = uri, encode_ontology('hasHeadline'), rdflib.Literal(page['headline'])
     graph.add(triple)
 
@@ -171,6 +166,10 @@ def map_instance(page, graph):
     for o in page.get('instanceOf', []):
         triple = uri, rdf['type'], encode_ontology(o['n'])
         graph.add(triple)
+        triple = encode_ontology(clss), rdf['type'], encode_ontology('Classifier')
+        if not triple in graph:
+            print 'Adding additional rdf:type onto:Classifier statement for {}'.format(o['n'])
+            graph.add(triple)
 
     #TODO handle sub resources
     for sub_resource_name in page.get('subresources',{}):
