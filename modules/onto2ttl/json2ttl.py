@@ -60,9 +60,9 @@ if __name__ == '__main__':
                         comment = prop['comment']
                     if not prop.has_key('overload'):
                         s += "\n\n %s rdfs:type rdfs:Property ; \n" \
-                            " %s rdfs:comment \"%s\" ; \n" \
+                            " rdfs:comment \"%s\" ; \n" \
                             " rdfs:domain %s ; \n" \
-                            " rdfs:range %s . \n" % (prop['property'], prop['property'], comment, id, prop['range'])
+                            " rdfs:range %s . \n" % (prop['property'], comment, id, prop['range'])
 
                     print s
 
