@@ -1,0 +1,20 @@
+Query:
+
+PREFIX onto:<http://101companies.org/ontology#>
+
+
+
+Query:
+
+PREFIX onto:<http://101companies.org/ontology#>
+
+SELECT * WHERE {
+  ?s rdf:type onto:JavaSourceFile .  
+}
+
+Results:
+http://101companies.org/resources#hibernateJava/src/Main.java
+
+Comment:
+	* Reasoning : EL
+	* Testing how 101meta rules for capturing Java source files looks in OWL

@@ -1,0 +1,12 @@
+SELECT * WHERE {
+  ?s rdf:type onto:Contribution .  
+}
+
+Results:
+http://101companies.org/resources#hibernateJava
+http://101companies.org/resources#myTestContribution
+http://101companies.org/resources#myOtherTestContribution
+
+Comment: 
+	* Reasoning: EL
+	* Testing wether written triples take precedence over min cardinalities and such (and they do)

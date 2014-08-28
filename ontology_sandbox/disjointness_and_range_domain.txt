@@ -1,0 +1,16 @@
+Query:
+
+PREFIX onto:<http://101companies.org/ontology#>
+
+SELECT * WHERE {
+  ?s rdf:type onto:Technology .  
+}
+
+Results:
+http://101companies.org/resources#Hibernate
+http://101companies.org/resources#myTestHybrid
+http://101companies.org/resources#myTestBadThing
+
+Comment:
+	* Reasoning : EL
+	* Testing disjointness and RDFS domain / range type assignment
