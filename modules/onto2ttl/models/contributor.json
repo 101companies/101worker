@@ -1,6 +1,7 @@
 {
     "@id": "onto:Contributor",
     "@type": ["onto:Entity", "foaf:Person"],
+    "comment":"",
     "properties": [
         {
             "property": "onto:profile",

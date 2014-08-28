@@ -1,6 +1,7 @@
  {
   "@id": "onto:Contribution",
   "@type": "onto:System",
+  "comment":"",
   "properties": [
       {
           "property": "onto:uses",

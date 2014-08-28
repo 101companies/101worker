@@ -1,6 +1,7 @@
 {
     "@id": "onto:Feature",
     "@type": "onto:Description",
+    "comment":"",
     "properties": [
         {
             "property": "onto:varies",

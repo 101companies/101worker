@@ -1,4 +1,5 @@
 {
     "@id": "onto:Course",
-    "@type": "onto:Container"
+    "@type": "onto:Container",
+    "comment":""
 }

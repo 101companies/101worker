@@ -1,4 +1,5 @@
  {
   "@id": "onto:Concept",
-  "@type": "onto:Instrument"
+  "@type": "onto:Instrument",
+  "comment":""
  }

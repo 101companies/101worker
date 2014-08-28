@@ -1,7 +1,8 @@
  {
   "@id": "onto:Document",
   "@type": ["onto:Description", "foaf:Document"],
-   "properties": [
+  "comment":"",
+  "properties": [
     {
         "property": "onto:describes",
         "range": "onto:Instrument",

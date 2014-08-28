@@ -1,4 +1,5 @@
 {
     "@id": "onto:Language",
-    "@type": "onto:Instrument"
+    "@type": "onto:Instrument",
+    "comment":""
 }

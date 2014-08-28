@@ -1,6 +1,7 @@
 {
     "@id": "onto:Technology",
     "@type": ["onto:Instrument", "onto:System"],
+    "comment":"",
     "properties": [
         {
             "property": "onto:uses",

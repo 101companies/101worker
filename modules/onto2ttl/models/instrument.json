@@ -1,6 +1,7 @@
 {
     "@id": "onto:Instrument",
     "@type": "onto:Entity",
+    "comment":"",
      "properties": [
        {
          "property": "onto:supports",

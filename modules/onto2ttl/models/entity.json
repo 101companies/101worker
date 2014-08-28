@@ -8,6 +8,7 @@
     },
   "@id": "onto:Entity",
   "@instance": "rdfs:Class",
+  "comment":"",
      "mapping" : [
       {
          "property": "instanceOf",

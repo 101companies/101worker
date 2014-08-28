@@ -1,4 +1,5 @@
 {
    "@id": "onto:Description",
-   "@type": "onto:Entity"
+   "@type": "onto:Entity",
+   "comment":""
 }
