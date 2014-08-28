@@ -1,9 +1,10 @@
 {
     "@id": "onto:Technology",
-    "@type": "onto:Instrument",
+    "@type": ["onto:Instrument", "onto:System"],
     "properties": [
         {
             "property": "onto:uses",
+            "overload": "true",
             "range": "onto:Instrument",
             "minCardinality": "0"
         },

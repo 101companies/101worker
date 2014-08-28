@@ -4,6 +4,7 @@
   "properties": [
       {
           "property": "onto:uses",
+          "overload": "true",
           "range": "onto:Instrument",
           "minCardinality": "1"
       },
@@ -24,6 +25,7 @@
       },
       {
           "property": "onto:memberOf",
+          "overloaded": "true",
           "range": "onto:Theme",
           "minCardinality": "0"
       },
