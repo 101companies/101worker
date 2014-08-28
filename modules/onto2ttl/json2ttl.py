@@ -48,7 +48,7 @@ if __name__ == '__main__':
             if m.has_key('comment'):
                 comment = m['comment']
 
-            s += "\nrdfs:comment \"%s\" . \n" % comment
+            s += "\n%s rdfs:comment \"%s\" ; \n" % (id, comment)
 
             # :Entity rdfs:subclassOf owl:Class .
 
