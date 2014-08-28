@@ -19,9 +19,9 @@
           "minCardinality": "1"
       },
       {
-          "property": "onto:reviewedBy",
-          "range": "onto:Contributor",
-          "minCardinality": "0"
+        "property": "onto:designedBy",
+        "range": "foaf:Person",
+        "minCardinality": "0"
       }
    ]
 }
