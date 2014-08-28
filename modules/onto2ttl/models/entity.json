@@ -65,7 +65,7 @@
        },
        {
           "property": "onto:moreComplexThan",
-          "range": "onto:Contribution",
+          "range": "onto:Entity",
           "minCardinality": "0"
        }
    ]
