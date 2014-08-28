@@ -4,11 +4,6 @@
     "comment":"",
     "properties": [
         {
-            "property": "onto:varies",
-            "range": "onto:Feature",
-            "minCardinality": "0"
-        },
-        {
             "property": "onto:implies",
             "range": "onto:Feature",
             "minCardinality": "0"
