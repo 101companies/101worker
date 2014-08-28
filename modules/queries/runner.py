@@ -46,7 +46,7 @@ def process(file_names, prefixes):
                         x = x.replace(ns, prefixes[ns]+':')
                 return x
 
-            output = template.render(data=res, strip101=lambda x: strip101(x))
+            output = template.render(data=res, strip101=lambda x: strip101(x), escape=lambda x: x.replace('_', "\_"))
             #print output
 
             with open(os.path.join(os.path.dirname(__file__), 'output', file_to_save.replace('.tmpl', '.txt')), "w") as output_file:
