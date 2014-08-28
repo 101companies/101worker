@@ -1,4 +1,7 @@
-SELECT ?domain ?property ?range {
-  ?domain rdfs:domain ?property .
-  ?range rdfs:range ?property .
+SELECT ?property ?domain ?range
+WHERE {
+  ?property rdfs:domain ?domain .
+  ?property rdfs:range ?range .
+  ?domain rdfs:subClassOf onto:Entity
 }
+ORDER BY ?property ?domain ?range

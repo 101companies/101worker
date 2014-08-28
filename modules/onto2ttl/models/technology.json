@@ -1,19 +1,21 @@
 {
     "@id": "onto:Technology",
     "@type": ["onto:Instrument", "onto:System"],
-    "comment":"",
+    "comment": "Software technologies",
     "properties": [
         {
             "property": "onto:uses",
             "overload": "true",
             "range": "onto:Instrument",
-            "minCardinality": "0"
+            "minCardinality": "0",
+            "comment": "Use of instruments by the technology"
         },
         {
             "property": "onto:implements",
             "overload": "true",
-            "range": "onto:Resource",
-            "minCardinality": "0"
+            "range": "onto:Document",
+            "minCardinality": "0",
+            "comment": "Implementation of a standard or alike"
         }
     ]
 }

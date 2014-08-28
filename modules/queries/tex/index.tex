@@ -92,7 +92,7 @@ sensitive,%
     \lstinputlisting{../output/#1.txt}
 }
 
-\title{Exploring the \solasote{} ontology\\
+\title{The \solasote{} ontology\\
 (Draft as of \today)}
 
 \author{Ralf L\"ammel \and Martin Leinberger \and Andrei Varanovich\\
@@ -110,20 +110,33 @@ Fachbereich Informatik, Universit\"at Koblenz-Landau, Germany}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Format of this document}
+\section{Introduction}
 
 \todo{Ralf}{Write this section.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Query/output series}
+\section{Basics of \solasote}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Entity types of \solasote}
 
-\subsection{Entities of \solasote}
+Each individuals of \solasote{} is of one of the following entity
+types:
 
-\solasote{} covers software languages. The following SPARQL query
-retrieves all languages of the ontology:
+\sparql{entityTypes}
+
+\todo{all}{Waiting for clean-up. Eventually, we would be able to
+  show here a complete and short list of entity types. What's shown
+  below is obviously wrong.}
+
+\todo{all}{We also need to support some sort of headline in the .json
+  file which needs to arrive in some way in the triplestore.}
+
+\partialOutput{7}{entityTypes}
+
+Let's have a look at illustrative individuals for some of the entity
+types. The following SPARQL query retrieves all software languages of
+the ontology:
 
 \sparql{languages}
 
@@ -168,6 +181,11 @@ Likewise, other types of entities may be explored, e.g.:
 \item Contributors
 \end{itemize}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Query/output series}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Classification of \solasote's entities}
@@ -195,12 +213,12 @@ classifiers, again in alphabetical order and with associated concepts:
 Let us see now how classifiers are instantiated. Here is how we ask
 whether \uri{lang:Java} is a (software) language:
 
-\sparql{askJavaOfTypeLanguage}
+\sparql{javaOfTypeLanguage}
 
 \noindent
 Evaluation of this query literally returns `true':
 
-\completeOutput{askJavaOfTypeLanguage}
+\completeOutput{javaOfTypeLanguage}
 
 \noindent
 Instead, we may also ask for all types of \uri{lang:Java}:
@@ -209,6 +227,8 @@ Instead, we may also ask for all types of \uri{lang:Java}:
 
 \noindent
 \uri{lang:Java} has indeed a number of types:
+
+\todo{Ralf}{Why is Java of type Resource?}
 
 \completeOutput{typesOfJava}
 
@@ -324,7 +344,7 @@ These are some of the OO programming languages:
 \todo{Martin and Andrei}{Integrate 101's properties into
   triplestore. This requires a mapping from the DSL to RDFS/Owl.}
 
-\partialOutput{7}{properties}
+\completeOutput{properties}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -345,6 +365,8 @@ certain kind (such as languages, technologies, or concepts).
 
 \partialOutput{7}{popularTechnologies}
 
+\todo{Ralf}{Why is contrib:haskellEngineer a popular technology?}
+
 \sparql{popularConcepts}
 
 \partialOutput{7}{popularConcepts}
@@ -356,6 +378,8 @@ certain kind (such as languages, technologies, or concepts).
 \todo{Ralf}{Write this section.}
 
 \todo{Martin}{Complete sandbox upload on 101worker.}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

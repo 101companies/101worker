@@ -8,7 +8,7 @@
     },
   "@id": "onto:Entity",
   "@instance": "rdfs:Class",
-  "comment":"",
+  "comment": "Individuals in the scope of the ontology",
      "mapping" : [
       {
          "property": "instanceOf",
@@ -30,43 +30,49 @@
            "property": "onto:mentions",
            "range": "onto:Entity",
            "minCardinality": "0",
-           "comment": "Nonspecific reference to a concept"
+           "comment": "Nonspecific reference to an entity"
        },
        {
            "property": "onto:sameAs",
            "range": "rdfs:Literal",
            "minCardinality": "0",
-           "comment": ""
+           "comment": "Equivalence relative to external resource"
        },
        {
            "property": "onto:similarTo",
            "range": "rdfs:Literal",
-           "minCardinality": "0"
+           "minCardinality": "0",
+           "comment": "Similarity relative to external resource"
        },
        {
            "property": "onto:linksTo",
            "range": "rdfs:Literal",
-           "minCardinality": "0"
+           "minCardinality": "0",
+           "comment": "Non-specific link to external resource"
        },
        {
            "property": "onto:dependsOn",
            "range": "onto:Entity",
-           "minCardinality": "0"
+           "minCardinality": "0",
+           "comment": "Dependence relationship"
        },
        {
            "property": "onto:carries",
            "range": "onto:Tag",
-           "minCardinality": "0"
+           "minCardinality": "0",
+           "comment": "Tagging of entities"
        },
        {
            "property": "onto:memberOf",
            "range": "onto:Container",
-           "minCardinality": "0"
+           "minCardinality": "0",
+           "comment": "Membership relationship"
        },
        {
-          "property": "onto:moreComplexThan",
-          "range": "onto:Entity",
-          "minCardinality": "0"
+           "property": "onto:moreComplexThan",
+           "range": "onto:Entity",
+           "minCardinality": "0",
+           "comment": "Comparison of complexity"
        }
    ]
  }

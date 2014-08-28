@@ -1,52 +1,54 @@
  {
   "@id": "onto:Contribution",
   "@type": "onto:System",
-  "comment":"",
+  "comment": "Contributions to the 101 project",
   "properties": [
       {
           "property": "onto:uses",
           "overload": "true",
-          "range": "onto:Instrument",
-          "minCardinality": "1"
+          "range": "onto:Language",
+          "minCardinality": "1",
+          "comment": "Use of languages by the contribution"
       },
       {
           "property": "onto:developedBy",
           "range": "onto:Contributor",
-          "overload":"true",
-          "minCardinality": "1"
+          "overload": "true",
+          "minCardinality": "1",
+          "comment": "Developer of a contribution"
       },
       {
           "property": "onto:reviewedBy",
           "range": "onto:Contributor",
           "overload":"true",
-          "minCardinality": "0"
+          "minCardinality": "0",
+          "comment": "Reviewer of a contribution"
       },
       {
           "property": "onto:implements",
           "overload": "true",
           "range": "onto:Feature",
-          "minCardinality": "1"
+          "minCardinality": "1",
+          "comment": "Feature implemented by a contribution"
       },
       {
           "property": "onto:memberOf",
           "overload": "true",
           "range": "onto:Theme",
-          "minCardinality": "0"
+          "minCardinality": "0",
+          "comment": "Contributions collected in themes"
       },
       {
           "property": "onto:varies",
           "range": "onto:Contribution",
-          "minCardinality": "0"
+          "minCardinality": "0",
+          "comment": "Similarity of contributions"
       },
       {
          "property": "onto:basedOn",
          "range": "onto:Contribution",
-          "minCardinality": "0"
-      },
-      {
-          "property": "onto:reviewedBy",
-          "range": "onto:Contributor",
-          "minCardinality": "0"
+          "minCardinality": "0",
+          "comment": "Reuse of contributions"
       }
   ]
 }

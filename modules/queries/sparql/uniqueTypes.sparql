@@ -1,0 +1,18 @@
+SELECT (COUNT(DISTINCT ?entity) AS ?count) {
+  ?entity a onto:Entity .
+  ?entity a ?type1 .
+  ?entity a ?type2 .
+  ?type1 rdfs:subClassOf onto:Entity .
+  ?type2 rdfs:subClassOf onto:Entity .
+  FILTER (?type1 != ?type2) .
+  FILTER NOT EXISTS { ?type1 a onto:Classifier } .
+  FILTER NOT EXISTS { ?type2 a onto:Classifier } .
+  FILTER NOT EXISTS { 
+    ?subtype1 rdfs:subClassOf ?type1 .
+    FILTER (?type1 != ?subtype1)
+  } .
+  FILTER NOT EXISTS { 
+    ?subtype2 rdfs:subClassOf ?type2 .
+    FILTER (?type2 != ?subtype2)
+  }
+}

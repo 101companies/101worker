@@ -1,5 +1,6 @@
-SELECT ?classifier ?concept WHERE {
+SELECT ?classifier ?concept
+WHERE {
   ?classifier rdf:type onto:Classifier .
-  ?classifier onto:classifies ?concept .
+  ?classifier onto:classifies ?concept
 }
 ORDER BY ?classifier

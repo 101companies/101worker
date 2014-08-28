@@ -1,0 +1,11 @@
+SELECT ?type
+WHERE { 
+  ?type rdfs:subClassOf onto:Entity .
+  FILTER (?type != onto:Entity) .
+  FILTER NOT EXISTS { ?type a onto:Classifier } .
+  FILTER NOT EXISTS { 
+    ?subtype rdfs:subClassOf ?type .
+    FILTER (?type != ?subtype)
+  } 
+}
+ORDER BY ?type

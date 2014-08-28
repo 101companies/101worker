@@ -1,5 +1,5 @@
 {
     "@id": "onto:Language",
     "@type": "onto:Instrument",
-    "comment":""
+    "comment": "Software languages"
 }

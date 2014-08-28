@@ -1,4 +1,3 @@
-SELECT ?type {
-  lang:Java rdf:type ?type
-}
+SELECT ?type
+WHERE { lang:Java rdf:type ?type }
 ORDER BY ?type

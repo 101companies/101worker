@@ -1,13 +1,13 @@
  {
   "@id": "onto:Document",
   "@type": ["onto:Description", "foaf:Document"],
-  "comment":"",
+  "comment": "Documents in a broad sense",
   "properties": [
     {
         "property": "onto:describes",
         "range": "onto:Instrument",
         "minCardinality": "0",
-        "comment": "Something defines a language"
+        "comment": "Description of an instrument"
     }
   ]
 }

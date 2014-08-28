@@ -1,5 +1,5 @@
 {
    "@id": "onto:Description",
    "@type": "onto:Entity",
-   "comment":""
+   "comment": "Base type for features and documents"
 }

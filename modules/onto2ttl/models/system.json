@@ -1,27 +1,25 @@
 {
    "@id": "onto:System",
    "@type": "onto:Entity",
-   "comment":"",
+   "comment": "Software systems",
    "properties": [
       {
          "property": "onto:implements",
          "range": "onto:Description",
-         "minCardinality": "0"
+         "minCardinality": "0",
+         "comment": "Systems implementing descriptions"
       },
       {
         "property": "onto:uses",
         "range": "onto:Instrument",
-        "minCardinality": "0"
+        "minCardinality": "0",
+        "comment": "Use of instruments by systems"
       },
       {
           "property": "onto:developedBy",
-          "range": "onto:Contributor",
-          "minCardinality": "1"
-      },
-      {
-        "property": "onto:designedBy",
-        "range": "foaf:Person",
-        "minCardinality": "0"
+          "range": "foaf:Person",
+          "minCardinality": "1",
+          "comment": "Developers of systems"
       }
    ]
 }

@@ -1,5 +1,5 @@
 {
     "@id": "onto:Course",
     "@type": "onto:Container",
-    "comment":""
+    "comment": "Courses on programming and software engineering"
 }

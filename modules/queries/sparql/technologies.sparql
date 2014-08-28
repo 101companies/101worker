@@ -1,4 +1,3 @@
-SELECT DISTINCT ?technology WHERE {
-  ?technology rdf:type onto:Technology .
-}
+SELECT DISTINCT ?technology
+WHERE { ?technology rdf:type onto:Technology }
 ORDER BY ?technology

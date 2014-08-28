@@ -1,3 +1,2 @@
-SELECT ?wikilink {
-  lang:Haskell onto:hasWikiLink ?wikilink
-}
+SELECT ?wikilink
+WHERE { lang:Haskell onto:hasWikiLink ?wikilink }

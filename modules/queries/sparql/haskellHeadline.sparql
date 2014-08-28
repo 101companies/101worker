@@ -1,3 +1,2 @@
-SELECT ?headline {
-  lang:Haskell onto:hasHeadline ?headline
-}
+SELECT ?headline
+WHERE { lang:Haskell onto:hasHeadline ?headline }

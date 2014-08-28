@@ -1,19 +1,26 @@
 {
     "@id": "onto:Instrument",
     "@type": "onto:Entity",
-    "comment":"",
+    "comment": "Base type for languages, technologies, and concepts",
      "properties": [
        {
          "property": "onto:supports",
          "range": "onto:Instrument",
          "minCardinality": "0",
-         "comment": "Instruments can support instruments by different means"
+         "comment": "Instruments supporting other instruments"
+       },
+       {
+         "property": "onto:designedBy",
+         "range": "foaf:Person",
+         "minCardinality": "0",
+         "comment": "Instruments being designed by persons"
        },
        {
            "property": "onto:memberOf",
            "overload": "true",
            "range": "onto:Vocabulary",
-           "minCardinality": "0"
+           "minCardinality": "0",
+           "comment": "Instruments collected in vocabularies"
        }
      ]
 }

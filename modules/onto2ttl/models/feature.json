@@ -1,17 +1,19 @@
 {
     "@id": "onto:Feature",
     "@type": "onto:Description",
-    "comment":"",
+    "comment": "Software features",
     "properties": [
         {
             "property": "onto:implies",
             "range": "onto:Feature",
-            "minCardinality": "0"
+            "minCardinality": "0",
+            "comment": "Cross-feature constraint"
         },
         {
             "property": "onto:illustrates",
             "range": "onto:Concept",
-            "minCardinality": "0"
+            "minCardinality": "0",
+            "comment": "Chrestomathic purpose of a feature"
         }
     ]
 }

@@ -1,14 +1,14 @@
 {
     "@id": "onto:Script",
     "@type": "onto:Entity",
-    "comment":"",
+    "comment": "Scripts as units of a course",
     "properties": [
       {
           "property": "onto:memberOf",
           "overload": "true",
           "range": "onto:Course",
           "minCardinality": "1",
-          "comment": "Script (lecture) belongs to a course"
+          "comment": "Scripts belonging to a course"
       }
     ]
 }
