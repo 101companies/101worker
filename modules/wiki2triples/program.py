@@ -167,7 +167,7 @@ def map_instance(page, graph):
         triple = uri, rdf['type'], encode_ontology(o['n'])
         graph.add(triple)
         triple = encode_ontology(clss), rdf['type'], encode_ontology('Classifier')
-        if not triple in graph:
+        if not triple in graph and not o['p']:
             print 'Adding additional rdf:type onto:Classifier statement for {}'.format(o['n'])
             graph.add(triple)
 
