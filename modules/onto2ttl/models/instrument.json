@@ -11,6 +11,7 @@
        },
        {
            "property": "onto:memberOf",
+           "overload": "true",
            "range": "onto:Vocabulary",
            "minCardinality": "0"
        }

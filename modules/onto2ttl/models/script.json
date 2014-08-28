@@ -4,7 +4,8 @@
     "comment":"",
     "properties": [
       {
-         "property": "onto:memberOf",
+          "property": "onto:memberOf",
+          "overload": "true",
           "range": "onto:Course",
           "minCardinality": "1",
           "comment": "Script (lecture) belongs to a course"
