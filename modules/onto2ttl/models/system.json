@@ -12,6 +12,16 @@
         "property": "onto:uses",
         "range": "onto:Instrument",
         "minCardinality": "0"
+      },
+      {
+          "property": "onto:developedBy",
+          "range": "onto:Contributor",
+          "minCardinality": "1"
+      },
+      {
+          "property": "onto:reviewedBy",
+          "range": "onto:Contributor",
+          "minCardinality": "0"
       }
    ]
 }

@@ -12,11 +12,13 @@
       {
           "property": "onto:developedBy",
           "range": "onto:Contributor",
+          "overload":"true",
           "minCardinality": "1"
       },
       {
           "property": "onto:reviewedBy",
           "range": "onto:Contributor",
+          "overload":"true",
           "minCardinality": "0"
       },
       {
@@ -29,11 +31,6 @@
           "property": "onto:memberOf",
           "overload": "true",
           "range": "onto:Theme",
-          "minCardinality": "0"
-      },
-      {
-          "property": "onto:moreComplexThan",
-          "range": "onto:Contribution",
           "minCardinality": "0"
       },
       {
