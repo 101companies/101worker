@@ -34,8 +34,9 @@ if __name__ == '__main__':
             if m.has_key('@type'):
                 t = m['@type']
                 if type(t) is list:
+                    s += id
                     for x in t:
-                        s += "%s rdfs:subClassOf %s ; \n" % (id, x)
+                        s += "rdfs:subClassOf %s ; \n" % (x)
                 else:
                     s += "%s rdfs:subClassOf %s ;" % (id, t)
                 print(s)
