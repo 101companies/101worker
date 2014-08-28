@@ -26,7 +26,7 @@
       },
       {
           "property": "onto:memberOf",
-          "overloaded": "true",
+          "overload": "true",
           "range": "onto:Theme",
           "minCardinality": "0"
       },
