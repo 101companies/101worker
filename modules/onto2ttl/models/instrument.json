@@ -5,9 +5,9 @@
      "properties": [
        {
          "property": "onto:supports",
-         "range": "onto:Concept",
+         "range": "onto:Instrument",
          "minCardinality": "0",
-         "comment": "Instruments can support concepts by different means"
+         "comment": "Instruments can support instruments by different means"
        },
        {
            "property": "onto:memberOf",
