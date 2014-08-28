@@ -44,6 +44,12 @@ if __name__ == '__main__':
                 s += "%s rdf:type %s ." % (id, t)
                 print(s)
 
+            comment = ""
+            if m.has_key('comment'):
+                comment = m['comment']
+
+            s += "\nrdfs:comment \"%s\" . \n" % comment
+
             # :Entity rdfs:subclassOf owl:Class .
 
             if 'properties' in m:
@@ -51,11 +57,15 @@ if __name__ == '__main__':
                     print prop
                     # TODO: comments are missing in the models
                     # " rdfs:label \"Name of the entity\" ; \n" \
-                    # " rdfs:comment \"Comment\" ; \n" \
+                    #
+                    comment = "\"\""
+                    if prop.has_key('comment'):
+                        comment = prop['comment']
                     if not prop.has_key('overload'):
                         s += "\n\n %s rdfs:type rdfs:Property ; \n" \
+                            " rdfs:comment %s ; \n" \
                             " rdfs:domain %s ; \n" \
-                            " rdfs:range %s . \n" % (prop['property'], id, prop['range'])
+                            " rdfs:range %s . \n" % (prop['property'], comment, id, prop['range'])
 
                     print s
 
