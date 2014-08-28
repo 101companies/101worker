@@ -157,6 +157,9 @@ def map_instance(page, graph):
     triple = uri, rdf['type'], encode_ontology(clss)
     graph.add(triple)
 
+    triple = encode_ontology(clss), rdf['type'], encode_ontology('Classifier')
+    graph.add(triple)
+
     triple = uri, encode_ontology('hasHeadline'), rdflib.Literal(page['headline'])
     graph.add(triple)
 
@@ -200,6 +203,9 @@ def map_class(page, graph):
     graph.add(triple)
 
     triple = onto_entity, rdf['type'], encode_ontology('Classifier')
+    graph.add(triple)
+
+    triple = onto_entity, rdfs['comment'], page['headline']
     graph.add(triple)
 
     for o in page.get('isA', []):
