@@ -205,7 +205,7 @@ def map_class(page, graph):
     triple = onto_entity, rdf['type'], encode_ontology('Classifier')
     graph.add(triple)
 
-    triple = onto_entity, rdfs['comment'], page['headline']
+    triple = onto_entity, rdfs['comment'], rdflib.Literal(page['headline'])
     graph.add(triple)
 
     for o in page.get('isA', []):
