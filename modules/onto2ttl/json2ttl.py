@@ -36,7 +36,7 @@ if __name__ == '__main__':
                 if type(t) is list:
                     s += id
                     for x in t:
-                        s += "rdfs:subClassOf %s ; \n" % (x)
+                        s += " rdfs:subClassOf %s ; \n" % (x)
                 else:
                     s += "%s rdfs:subClassOf %s ;" % (id, t)
                 print(s)
