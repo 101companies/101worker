@@ -11,6 +11,7 @@
         },
         {
             "property": "onto:implements",
+            "overload": "true",
             "range": "onto:Resource",
             "minCardinality": "0"
         }
