@@ -41,7 +41,7 @@ if __name__ == '__main__':
                 print(s)
             elif m.has_key('@instance'):
                 t = m['@instance']
-                s += "%s rdf:type %s ." % (id, t)
+                s += "%s rdf:type %s ;" % (id, t)
                 print(s)
 
             comment = ""
