@@ -25,7 +25,8 @@ if __name__ == '__main__':
 @prefix voc:<http://101companies.org/resources/Vocabulary#> . \n\
 @prefix theme:<http://101companies.org/resources/Theme#> . \n\
 @prefix course:<http://101companies.org/resources/Course#> . \n\
-@prefix script:<http://101companies.org/resources/Script#> . \n\n"
+@prefix script:<http://101companies.org/resources/Script#> . \n\
+@prefix foaf: <http://xmlns.com/foaf/0.1/> . \n\n"
 
         with open(os.path.join(os.path.dirname(__file__), 'models', file)) as json_data:
             m = json.load(json_data)
