@@ -35,9 +35,9 @@ if __name__ == '__main__':
                 t = m['@type']
                 if type(t) is list:
                     for x in t:
-                        s += "%s rdfs:subClassOf %s . \n" % (id, x)
+                        s += "%s rdfs:subClassOf %s ; \n" % (id, x)
                 else:
-                    s += "%s rdfs:subClassOf %s ." % (id, t)
+                    s += "%s rdfs:subClassOf %s ;" % (id, t)
                 print(s)
             elif m.has_key('@instance'):
                 t = m['@instance']
@@ -48,7 +48,7 @@ if __name__ == '__main__':
             if m.has_key('comment'):
                 comment = m['comment']
 
-            s += "\n    rdfs:comment \"%s\" ; \n" % (comment)
+            s += "\n    rdfs:comment \"%s\" . \n" % (comment)
 
             # :Entity rdfs:subclassOf owl:Class .
 
