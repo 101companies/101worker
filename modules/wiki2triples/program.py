@@ -158,7 +158,9 @@ def map_instance(page, graph):
     graph.add(triple)
 
     triple = encode_ontology(clss), rdf['type'], encode_ontology('Classifier')
-    graph.add(triple)
+    if not triple in graph:
+        print 'Adding additional rdf:type onto:Classifier statement for {}'.format(clss)
+        graph.add(triple)
 
     triple = uri, encode_ontology('hasHeadline'), rdflib.Literal(page['headline'])
     graph.add(triple)
@@ -287,6 +289,7 @@ def main():
     for ont_def in filter(lambda x: '.ttl' in x, os.listdir(path_to_ontology)):
         print 'Parsing ' + ont_def
         graph.parse(os.path.join(path_to_ontology, ont_def), format='turtle')
+    graph.parse('additional_triples.ttl', format='turtle')
     graph.add((encode_ontology('WikiPage'), rdf['type'], rdfs['Class']))
     
     #hardcoded_classes(graph)
