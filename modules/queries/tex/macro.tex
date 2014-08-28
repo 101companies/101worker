@@ -1,0 +1,135 @@
+% THANKS DUE TO http://tex.stackexchange.com/questions/4889/input-only-part-of-a-file
+\makeatletter
+\newread\pin@file
+\newcounter{pinlineno}
+\newcommand\pin@accu{}
+\newcommand\pin@ext{pintmp}
+% inputs #3, selecting only lines #1 to #2 (inclusive)
+\newcommand*\partialinput [3] {%
+  \IfFileExists{#3}{%
+    \openin\pin@file #3%
+    % skip lines 1 to #1 (exclusive)
+    \setcounter{pinlineno}{1}%
+    \@whilenum\value{pinlineno}<#1 \do{%
+      \read\pin@file to\pin@line%
+      \stepcounter{pinlineno}%
+    }%
+    % prepare reading lines #1 to #2 inclusive
+    \addtocounter{pinlineno}{-1}%
+    \let\pin@accu\empty%
+    \begingroup%
+    \endlinechar\newlinechar%
+    \@whilenum\value{pinlineno}<#2 \do{%
+      % use safe catcodes provided by e-TeX's \readline
+      \readline\pin@file to\pin@line%
+      \edef\pin@accu{\pin@accu\pin@line}%
+      \stepcounter{pinlineno}%
+    }%
+    \closein\pin@file
+    \expandafter\endgroup
+    \scantokens\expandafter{\pin@accu}%
+  }{%
+    \errmessage{File `#3' doesn't exist!}%
+  }%
+}
+\makeatother
+
+\newcommand{\uri}[1]{\textsf{#1}}
+\newcommand{\ooo}[1]{\textsf{101#1}}%
+\newcommand{\todo}[2]{\noindent{}TODO (#1): #2}
+\newcommand{\solasote}{{\itshape\textsf{SoLaSoTe}}}
+\newcommand{\sparqlnote}[1]{
+\paragraph{A note on SPARQL} #1
+}
+
+\definecolor{codebackground}{rgb}{0.97,0.97,0.97}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{keyword}{rgb}{0.5,0.0,0.5}
+\definecolor{comment}{rgb}{0.3,0.5,0.3}
+\definecolor{code}{rgb}{0.0,0.0,0.3}
+\definecolor{ncode}{rgb}{0.0,0.3,0.3}
+\definecolor{scode}{rgb}{0.3,0.0,0.3}
+\definecolor{static}{rgb}{0.0,0.0,0.3}
+
+\lstset{%
+numbers=none,
+basicstyle=\sffamily\color{ncode}\small\itshape,%
+%frame=single,
+frame=none,
+columns=fullflexible,
+sensitive,%
+%  fontadjust=true,%
+  showstringspaces=false,%
+  keywordstyle=\color{keyword},%
+  commentstyle=\color{comment}\normalfont\small,%
+%  tabsize=2,
+%  numbers=left,                   % where to put the line-numbers
+%  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  backgroundcolor=\color{codebackground},
+ %breaklines=true
+  morestring=[b]"'%
+}
+
+\newcommand{\sparql}[1]{%
+\medskip
+
+\noindent
+\begin{boxedminipage}{\hsize}
+\hfill{}Query \underline{#1.sparql}
+\lstinputlisting[language=SPARQL]{../sparql/#1.sparql}
+\end{boxedminipage}
+\medskip
+}
+
+\newcommand{\partialOutputTabular}[4]{
+
+\medskip
+
+\noindent
+\begin{boxedminipage}{\hsize}
+\hfill{}Output of query \underline{#4.sparql} (first few rows)
+
+\noindent
+\colorbox{codebackground}{
+\begin{tabular}#1
+#2\\\hline
+\partialinput{1}{#3}{../output/#4.txt}
+...
+\end{tabular}}
+\end{boxedminipage}
+\medskip
+}
+\newcommand{\partialOutput}[2]{%
+
+\medskip
+
+\noindent
+\begin{boxedminipage}{\hsize}
+\hfill{}Output of query \underline{#2.sparql} (first few rows)
+\lstinputlisting[language=CSV,lastline=#1]{../output/#2.txt}
+{\large{}...}
+\end{boxedminipage}
+\medskip
+}
+
+\newcommand{\completeOutput}[1]{%
+
+\medskip
+
+\noindent
+\begin{boxedminipage}{\hsize}
+\hfill{}Output of query \underline{#1.sparql}
+\lstinputlisting[language=CSV]{../output/#1.txt}
+\end{boxedminipage}
+\medskip
+}
+
+
+
+\newcommand*{\Objective}[1]{\emph{Objective:} #1}
+\newcommand*{\Output}[1]{\emph{Output:} #1}
+
+\newcommand*{\Result}[1]{
+
+    \lstinputlisting{../output/#1.txt}
+}

@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{llncs}
 
 \usepackage{fancyvrb}
 \usepackage{tikz}
@@ -9,104 +9,24 @@
 \usepackage{comment}
 \usepackage{xcolor}
 \usepackage{hyperref}
-
-\newcommand{\uri}[1]{\textsf{#1}}
-\newcommand{\ooo}[1]{\textsf{101#1}}%
-\newcommand{\todo}[2]{\noindent{}TODO (#1): #2}
-\newcommand{\solasote}{{\itshape\textsf{SoLaSoTe}}}
-\newcommand{\sparqlnote}[1]{
-\paragraph{A note on SPARQL} #1
-}
-
-\definecolor{codebackground}{rgb}{0.97,0.97,0.97}
-\definecolor{gray}{rgb}{0.5,0.5,0.5}
-\definecolor{keyword}{rgb}{0.5,0.0,0.5}
-\definecolor{comment}{rgb}{0.3,0.5,0.3}
-\definecolor{code}{rgb}{0.0,0.0,0.3}
-\definecolor{ncode}{rgb}{0.0,0.3,0.3}
-\definecolor{scode}{rgb}{0.3,0.0,0.3}
-\definecolor{static}{rgb}{0.0,0.0,0.3}
-
-\lstset{%
-numbers=none,
-basicstyle=\sffamily\color{ncode}\small\itshape,%
-%frame=single,
-frame=none,
-columns=fullflexible,
-sensitive,%
-%  fontadjust=true,%
-  showstringspaces=false,%
-  keywordstyle=\color{keyword},%
-  commentstyle=\color{comment}\normalfont\small,%
-%  tabsize=2,
-%  numbers=left,                   % where to put the line-numbers
-%  numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
-  backgroundcolor=\color{codebackground},
- %breaklines=true
-  morestring=[b]"'%
-}
-
-\newcommand{\sparql}[1]{%
-\medskip
-
-\noindent
-\begin{boxedminipage}{\hsize}
-\hfill{}Query \underline{#1.sparql}
-\lstinputlisting[language=SPARQL]{../sparql/#1.sparql}
-\end{boxedminipage}
-\medskip
-}
-
-\newcommand{\partialOutput}[2]{%
-
-\medskip
-
-\noindent
-\begin{boxedminipage}{\hsize}
-\hfill{}Output of query \underline{#2.sparql} (first few rows)
-\lstinputlisting[language=CSV,lastline=#1]{../output/#2.txt}
-{\large{}...}
-\end{boxedminipage}
-\medskip
-}
-
-\newcommand{\completeOutput}[1]{%
-
-\medskip
-
-\noindent
-\begin{boxedminipage}{\hsize}
-\hfill{}Output of query \underline{#1.sparql}
-\lstinputlisting[language=CSV]{../output/#1.txt}
-\end{boxedminipage}
-\medskip
-}
-
-
-
-\newcommand*{\Objective}[1]{\emph{Objective:} #1}
-\newcommand*{\Output}[1]{\emph{Output:} #1}
-
-\newcommand*{\Result}[1]{
-
-    \lstinputlisting{../output/#1.txt}
-}
+\input{macro}
 
 \title{The \solasote{} ontology\\
 (Draft as of \today)}
 
-\author{Ralf L\"ammel \and Martin Leinberger \and Andrei Varanovich\\
-Fachbereich Informatik, Universit\"at Koblenz-Landau, Germany}
+\author{Ralf L\"ammel \and Martin Leinberger \and Andrei Varanovich}
+
+\institute{Fachbereich Informatik, Universit\"at Koblenz-Landau, Germany}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-\todo{Ralf}{Write abstract.}
+  This document describes and demonstrates the \solasote{} ontology
+  for software languages, software technologies, and software
+  concepts, as they are used in programming and software engineering.
 \end{abstract}
-
-\tableofcontents
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -145,7 +65,7 @@ the ontology:
 \noindent
 Here is the first few languages sorted alphabetically:
 
-\partialOutput{7}{languages}
+\partialOutputTabular{{l|l}}{\textbf{Language} & \textbf{Headline}}{7}{languages}
 
 \noindent
 \solasote{} covers software technologies, too. Here, is a SPARQL query

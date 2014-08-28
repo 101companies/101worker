@@ -13,7 +13,7 @@ run:
 	python runner.py
 	cp -r output ${dumpsDir}/sparql_queries
 	cd tex; make
-	cp tex/index.pdf ${dumpsDir}/sparql_queries
+	cp tex/doc.pdf ${dumpsDir}/solasote.pdf
 
 # Remove local temporary files, if any
 clean:
