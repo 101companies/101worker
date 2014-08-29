@@ -1,6 +1,6 @@
 {
     "@id": "onto:Contributor",
-    "@type": ["onto:Entity", "foaf:Person"],
+    "@type": ["foaf:Person", "onto:Entity"],
     "comment": "Contributors to the 101 project",
     "properties": [
         {

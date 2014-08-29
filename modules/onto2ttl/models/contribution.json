@@ -1,6 +1,6 @@
  {
   "@id": "onto:Contribution",
-  "@type": "onto:System",
+  "@type": ["onto:Entity", "onto:System"],
   "comment": "Contributions to the 101 project",
   "properties": [
       {

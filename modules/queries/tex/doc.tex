@@ -23,9 +23,11 @@
 \maketitle
 
 \begin{abstract}
-  This document describes and demonstrates the \solasote{} ontology
-  for software languages, software technologies, and software
-  concepts, as they are used in programming and software engineering.
+  This document describes and exercises the \solasote{} ontology for
+  software languages, software technologies, and software concepts, as
+  they are relevant for programming and software engineering. Evidence
+  from the software chrestomathy of the 101 project is used to
+  demonstrate the ontology.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,19 +42,19 @@
 
 \subsection{Entity types of \solasote}
 
-Each individuals of \solasote{} is of one of the following entity
+Each individual of \solasote{} is of one of the following entity
 types:
 
-\sparql{entityTypes}
+\completeOutputTabular{{l|l}}{\textbf{Type} & \textbf{Headline}}{individuals}
 
-\todo{all}{Waiting for clean-up. Eventually, we would be able to
-  show here a complete and short list of entity types. What's shown
-  below is obviously wrong.}
+\todo{all}{The above list is still wrong.}
+
+\sparql{individuals}
 
 \todo{all}{We also need to support some sort of headline in the .json
   file which needs to arrive in some way in the triplestore.}
 
-\partialOutput{7}{entityTypes}
+\partialOutput{7}{individuals}
 
 Let's have a look at illustrative individuals for some of the entity
 types. The following SPARQL query retrieves all software languages of
@@ -65,7 +67,7 @@ the ontology:
 \noindent
 Here is the first few languages sorted alphabetically:
 
-\partialOutputTabular{{l|l}}{\textbf{Language} & \textbf{Headline}}{7}{languages}
+%\partialOutputTabular{{l|l}}{\textbf{Language} & \textbf{Headline}}{7}{languages}
 
 \noindent
 \solasote{} covers software technologies, too. Here, is a SPARQL query

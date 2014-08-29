@@ -1,6 +1,6 @@
 {
     "@id": "onto:Technology",
-    "@type": ["onto:Instrument", "onto:System"],
+    "@type": ["onto:Entity", "onto:Instrument", "onto:System"],
     "comment": "Software technologies",
     "properties": [
         {

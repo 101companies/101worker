@@ -1,10 +1,12 @@
-SELECT ?type
+SELECT ?type ?comment
 WHERE { 
   ?type rdfs:subClassOf onto:Entity .
+  ?type rdfs:comment ?comment .
   FILTER (?type != onto:Entity) .
   FILTER NOT EXISTS { ?type a onto:Classifier } .
   FILTER NOT EXISTS { 
     ?subtype rdfs:subClassOf ?type .
+    FILTER NOT EXISTS { ?subtype a onto:Classifier } .
     FILTER (?type != ?subtype)
   } 
 }
