@@ -220,8 +220,9 @@ def map_class(page, graph):
     triple = onto_entity, rdf['type'], rdfs['Class']
     graph.add(triple)
 
-    triple = onto_entity, rdf['type'], encode_ontology('onto', 'Classifier')
-    graph.add(triple)
+    if not page['n'] in premodeled_classes:
+        triple = onto_entity, rdf['type'], encode_ontology('onto', 'Classifier')
+        graph.add(triple)
 
     triple = onto_entity, rdfs['comment'], rdflib.Literal(page['headline'])
     graph.add(triple)
