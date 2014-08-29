@@ -1,6 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Basics of \solasote}
+\label{S:basics}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Entity types of \solasote}
 
@@ -23,6 +26,10 @@ base type \uri{onto:Entity}, but we do not include subclasses of the
 used for classification. This is explained in more detail in
 \S\ref{S:schema}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Illustrative \solasote{} individuals}
+
 Let's have a look at illustrative individuals for some of the entity types. To this end, we use queries to retrieve all software languages, technologies, and concepts. We order them by `popularity', i.e., numbers of any sort of subjects referring to them through any sort of predicate. In this manner, we see presumably more well-known, less obscure individuals. Thus:
 
 \sparql{languages}
@@ -43,16 +50,140 @@ Here are the first few individuals for each of the queries:
 \partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{concepts}
 %|
 
-\todo{Ralf}{What to do about names starting in `101'.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo{Ralf}{Clearly, some of the listed names are not proper concept names.}
+\subsection{Classification of \solasote's entities}
 
-Likewise, other types of entities may be explored, e.g.:
+\todo{Ralf}{Write this section.}
 
-\begin{itemize}
-\item Features
-\item Contributions
-\item Contributors
-\end{itemize}
+\begin{comment}
+\solasote{} organizes classifiers for software languages,
+technologies, and concepts. In fact, it uses a class hierarchy (in the
+sense of rdfs:subClassOf) with instances at the leaves (in the sense
+of rdf:type) for classification.
+
+All classifiers are concepts, but not all concepts are
+classifiers. Each classifier is associated with a concept of the same
+name with a different prefix. We see this situation by looking at the
+first few concept in alphabetical order as well as the first few
+classifiers, again in alphabetical order and with associated concepts: 
+
+\sparql{concepts}
+
+\partialOutput{7}{concepts}
+
+\sparql{classifiers}
+
+\partialOutput{7}{classifiers}
+
+\noindent
+Let us see now how classifiers are instantiated. Here is how we ask
+whether \uri{lang:Java} is a (software) language:
+
+\sparql{javaOfTypeLanguage}
+
+\noindent
+Evaluation of this query literally returns `true':
+
+\completeOutput{javaOfTypeLanguage}
+
+\noindent
+Instead, we may also ask for all types of \uri{lang:Java}:
+
+\sparql{typesOfJava}
+
+\noindent
+\uri{lang:Java} has indeed a number of types:
+
+\todo{Ralf}{Why is Java of type Resource?}
+
+\completeOutput{typesOfJava}
+
+\noindent
+These types can be explained in the following way:
+%
+\begin{description}
+%
+\item[\uri{onto:Language}] This type stems from the entity's namespace
+  on the \ooo{wiki}. That is, `Java' belongs to \ooo{wiki}'s namespace
+  `Language' and thus, it gets associated with the type \uri{onto:Language}
+  by the mapping from \ooo{wiki} to \solasote
+%
+\item[\uri{onto:OO\_programming\_language}] This type stems from a
+  semantic property stated on \ooo{wiki}'s page for \uri{lang:Java}. That
+  is, the
+  page\footnote{\url{http://101companies.org/wiki/Language:Java}}
+  contains markup for a relevant semantic property as follows:
+\begin{center}
+\begin{BVerbatim}
+[[instanceOf::OO programming language]]
+\end{BVerbatim}
+\end{center}
+\noindent
+In this manner, the wiki directly declares `Java' to be of type `OO
+programming language'.
+%
+\item[\uri{onto:Instrument}, \uri{onto:Entity}] These are supertypes
+  of \uri{onto:Language}, as declared explicitly by the general class
+  hierarchy for \solasote. Thus, these types are listed because they
+  are inferred by the \emph{rdfs:subClassOf} hierarchy of \solasote.
+%
+\item[\uri{onto:Language}, \uri{onto:Programming\_language}]
+  These are supertypes of \uri{onto:OO\_programming\_language}, as
+  declared by semantic `isA' properties on the \ooo{wiki}. For
+  instance, the
+  page for \uri{onto:OO\_programming\_language}\footnote{\url{http://101companies.org/wiki/OO_programming_language}}
+  contains markup for a relevant semantic property as follows:
+\begin{center}
+\begin{BVerbatim}
+[[isA::Programming language]]
+\end{BVerbatim}
+\end{center}
+\noindent
+Thus, these types are listed because they are inferred by the
+\emph{rdfs:subClassOf} hierarchy of \solasote. The type
+\uri{onto:Language} is a shorthand for what is called `software
+language' on the wiki. The type \uri{onto:Programming\_language} is a
+proper classifier of (software) languages (just as much as
+\uri{onto:OO\_programming\_language}).
+%
+\item[\uri{onto:WikiPage}] This type conveys that the resource at hand
+  corresponds to a wiki page on the \ooo{wiki}. This is basically
+  true for all resources of type \uri{onto:Entity}. The type factors
+  all more representational properties of entities; see
+  \S\ref{S:mapping}.
+%
+%\item[\uri{rdfs:Resource}] This is the root type of all resources
+%  based on RDFS' underlying type system.
+\end{description}
+%
+We can also query the supertypes of a given type. For instance, let's
+query the supertypes of \uri{onto:OO\_programming\_language}, as we
+have encountered this type previously:
+
+\todo{Martin}{Once the name mapping of 26 Aug is in place, then
+  uri{rdfs:Resource} should be gone from the output; ditto \uri{onto:Software\_language}.}
+
+\sparql{supertypesOfOoProgrammingLanguage}
+
+\noindent
+These are all the supertypes of \uri{onto:OO\_programming\_language};
+please note that all the types but \uri{onto:Programming\_language}
+are inferred and that inference clearly assumes reflexivity, since
+\uri{onto:OO\_programming\_language} is returned as a supertype of itself:
+
+\completeOutput{supertypesOfOoProgrammingLanguage}
+
+\noindent
+Alternatively, we can also query for all the instances of a certain
+class. For instance, we can ask for all the OO programming languages:
+
+\sparql{instancesOfOoProgrammingLanguage}
+
+\noindent
+These are some of the OO programming languages:
+
+\partialOutput{7}{instancesOfOoProgrammingLanguage}
+\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
