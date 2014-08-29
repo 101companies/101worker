@@ -1,5 +1,6 @@
  {
   "@id": "onto:Concept",
   "@type": ["onto:Entity", "onto:Instrument"],
-  "comment": "Software concepts"
+  "comment": "Software concepts",
+  "wikialias": ["Software_concept"]
  }

@@ -1,5 +1,6 @@
 {
     "@id": "onto:Language",
     "@type": ["onto:Entity", "onto:Instrument"],
-    "comment": "Software languages"
+    "comment": "Software languages",
+    "wikialias": ["Software_language"]
 }

@@ -2,6 +2,7 @@
     "@id": "onto:Feature",
     "@type": ["onto:Entity", "onto:Description"],
     "comment": "Software features",
+    "wikialias": ["Software_feature"],
     "properties": [
         {
             "property": "onto:implies",

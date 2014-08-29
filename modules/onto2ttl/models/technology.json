@@ -2,6 +2,7 @@
     "@id": "onto:Technology",
     "@type": ["onto:Entity", "onto:Instrument", "onto:System"],
     "comment": "Software technologies",
+    "wikialias": ["Software_technology"],
     "properties": [
         {
             "property": "onto:uses",
