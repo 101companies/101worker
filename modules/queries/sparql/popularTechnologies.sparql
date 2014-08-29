@@ -1,8 +1,0 @@
-SELECT ?technology (COUNT(DISTINCT ?contribution) AS ?count)
-WHERE {
-  ?technology rdf:type onto:Technology .
-  ?contribution rdf:type onto:Contribution .
-  ?contribution ?predicate ?technology
-}
-GROUP BY ?technology
-ORDER BY DESC(?count)

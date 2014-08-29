@@ -1,3 +1,3 @@
 {% for x in data -%}
-{{ escape(strip101(x['language']['value'])) }} & {{ strip101(x['headline']['value']) }} \\
+{{ unqualify(x['language']['value']) }} & {{ x['headline']['value'] }} \\
 {% endfor %}

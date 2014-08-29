@@ -1,3 +1,3 @@
 {% for x in data -%}
-{{ strip101(x['domain']['value']) }}; {{ strip101(x['property']['value']) }}; {{ strip101(x['range']['value']) }}
+{{ prefixy(x['domain']['value']) }}; {{ prefixy(x['property']['value']) }}; {{ prefixy(x['range']['value']) }}
 {% endfor %}

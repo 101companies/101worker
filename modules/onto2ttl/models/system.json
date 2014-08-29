@@ -2,6 +2,7 @@
    "@id": "onto:System",
    "@instance": "rdfs:Class",
    "comment": "Software systems",
+   "wikialias": ["Software_system"],
    "properties": [
       {
          "property": "onto:implements",

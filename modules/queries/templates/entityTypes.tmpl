@@ -1,3 +1,3 @@
 {% for x in data -%}
-{{ strip101(x['type']['value']) }} & {{ strip101(x['comment']['value']) }} \\
+{{ prefixy(x['type']['value']) }} & {{ x['comment']['value'] }} \\
 {% endfor %}

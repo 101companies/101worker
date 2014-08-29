@@ -1,8 +1,0 @@
-SELECT ?concept (COUNT(DISTINCT ?contribution) AS ?count)
-WHERE {
-  ?concept rdf:type onto:Concept .
-  ?contribution rdf:type onto:Contribution .
-  ?contribution ?predicate ?concept
-}
-GROUP BY ?concept
-ORDER BY DESC(?count)
