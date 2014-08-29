@@ -1,6 +1,6 @@
 {
     "@id": "onto:Feature",
-    "@type": "onto:Description",
+    "@type": ["onto:Entity", "onto:Description"],
     "comment": "Software features",
     "properties": [
         {

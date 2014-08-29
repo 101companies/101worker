@@ -1,5 +1,5 @@
 {
     "@id": "onto:Theme",
-    "@type": "onto:Container",
+    "@type": ["onto:Entity", "onto:Container"],
     "comment": "Containers of contributions"
 }

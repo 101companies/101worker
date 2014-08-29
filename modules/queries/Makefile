@@ -7,6 +7,9 @@ all:
 	mkdir -p ${dumpsDir}/sparql_queries
 	make run
 
+%.run:
+	python runner.py $*.sparql
+
 run:
 	cp -r templates ${dumpsDir}/sparql_queries
 	cp -r sparql ${dumpsDir}/sparql_queries

@@ -90,12 +90,33 @@ sensitive,%
 \hfill{}Output of query \underline{#4.sparql} (first few rows)
 
 \noindent
+\begin{center}
 \colorbox{codebackground}{
 \begin{tabular}#1
 #2\\\hline
 \partialinput{1}{#3}{../output/#4.txt}
 ...
 \end{tabular}}
+\end{center}
+\end{boxedminipage}
+\medskip
+}
+\newcommand{\completeOutputTabular}[3]{
+
+\medskip
+
+\noindent
+\begin{boxedminipage}{\hsize}
+\hfill{}Output of query \underline{#3.sparql}
+
+\noindent
+\begin{center}
+\colorbox{codebackground}{
+\begin{tabular}#1
+#2\\\hline
+\input{../output/#3.txt}
+\end{tabular}}
+\end{center}
 \end{boxedminipage}
 \medskip
 }

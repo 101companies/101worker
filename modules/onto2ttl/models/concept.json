@@ -1,5 +1,5 @@
  {
   "@id": "onto:Concept",
-  "@type": "onto:Instrument",
+  "@type": ["onto:Entity", "onto:Instrument"],
   "comment": "Software concepts"
  }

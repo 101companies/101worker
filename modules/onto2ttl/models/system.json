@@ -1,6 +1,6 @@
 {
    "@id": "onto:System",
-   "@type": "onto:Entity",
+   "@instance": "rdfs:Class",
    "comment": "Software systems",
    "properties": [
       {
