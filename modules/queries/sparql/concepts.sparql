@@ -1,3 +1,8 @@
-SELECT DISTINCT ?concept
-WHERE { ?concept rdf:type onto:Concept }
-ORDER BY ?concept
+SELECT ?concept ?headline (COUNT(?subject) AS ?count)
+WHERE {
+  ?concept a onto:Concept .
+  ?concept onto:hasHeadline ?headline .
+  ?subject ?predicate ?concept .
+}
+GROUP BY ?concept ?headline
+ORDER BY DESC(?count)

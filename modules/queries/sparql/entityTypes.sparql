@@ -1,0 +1,7 @@
+SELECT ?type ?comment {
+  ?type rdfs:subClassOf onto:Entity .
+  FILTER (?type != onto:Entity) .
+  FILTER NOT EXISTS { ?type a onto:Classifier } .
+  ?type rdfs:comment ?comment
+}
+ORDER BY ?type

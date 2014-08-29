@@ -1,7 +1,8 @@
-SELECT DISTINCT ?language ?headline
-WHERE { 
-  ?language rdf:type onto:Language .
-  ?language onto:hasHeadline ?headline
+SELECT ?language ?headline (COUNT(?subject) AS ?count)
+WHERE {
+  ?language a onto:Language .
+  ?language onto:hasHeadline ?headline .
+  ?subject ?predicate ?language .
 }
-ORDER BY ?language
-
+GROUP BY ?language ?headline
+ORDER BY DESC(?count)

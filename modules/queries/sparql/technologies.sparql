@@ -1,3 +1,8 @@
-SELECT DISTINCT ?technology
-WHERE { ?technology rdf:type onto:Technology }
-ORDER BY ?technology
+SELECT ?technology ?headline (COUNT(?subject) AS ?count)
+WHERE {
+  ?technology a onto:Technology .
+  ?technology onto:hasHeadline ?headline .
+  ?subject ?predicate ?technology .
+}
+GROUP BY ?technology ?headline
+ORDER BY DESC(?count)

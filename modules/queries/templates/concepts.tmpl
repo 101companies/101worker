@@ -1,3 +1,3 @@
 {% for x in data -%}
-{{ strip101(x['concept']['value']) }}
+{{ escape(strip101(x['concept']['value'])) }} & {{ strip101(x['headline']['value']) }} \\
 {% endfor %}
