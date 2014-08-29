@@ -54,6 +54,24 @@ for y in filter(lambda x: x not in ['entity'], allowed_relations.keys()):
     allowed_relations[y] += allowed_relations['entity']
 
 
+def page_mapping(ns, s):
+    if not ns: ns = 'Concept'
+    map = {
+            'software language' : 'Language',
+            'software technology': 'Technology',
+            'software concept' : 'Concept',
+            'software feature' : 'Feature'
+        }
+    if s.lower() in map and ns == 'Concept':
+        print 'Mapping {} to {}'.format(s, map[s.lower()])
+        s = map[s.lower()]
+        return s
+
+    return s
+
+
+
+
 def filter_pages(wiki):
     collection = []
     namespace_blacklist = json.load(open('namespaces_blacklist.json', 'r'))
@@ -76,27 +94,13 @@ def encode_predicate(p):
 
 
 def encode_ontology(namespace, s):
-    if not namespace: namespace = 'Concept'
-    map = {
-        'software language' : 'Language',
-        'software technology': 'Technology',
-        'software concept' : 'Concept',
-        'software feature' : 'Feature'
-    }
-    if s.lower() in map and namespace == 'Concept':
-        print 'Mapping {} to {}'.format(s, map[s.lower()])
-        s = map[s.lower()]
+    s = page_mapping(namespace, s)
     return ontology[ encode(s) ]
 
 
 def encode_resource(namespace, s):
     if not namespace: namespace = 'Concept'
-    map = {
-        'software concept' : 'Concept'
-    }
-    if s.lower() in map and namespace == 'Concept':
-        print 'Mapping {} to {}'.format(s, map[s.lower()])
-        s = map[s.lower()]
+    s = page_mapping(namespace, s)
     return get_namespace(namespace)[ encode(s) ]
 
 
@@ -130,34 +134,34 @@ def disambiguate(p):
         return encode_resource(namespace, name)
 
 
-def hardcoded_classes(graph):
-    # Adding most basic classes
-    entity = encode_ontology('onto', 'Entity')
-    wikipage = encode_ontology('onto', 'WikiPage')
-    classifier = encode_ontology('onto', 'Classifier')
-
-    for s in [entity, wikipage, classifier]:
-        triple = (s, rdf['type'], rdfs['Class'])
-        graph.add(triple)
-
-    # Adding instruments
-    instrument = encode_ontology('onto', 'Instrument')
-    graph.add((instrument, rdf['type'], rdfs['Class']))
-    graph.add((instrument, rdfs['subClassOf'], entity))
-
-    for s in [encode_ontology('onto', 'Language'), encode_ontology('onto', 'Technology'), encode_ontology('onto', 'Concept')]:
-        triple = s, rdfs['subClassOf'], instrument
-        graph.add(triple)
-
-        #TODO Check again with Ralf and Andrei
-        triple = s, rdfs['subClassOf'], wikipage
-        graph.add(triple)
-
-    # Add remaining classes
-    for s in ['Contribution', 'Contributor', 'Feature', 'Script', 'Course']:
-        s = encode_ontology('onto', s)
-        triple = (s, rdfs['subClassOf'], entity)
-        graph.add(triple)
+# def hardcoded_classes(graph):
+#     # Adding most basic classes
+#     entity = encode_ontology('onto', 'Entity')
+#     wikipage = encode_ontology('onto', 'WikiPage')
+#     classifier = encode_ontology('onto', 'Classifier')
+#
+#     for s in [entity, wikipage, classifier]:
+#         triple = (s, rdf['type'], rdfs['Class'])
+#         graph.add(triple)
+#
+#     # Adding instruments
+#     instrument = encode_ontology('onto', 'Instrument')
+#     graph.add((instrument, rdf['type'], rdfs['Class']))
+#     graph.add((instrument, rdfs['subClassOf'], entity))
+#
+#     for s in [encode_ontology('onto', 'Language'), encode_ontology('onto', 'Technology'), encode_ontology('onto', 'Concept')]:
+#         triple = s, rdfs['subClassOf'], instrument
+#         graph.add(triple)
+#
+#         #TODO Check again with Ralf and Andrei
+#         triple = s, rdfs['subClassOf'], wikipage
+#         graph.add(triple)
+#
+#     # Add remaining classes
+#     for s in ['Contribution', 'Contributor', 'Feature', 'Script', 'Course']:
+#         s = encode_ontology('onto', s)
+#         triple = (s, rdfs['subClassOf'], entity)
+#         graph.add(triple)
 
 
 def map_instance(page, graph):
@@ -184,7 +188,7 @@ def map_instance(page, graph):
         triple = uri, rdf['type'], encode_ontology(o['p'], o['n'])
         graph.add(triple)
         triple = encode_ontology(o['p'], o['n']), rdf['type'], encode_ontology('onto', 'Classifier')
-        if not triple in graph and not o['p'] and not o['n'] in premodeled_classes:
+        if not triple in graph and not o['p'] and not page_mapping(o['p'], o['n']) in premodeled_classes:
             print 'Adding additional rdf:type onto:Classifier statement for {}'.format(o['n'])
             graph.add(triple)
 
@@ -220,7 +224,7 @@ def map_class(page, graph):
     triple = onto_entity, rdf['type'], rdfs['Class']
     graph.add(triple)
 
-    if not page['n'] in premodeled_classes:
+    if not page_mapping(page['p'], page['n']) in premodeled_classes:
         triple = onto_entity, rdf['type'], encode_ontology('onto', 'Classifier')
         graph.add(triple)
 
