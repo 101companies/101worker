@@ -1,0 +1,11 @@
+SELECT ?supertype ?subtype {
+  ?supertype rdfs:subClassOf onto:Resource .
+  ?subtype rdfs:subClassOf ?supertype .
+  FILTER (?supertype != rdfs:Resource) .
+  FILTER (?supertype != onto:Resource) .
+  FILTER (?supertype != onto:Entity) .
+  FILTER (?subtype != ?supertype) .
+  FILTER NOT EXISTS { ?supertype a onto:Classifier } .
+  FILTER NOT EXISTS { ?subtype a onto:Classifier }
+}
+ORDER BY ?supertype ?subtype
