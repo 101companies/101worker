@@ -1,58 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Basics of \solasote}
-\label{S:basics}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Entity types of \solasote}
-
-The ontology covers individuals of the following types; we also refer
-to these types as `entity types':
-
-\completeOutputTabular{{l|l}}{\textbf{type} & \textbf{comment}}{entityTypes}
-%|
-
-\noindent
-For what it's worth, the list of entity types can be retrieved from
-\solasote's triplestore as follows:
-
-\sparql{entityTypes}
-
-\noindent
-That is, the types of individuals are organized as subclasses of a
-base type \uri{onto:Entity}, but we do not include subclasses of the
-\solasote-specific type \uri{onto:Classifier} because these are types
-used for classification. This is explained in more detail in
-\S\ref{S:schema}.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Illustrative \solasote{} individuals}
-
-Let's have a look at illustrative individuals for some of the entity types. To this end, we use queries to retrieve all software languages, technologies, and concepts. We order them by `popularity', i.e., numbers of any sort of subjects referring to them through any sort of predicate. In this manner, we see presumably more well-known, less obscure individuals. Thus:
-
-\sparql{languages}
-
-\sparql{technologies}
-
-\sparql{concepts}
-
-\noindent
-Here are the first few individuals for each of the queries:
-
-\partialOutputTabular{{l|l}}{\textbf{language} & \textbf{headline}}{7}{languages}
-%|
-
-\partialOutputTabular{{l|l}}{\textbf{technology} & \textbf{headline}}{7}{technologies}
-%|
-
-\partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{concepts}
-%|
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Classification of \solasote's entities}
+\section{Classification with \solasote}
+\label{S:classify}
 
 \todo{Ralf}{Write this section.}
 
