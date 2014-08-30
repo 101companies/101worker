@@ -1,3 +1,7 @@
-SELECT ?supertype
-WHERE { onto:OO_programming_language rdfs:subClassOf ?supertype }
-ORDER BY ?supertype
+SELECT ?type
+WHERE {
+  onto:OO_programming_language rdfs:subClassOf ?type .
+  ?type a onto:Classifier .
+  FILTER (?type != onto:OO_programming_language )
+}
+ORDER BY ?type

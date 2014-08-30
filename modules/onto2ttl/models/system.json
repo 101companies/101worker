@@ -1,7 +1,7 @@
 {
    "@id": "onto:System",
    "@type": "onto:Resource",
-   "comment": "Software systems",
+   "comment": "Base types for technologies and contributions",
    "wikialias": ["Software_system"],
    "properties": [
       {

@@ -3,31 +3,7 @@
 \section{Classification with \solasote}
 \label{S:classify}
 
-\todo{Ralf}{Write this section.}
-
-\begin{comment}
-\solasote{} organizes classifiers for software languages,
-technologies, and concepts. In fact, it uses a class hierarchy (in the
-sense of rdfs:subClassOf) with instances at the leaves (in the sense
-of rdf:type) for classification.
-
-All classifiers are concepts, but not all concepts are
-classifiers. Each classifier is associated with a concept of the same
-name with a different prefix. We see this situation by looking at the
-first few concept in alphabetical order as well as the first few
-classifiers, again in alphabetical order and with associated concepts: 
-
-\sparql{concepts}
-
-\partialOutput{7}{concepts}
-
-\sparql{classifiers}
-
-\partialOutput{7}{classifiers}
-
-\noindent
-Let us see now how classifiers are instantiated. Here is how we ask
-whether \uri{lang:Java} is a (software) language:
+\solasote's individuals are roughly classified on the grounds of the entity types described previously. For instance, we may obviously ask whether \uri{lang:Java} is a (software) language:
 
 \sparql{javaOfTypeLanguage}
 
@@ -37,102 +13,50 @@ Evaluation of this query literally returns `true':
 \completeOutput{javaOfTypeLanguage}
 
 \noindent
-Instead, we may also ask for all types of \uri{lang:Java}:
-
-\sparql{typesOfJava}
-
-\noindent
-\uri{lang:Java} has indeed a number of types:
-
-\todo{Ralf}{Why is Java of type Resource?}
+A more fine-grained classification is also supported on the grounds of a class hierarchy with the entity types as root types. These extra classes are called `classifiers'. For instance, \uri{lang:Java} is of the following (classifier) types:
 
 \completeOutput{typesOfJava}
 
 \noindent
-These types can be explained in the following way:
-%
-\begin{description}
-%
-\item[\uri{onto:Language}] This type stems from the entity's namespace
-  on the \ooo{wiki}. That is, `Java' belongs to \ooo{wiki}'s namespace
-  `Language' and thus, it gets associated with the type \uri{onto:Language}
-  by the mapping from \ooo{wiki} to \solasote
-%
-\item[\uri{onto:OO\_programming\_language}] This type stems from a
-  semantic property stated on \ooo{wiki}'s page for \uri{lang:Java}. That
-  is, the
-  page\footnote{\url{http://101companies.org/wiki/Language:Java}}
-  contains markup for a relevant semantic property as follows:
-\begin{center}
-\begin{BVerbatim}
-[[instanceOf::OO programming language]]
-\end{BVerbatim}
-\end{center}
-\noindent
-In this manner, the wiki directly declares `Java' to be of type `OO
-programming language'.
-%
-\item[\uri{onto:Instrument}, \uri{onto:Entity}] These are supertypes
-  of \uri{onto:Language}, as declared explicitly by the general class
-  hierarchy for \solasote. Thus, these types are listed because they
-  are inferred by the \emph{rdfs:subClassOf} hierarchy of \solasote.
-%
-\item[\uri{onto:Language}, \uri{onto:Programming\_language}]
-  These are supertypes of \uri{onto:OO\_programming\_language}, as
-  declared by semantic `isA' properties on the \ooo{wiki}. For
-  instance, the
-  page for \uri{onto:OO\_programming\_language}\footnote{\url{http://101companies.org/wiki/OO_programming_language}}
-  contains markup for a relevant semantic property as follows:
-\begin{center}
-\begin{BVerbatim}
-[[isA::Programming language]]
-\end{BVerbatim}
-\end{center}
-\noindent
-Thus, these types are listed because they are inferred by the
-\emph{rdfs:subClassOf} hierarchy of \solasote. The type
-\uri{onto:Language} is a shorthand for what is called `software
-language' on the wiki. The type \uri{onto:Programming\_language} is a
-proper classifier of (software) languages (just as much as
-\uri{onto:OO\_programming\_language}).
-%
-\item[\uri{onto:WikiPage}] This type conveys that the resource at hand
-  corresponds to a wiki page on the \ooo{wiki}. This is basically
-  true for all resources of type \uri{onto:Entity}. The type factors
-  all more representational properties of entities; see
-  \S\ref{S:mapping}.
-%
-%\item[\uri{rdfs:Resource}] This is the root type of all resources
-%  based on RDFS' underlying type system.
-\end{description}
-%
-We can also query the supertypes of a given type. For instance, let's
-query the supertypes of \uri{onto:OO\_programming\_language}, as we
-have encountered this type previously:
+The (classifier) types of an individual can be retrieved like this:
 
-\todo{Martin}{Once the name mapping of 26 Aug is in place, then
-  uri{rdfs:Resource} should be gone from the output; ditto \uri{onto:Software\_language}.}
+\sparql{typesOfJava}
+
+\noindent
+As the query clarifiers, classifier types can be explicitly selected by testing for the extra type \uri{onto:Classifier} of those classes, thereby not confusing them with general types of the ontology---such as \uri{onto:Language} or \uri{Entity}. The class(ifier) hierarchy can also be queried in itself---without starting from individuals. For instance, this is how we ask for the supertypes of the classifier
 
 \sparql{supertypesOfOoProgrammingLanguage}
-
-\noindent
-These are all the supertypes of \uri{onto:OO\_programming\_language};
-please note that all the types but \uri{onto:Programming\_language}
-are inferred and that inference clearly assumes reflexivity, since
-\uri{onto:OO\_programming\_language} is returned as a supertype of itself:
 
 \completeOutput{supertypesOfOoProgrammingLanguage}
 
 \noindent
-Alternatively, we can also query for all the instances of a certain
-class. For instance, we can ask for all the OO programming languages:
+This is how we query for all individuals with a certain classifier; in this case, we are interested in all OO programming languages:
 
 \sparql{instancesOfOoProgrammingLanguage}
 
 \noindent
-These are some of the OO programming languages:
+These are some OO programming languages:
 
 \partialOutput{7}{instancesOfOoProgrammingLanguage}
-\end{comment}
+
+\solasote's approach towards classification makes one specific assumption.  For each classifier, there is a corresponding concept (\uri{onto:Concept}) of the same name modulo different prefixes (`onto' for classifieres, `concept' for concepts). Whether or not a concept has an associated classifier depends on the fact whether the concept is actually used for classification.
+
+In \S\ref{S:entities}, we had queried for `popular' concepts regardless of whether they are (associated with) classifiers. Here is a similar query, which specifically focuses on `popular' classifiers:
+
+\sparql{classifiers}
+
+\noindent
+In the query, we use a predicate `classifies' to look up the association between classifier and concept. Here are the first few classifiers returned by the query:
+
+\partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{classifiers}
+%|
+
+\noindent
+Clearly, this list overlaps with the ranking of popular concepts overall; see again \S\ref{S:entities}. For comparison, here is query for `popular' non-classifier concepts:
+
+\sparql{nonClassifiers}
+
+\partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{nonClassifiers}
+%|
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,6 +1,10 @@
-SELECT ?classifier ?concept
+SELECT ?concept ?headline (COUNT(?subject) AS ?count)
 WHERE {
-  ?classifier rdf:type onto:Classifier .
-  ?classifier onto:classifies ?concept
+  ?concept a onto:Concept .
+  ?concept onto:hasHeadline ?headline .
+  ?classifier a onto:Classifier .
+  ?classifier onto:classifies ?concept .
+  ?subject ?predicate ?concept
 }
-ORDER BY ?classifier
+GROUP BY ?concept ?headline
+ORDER BY DESC(?count)
