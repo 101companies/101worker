@@ -1,7 +1,8 @@
-SELECT ?property ?domain ?range
+SELECT ?property ?comment
 WHERE {
   ?property rdfs:domain ?domain .
   ?property rdfs:range ?range .
-  ?domain rdfs:subClassOf onto:Entity
+  ?domain rdfs:subClassOf onto:Resource .
+  ?property rdfs:comment ?comment 
 }
-ORDER BY ?property ?domain ?range
+ORDER BY ?property ?comment

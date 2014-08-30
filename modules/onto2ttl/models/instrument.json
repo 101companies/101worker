@@ -1,6 +1,6 @@
 {
     "@id": "onto:Instrument",
-    "@instance": "rdfs:Class",
+    "@type": "onto:Resource",
     "comment": "Base type for languages, technologies, and concepts",
      "properties": [
        {

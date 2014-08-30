@@ -1,5 +1,5 @@
 {
    "@id": "onto:Description",
-   "@instance": "rdfs:Class",
+   "@type": "onto:Resource",
    "comment": "Base type for features and documents"
 }

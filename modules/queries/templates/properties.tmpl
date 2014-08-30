@@ -1,3 +1,3 @@
 {% for x in data -%}
-{{ prefixy(x['domain']['value']) }}; {{ prefixy(x['property']['value']) }}; {{ prefixy(x['range']['value']) }}
+{{ unqualify(x['property']['value']) }} & {{ unqualify(x['domain']['value']) }} & {{ prefixy(x['range']['value']) }} & {{ x['comment']['value'] }} \\
 {% endfor %}

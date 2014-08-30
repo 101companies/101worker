@@ -1,5 +1,5 @@
 {
    "@id": "onto:Container",
-   "@instance": "rdfs:Class",
+   "@type": "onto:Resource",
    "comment": "Base type for vocabularies, scripts, and themes"
 }

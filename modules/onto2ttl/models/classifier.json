@@ -1,5 +1,5 @@
 {
     "@id": "onto:Classifier",
-    "@instance": "rdfs:Class",
+    "@type": "onto:Resource",
     "comment": "Concepts serving for classification"
 }

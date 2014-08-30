@@ -1,6 +1,6 @@
 {
    "@id": "onto:System",
-   "@instance": "rdfs:Class",
+   "@type": "onto:Resource",
    "comment": "Software systems",
    "wikialias": ["Software_system"],
    "properties": [
