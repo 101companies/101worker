@@ -10,3 +10,4 @@ http://101companies.org/resources#myOtherTestContribution
 Comment: 
 	* Reasoning: EL
 	* Testing wether written triples take precedence over min cardinalities and such (and they do)
+	* Reasoning just adds triples
