@@ -8,6 +8,7 @@ run:
 	python json2ttl.py
 	cp -r models ${output}
 	cp -r ttl ${output}
+	cp config.json ${output}
 
 # Remove local temporary files, if any
 clean:
