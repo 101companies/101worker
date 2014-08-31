@@ -3,14 +3,97 @@
 \section{The properties of \solasote}
 \label{S:properties}
 
-\completeOutputTabular{{l|l|l|l}}{\textbf{property} & \textbf{comment}}{properties}
+\solasote's individuals are not just classified (see
+\S\ref{S:classify}), but they are characterized in several other ways
+through semantic properties in the sense of Semantic Web-like
+triples. The underlying set of predicates is listed here:
+
+\completeOutputTabular{{l|l|l|l}}{\textbf{predicate} & \textbf{comment}}{predicates}
 %|
 
-\sparql{properties}
+\noindent
+For what it's worth, the list of predicates can be retrieved from
+\solasote's triplestore as follows:
 
-\completeOutputTabular{{l|l|l|l}}{\textbf{property} & \textbf{domain} & \textbf{range}}{propertyTypes}
+\sparql{predicates}
+
+\noindent
+Before we discuss these predicates in more detail, we should also
+identify their types in the sense of the assumed domain and range for
+each predicate:
+
+\completeOutputTabular{{l|l|l|l}}{\textbf{predicate} & \textbf{domain} & \textbf{range}}{domainsAndRanges}
 %|
 
-\sparql{propertyTypes}
+\noindent
+Again, for completeness' sake, the table has been produced by the
+following query:
+
+\sparql{domainsAndRanges}
+
+\noindent
+Now let's discuss these properties one by one, while also providing
+typical examples. We pick a order so that perhaps the more obvious
+predicates are discussed first:
+
+\medskip
+
+\noindent
+\begin{description}
+
+\item[uses] Systems (technologies and \ooo{}'s contributions) can make
+  use of software languages, technologies, and concepts. Use of a
+  language should be understood as `some artifact of the system being
+  written in said language'. For instance:
+  \sparql{exampleUsePredicate}
+  \noindent
+  Here, \uri{onto:haskellStarter} is a simple Haskell-based
+  contribution to \ooo{}. Use of a technology should be understood as
+  `the system being developed or executed with the help of said
+  technology'. Use of a concept should be understood as `the concept
+  being exercised or taken dependence on in the design or
+  implementation of the system'.
+
+\medskip
+
+\item[basedOn]
+%
+\item[carries]
+%
+\item[dependsOn]
+%
+\item[describes]
+%
+\item[designedBy]
+%
+\item[developedBy]
+%
+\item[illustrates]
+%
+\item[implements]
+%
+\item[implies]
+%
+\item[memberOf]
+%
+\item[mentions]
+%
+\item[moreComplexThan]
+%
+\item[partOf]
+%
+\item[profile]
+%
+\item[sameAs]
+%
+\item[similarTo]
+%
+\item[linksTo]
+%
+\item[supports]
+%
+\item[varies]
+%
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

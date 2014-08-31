@@ -1,3 +1,6 @@
+\newcommand{\fullhline}{%
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}}
+
 % THANKS DUE TO http://tex.stackexchange.com/questions/4889/input-only-part-of-a-file
 \makeatletter
 \newread\pin@file
@@ -74,21 +77,24 @@ sensitive,%
 \medskip
 
 \noindent
-\begin{boxedminipage}{\hsize}
+\fullhline
+
 \hfill{}Query \underline{#1.sparql}
 \lstinputlisting[language=SPARQL]{../sparql/#1.sparql}
-\end{boxedminipage}
+\fullhline
 \medskip
 }
 
-\newcommand{\partialOutputTabular}[4]{{\small
+\newcommand{\partialOutputTabular}[4]{
 
 \medskip
 
 \noindent
-\begin{boxedminipage}{\hsize}
+\fullhline
+
 \hfill{}Output of query \underline{#4.sparql} (first few rows)
 
+{\small
 \noindent
 \begin{center}
 \colorbox{codebackground}{
@@ -98,17 +104,19 @@ sensitive,%
 ...
 \end{tabular}}
 \end{center}
-\end{boxedminipage}
+\fullhline
 \medskip
 }}
-\newcommand{\completeOutputTabular}[3]{{\small
+\newcommand{\completeOutputTabular}[3]{
 
 \medskip
 
 \noindent
-\begin{boxedminipage}{\hsize}
+\fullhline
+
 \hfill{}Output of query \underline{#3.sparql}
 
+{\small
 \noindent
 \begin{center}
 \colorbox{codebackground}{
@@ -117,7 +125,7 @@ sensitive,%
 \input{../output/#3.txt}
 \end{tabular}}
 \end{center}
-\end{boxedminipage}
+\fullhline
 \medskip
 }}
 \newcommand{\partialOutput}[2]{%
@@ -125,11 +133,12 @@ sensitive,%
 \medskip
 
 \noindent
-\begin{boxedminipage}{\hsize}
+\fullhline
+
 \hfill{}Output of query \underline{#2.sparql} (first few rows)
 \lstinputlisting[language=CSV,lastline=#1]{../output/#2.txt}
 {\large{}...}
-\end{boxedminipage}
+\fullhline
 \medskip
 }
 
@@ -138,10 +147,11 @@ sensitive,%
 \medskip
 
 \noindent
-\begin{boxedminipage}{\hsize}
+\fullhline
+
 \hfill{}Output of query \underline{#1.sparql}
 \lstinputlisting[language=CSV]{../output/#1.txt}
-\end{boxedminipage}
+\fullhline
 \medskip
 }
 

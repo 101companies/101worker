@@ -1,0 +1,7 @@
+SELECT ?predicate ?domain ?range
+WHERE {
+  ?predicate rdfs:domain ?domain .
+  ?predicate rdfs:range ?range .
+  ?domain rdfs:subClassOf onto:Resource .
+}
+ORDER BY ?predicate ?domain ?range

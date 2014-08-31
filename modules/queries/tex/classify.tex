@@ -59,14 +59,45 @@ Clearly, this list overlaps with the ranking of popular concepts overall; see ag
 \partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{nonClassifiers}
 %|
 
-\sparql{baseTypeSubClassing}
+At this point, we have discussed \solasote's entity types (rooted in
+\uri{onto:Entity} and \solasote's classification types forming a class
+hierarchy rooted by the entity types with individuals as
+instances. \solasote{} uses yet a few extra `base types' to capture
+commonalities of entity types in certain contexts. Here is a list of
+these types and the corresponding subClassOf relationships:
+
+\completeOutputTabular{{l|l}}{\textbf{type} & \textbf{comment}}{baseTypes}
+%|
 
 \completeOutputTabular{{l|l}}{\textbf{subtype} & \textbf{supertype}}{baseTypeSubClassing}
 %|
 
-\sparql{externalTypes}
+\noindent
+For instance, both a software technology and a contribution (i.e., an
+implementation of \ooo{}'s system) can be regarded as a `software
+system'.  The idea is that these base types are convenient in setting
+up \solasote's properties, as discussed in more detail in
+\S\ref{S:properties}. For instance, both a technology and a
+contribution may be said to be `developed by' a person. For
+completeness' sake, the list of base types and the corresponding
+subClassOf relationships can be retrieved from \solasote's triplestore
+as follows:
+
+\sparql{baseTypes}
+
+\sparql{baseTypeSubClassing}
+
+\noindent
+Last but not least, \solasote{} also leverages external types, i.e.,
+types of other ontologies. In fact, besides RDF and RDFS, \solasote{}
+currently only uses these FOAF types:
 
 \completeOutputTabular{{l|l}}{\textbf{subtype} & \textbf{supertype}}{externalTypes}
 %|
+
+\noindent
+The following query results in the list shown above:
+
+\sparql{externalTypes}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
