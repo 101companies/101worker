@@ -69,6 +69,7 @@ if __name__=='__main__':
     connection.addnamespace('onto', 'http://101companies.org/ontology#')
     connection.addnamespace('res', 'http://101companies.org/resources#')
     connection.addnamespace('lang', 'http://101companies.org/resources/Language#')
+    connection.addnamespace('contrib', 'http://101companies.org/resources/Contribution#')
 
     req = urllib2.Request('http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/namespaces')
     req.add_header('Accept', 'application/sparql-results+json')
@@ -89,9 +90,9 @@ if __name__=='__main__':
         print "Processing file: %s" % sys.argv[1]
         file_names = [sys.argv[1]]
     else:
-        relevant_path = os.path.join(os.path.dirname(__file__), 'sparql')
-        included_extenstions = ['sparql']
-        file_names = [fn for fn in os.listdir(relevant_path) if any([fn.endswith(ext) for ext in included_extenstions])]
+       relevant_path = os.path.join(os.path.dirname(__file__), 'sparql')
+       included_extenstions = ['sparql']
+       file_names = [fn for fn in os.listdir(relevant_path) if any([fn.endswith(ext) for ext in included_extenstions])]
 
     process(file_names, prefixes)
 
