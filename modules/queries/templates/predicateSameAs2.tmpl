@@ -1,3 +1,3 @@
 {% for x in data -%}
-{{ prefixy(x['predicate']['value']) }} & {{ x['url']['value'] }} \\
+{{ prefixy(x['predicate']['value']) }} & \url{ {{ x['url']['value'] }} } \\
 {% endfor %}

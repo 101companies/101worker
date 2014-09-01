@@ -29,22 +29,10 @@
           "comment": "Reuse of systems"
       },
       {
-          "property": "onto:designedBy",
-          "range": "foaf:Person",
-          "minCardinality": "0",
-          "comment": "Designer of a system"
-      },
-      {
           "property": "onto:developedBy",
           "range": "foaf:Person",
           "minCardinality": "1",
           "comment": "Developer of a system"
-      },
-      {
-          "property": "onto:reviewedBy",
-          "range": "foaf:Person",
-          "minCardinality": "0",
-          "comment": "Reviewer of a system"
       }
    ]
 }

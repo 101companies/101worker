@@ -10,12 +10,6 @@
          "comment": "Instruments supporting other instruments"
        },
        {
-         "property": "onto:designedBy",
-         "range": "foaf:Person",
-         "minCardinality": "0",
-         "comment": "Instruments being designed by persons"
-       },
-       {
            "property": "onto:memberOf",
            "overload": "true",
            "range": "onto:Vocabulary",

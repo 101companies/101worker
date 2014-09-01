@@ -44,6 +44,18 @@
            "comment": "Non-specific link to external resource"
        },
        {
+         "property": "onto:designedBy",
+         "range": "foaf:Person",
+         "minCardinality": "0",
+         "comment": "Designer of an entity"
+       },
+       {
+         "property": "onto:reviewedBy",
+         "range": "foaf:Person",
+         "minCardinality": "0",
+         "comment": "Reviewer of an entity"
+       },
+       {
            "property": "onto:dependsOn",
            "range": "onto:Entity",
            "minCardinality": "0",

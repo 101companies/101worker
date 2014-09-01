@@ -41,11 +41,11 @@ explanation.
 \subsection{sameAs, similarTo, linksTo} 
 
 This is a family of predicates all concerned with linking individuals
-of \solatose{} with external web-based resources, e.g., pages on
+of \solasote{} with external web-based resources, e.g., pages on
 Wikipedia or resources according to DBpedia. Their meaning and purpose
 is closely related to \uri{owl:sameAs}~\cite{owl} and variations that
 are discussed by the Semantic Web community~\cite{HalpinHT11}. The use
-of \uri{onto:sameAs} expresses that the \solatose{} individual and the
+of \uri{onto:sameAs} expresses that the \solasote{} individual and the
 external resource's URL refer to the same thing. For instanceL
 
 \sparql{predicateSameAs1}
@@ -56,15 +56,14 @@ Specification' (JLS) of entity type \uri{onto:Document}; we use the
 \uri{onto:sameAs} predicate to associate it with Oracle's authorative
 source for the JLS.
 
-The use of \uri{onto:similarTo} expresses that the \solatose{}
+The use of \uri{onto:similarTo} expresses that the \solasote{}
 individual and the external's URL refer to closely related but notably
 not the same things. An unspecific link to an external resource is
-enabled by \uri{onto:linksTo}, but such links are not encouraged. We
-query some links for illustration:
+enabled by \uri{onto:linksTo}. We query some links for illustration:
 
 \sparql{predicateSameAs2}
 
-\completeOutputTabular{{l|l|l}}{\textbf{predicate} & \textbf{url}}{predicateSameAs2}
+\completeOutputTabular{{l|l}}{\textbf{predicate} & \textbf{url}}{predicateSameAs2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
