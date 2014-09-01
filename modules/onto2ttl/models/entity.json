@@ -50,6 +50,12 @@
          "comment": "Designer of an entity"
        },
        {
+         "property": "onto:developedBy",
+         "range": "foaf:Person",
+         "minCardinality": "1",
+         "comment": "Developer of an entity"
+       },
+       {
          "property": "onto:reviewedBy",
          "range": "foaf:Person",
          "minCardinality": "0",

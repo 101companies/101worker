@@ -27,12 +27,6 @@
          "range": "onto:System",
           "minCardinality": "0",
           "comment": "Reuse of systems"
-      },
-      {
-          "property": "onto:developedBy",
-          "range": "foaf:Person",
-          "minCardinality": "1",
-          "comment": "Developer of a system"
       }
    ]
 }
