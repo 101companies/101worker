@@ -1,0 +1,4 @@
+SELECT ?object {
+  contrib:haskellStarter onto:mentions ?object
+}
+ORDER BY ?object

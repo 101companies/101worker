@@ -1,0 +1,3 @@
+ASK {
+  tech:javac onto:implements doc:JLS
+}

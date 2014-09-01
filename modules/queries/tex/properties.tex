@@ -33,67 +33,181 @@ following query:
 
 \noindent
 Now let's discuss these properties one by one, while also providing
-typical examples. We pick a order so that perhaps the more obvious
-predicates are discussed first:
+typical examples. We pick a particular order that fits convenience of
+explanation.
 
-\medskip
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{sameAs, similarTo, linksTo} 
+
+This is a family of predicates all concerned with linking individuals
+of \solatose{} with external web-based resources, e.g., pages on
+Wikipedia or resources according to DBpedia. Their meaning and purpose
+is closely related to \uri{owl:sameAs}~\cite{owl} and variations that
+are discussed by the Semantic Web community~\cite{HalpinHT11}. The use
+of \uri{onto:sameAs} expresses that the \solatose{} individual and the
+external resource's URL refer to the same thing. For instanceL
+
+\sparql{predicateSameAs1}
 
 \noindent
-\begin{description}
+That is, there is an \solasote{} individual for the `Java Language
+Specification' (JLS) of entity type \uri{onto:Document}; we use the
+\uri{onto:sameAs} predicate to associate it with Oracle's authorative
+source for the JLS.
 
-\item[uses] Systems (technologies and \ooo{}'s contributions) can make
-  use of software languages, technologies, and concepts. Use of a
-  language should be understood as `some artifact of the system being
-  written in said language'. For instance:
-  \sparql{predicateUses}
-  \noindent
-  Here, \uri{onto:haskellStarter} is a simple Haskell-based
-  contribution to \ooo{}. Use of a technology should be understood as
-  `the system being developed or executed with the help of said
-  technology'. Use of a concept should be understood as `the concept
-  being exercised or taken dependence on in the design or
-  implementation of the system'.
+The use of \uri{onto:similarTo} expresses that the \solatose{}
+individual and the external's URL refer to closely related but notably
+not the same things. An unspecific link to an external resource is
+enabled by \uri{onto:linksTo}, but such links are not encouraged. We
+query some links for illustration:
 
-\medskip
+\sparql{predicateSameAs2}
 
-\item[basedOn]
-%
-\item[carries]
-%
-\item[dependsOn]
-%
-\item[describes]
-%
-\item[designedBy]
-%
-\item[developedBy]
-%
-\item[illustrates]
-%
-\item[implements]
-%
-\item[implies]
-%
-\item[memberOf]
-%
-\item[mentions]
-%
-\item[moreComplexThan]
-%
-\item[partOf]
-%
-\item[profile]
-%
-\item[sameAs]
-%
-\item[similarTo]
-%
-\item[linksTo]
-%
-\item[supports]
-%
-\item[varies]
-%
-\end{description}
+\completeOutputTabular{{l|l|l}}{\textbf{predicate} & \textbf{url}}{predicateSameAs2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{uses} 
+
+Systems (i.e., technologies and \ooo{}'s contributions) can make use
+of instruments (i.e., software languages, technologies, and
+concepts). Use of a language should be understood as `some artifact of
+the system being written in said language'. For instance:
+
+\sparql{predicateUses1}
+
+\noindent
+Here, \uri{onto:haskellStarter} is a simple Haskell-based contribution
+to \ooo{}. Use of a technology should be understood as `the system
+being developed or executed with the help of said technology'. Use of
+a concept should be understood as `the concept being exercised or
+taken dependence on in the design or implementation of the
+system'. For instance:
+
+\sparql{predicateUses2}
+
+\noindent
+Here, \url{tech:JAXB}\footnote{... \uri{onto:sameAs}
+  \url{http://www.oracle.com/technetwork/articles/javase/index-140168.html}}
+is the Java platform's technology for XML-data binding, which indeed
+uses `Java annotations' for controling the mapping.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{partOf}
+
+Whole-part relationships are used in many areas of modeling; they make
+sense for \solasote, too. That is, some kinds of \solasote{}
+individuals may be composites of other kinds of \solasote{}
+individuals. For instance:
+
+\sparql{predicatePartOf1}
+
+\noindent
+That is, the Java compiler,
+\uri{tech:javac},\footnote{... \uri{onto:sameAs}
+  \url{http://en.wikipedia.org/wiki/Javac}} is part of the Java
+Development Kit, \uri{tech:JDK}.\footnote{... \uri{onto:sameAs}
+  \url{http://en.wikipedia.org/wiki/Java_Development_Kit}}. Operationally,
+by installing JDK on a machine, one also gets the executable for the
+Java compiler. Here is another example exercising another entity type
+for whole-part relationships:
+
+\sparql{predicatePartOf2}
+
+\noindent
+That is, the XPath query language for XML,
+\uri{lang:XPath},\footnote{... \uri{onto:sameAs}
+  \url{http://www.w3.org/TR/xpath/}} is part of the XSLT
+transformation language for XML
+Development Kit, \uri{lang:XSLT}.\footnote{... \uri{onto:sameAs}
+  \url{http://www.w3.org/TR/xslt}}. The `part of' relationship must not
+be confused here with a `subset off' relationship. That is, by saying
+XPath is part of XSLT, we refer to the fact that XPath expressions can
+be used in certain operand position in an XSLT program. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{implements}
+
+Systems (i.e., technologies and \ooo{}'s contributions) can implement
+descriptions (i.e., features or documents). The idea is that the
+descriptions serve essentially as requirements. For instance:
+
+\sparql{predicateImplements1}
+
+\noindent
+Here, \uri{onto:haskellStarter} is again the simple Haskell-based
+contribution to \ooo{}, which was exercised already earlier on. The
+triple states that the contribution implements \uri{feature:Total} (a
+feature for totaling all salaries in a company of \ooo{}'s
+system). Here is another example:
+
+\sparql{predicateImplements2}
+
+\noindent
+Here, \uri{tech:javac} refers to the `standard' Java compiler, as part
+of JDK, and \uri{doc:JLS} refers again to the Java Language
+Specification, as noted earlier. Clearly, the `standard' is supposed
+to implement the language `standard'.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{memberOf}
+
+TBD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{basedOn, varies}
+
+TBD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{carries}
+
+TBD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{dependsOn}
+
+TBD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{describes}
+
+TBD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{designedBy, developedBy, reviewedBy}
+
+TBD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{illustrates}
+
+\subsection{implies}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{mentions}
+
+\sparql{predicateMentions}
+
+\partialOutput{7}{predicateMentions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{moreComplexThan}
+
+\subsection{profile}
+
+\subsection{supports}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

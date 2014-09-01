@@ -3,6 +3,8 @@ www-dir = /home/softlang/www/solasote
 
 all:
 	pdflatex doc
+	bibtex doc
+	pdflatex doc
 	pdflatex doc
 
 clean:

@@ -1,0 +1,4 @@
+SELECT ?predicate ?url {
+  concept:Monad ?predicate ?url .
+  FILTER (?predicate = onto:sameAs || ?predicate = onto:similarTo)
+}

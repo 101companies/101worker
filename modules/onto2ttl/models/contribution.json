@@ -11,6 +11,13 @@
           "comment": "Use of languages by the contribution"
       },
       {
+          "property": "onto:designedBy",
+          "range": "onto:Contributor",
+          "overload": "true",
+          "minCardinality": "1",
+          "comment": "Designer of a contribution"
+      },
+      {
           "property": "onto:developedBy",
           "range": "onto:Contributor",
           "overload": "true",
@@ -40,15 +47,24 @@
       },
       {
           "property": "onto:varies",
+          "overload": "true",
           "range": "onto:Contribution",
           "minCardinality": "0",
           "comment": "Similarity of contributions"
       },
       {
          "property": "onto:basedOn",
+          "overload": "true",
          "range": "onto:Contribution",
           "minCardinality": "0",
           "comment": "Reuse of contributions"
+      },
+      {
+          "property": "onto:moreComplexThan",
+          "overload": "true",
+          "range": "onto:Contribution",
+          "minCardinality": "0",
+          "comment": "Comparison of complexity"
       }
   ]
 }

@@ -1,0 +1,3 @@
+ASK {
+  tech:javac onto:partOf tech:JDK
+}
