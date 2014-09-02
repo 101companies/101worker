@@ -73,8 +73,13 @@ enabled by \uri{onto:linksTo}. We query some links for illustration:
 
 Systems (i.e., technologies and \ooo{}'s contributions) can make use
 of instruments (i.e., software languages, technologies, and
-concepts). Use of a language should be understood as `some artifact of
-the system being written in said language'. For instance:
+concepts). The property of a system to use an instrument expresses
+that said instrument is used in the design or implementation or
+execution of said system. This may be more or less observable from the
+outside; such a property expresses knowledge about `internals'.
+
+More specifically, use of a language should be understood as `some
+artifact of the system being written in said language'. For instance:
 
 \sparql{predicateUses1}
 
@@ -83,8 +88,8 @@ Here, \uri{onto:haskellStarter} is a simple Haskell-based contribution
 to \ooo{}. Use of a technology should be understood as `the system
 being developed or executed with the help of said technology'. Use of
 a concept should be understood as `the concept being exercised or
-taken dependence on in the design or implementation of the
-system'. For instance:
+taken dependence on in the design or implementation or execution of
+the system'. For instance:
 
 \sparql{predicateUses2}
 
@@ -93,6 +98,48 @@ Here, \url{tech:JAXB}\footnote{... \uri{onto:sameAs}
   \url{http://www.oracle.com/technetwork/articles/javase/index-140168.html}}
 is the Java platform's technology for XML-data binding, which indeed
 uses `Java annotations' for controling the mapping.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{supports}
+
+A technology can support another technology in that it provides some
+sort of interface in generalized sense (e.g., an I/O behavior or a
+plug-in model) so that the supporting technology can be used with the
+supported technology. For instance:
+
+\sparql{predicateSupports1}
+
+\noindent
+Here, \uri{tech:CMake}\footnote{... \uri{onto:sameAs}
+  \url{http://www.cmake.org/}} is a cross-platform, open-source build
+system which supports \uri{tech:Make} in that it CMake can generate
+native makefiles.
+
+The predicate \uri{onto:supports} generalizes the situation of
+technologies supporting technologies so that instruments (i.e.,
+languages, technologies, and concepts) support other instruments. Here
+are the additional situations:
+%
+\begin{itemize}
+\item A technology supporting a language: said interface can be
+  leveraged by using the language.
+\item A technology supporting a concept: said interface (the use
+  thereof) conforms to the concept.
+\item A language supporting a concept: the language's characteristics
+  support the concept.
+\item A concept supporting an instrument: the concept is expected here
+  to denote a class of technologies and languages. Thus, this
+  situation effectively reduces to one mentioned before.
+\end{itemize}
+
+\noindent
+A few illustrative support relationships are queried here:
+
+\sparql{predicateSupports2}
+
+\partialOutputTabular{{l|l}}{\textbf{subject} & \textbf{object}}{10}{predicateSupports2}
+%|
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -244,26 +291,6 @@ TBD
 %|
 
 TBD
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{supports}
-
-`Support' is related to `Use' (\S\ref{S:uses})
-
-\sparql{predicateSupports}
-
-\partialOutputTabular{{l|l}}{\textbf{subject} & \textbf{object}}{10}{predicateSupports}
-%|
-
-TBD
-
-\begin{comment}
-Haskell supports Functional programming
-Rails supports DRY (uses? DRY)
-JAXB supports XML-data binding and Object/XML mapping
-... ?
-\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
