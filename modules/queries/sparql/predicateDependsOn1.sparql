@@ -1,0 +1,7 @@
+SELECT ?earlier ?later {
+  ?earlier a onto:Script .
+  ?later a onto:Script .
+  ?later onto:dependsOn ?earlier .
+  ?earlier onto:memberOf course:Lambdas_in_Koblenz .
+  ?later onto:memberOf course:Lambdas_in_Koblenz
+}

@@ -15,6 +15,13 @@
            "range": "onto:Vocabulary",
            "minCardinality": "0",
            "comment": "Instruments collected in vocabularies"
+       },
+       {
+           "property": "onto:dependsOn",
+           "range": "onto:Instrument",
+           "overload": "true",
+           "minCardinality": "0",
+           "comment": "Constraints on instrument usage"
        }
      ]
 }

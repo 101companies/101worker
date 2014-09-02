@@ -5,15 +5,16 @@
     "wikialias": ["Software_feature"],
     "properties": [
         {
-            "property": "onto:implies",
+            "property": "onto:dependsOn",
             "range": "onto:Feature",
+            "overload": "true",
             "minCardinality": "0",
             "comment": "Cross-feature constraint"
         },
         {
             "property": "onto:moreComplexThan",
-            "overload": "true",
             "range": "onto:Feature",
+            "overload": "true",
             "minCardinality": "0",
             "comment": "Comparison of complexity"
         }

@@ -59,12 +59,25 @@ source for the JLS.
 The use of \uri{onto:similarTo} expresses that the \solasote{}
 individual and the external's URL refer to closely related but notably
 not the same things. An unspecific link to an external resource is
-enabled by \uri{onto:linksTo}. We query some links for illustration:
+enabled by \uri{onto:linksTo}. We query the links for an illustrative
+individual, \uri{concept:Monad}:
 
 \sparql{predicateSameAs2}
 
 \completeOutputTabular{{l|l}}{\textbf{predicate} & \textbf{url}}{predicateSameAs2}
 %|
+
+\noindent
+That is, two pages, one on the Haskell wiki, another on Wikipedia, are
+linked to in `sameAs' properties. The idea is here that these two
+pages describe the notion of monad exactly in the functional
+programming-centric (perhaps even Haskell-biased) way as intended for
+\solasote. Another page on Wikipedia is linked to in a `similarTo'
+property because it is concerned with the related notion of monad in
+category theory. Finally, a page on Wikibooks is linked to in a
+`linksTo' property to express that this page is not considered a
+definitional resource of the notion at hand, but it does provide
+(pedagogically) valuable information.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -145,17 +158,25 @@ A few illustrative support relationships are queried here:
 
 \subsection{illustrates}
 
-As much as a system may use some instrument, the point of a
-description (say, a specification) may be to illustrate some
-instrument; the point being that a `description' (such as requirement
-description for a feature) cannot claim to `use' an instrument (e.g.,
-a concept); it can merely stipulate its use, i.e., it can illustrate
-or motivate its use.
+As much as a system may use some instrument, a feature description or
+any sort of document may be said to illustrate some instrument the
+point being that a description may not be able to claim `use' of the
+instrument, but it may very well stipulate or explain or motivate its
+use. For instance:
 
-\begin{comment}
-Mentoring illustrates what?
-What else illustrates what?
-\end{comment}
+\sparql{predicateIllustrates1}
+
+\noindent
+The listed handbook is claimed to illustrate the concept of functional
+data structures. The `illustrates' predicate is specifically helpful
+in communicating the purpose of software features of \ooo{}'s
+imaginary software system. Here is a query that looks up concepts
+illustrated by the features:
+
+\sparql{predicateIllustrates2}
+
+\partialOutputTabular{{l|l|l}}{\textbf{feature} & \textbf{concept} & \textbf{headline}}{7}{predicateIllustrates2}
+%|
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -215,17 +236,6 @@ Here, \uri{tech:javac} refers to the `standard' Java compiler, as part
 of JDK, and \uri{doc:JLS} refers again to the Java Language
 Specification, as noted earlier. Clearly, the `standard' is supposed
 to implement the language `standard'.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{describes}
-
-Just as much as a system or a technology implements a feature or a
-document (a `requirement'), a document may dually describe an
-instrument (i.e., a language, a technology, or a concept). For
-instance:
-
-TODO: Show examples of such ``describes''
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

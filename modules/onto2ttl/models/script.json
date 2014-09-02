@@ -9,6 +9,13 @@
           "range": "onto:Course",
           "minCardinality": "1",
           "comment": "Scripts belonging to a course"
+      },
+      {
+          "property": "onto:dependsOn",
+          "range": "onto:Script",
+          "overload": "true",
+          "minCardinality": "0",
+          "comment": "Constraint on script order"
       }
     ]
 }
