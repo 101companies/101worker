@@ -11,12 +11,6 @@
             "comment": "Cross-feature constraint"
         },
         {
-            "property": "onto:illustrates",
-            "range": "onto:Concept",
-            "minCardinality": "0",
-            "comment": "Chrestomathic purpose of a feature"
-        },
-        {
             "property": "onto:moreComplexThan",
             "overload": "true",
             "range": "onto:Feature",

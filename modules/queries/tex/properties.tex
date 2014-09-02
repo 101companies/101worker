@@ -8,7 +8,7 @@
 through semantic properties in the sense of Semantic Web-like
 triples. The underlying set of predicates is listed here:
 
-\completeOutputTabular{{l|l|l|l}}{\textbf{predicate} & \textbf{comment}}{predicates}
+\completeOutputTabular{{l|l}}{\textbf{predicate} & \textbf{comment}}{predicates}
 %|
 
 \noindent
@@ -64,10 +64,12 @@ enabled by \uri{onto:linksTo}. We query some links for illustration:
 \sparql{predicateSameAs2}
 
 \completeOutputTabular{{l|l}}{\textbf{predicate} & \textbf{url}}{predicateSameAs2}
+%|
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{uses} 
+\label{S:uses}
 
 Systems (i.e., technologies and \ooo{}'s contributions) can make use
 of instruments (i.e., software languages, technologies, and
@@ -91,6 +93,22 @@ Here, \url{tech:JAXB}\footnote{... \uri{onto:sameAs}
   \url{http://www.oracle.com/technetwork/articles/javase/index-140168.html}}
 is the Java platform's technology for XML-data binding, which indeed
 uses `Java annotations' for controling the mapping.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{illustrates}
+
+As much as a system may use some instrument, the point of a
+description (say, a specification) may be to illustrate some
+instrument; the point being that a `description' (such as requirement
+description for a feature) cannot claim to `use' an instrument (e.g.,
+a concept); it can merely stipulate its use, i.e., it can illustrate
+or motivate its use.
+
+\begin{comment}
+Mentoring illustrates what?
+What else illustrates what?
+\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -153,9 +171,39 @@ to implement the language `standard'.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{describes}
+
+Just as much as a system or a technology implements a feature or a
+document (a `requirement'), a document may dually describe an
+instrument (i.e., a language, a technology, or a concept). For
+instance:
+
+TODO: Show examples of such ``describes''
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{memberOf}
 
 TBD
+
+\begin{comment}
+Members of a theme
+Members of a vocabulary
+Members of a course
+\end{comment}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{moreComplexThan}
+
+TBD
+
+\begin{comment}
+Aha, moreComplexThan!?
+- A contribution being more complex than another contribution
+- A feature being more complex than another feature
+- Does this sound like something applicable to language subset relationship?
+\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -163,11 +211,10 @@ TBD
 
 TBD
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{carries}
-
-TBD
+\begin{comment}
+Contributions based on other contributions
+Contributions varying other contributions
+\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -177,7 +224,7 @@ TBD
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{describes}
+\subsection{implies}
 
 TBD
 
@@ -189,24 +236,39 @@ TBD
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{illustrates}
-
-\subsection{implies}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{mentions}
 
 \sparql{predicateMentions}
 
-\partialOutput{7}{predicateMentions}
+\completeOutputTabular{{l|l}}{\textbf{object} & \textbf{headline}}{predicateMentions}
+%|
+
+TBD
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{moreComplexThan}
-
-\subsection{profile}
-
 \subsection{supports}
+
+`Support' is related to `Use' (\S\ref{S:uses})
+
+\sparql{predicateSupports}
+
+\partialOutputTabular{{l|l}}{\textbf{subject} & \textbf{object}}{10}{predicateSupports}
+%|
+
+TBD
+
+\begin{comment}
+Haskell supports Functional programming
+Rails supports DRY (uses? DRY)
+JAXB supports XML-data binding and Object/XML mapping
+... ?
+\end{comment}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{profile, carries}
+
+Cover as miscellaneous.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

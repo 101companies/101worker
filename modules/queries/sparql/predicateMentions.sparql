@@ -1,4 +1,5 @@
-SELECT ?object {
-  contrib:haskellStarter onto:mentions ?object
+SELECT ?object ?headline {
+  contrib:haskellStarter onto:mentions ?object .
+  ?object onto:hasHeadline ?headline
 }
-ORDER BY ?object
+ORDER BY ?object ?headline
