@@ -11,10 +11,17 @@ camelize = lambda words: ''.join(words[0].lower() + words[1:])
 def extract_properties(internal_links):
     links = {}
     for link in internal_links:
-        if not '::' in link: continue
-        l = link.split('::')
-        p = camelize(l[0])  # property
-        n = l[1]
+        if not '::' in link:
+            if link.startswith('~'):
+               p = 'mentionsNot'
+               n = link[1:]
+            else:
+                p = 'mentions'
+                n = link
+        else:
+            l = link.split('::')
+            p = camelize(l[0])  # property
+            n = l[1]
         if p in links:
             links[p].append(handle_page_name(n, {}))
         else:
@@ -40,8 +47,11 @@ def handle_page_name(name, props):
 client = MongoClient('db.101companies.org', 27017)
 db = client['wiki_production']
 
-MONGODB_USER = os.environ['MONGODB_USER']
-MONGODB_PWD = os.environ['MONGODB_PWD']
+MONGODB_USER='dbadmin'
+MONGODB_PWD='uNYv5DoVcVw0XJ'
+
+#MONGODB_USER = os.environ['MONGODB_USER']
+#MONGODB_PWD = os.environ['MONGODB_PWD']
 
 db.authenticate(MONGODB_USER, MONGODB_PWD)
 
