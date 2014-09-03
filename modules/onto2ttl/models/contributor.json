@@ -1,13 +1,5 @@
 {
     "@id": "onto:Contributor",
     "@type": ["foaf:Person", "onto:Entity"],
-    "comment": "Contributors to the 101 project",
-    "properties": [
-        {
-            "property": "onto:profile",
-            "range": "rdfs:Literal",
-            "minCardinality": "1",
-	    "comment": "Web page with info about contributor"
-        }
-    ]
+    "comment": "Contributors to the 101 project"
 }
