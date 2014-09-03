@@ -1,5 +1,8 @@
 {
-    "@id": "onto:Vocabulary",
-    "@type": ["onto:Entity", "onto:Container"],
+    "@id": "Vocabulary",
+    "@type": [
+        "Entity",
+        "Container"
+    ],
     "comment": "Containers of terms"
 }

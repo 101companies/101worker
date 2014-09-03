@@ -73,8 +73,9 @@ if __name__=='__main__':
     connection.addnamespace('concept', 'http://101companies.org/resources/Concept#')
     connection.addnamespace('tech', 'http://101companies.org/resources/Technology#')
     connection.addnamespace('feature', 'http://101companies.org/resources/Feature#')
-    connection.addnamespace('doc', 'http://101companies.org/resources/Document#')
+    connection.addnamespace('doc', 'http://101companies.org/resoussrces/Document#')
     connection.addnamespace('course', 'http://101companies.org/resources/Course#')
+    connection.addnamespace('contributor', 'http://101companies.org/resources/Contributor#ss')
 
     req = urllib2.Request('http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/namespaces')
     req.add_header('Accept', 'application/sparql-results+json')

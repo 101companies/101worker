@@ -1,5 +1,5 @@
 {
-   "@id": "onto:Container",
-   "@type": "onto:Resource",
-   "comment": "Base type for vocabularies, scripts, and themes"
+    "@id": "Container",
+    "@type": "Resource",
+    "comment": "Base type for vocabularies, scripts, and themes"
 }

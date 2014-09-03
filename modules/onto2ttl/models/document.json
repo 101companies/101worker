@@ -1,6 +1,9 @@
- {
-  "@id": "onto:Document",
-  "@type": ["foaf:Document", "onto:Entity", "onto:Description"],
-  "comment": "Documents in a broad sense"
+{
+    "@id": "Document",
+    "@type": [
+        "foaf:Document",
+        "Entity",
+        "Description"
+    ],
+    "comment": "Documents in a broad sense"
 }
-

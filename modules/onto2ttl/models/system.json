@@ -1,32 +1,34 @@
 {
-   "@id": "onto:System",
-   "@type": "onto:Resource",
-   "comment": "Base type for technologies and contributions",
-   "wikialias": ["Software_system"],
-   "properties": [
-      {
-         "property": "onto:implements",
-         "range": "onto:Description",
-         "minCardinality": "0",
-         "comment": "Systems implementing descriptions"
-      },
-      {
-        "property": "onto:uses",
-        "range": "onto:Instrument",
-        "minCardinality": "0",
-        "comment": "Use of instruments by systems"
-      },
-      {
-          "property": "onto:varies",
-          "range": "onto:System",
-          "minCardinality": "0",
-          "comment": "Similarity of systems"
-      },
-      {
-         "property": "onto:basedOn",
-         "range": "onto:System",
-          "minCardinality": "0",
-          "comment": "Reuse of systems"
-      }
-   ]
+    "@id": "System",
+    "@type": "Resource",
+    "comment": "Base type for technologies and contributions",
+    "wikialias": [
+        "Software_system"
+    ],
+    "properties": [
+        {
+            "property": "implements",
+            "range": "Description",
+            "minCardinality": "0",
+            "comment": "Systems implementing descriptions"
+        },
+        {
+            "property": "uses",
+            "range": "Instrument",
+            "minCardinality": "0",
+            "comment": "Use of instruments by systems"
+        },
+        {
+            "property": "varies",
+            "range": "System",
+            "minCardinality": "0",
+            "comment": "Similarity of systems"
+        },
+        {
+            "property": "basedOn",
+            "range": "System",
+            "minCardinality": "0",
+            "comment": "Reuse of systems"
+        }
+    ]
 }

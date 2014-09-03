@@ -1,19 +1,24 @@
 {
-    "@id": "onto:Feature",
-    "@type": ["onto:Entity", "onto:Description"],
+    "@id": "Feature",
+    "@type": [
+        "Entity",
+        "Description"
+    ],
     "comment": "Software features",
-    "wikialias": ["Software_feature"],
+    "wikialias": [
+        "Software_feature"
+    ],
     "properties": [
         {
-            "property": "onto:dependsOn",
-            "range": "onto:Feature",
+            "property": "dependsOn",
+            "range": "Feature",
             "overload": "true",
             "minCardinality": "0",
             "comment": "Cross-feature constraint"
         },
         {
-            "property": "onto:moreComplexThan",
-            "range": "onto:Feature",
+            "property": "moreComplexThan",
+            "range": "Feature",
             "overload": "true",
             "minCardinality": "0",
             "comment": "Comparison of complexity"

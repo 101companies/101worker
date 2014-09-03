@@ -1,15 +1,20 @@
 {
-    "@id": "onto:Language",
-    "@type": ["onto:Entity", "onto:Instrument"],
+    "@id": "Language",
+    "@type": [
+        "Entity",
+        "Instrument"
+    ],
     "comment": "Software languages",
-    "wikialias": ["Software_language"],
+    "wikialias": [
+        "Software_language"
+    ],
     "properties": [
-      {
-          "property": "onto:designedBy",
-          "range": "onto:Contributor",
-          "overload": "true",
-          "minCardinality": "1",
-          "comment": "Designer of a contribution"
-      }
+        {
+            "property": "designedBy",
+            "range": "Contributor",
+            "overload": "true",
+            "minCardinality": "1",
+            "comment": "Designer of a contribution"
+        }
     ]
 }

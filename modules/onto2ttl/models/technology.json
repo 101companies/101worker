@@ -1,26 +1,32 @@
 {
-    "@id": "onto:Technology",
-    "@type": ["onto:Entity", "onto:Instrument", "onto:System"],
+    "@id": "Technology",
+    "@type": [
+        "Entity",
+        "Instrument",
+        "System"
+    ],
     "comment": "Software technologies",
-    "wikialias": ["Software_technology"],
+    "wikialias": [
+        "Software_technology"
+    ],
     "properties": [
         {
-            "property": "onto:uses",
+            "property": "uses",
             "overload": "true",
-            "range": "onto:Instrument",
+            "range": "Instrument",
             "minCardinality": "0",
             "comment": "Use of instruments by the technology"
         },
         {
-            "property": "onto:implements",
+            "property": "implements",
             "overload": "true",
-            "range": "onto:Document",
+            "range": "Document",
             "minCardinality": "0",
             "comment": "Implementation of a standard or alike"
         },
         {
-            "property": "onto:designedBy",
-            "range": "onto:Contributor",
+            "property": "designedBy",
+            "range": "Contributor",
             "overload": "true",
             "minCardinality": "1",
             "comment": "Designer of a contribution"

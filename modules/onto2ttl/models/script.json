@@ -1,21 +1,21 @@
 {
-    "@id": "onto:Script",
-    "@type": "onto:Entity",
+    "@id": "Script",
+    "@type": "Entity",
     "comment": "Scripts as units of a course",
     "properties": [
-      {
-          "property": "onto:memberOf",
-          "overload": "true",
-          "range": "onto:Course",
-          "minCardinality": "1",
-          "comment": "Scripts belonging to a course"
-      },
-      {
-          "property": "onto:dependsOn",
-          "range": "onto:Script",
-          "overload": "true",
-          "minCardinality": "0",
-          "comment": "Constraint on script order"
-      }
+        {
+            "property": "memberOf",
+            "overload": "true",
+            "range": "Course",
+            "minCardinality": "1",
+            "comment": "Scripts belonging to a course"
+        },
+        {
+            "property": "dependsOn",
+            "range": "Script",
+            "overload": "true",
+            "minCardinality": "0",
+            "comment": "Constraint on script order"
+        }
     ]
 }

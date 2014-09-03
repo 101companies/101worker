@@ -1,13 +1,13 @@
 {
-  "@id": "onto:Description",
-  "@type": "onto:Resource",
-  "comment": "Base type for features and documents",
-  "properties": [
-    {
-      "property": "onto:illustrates",
-      "range": "onto:Instrument",
-      "minCardinality": "0",
-      "comment": "Chrestomathic purpose of a description"
-    }
-  ]
+    "@id": "Description",
+    "@type": "Resource",
+    "comment": "Base type for features and documents",
+    "properties": [
+        {
+            "property": "illustrates",
+            "range": "Instrument",
+            "minCardinality": "0",
+            "comment": "Chrestomathic purpose of a description"
+        }
+    ]
 }
