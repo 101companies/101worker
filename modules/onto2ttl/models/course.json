@@ -1,5 +1,14 @@
 {
     "@id": "onto:Course",
     "@type": ["onto:Entity", "onto:Container"],
-    "comment": "Courses on programming and software engineering"
+    "comment": "Courses on programming and software engineering",
+    "properties": [
+      {
+          "property": "onto:designedBy",
+          "range": "onto:Contributor",
+          "overload": "true",
+          "minCardinality": "1",
+          "comment": "Designer of a contribution"
+      }
+    ]
 }

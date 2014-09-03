@@ -277,13 +277,52 @@ Contributions varying other contributions
 
 \subsection{dependsOn}
 
-TBD
+\solasote{}'s individuals may depend on each other in different
+ways. Scripts, i.e., course units such as lectures or labs, may depend
+on each other in the sense that one unit builds upon content of
+another unit. Consider the following dependencies for a course on
+functional programming:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\sparql{predicateDependsOn1}
 
-\subsection{implies}
+\noindent
+For instance, the somewhat advanced topic of `functors' (and friends)
+depends on prior coverage of `type-class polymorphism'. Clearly, such
+dependency relationships can be used to arrange the units in an actual
+sequential order and it helps self-learners in processing the content
+in a reasonable order.
 
-TBD
+Another kind of dependency concerns features of \ooo{}'s system. That
+is, one feature may `imply' (say, depend on) another feature. For
+instance, a feature to compute the `depth' of department nesting implies
+the feature for `hierachical companies', as flat companies would not
+give rise to a meaningful notion of depth. We query all feature
+dependencies as follows:
+
+\completeOutputTabular{{l|l}}{\textbf{earlier} & \textbf{later}}{predicateDependsOn1}
+%|
+
+\sparql{predicateDependsOn2}
+
+\noindent
+Yet another kind of dependency concerns instruments to depend on other
+instruments in the sense that one instrument cannot be `reasonably'
+used without the other. For illustration, consider the following
+dependencies for Ruby on Rails:
+
+\completeOutputTabular{{l|l}}{\textbf{feature} & \textbf{implied}}{predicateDependsOn2}
+%|
+
+\sparql{predicateDependsOn3}
+
+\completeOutputTabular{{l|l}}{\textbf{dependency} & \textbf{headline}}{predicateDependsOn3}
+%|
+
+\noindent
+For instance, there is no `reasonable' way of using Rails other than
+complying with the architectural pattern of MVC. Also, web development
+with Rails assumes that all functionality etc.\ is coded in Rails;
+likewise for the other dependencies.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

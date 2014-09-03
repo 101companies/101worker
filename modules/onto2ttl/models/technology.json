@@ -17,6 +17,13 @@
             "range": "onto:Document",
             "minCardinality": "0",
             "comment": "Implementation of a standard or alike"
+        },
+        {
+            "property": "onto:designedBy",
+            "range": "onto:Contributor",
+            "overload": "true",
+            "minCardinality": "1",
+            "comment": "Designer of a contribution"
         }
     ]
 }

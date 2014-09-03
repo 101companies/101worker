@@ -32,12 +32,12 @@ As the query clarifiers, classifier types can be explicitly selected by testing 
 \noindent
 This is how we query for all individuals with a certain classifier; in this case, we are interested in all OO programming languages:
 
-\sparql{instancesOfOoProgrammingLanguage}
+\sparql{ooProgrammingLanguage}
 
 \noindent
 These are some OO programming languages:
 
-\partialOutput{7}{instancesOfOoProgrammingLanguage}
+\partialOutput{7}{ooProgrammingLanguage}
 
 \solasote's approach towards classification makes one specific assumption.  For each classifier, there is a corresponding concept (\uri{onto:Concept}) of the same name modulo different prefixes (`onto' for classifieres, `concept' for concepts). Whether or not a concept has an associated classifier depends on the fact whether the concept is actually used for classification.
 

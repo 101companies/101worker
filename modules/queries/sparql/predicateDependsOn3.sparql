@@ -1,0 +1,5 @@
+SELECT ?dependency ?headline {
+  tech:Ruby_on_Rails onto:dependsOn ?dependency .
+  ?dependency a onto:Instrument .
+  ?dependency onto:hasHeadline ?headline
+}
