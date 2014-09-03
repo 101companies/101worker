@@ -1,0 +1,3 @@
+{% for x in data -%}
+{{ escape(prefixy(x['entity']['value'])) }} & {{ x['headline']['value'] }} \\
+{% endfor %}
