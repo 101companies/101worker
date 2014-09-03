@@ -4,7 +4,7 @@ import os
 from connection import Connection
 from jinja2 import Environment, FileSystemLoader
 import urllib2
-from json import loads
+from json import loads, load
 import sys
 
 SPATXT = 'text/boolean'
@@ -66,16 +66,10 @@ if __name__=='__main__':
     connection = Connection('http://triples.101companies.org/openrdf-sesame/')
     connection.use_repository('Testing_2')
 
-    connection.addnamespace('onto', 'http://101companies.org/ontology#')
-    connection.addnamespace('res', 'http://101companies.org/resources#')
-    connection.addnamespace('lang', 'http://101companies.org/resources/Language#')
-    connection.addnamespace('contrib', 'http://101companies.org/resources/Contribution#')
-    connection.addnamespace('concept', 'http://101companies.org/resources/Concept#')
-    connection.addnamespace('tech', 'http://101companies.org/resources/Technology#')
-    connection.addnamespace('feature', 'http://101companies.org/resources/Feature#')
-    connection.addnamespace('doc', 'http://101companies.org/resoussrces/Document#')
-    connection.addnamespace('course', 'http://101companies.org/resources/Course#')
-    connection.addnamespace('contributor', 'http://101companies.org/resources/Contributor#ss')
+    with open('../onto2ttl/config.json') as json_data:
+        m = load(json_data)
+        for x in m['@context']:
+            connection.addnamespace(x, m['@context'][x])
 
     req = urllib2.Request('http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/namespaces')
     req.add_header('Accept', 'application/sparql-results+json')
