@@ -328,23 +328,63 @@ likewise for the other dependencies.
 
 \subsection{designedBy, developedBy, reviewedBy}
 
-TBD
+These properties are concerned with persons and specifically
+their involvement in the design, development, and reviewing of
+different kinds of \solasote{}'s individuals. This is a list of
+relevant scenarios:
+%
+\begin{itemize}
+\item Persons may design languages, technologies, (\ooo{}'s) contributions, and
+  courses.
+\item Persons may develop technologies and contributions.
+\item Persons may review contributions.
+\end{itemize}
+%
+\solasote{} leverages the entity type \uri{onto:Contributor} for
+persons concerned with (\ooo{}'s) contributions. Here is query for the
+contributions developed by one of the present document's authors:
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\sparql{predicateDevelopedBy}
 
-\subsection{mentions}
-
-\sparql{predicateMentions}
-
-\completeOutputTabular{{l|l}}{\textbf{object} & \textbf{headline}}{predicateMentions}
+\partialOutputTabular{{l|l}}{\textbf{contribution} & \textbf{headline}}{7}{predicateDevelopedBy}
 %|
-
-TBD
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{profile, carries}
 
 Cover as miscellaneous.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{mentions}
+
+The documentation of \solasote{} on the \ooo{wiki} may use
+`semantically weak' references to \solasote's individuals. We call
+them `semantically weak' in that these references would not use any of
+the specific predicate, but they are essentially plain
+hyperlinks. These references are represented through `mentions'
+properties in \solasote. 
+
+For instance, the following query lists all individuals mentioned by a
+simple Haskell-based contribution to \ooo{},
+\uri{contrib:haskellStarter}:
+
+\sparql{predicateMentions}
+
+\completeOutputTabular{{l|l}}{\textbf{object} & \textbf{headline}}{predicateMentions}
+%|
+
+\noindent
+A good number of concepts is mentioned because they are presumably
+demonstrated (`used') by the contribution. The feature `Total' is
+mentioned because the documentation discusses some details of this
+particular feature; other features are implemented, but not discussed
+explicitly. The language Haskell is mentioned for obvious reasons.
+
+Ideally, all mentioned individuals should also be linked in a
+semantically strong way, i.e., by using one of the predicates other
+than `mention'. This can be regarded as a quality criterion for the
+documention on \ooo{wiki}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

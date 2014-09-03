@@ -3,6 +3,13 @@ __author__ = 'avaranovich'
 import os
 import json
 
+def handleType(t):
+    onto = "onto:"
+    if ':' in t:
+        return t
+    else:
+        return (onto + t)
+
 if __name__ == '__main__':
 
     relevant_path = os.path.join(os.path.dirname(__file__), 'models')
@@ -28,20 +35,21 @@ if __name__ == '__main__':
 @prefix script:<http://101companies.org/resources/Script#> . \n\
 @prefix foaf: <http://xmlns.com/foaf/0.1/> . \n\n"
 
+
         with open(os.path.join(os.path.dirname(__file__), 'models', file)) as json_data:
             m = json.load(json_data)
-            id = m['@id']
+            id = handleType(m['@id'])
             if m.has_key('@type'):
                 t = m['@type']
                 if type(t) is list:
                     s += id
                     for x in t:
-                        s += " rdfs:subClassOf %s ; \n" % (x)
+                        s += " rdfs:subClassOf %s ; \n" % (handleType(x))
                 else:
-                    s += "%s rdfs:subClassOf %s ;" % (id, t)
+                    s += "%s rdfs:subClassOf %s ;" % (id, handleType(t))
                 print(s)
             elif m.has_key('@instance'):
-                t = m['@instance']
+                t =  handleType(m['@instance'])
                 s += "%s rdf:type %s ;" % (id, t)
                 print(s)
 
@@ -63,7 +71,7 @@ if __name__ == '__main__':
                         s += "\n\n %s rdfs:type rdfs:Property ; \n" \
                             " rdfs:comment \"%s\" ; \n" \
                             " rdfs:domain %s ; \n" \
-                            " rdfs:range %s . \n" % (prop['property'], comment, id, prop['range'])
+                            " rdfs:range %s . \n" % (handleType(prop['property']), comment, id, prop['range'])
 
                     print s
 
