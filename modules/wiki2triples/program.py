@@ -115,7 +115,7 @@ def make_wiki_link(p):
 def disambiguate(p):
     if 'http://' in p:
         try:
-            return URIRef(urllib.quote(encode(p)))
+            return URIRef(encode(p))
         except:
             debug.setdefault('non_convertable_uris', []).append(p)
             return URIRef('http://failedConversion.com')
@@ -188,7 +188,7 @@ def map_instance(page, graph):
         triple = uri, rdf['type'], encode_ontology(o['p'], o['n'])
         graph.add(triple)
         triple = encode_ontology(o['p'], o['n']), rdf['type'], encode_ontology('onto', 'Classifier')
-        if not triple in graph and not o['p'] and not page_mapping(o['p'], o['n']) in premodeled_classes:
+        if not o['p'] and not page_mapping(o['p'], o['n']) in premodeled_classes:
             print 'Adding additional rdf:type onto:Classifier statement for {}'.format(o['n'])
             graph.add(triple)
 
