@@ -115,7 +115,7 @@ def make_wiki_link(p):
 def disambiguate(p):
     if 'http://' in p:
         try:
-            return URIRef(encode(p))
+            return URIRef(urllib.quote(p))
         except:
             debug.setdefault('non_convertable_uris', []).append(p)
             return URIRef('http://failedConversion.com')
