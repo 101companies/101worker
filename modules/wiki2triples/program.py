@@ -42,6 +42,7 @@ ignored_keys_in_classes = ignored_keys_in_instances
 ignored_keys_in_subresources = ['internal_links']
 
 
+# revise, as this is just plain awful
 models = filter(lambda x: '.json' in x, os.listdir('./../validate/models'))
 for model in models:
     model_name = model.replace('.json', '')
@@ -52,6 +53,18 @@ for model in models:
 #print allowed_relations
 for y in filter(lambda x: x not in ['entity'], allowed_relations.keys()):
     allowed_relations[y] += allowed_relations['entity']
+
+overloading_table = {}
+def build_overloading_table():
+    for m in filter(lambda x: '.json' in x, os.listdir('./../onto2ttl/models')):
+        data = json.load(open('./../onto2ttl/' + m, 'r'))
+        property_domain = data['@id']
+        for property in data['properties']:
+            if property.get('super', None):
+                super_property = property['super']
+                property_range = property['range']
+                overloading_table.setdefault(super_property, {})[(property_domain, property_range)] =\
+                    property['property']
 
 
 def page_mapping(ns, s):
@@ -70,8 +83,6 @@ def page_mapping(ns, s):
     return s
 
 
-
-
 def filter_pages(wiki):
     collection = []
     namespace_blacklist = json.load(open('namespaces_blacklist.json', 'r'))
@@ -88,6 +99,7 @@ def encode(s):
                         .replace(unichr(252), 'o').replace(unichr(225), 'a').replace(unichr(237), 'i')
                         .replace(unichr(241), 'n').replace(unichr(243), 'o').replace(unichr(250), 'u')
                         .replace(unichr(252), 'u').replace(' ', '_'))
+
 
 def encode_predicate(p):
     return encode_ontology('onto',p[0].lower() + p[1:])
@@ -129,9 +141,9 @@ def disambiguate(p):
             namespace, name = p['p'], p['n']
             if not namespace: namespace = 'Concept'
     if name in classes_in_wiki or (namespace+':'+name) in classes_in_wiki:
-        return encode_resource('Concept', name)
+        return 'Concept', encode_resource('Concept', name)
     else:
-        return encode_resource(namespace, name)
+        return namespace, encode_resource(namespace, name)
 
 
 # def hardcoded_classes(graph):
@@ -170,6 +182,7 @@ def map_instance(page, graph):
         else: return 'Concept'
 
     clss = class_for_page()
+    domain_for_relation = clss
     uri = encode_resource(clss, page['n'])
 
     triple = uri, rdf['type'], encode_ontology('onto', 'WikiPage')
@@ -199,7 +212,8 @@ def map_instance(page, graph):
         for key in filter(lambda x: x not in ignored_keys_in_subresources, sub_resource):
             predicate = encode_predicate(key)
             for p in sub_resource[key]:
-                target = disambiguate(p)
+                target_clss, target = disambiguate(p)
+                predicate = overloading_table.get(predicate, {}).get((clss, target_clss), predicate)
                 graph.add( (sub_resource_uri, predicate, target) )
 
     #Remaining predicates should all be in internal links
@@ -207,12 +221,13 @@ def map_instance(page, graph):
         # Determine predicate
         if '::' in link:
             predicate = link.split('::')[0]
-            obj = disambiguate(link.split('::')[1])
+            target_clss, obj = disambiguate(link.split('::')[1])
         else:
             predicate = 'mentions'
-            obj = disambiguate(link)
+            target_clss, obj = disambiguate(link)
 
         if (predicate[0].lower() + predicate[1:]) not in ignored_keys_in_instances:
+            predicate = overloading_table.get(predicate, {}).get((clss, target_clss), predicate)
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
 
@@ -261,7 +276,8 @@ def map_class(page, graph):
         for key in filter(lambda x: x not in ignored_keys_in_subresources, sub_resource):
             predicate = encode_predicate(key)
             for p in sub_resource[key]:
-                target = disambiguate(p)
+                target_clss, target = disambiguate(p)
+                predicate = overloading_table.get(predicate, {}).get((clss, target_clss), predicate)
                 graph.add( (sub_resource_uri, predicate, target) )
 
     #Remaining predicates should all be in internal links
@@ -269,12 +285,13 @@ def map_class(page, graph):
         # Determine predicate
         if '::' in link:
             predicate = link.split('::')[0]
-            obj = disambiguate(link.split('::')[1])
+            target_clss, obj = disambiguate(link.split('::')[1])
         else:
             predicate = 'mentions'
-            obj = disambiguate(link)
+            target_clss, obj = disambiguate(link)
 
         if (predicate[0].lower() + predicate[1:]) not in ignored_keys_in_classes:
+            predicate = overloading_table.get(predicate, {}).get((clss, target_clss), predicate)
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
 
