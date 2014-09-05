@@ -39,7 +39,10 @@ explanation.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{sameAs, similarTo, linksTo} 
-
+\label{S:sameAs}
+\label{S:similarTo}
+\label{S:linksTo}
+ 
 This is a family of predicates all concerned with linking individuals
 of \solasote{} with external web-based resources, e.g., pages on
 Wikipedia or resources according to DBpedia. Their meaning and purpose
@@ -115,6 +118,7 @@ uses `Java annotations' for controling the mapping.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{supports}
+\label{S:supports}
 
 A technology can support another technology in that it provides some
 sort of interface in generalized sense (e.g., an I/O behavior or a
@@ -157,6 +161,7 @@ A few illustrative support relationships are queried here:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{illustrates}
+\label{S:illustrates}
 
 As much as a system may use some instrument, a feature description or
 any sort of document may be said to illustrate some instrument the
@@ -181,6 +186,7 @@ illustrated by the features:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{partOf}
+\label{S:partOf}
 
 Whole-part relationships are used in many areas of modeling; they make
 sense for \solasote, too. That is, some kinds of \solasote{}
@@ -215,6 +221,7 @@ be used in certain operand position in an XSLT program.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{implements}
+\label{S:implements}
 
 Systems (i.e., technologies and \ooo{}'s contributions) can implement
 descriptions (i.e., features or documents). The idea is that the
@@ -240,18 +247,34 @@ to implement the language `standard'.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{memberOf}
+\label{S:memberOf}
 
-TBD
+\solasote{} organizes individuals in containers. There are the
+following use cases: 
+%
+\begin{itemize}
+\item Vocabularies as containers with terms (typically concepts) as
+  members.
+\item Courses as containers with scripts (units such as lectures) as
+  members.
+\item Themes as containers with (\ooo{}'s) contributions as members.
+\end{itemize}
+%
+These kinds of containment are illustrated in turn.
 
-\begin{comment}
-Members of a theme
-Members of a vocabulary
-Members of a course
-\end{comment}
+\sparql{memberOfVocabulary}
+
+\partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{memberOfVocabulary}
+%|
+
+\sparql{memberOfCourse}
+
+\partialOutputTabular{l}{\textbf{script}}{7}{memberOfCourse}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{moreComplexThan}
+\label{S:moreComplexThan}
 
 TBD
 
@@ -265,6 +288,8 @@ Aha, moreComplexThan!?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{basedOn, varies}
+\label{S:basedOn}
+\label{S:varies}
 
 TBD
 
@@ -276,6 +301,7 @@ Contributions varying other contributions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{dependsOn}
+\label{S:dependsOn}
 
 \solasote{}'s individuals may depend on each other in different
 ways. Scripts, i.e., course units such as lectures or labs, may depend
@@ -283,15 +309,26 @@ on each other in the sense that one unit builds upon content of
 another unit. Consider the following dependencies for a course on
 functional programming:
 
-\sparql{predicateDependsOn1}
+\sparql{dependsOnScript}
+
+\completeOutputTabular{{l|l}}{\textbf{earlier} & \textbf{later}}{dependsOnScript}
+%|
 
 \noindent
 For instance, the somewhat advanced topic of `functors' (and friends)
 depends on prior coverage of `type-class polymorphism'. Clearly, such
 dependency relationships can be used to arrange the units in an actual
 sequential order and it helps self-learners in processing the content
-in a reasonable order.
+in a reasonable order. Here is indeed a query which orders the scripts
+in such a way; we also list the number of scripts that are
+prerequistes for each script:
 
+\sparql{course}
+
+\completeOutputTabular{{l|l}}{\textbf{course} & \textbf{count}}{course}
+%|
+
+\noindent
 Another kind of dependency concerns features of \ooo{}'s system. That
 is, one feature may `imply' (say, depend on) another feature. For
 instance, a feature to compute the `depth' of department nesting implies
@@ -299,10 +336,10 @@ the feature for `hierachical companies', as flat companies would not
 give rise to a meaningful notion of depth. We query all feature
 dependencies as follows:
 
-\completeOutputTabular{{l|l}}{\textbf{earlier} & \textbf{later}}{predicateDependsOn1}
-%|
+\sparql{dependsOnFeature}
 
-\sparql{predicateDependsOn2}
+\completeOutputTabular{{l|l}}{\textbf{feature} & \textbf{implied}}{dependsOnFeature}
+%|
 
 \noindent
 Yet another kind of dependency concerns instruments to depend on other
@@ -310,12 +347,9 @@ instruments in the sense that one instrument cannot be `reasonably'
 used without the other. For illustration, consider the following
 dependencies for Ruby on Rails:
 
-\completeOutputTabular{{l|l}}{\textbf{feature} & \textbf{implied}}{predicateDependsOn2}
-%|
+\sparql{dependsOnInstrument}
 
-\sparql{predicateDependsOn3}
-
-\completeOutputTabular{{l|l}}{\textbf{dependency} & \textbf{headline}}{predicateDependsOn3}
+\completeOutputTabular{{l|l}}{\textbf{dependency} & \textbf{headline}}{dependsOnInstrument}
 %|
 
 \noindent
@@ -327,6 +361,9 @@ likewise for the other dependencies.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{designedBy, developedBy, reviewedBy}
+\label{S:designedBy}
+\label{S:developedBy}
+\label{S:reviewedBy}
 
 These properties are concerned with persons and specifically
 their involvement in the design, development, and reviewing of
@@ -344,14 +381,15 @@ relevant scenarios:
 persons concerned with (\ooo{}'s) contributions. Here is query for the
 contributions developed by one of the present document's authors:
 
-\sparql{predicateDevelopedBy}
+\sparql{developedBy}
 
-\partialOutputTabular{{l|l}}{\textbf{contribution} & \textbf{headline}}{7}{predicateDevelopedBy}
+\partialOutputTabular{{l|l}}{\textbf{contribution} & \textbf{headline}}{7}{developedBy}
 %|
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{mentions}
+\label{S:mentions}
 
 The documentation of \solasote{} on the \ooo{wiki} may use
 `semantically weak' references to \solasote's individuals. We call
@@ -384,6 +422,7 @@ documention on \ooo{wiki}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{carries}
+\label{S:carries}
 
 A simple tagging scheme is used for \solasote{} so that one can
 associate `tags' with individuals. As of writing, the only noteworthy

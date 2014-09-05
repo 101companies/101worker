@@ -4,70 +4,84 @@
         "Entity",
         "System"
     ],
-    "comment": "Contributions to the 101 project",
+    "comment": "Contributions of the 101 project",
     "properties": [
         {
-            "property": "uses",
-            "overload": "true",
+            "property": "contribUsesLang",
+            "super": "uses",
             "range": "Language",
             "minCardinality": "1",
-            "comment": "Use of languages by the contribution"
+            "comment": "Use of languages by contributions"
         },
         {
-            "property": "designedBy",
-            "range": "Contributor",
-            "overload": "true",
-            "minCardinality": "1",
-            "comment": "Designer of a contribution"
-        },
-        {
-            "property": "developedBy",
-            "range": "Contributor",
-            "overload": "true",
-            "minCardinality": "1",
-            "comment": "Developer of a contribution"
-        },
-        {
-            "property": "reviewedBy",
-            "range": "Contributor",
-            "overload": "true",
+            "property": "contribUsesTech",
+            "super": "uses",
+            "range": "Technology",
             "minCardinality": "0",
-            "comment": "Reviewer of a contribution"
+            "comment": "Use of technologies by contributions"
         },
         {
-            "property": "implements",
-            "overload": "true",
+            "property": "contribUsesConcept",
+            "super": "uses",
+            "range": "Concept",
+            "minCardinality": "0",
+            "comment": "Use of concepts by contributions"
+        },
+        {
+            "property": "contribDesignedBy",
+            "super": "designedBy",
+            "range": "Contributor",
+            "minCardinality": "1",
+            "comment": "Designers of contributions"
+        },
+        {
+            "property": "contribDevelopedBy",
+            "super": "developedBy",
+            "range": "Contributor",
+            "minCardinality": "1",
+            "comment": "Developers of contributions"
+        },
+        {
+            "property": "contribReviewedBy",
+            "super": "reviewedBy",
+            "range": "Contributor",
+            "minCardinality": "0",
+            "comment": "Reviewers of contributions"
+        },
+        {
+            "property": "contribImplements",
+            "super": "implements",
             "range": "Feature",
             "minCardinality": "1",
-            "comment": "Feature implemented by a contribution"
+            "comment": "Features implemented by contributions"
         },
         {
-            "property": "memberOf",
-            "overload": "true",
+            "property": "contribMemberOf",
+            "super": "memberOf",
             "range": "Theme",
             "minCardinality": "0",
             "comment": "Contributions collected in themes"
         },
         {
-            "property": "varies",
-            "overload": "true",
+            "property": "contribVaries",
+            "super": "varies",
             "range": "Contribution",
             "minCardinality": "0",
             "comment": "Similarity of contributions"
         },
         {
-            "property": "basedOn",
-            "overload": "true",
+            "property": "contribBasedOn",
+            "super": "basedOn",
             "range": "Contribution",
             "minCardinality": "0",
             "comment": "Reuse of contributions"
         },
         {
-            "property": "moreComplexThan",
-            "overload": "true",
+            "property": "contribMoreComplexThan",
+            "super": "moreComplexThan",
             "range": "Contribution",
             "minCardinality": "0",
-            "comment": "Comparison of complexity"
+            "comment": "Complexity of contributions"
         }
     ]
 }

@@ -44,7 +44,7 @@ def process(file_names, prefixes):
                 return escape(prefixy(x)).split(':')[1]
                 
             def escape(x):
-                return x.replace('_', "\_")
+                return x.replace('_', "\_").replace('#', "\#")
                 
             def prefixy(x):
                 for ns in prefixes:

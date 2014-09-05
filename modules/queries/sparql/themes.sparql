@@ -1,0 +1,6 @@
+SELECT ?theme ?headline
+WHERE {
+  ?theme a onto:Theme .
+  ?theme onto:hasHeadline ?headline
+}
+ORDER BY ?theme

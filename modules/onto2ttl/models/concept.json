@@ -7,5 +7,35 @@
     "comment": "Software concepts",
     "wikialias": [
         "Software_concept"
+    ],
+    "properties": [
+        {
+            "property": "conceptSupportsLang",
+            "super": "supports",
+            "range": "Language",
+            "minCardinality": "0",
+            "comment": "Concepts supporting languages"
+        },
+        {
+            "property": "conceptSupportsTech",
+            "super": "supports",
+            "range": "Technology",
+            "minCardinality": "0",
+            "comment": "Concepts supporting technologies"
+        },
+        {
+            "property": "conceptSupportsConcept",
+            "super": "supports",
+            "range": "Concept",
+            "minCardinality": "0",
+            "comment": "Concepts supporting concepts"
+        },
+       {
+            "property": "conceptMemberOf",
+            "super": "memberOf",
+            "range": "Vocabulary",
+            "minCardinality": "0",
+            "comment": "Concepts collected in vocabularies"
+       }
     ]
 }

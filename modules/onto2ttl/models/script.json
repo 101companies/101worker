@@ -4,18 +4,18 @@
     "comment": "Scripts as units of a course",
     "properties": [
         {
-            "property": "memberOf",
-            "overload": "true",
+            "property": "scriptMemberOf",
+            "super": "memberOf",
             "range": "Course",
-            "minCardinality": "1",
-            "comment": "Scripts belonging to a course"
+            "minCardinality": "0",
+            "comment": "Courses as containers of scripts"
         },
         {
-            "property": "dependsOn",
+            "property": "scriptDependsOn",
+            "super": "dependsOn",
             "range": "Script",
-            "overload": "true",
             "minCardinality": "0",
-            "comment": "Constraint on script order"
+            "comment": "Constraints on script order"
         }
     ]
 }

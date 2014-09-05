@@ -10,16 +10,16 @@
     ],
     "properties": [
         {
-            "property": "dependsOn",
+            "property": "featureDependsOn",
+            "super": "dependsOn",
             "range": "Feature",
-            "overload": "true",
             "minCardinality": "0",
             "comment": "Cross-feature constraint"
         },
         {
-            "property": "moreComplexThan",
+            "property": "featureMoreComplexThan",
+            "super": "moreComplexThan",
             "range": "Feature",
-            "overload": "true",
             "minCardinality": "0",
             "comment": "Comparison of complexity"
         }

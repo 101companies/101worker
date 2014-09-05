@@ -8,20 +8,6 @@
             "range": "Instrument",
             "minCardinality": "0",
             "comment": "Instruments supporting other instruments"
-        },
-        {
-            "property": "memberOf",
-            "overload": "true",
-            "range": "Vocabulary",
-            "minCardinality": "0",
-            "comment": "Instruments collected in vocabularies"
-        },
-        {
-            "property": "dependsOn",
-            "range": "Instrument",
-            "overload": "true",
-            "minCardinality": "0",
-            "comment": "Constraints on instrument usage"
         }
     ]
 }

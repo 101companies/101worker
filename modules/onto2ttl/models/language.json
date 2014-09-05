@@ -10,11 +10,18 @@
     ],
     "properties": [
         {
-            "property": "designedBy",
-            "range": "Contributor",
-            "overload": "true",
-            "minCardinality": "1",
-            "comment": "Designer of a contribution"
+            "property": "langSupportsConcept",
+            "super": "supports",
+            "range": "Concept",
+            "minCardinality": "0",
+            "comment": "Languages supporting concepts"
+        },
+        {
+            "property": "langDesignedBy",
+            "super": "designedBy",
+            "range": "foaf:Person",
+            "minCardinality": "0",
+            "comment": "Designers of languages"
         }
     ]
 }

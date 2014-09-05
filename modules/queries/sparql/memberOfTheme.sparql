@@ -1,0 +1,4 @@
+SELECT ?script {
+  ?script onto:memberOf course:Lambdas_in_Koblenz .
+}
+ORDER BY ?script

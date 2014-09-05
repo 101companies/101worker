@@ -3,8 +3,15 @@
 \section{Individuals of \solasote}
 \label{S:entities}
 
-The ontology covers individuals of the following types; we also refer
-to these types as `entity types':
+The kinds of individuals in the ontology give rise to \solasote's set
+of entity types, which we will discuss first. Then, we query the
+ontology to look at illustrative representatives of each entity type.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Entity types}
+
+There are these entity types:
 
 \completeOutputTabular{{l|l}}{\textbf{type} & \textbf{comment}}{entityTypes}
 %|
@@ -22,24 +29,100 @@ base type \uri{onto:Entity}, but we do not include subclasses of the
 used for classification. This is explained in more detail in
 \S\ref{S:classify}.
 
-Let's have a look at illustrative individuals for some of the entity types. To this end, we use queries to retrieve all software languages, technologies, and concepts. We order them by `popularity', i.e., numbers of any sort of subjects referring to them through any sort of predicate. In this manner, we see presumably more well-known, less obscure individuals. Thus:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Type `Language'}
+
+The following query retrieves all software language:
 
 \sparql{languages}
 
-\sparql{technologies}
-
-\sparql{concepts}
-
 \noindent
-Here are the first few individuals for each of the queries:
+As there are many languages, we order them by `popularity' and show
+only the most popular ones. By popularity we mean the numbers of any
+sort of subjects referring to them through any sort of predicate. In
+this manner, we see presumably more well-known, less obscure
+individuals. Thus:
 
 \partialOutputTabular{{l|l}}{\textbf{language} & \textbf{headline}}{7}{languages}
 %|
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Type `Technology'}
+
+We apply the same kind of query as before:
+
+\sparql{technologies}
+
 \partialOutputTabular{{l|l}}{\textbf{technology} & \textbf{headline}}{7}{technologies}
 %|
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Type `Concept'}
+
+We apply the same kind of query as before:
+
+\sparql{concepts}
+
 \partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{concepts}
+%|
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Type `Vocabulary'}
+
+Concepts can be collected in \emph{vocabularies}; see the `memberOf'
+predicate in \S\ref{S:memberOf}. Let's have a look at the vocabularies:
+
+\sparql{vocabularies}
+
+\completeOutputTabular{{l|l}}{\textbf{vocabulary} & \textbf{headline}}{vocabularies}
+%|
+
+\sparql{haskellVocabulary}
+
+\partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{vocabularies}
+%|
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Type `Contribution'}
+
+\solasote{} relies on the chrestomathy \ooo{} for evidence in the form
+of small systems that exercise languages, technologies, and
+concepts. These systems are called \emph{contributions}. We sort them
+by popularity again:
+
+\sparql{contributions}
+
+\partialOutputTabular{{l|l}}{\textbf{contribution} & \textbf{headline}}{12}{contributions}
+%|
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Type `Feature'}
+
+Contributions implement features of \ooo{}'s imaginary human resources
+management system (the \ooo{system}; see the `implements' predicate in
+\S\ref{S:implements}. We sort the features by popularity again:
+
+\sparql{features}
+
+\completeOutputTabular{{l|l}}{\textbf{feature} & \textbf{headline}}{features}
+%|
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Type `Theme'}
+
+Contributions can be collected in \emph{themes}; see the `memberOf'
+predicate in \S\ref{S:memberOf}. Let's have a look at the themes:
+
+\sparql{themes}
+
+\partialOutputTabular{{l|l}}{\textbf{theme} & \textbf{headline}}{7}{themes}
 %|
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

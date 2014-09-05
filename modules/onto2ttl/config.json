@@ -11,10 +11,12 @@
      "feature": "http://101companies.org/resources/Feature#",
      "contrib": "http://101companies.org/resources/Contribution#",
      "contributor": "http://101companies.org/resources/Contributor#",
+     "doc": "http://101companies.org/resources/Document#",
      "voc": "http://101companies.org/resources/Vocabulary#",
      "theme": "http://101companies.org/resources/Theme#",
      "course": "http://101companies.org/resources/Course#",
      "script": "http://101companies.org/resources/Script#",
+     "tag": "http://101companies.org/resources/Tag#",
      "sesame": "http://www.openrdf.org/schema/sesame#",
      "foaf": "http://xmlns.com/foaf/0.1"
     },

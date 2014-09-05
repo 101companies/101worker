@@ -1,0 +1,8 @@
+SELECT ?feature ?headline (COUNT(?subject) AS ?count)
+WHERE {
+  ?feature a onto:Feature .
+  ?feature onto:hasHeadline ?headline .
+  ?subject ?predicate ?feature
+}
+GROUP BY ?feature ?headline
+ORDER BY DESC(?count)

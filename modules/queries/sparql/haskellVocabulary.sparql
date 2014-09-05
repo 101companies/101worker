@@ -1,0 +1,6 @@
+SELECT ?concept ?headline
+WHERE {
+  ?concept onto:memberOf voc:Haskell .
+  ?concept onto:hasHeadline ?headline
+}
+ORDER BY ?concept

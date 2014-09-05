@@ -1,5 +1,0 @@
-SELECT ?entity ?headline {
-  ?entity onto:memberOf voc:Functional_programming .
-  ?entity onto:hasHeadline ?headline
-}
-ORDER BY ?entity
