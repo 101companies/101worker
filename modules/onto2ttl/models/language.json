@@ -10,13 +10,6 @@
     ],
     "properties": [
         {
-            "property": "langSupportsConcept",
-            "super": "supports",
-            "range": "Concept",
-            "minCardinality": "0",
-            "comment": "Languages supporting concepts"
-        },
-        {
             "property": "langDesignedBy",
             "super": "designedBy",
             "range": "foaf:Person",

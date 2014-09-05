@@ -32,27 +32,6 @@
             "comment": "Use of concepts by technologies"
         },
         {
-            "property": "techSupportsLang",
-            "super": "supports",
-            "range": "Language",
-            "minCardinality": "0",
-            "comment": "Technologies supporting languages"
-        },
-        {
-            "property": "techSupportsTech",
-            "super": "supports",
-            "range": "Technology",
-            "minCardinality": "0",
-            "comment": "Technologies supporting technologies"
-        },
-        {
-            "property": "techSupportsConcept",
-            "super": "supports",
-            "range": "Concept",
-            "minCardinality": "0",
-            "comment": "Technologies supporting concepts"
-        },
-        {
             "property": "techDependsOnTech",
             "super": "dependsOn",
             "range": "Technology",
