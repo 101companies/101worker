@@ -41,12 +41,12 @@ if __name__ == '__main__':
             id = handleType(m['@id'])
             if m.has_key('@type'):
                 t = m['@type']
+                s += id + "\n"
                 if type(t) is list:
-                    s += id
                     for x in t:
-                        s += " rdfs:subClassOf %s ; \n" % (handleType(x))
+                        s += "  rdfs:subClassOf %s ;\n" % (handleType(x))
                 else:
-                    s += "%s rdfs:subClassOf %s ;" % (id, handleType(t))
+                    s += "  rdfs:subClassOf %s ;\n" % (handleType(t))
                 print(s)
             elif m.has_key('@instance'):
                 t =  handleType(m['@instance'])
@@ -57,7 +57,7 @@ if __name__ == '__main__':
             if m.has_key('comment'):
                 comment = m['comment']
 
-            s += "\n    rdfs:comment \"%s\" . \n" % (comment)
+            s += "  rdfs:comment \"%s\" . \n" % (comment)
 
             # :Entity rdfs:subclassOf owl:Class .
 
@@ -67,12 +67,12 @@ if __name__ == '__main__':
                     comment = ""
                     if prop.has_key('comment'):
                         comment = prop['comment']
-                    if not prop.has_key('overload'):
-                        s += "\n\n %s rdfs:type rdfs:Property ; \n" \
-                            " rdfs:comment \"%s\" ; \n" \
-                            " rdfs:domain %s ; \n" \
-                            " rdfs:range %s . \n" % (handleType(prop['property']), comment, id, handleType(prop['range']))
-
+                    s += "\n" + handleType(prop['property']) + "\n  rdfs:type rdfs:Property ; \n"
+                    if prop.has_key('super'):
+                        s += "  rdfs:subPropertyOf " + handleType(prop['super']) + " ; \n"
+                    s += "  rdfs:comment \"" + comment + "\" ; \n"
+                    s += "  rdfs:domain " + id + "; \n"
+                    s += "  rdfs:range " + handleType(prop['range']) + " .\n"
                     print s
 
                     # write output into ttl file
