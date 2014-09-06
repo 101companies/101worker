@@ -63,7 +63,7 @@ def process(file_names, prefixes):
 if __name__=='__main__':
 
     env = Environment(loader=FileSystemLoader('templates'))
-    connection = Connection('http://141.26.71.163:8080/openrdf-sesame/openrdf-sesame/')
+    connection = Connection('http://141.26.71.163:8080/openrdf-sesame/')
     connection.use_repository('Testing_2')
 
     with open('../onto2ttl/config.json') as json_data:
