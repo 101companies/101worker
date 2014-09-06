@@ -311,7 +311,7 @@ def map_page(page, graph):
 
 
 def main():
-    uri = 'http://triples.101companies.org/openrdf-sesame/repositories/Testing_2'
+    uri = ' http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox'
     serialized_version = 'graph.rdf'
 
     print 'Initializing graph'
