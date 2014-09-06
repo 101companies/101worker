@@ -63,7 +63,7 @@ def process(file_names, prefixes):
 if __name__=='__main__':
 
     env = Environment(loader=FileSystemLoader('templates'))
-    connection = Connection('http://triples.101companies.org/openrdf-sesame/')
+    connection = Connection('http://141.26.71.163:8080/openrdf-sesame/openrdf-sesame/')
     connection.use_repository('Testing_2')
 
     with open('../onto2ttl/config.json') as json_data:
@@ -71,7 +71,7 @@ if __name__=='__main__':
         for x in m['@context']:
             connection.addnamespace(x, m['@context'][x])
 
-    req = urllib2.Request('http://triples.101companies.org/openrdf-sesame/repositories/Testing_2/namespaces')
+    req = urllib2.Request('http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox/namespaces')
     req.add_header('Accept', 'application/sparql-results+json')
     req.add_header('Content-Type', 'application/x-www-form-urlencoded')
     sock = urllib2.urlopen(req)
