@@ -127,10 +127,10 @@ def make_wiki_link(p):
 def disambiguate(p):
     if 'http://' in p:
         try:
-            return rdflib.Literal(p)
+            return None, rdflib.Literal(p)
         except:
             debug.setdefault('non_convertable_uris', []).append(p)
-            return URIRef('http://failedConversion.com')
+            return None, URIRef('http://failedConversion.com')
 
     if ':' in p:
         namespace, name = p.split(':')[0], p.split(':')[1]
