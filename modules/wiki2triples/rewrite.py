@@ -254,7 +254,8 @@ def make_general_resource(page, graph):
 
 def main():
     #uri = 'http://triples.101companies.org/openrdf-sesame/repositories/ML_testing'
-    uri = 'http://triples.101companies.org/openrdf-sesame/repositories/Testing_2'
+    #uri = 'http://triples.101companies.org/openrdf-sesame/repositories/Testing_2'
+    uri = 'http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox'
     #clear_sesame_graph(uri)
     #graph = SesameGraph(uri)
     graph = rdflib.Graph()
