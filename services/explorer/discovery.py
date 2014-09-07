@@ -217,7 +217,7 @@ def discoverMemberFile(namespace, member, path, file):
     setCommitInfos(response,filePath)
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(namespace, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     response['derived'] = DumpdataProvider.getDerivedFiles(filePath)
 
@@ -262,7 +262,7 @@ def discoverMemberPath(namespace, member, path):
         })
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(namespace, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
 
@@ -304,7 +304,7 @@ def discoverNamespaceMember(namespace, member):
             })
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(namespace, member)
+    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     if namespace == 'modules':
         response['module'] = DumpdataProvider.getModuleDescription(member)
