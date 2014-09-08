@@ -25,6 +25,7 @@ classes_in_wiki = []
 debug = {}
 premodeled_classes = []
 
+
 def get_namespace(namespace_name):
     if not namespace_name in namespace_cache:
         namespace_cache[namespace_name] = rdflib.Namespace('http://101companies.org/resources/'+namespace_name.strip()+'#')
@@ -334,7 +335,7 @@ def main():
     print 'Adding hardcoded (ontology) classes'
     path_to_ontology = '../../../101web/data/onto/ttl'
     for ont_def in filter(lambda x: '.ttl' in x, os.listdir(path_to_ontology)):
-        premodeled_classes.append(ont_def[0].upper() + ont_def[1:])
+        premodeled_classes.append(ont_def[0].upper() + ont_def[1:].replace('.ttl', ''))
         print 'Parsing ' + ont_def
         graph.parse(os.path.join(path_to_ontology, ont_def), format='turtle')
     #graph.parse('additional_triples.ttl', format='turtle')
@@ -363,7 +364,7 @@ def main():
     print 'Serializing graph...'
     open(serialized_version, 'w').write(graph.serialize())
     
-    #print overloading_table
+     
     print 'Clearing Sesame...'
     response, content = sesame.clear_graph(uri)
     assert response['status'] == '204'
