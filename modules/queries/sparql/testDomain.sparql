@@ -1,0 +1,4 @@
+SELECT ?x {
+  ?x onto:contribUsesLang ?y .
+  FILTER NOT EXISTS { ?x sesame:directType onto:Contribution }
+}
