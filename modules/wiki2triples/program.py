@@ -25,6 +25,7 @@ classes_in_wiki = []
 debug = {}
 premodeled_classes = []
 
+
 def get_namespace(namespace_name):
     if not namespace_name in namespace_cache:
         namespace_cache[namespace_name] = rdflib.Namespace('http://101companies.org/resources/'+namespace_name.strip()+'#')
@@ -57,9 +58,9 @@ for y in filter(lambda x: x not in ['entity'], allowed_relations.keys()):
 overloading_table = {}
 def build_overloading_table():
     for m in filter(lambda x: '.json' in x, os.listdir('./../onto2ttl/models')):
-        data = json.load(open('./../onto2ttl/' + m, 'r'))
+        data = json.load(open('./../onto2ttl/models/' + m, 'r'))
         property_domain = data['@id']
-        for property in data['properties']:
+        for property in data.get('properties',[]):
             if property.get('super', None):
                 super_property = property['super']
                 property_range = property['range']
@@ -227,9 +228,15 @@ def map_instance(page, graph):
             target_clss, obj = disambiguate(link)
 
         if (predicate[0].lower() + predicate[1:]) not in ignored_keys_in_instances:
-            predicate = overloading_table.get(predicate, {}).get((clss, target_clss), predicate)
+            #print predicate
+            #if predicate.lower() == 'uses':  
+                #print "{}, {}".format(clss, target_clss)
+                #print json.dumps(overloading_table, indent=4)
+                #raise Exception("my stop")
+            predicate = overloading_table.get(predicate.lower(), {}).get((clss, target_clss), predicate)
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
+            
 
 
 def map_class(page, graph):
@@ -311,8 +318,11 @@ def map_page(page, graph):
 
 
 def main():
-    uri = ' http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox'
+    uri = 'http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox'
     serialized_version = 'graph.rdf'
+
+    print 'Building overloading table'
+    build_overloading_table()
 
     print 'Initializing graph'
     graph = rdflib.Graph()
@@ -325,7 +335,7 @@ def main():
     print 'Adding hardcoded (ontology) classes'
     path_to_ontology = '../../../101web/data/onto/ttl'
     for ont_def in filter(lambda x: '.ttl' in x, os.listdir(path_to_ontology)):
-        premodeled_classes.append(ont_def[0].upper() + ont_def[1:])
+        premodeled_classes.append(ont_def[0].upper() + ont_def[1:].replace('.ttl', ''))
         print 'Parsing ' + ont_def
         graph.parse(os.path.join(path_to_ontology, ont_def), format='turtle')
     #graph.parse('additional_triples.ttl', format='turtle')
@@ -353,7 +363,8 @@ def main():
 
     print 'Serializing graph...'
     open(serialized_version, 'w').write(graph.serialize())
-
+    
+     
     print 'Clearing Sesame...'
     response, content = sesame.clear_graph(uri)
     assert response['status'] == '204'
