@@ -123,7 +123,7 @@ def make_ontology_classes(graph):
     graph.add( (entityPage, rdf['type'], rdfs['Class']) )
     graph.add( (entityPage, rdfs['subClassOf'], wikipage))
 
-    for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature', 'Script', 'Course']:
+    for ns in ['Concept', 'Contribution', 'Technology', 'Language', 'Feature', 'Script', 'Course', 'Tag']:
         thing = encodeOntology(ns)
         page = encodeOntology(ns+'Page')
 

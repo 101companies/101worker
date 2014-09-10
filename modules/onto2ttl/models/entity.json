@@ -1,4 +1,74 @@
-carries",
+{
+    "@id": "Entity",
+    "@type": "Resource",
+    "comment": "Individuals in the scope of the ontology",
+    "mapping": [
+        {
+            "property": "instanceOf",
+            "mapsTo": "rdfs:type"
+        },
+        {
+            "property": "isA",
+            "range": "rdfs:subclassOf"
+        }
+    ],
+    "properties": [
+        {
+            "property": "partOf",
+            "range": "Entity",
+            "minCardinality": "0",
+            "comment": "Whole-part relationships"
+        },
+        {
+            "property": "mentions",
+            "range": "Entity",
+            "minCardinality": "0",
+            "comment": "Nonspecific references to entities"
+        },
+        {
+            "property": "sameAs",
+            "range": "rdfs:Literal",
+            "minCardinality": "0",
+            "comment": "Equivalence relative to external resource"
+        },
+        {
+            "property": "similarTo",
+            "range": "rdfs:Literal",
+            "minCardinality": "0",
+            "comment": "Similarity relative to external resource"
+        },
+        {
+            "property": "linksTo",
+            "range": "rdfs:Literal",
+            "minCardinality": "0",
+            "comment": "Non-specific link to external resource"
+        },
+        {
+            "property": "designedBy",
+            "range": "foaf:Person",
+            "minCardinality": "0",
+            "comment": "Designers of entities"
+        },
+        {
+            "property": "developedBy",
+            "range": "foaf:Person",
+            "minCardinality": "1",
+            "comment": "Developers of entities"
+        },
+        {
+            "property": "reviewedBy",
+            "range": "foaf:Person",
+            "minCardinality": "0",
+            "comment": "Reviewer of entities"
+        },
+        {
+            "property": "dependsOn",
+            "range": "Entity",
+            "minCardinality": "0",
+            "comment": "Dependence relationships"
+        },
+        {
+            "property": "carries",
             "range": "Tag",
             "minCardinality": "0",
             "comment": "Tagging of entities"
@@ -7,7 +77,7 @@ carries",
             "property": "memberOf",
             "range": "Container",
             "minCardinality": "0",
-            "comment": "Collections of entities"
+            "comment": "Membership relationships"
         },
         {
             "property": "moreComplexThan",
