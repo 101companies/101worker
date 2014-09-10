@@ -1,9 +1,0 @@
-SELECT DISTINCT
-   ?course
-   (COUNT(?prerequisites) AS ?count)
-WHERE {
-   ?course onto:memberOf course:Lambdas_in_Koblenz .
-   OPTIONAL { ?course onto:dependsOn+ ?prerequisites }
-}
-GROUP BY ?course
-ORDER BY ?count

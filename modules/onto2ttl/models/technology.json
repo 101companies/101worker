@@ -60,11 +60,11 @@
             "comment": "Implementation of a standard or alike"
         },
         {
-            "property": "contribDesignedBy",
+            "property": "techDesignedBy",
             "super": "designedBy",
-            "range": "Contributor",
+            "range": "foaf:Person",
             "minCardinality": "0",
-            "comment": "Designers of contributions"
+            "comment": "Designers of technologies"
         }
     ]
 }

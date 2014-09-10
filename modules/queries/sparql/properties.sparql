@@ -1,0 +1,11 @@
+SELECT ?property ?comment
+WHERE {
+  ?property rdfs:domain ?domain .
+  ?domain rdfs:subClassOf onto:Resource .
+  FILTER NOT EXISTS { 
+    ?property rdfs:subPropertyOf ?super .
+    FILTER (?super != ?property)
+  } .
+  ?property rdfs:comment ?comment
+}
+ORDER BY ?property ?comment

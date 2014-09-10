@@ -1,14 +1,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{The properties of \solasote}
+\section{Properties of \solasote}
 \label{S:properties}
 
-\solasote's individuals are not just classified (see
-\S\ref{S:classify}), but they are characterized in several other ways
-through semantic properties in the sense of Semantic Web-like
-triples. The underlying set of predicates is listed here:
+\solatsote{} leverages several properties to characterize and relate
+individuals, as developed in the present section.  We begin by
+providing an overview of the properties. Next, we describe
+subproperties that are often available to better constrain domains and
+ranges to well-established scenarios. Eventually, we describe the
+properties in more detail and illustrate them by means of
+representative triples.
 
-\completeOutputTabular{{l|l}}{\textbf{predicate} & \textbf{comment}}{predicates}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Propertiess--Overview}
+
+There are these overall properties:
+
+\completeOutputTabular{{l|l}}{\textbf{property} & \textbf{comment}}{predicates}
 %|
 
 \noindent
@@ -273,6 +282,41 @@ These kinds of containment are illustrated in turn.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Collection with \solasote}
+\label{S:collect}
+
+\solasote's individuals may engage in different kinds of collections. (As evident from the queries to follow, such engagement is expressed through the `memberOf' predicate, which is also discussed again in \S\ref{S:memberOf}.) We mentioned vocabularies, themes, and courses as forms of collections in \S\ref{S:entities}. Collection complements classification (\S\ref{S:classify}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Collection of concepts as vocabularies}
+
+We refer back to \S\ref{S:vocabulary} for the entity type of vocabularies. For instance, the `Haskell vocabulary' collects concepts that are essentially specific to the Haskell style of functional programming or the Haskell community.
+
+\sparql{haskellVocabulary}
+
+\partialOutputTabular{{l|l}}{\textbf{concept} & \textbf{headline}}{7}{haskellVocabulary}
+%|
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Collection of contributions as themes}
+
+We refer back to \S\ref{S:theme} for the entity type of themes. For instance, the `Starter' theme collects contributions that demonstrate some simple features across the board, i.e., for different software languages without relying on `advanced' software technologies or software concepts.
+
+\sparql{starterTheme}
+
+\completeOutputTabular{{l|l}}{\textbf{contribution} & \textbf{headline}}{starterTheme}
+%|
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Collection of scripts as courses}
+
+TBD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{moreComplexThan}
 \label{S:moreComplexThan}
 
@@ -323,9 +367,9 @@ in a reasonable order. Here is indeed a query which orders the scripts
 in such a way; we also list the number of scripts that are
 prerequistes for each script:
 
-\sparql{course}
+\sparql{prerequisites}
 
-\completeOutputTabular{{l|l}}{\textbf{course} & \textbf{count}}{course}
+\completeOutputTabular{{l|l}}{\textbf{script} & \textbf{count}}{prerequisites}
 %|
 
 \noindent

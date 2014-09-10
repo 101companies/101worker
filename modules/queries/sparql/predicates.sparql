@@ -1,8 +1,0 @@
-SELECT ?predicate ?comment
-WHERE {
-  ?predicate rdfs:domain ?domain .
-  ?predicate rdfs:range ?range .
-  ?domain rdfs:subClassOf onto:Resource .
-  ?predicate rdfs:comment ?comment 
-}
-ORDER BY ?predicate ?comment
