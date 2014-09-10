@@ -1,74 +1,4 @@
-{
-    "@id": "Entity",
-    "@type": "Resource",
-    "comment": "Individuals in the scope of the ontology",
-    "mapping": [
-        {
-            "property": "instanceOf",
-            "mapsTo": "rdfs:type"
-        },
-        {
-            "property": "isA",
-            "range": "rdfs:subclassOf"
-        }
-    ],
-    "properties": [
-        {
-            "property": "partOf",
-            "range": "Entity",
-            "minCardinality": "0",
-            "comment": "Whole-part relationship"
-        },
-        {
-            "property": "mentions",
-            "range": "Entity",
-            "minCardinality": "0",
-            "comment": "Nonspecific reference to an entity"
-        },
-        {
-            "property": "sameAs",
-            "range": "rdfs:Literal",
-            "minCardinality": "0",
-            "comment": "Equivalence relative to external resource"
-        },
-        {
-            "property": "similarTo",
-            "range": "rdfs:Literal",
-            "minCardinality": "0",
-            "comment": "Similarity relative to external resource"
-        },
-        {
-            "property": "linksTo",
-            "range": "rdfs:Literal",
-            "minCardinality": "0",
-            "comment": "Non-specific link to external resource"
-        },
-        {
-            "property": "designedBy",
-            "range": "foaf:Person",
-            "minCardinality": "0",
-            "comment": "Designer of an entity"
-        },
-        {
-            "property": "developedBy",
-            "range": "foaf:Person",
-            "minCardinality": "1",
-            "comment": "Developer of an entity"
-        },
-        {
-            "property": "reviewedBy",
-            "range": "foaf:Person",
-            "minCardinality": "0",
-            "comment": "Reviewer of an entity"
-        },
-        {
-            "property": "dependsOn",
-            "range": "Entity",
-            "minCardinality": "0",
-            "comment": "Dependence relationship"
-        },
-        {
-            "property": "carries",
+carries",
             "range": "Tag",
             "minCardinality": "0",
             "comment": "Tagging of entities"
@@ -77,13 +7,13 @@
             "property": "memberOf",
             "range": "Container",
             "minCardinality": "0",
-            "comment": "Membership relationship"
+            "comment": "Collections of entities"
         },
         {
             "property": "moreComplexThan",
             "range": "Entity",
             "minCardinality": "0",
-            "comment": "Comparison of complexity"
+            "comment": "Complexity comparison of entities"
         }
     ]
 }

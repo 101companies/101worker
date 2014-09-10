@@ -1,0 +1,3 @@
+{% for x in data -%}
+{{ unqualify(x['type']['value']) }} & {{ x['count']['value'] }} \\
+{% endfor %}

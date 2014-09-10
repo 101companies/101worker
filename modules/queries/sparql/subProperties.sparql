@@ -1,0 +1,9 @@
+SELECT ?super ?property ?domain ?range
+WHERE {
+  ?property rdfs:domain ?domain .
+  ?property rdfs:range ?range .
+  ?domain rdfs:subClassOf onto:Resource .
+  ?property rdfs:subPropertyOf ?super .
+  FILTER (?super != ?property)
+}
+ORDER BY ?super ?property ?domain ?range

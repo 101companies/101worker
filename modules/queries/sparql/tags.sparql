@@ -1,0 +1,6 @@
+SELECT ?tag ?headline
+WHERE {
+  ?tag a onto:Tag .
+  ?tag onto:hasHeadline ?headline
+}
+ORDER BY ?tag

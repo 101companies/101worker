@@ -15,8 +15,6 @@ run:
 	cp -r sparql ${dumpsDir}/sparql_queries
 	python runner.py
 	cp -r output ${dumpsDir}/sparql_queries
-	cd tex; make
-	cp tex/doc.pdf ${dumpsDir}/solasote.pdf
 
 # Remove local temporary files, if any
 clean:

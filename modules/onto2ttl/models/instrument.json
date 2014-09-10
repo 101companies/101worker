@@ -7,7 +7,7 @@
             "property": "supports",
             "range": "Instrument",
             "minCardinality": "0",
-            "comment": "Instruments supporting other instruments"
+            "comment": "Instruments supporting instruments"
         }
     ]
 }

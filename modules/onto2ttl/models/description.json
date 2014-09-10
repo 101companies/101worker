@@ -7,7 +7,7 @@
             "property": "illustrates",
             "range": "Instrument",
             "minCardinality": "0",
-            "comment": "Chrestomathic purpose of a description"
+            "comment": "Descriptions serving for illustration"
         }
     ]
 }
