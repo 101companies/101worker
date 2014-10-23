@@ -2,6 +2,7 @@ from __future__ import division
 import fnmatch
 import os
 from gensim import corpora, models, similarities
+import scipy.spatial
 import simplejson as json
 import logging
 import nltk
@@ -43,7 +44,7 @@ def createFragmentDocuments(suffix, stopWords, stemming=True):
                 fragmentsDict = json.load(open(filename))
                 hostfile = os.path.join(const101.sRoot, filename[len(const101.tRoot) + 1:])[:-len(".fragments.refinedTokens.json")]
                 for fragment, tokens in fragmentsDict.iteritems():
-                    if "/method/" in fragment:
+                    if not "/method/" in fragment:
                         continue
                     fragmentTokens.append(tokens)
                     fragments.append(os.path.join(hostfile, fragment))
@@ -135,11 +136,13 @@ def computeCosineDistance(vec1, vec2):
     vectLength2 = 0
 
     for i in range(len(vec1)):
-        vectLength1 += vec1[i] * vec1[i]
-        vectLength2 += vec2[i] * vec2[i]
-        scalarProduct += vec1[i] * vec2[i]
+        score1 = vec1[i]
+        score2 = vec2[i]
+        vectLength1 += score1 * score1
+        vectLength2 += score2 * score2
+        scalarProduct += score1 * score2
 
-    return scalarProduct / (math.sqrt(vectLength1) * math.sqrt(vectLength2))
+    return 0.0 if (vectLength1 == 0 or vectLength2 == 0) else scalarProduct / (math.sqrt(vectLength1) * math.sqrt(vectLength2))
 
 
 def queryIndexESA(resource, index, model, freqDict, names, stopWords=None, resultCount=None):
@@ -151,8 +154,11 @@ def queryIndexESA(resource, index, model, freqDict, names, stopWords=None, resul
     sims = index[new_vec]
     docScores = dict()
 
+    print len(index.index)
+    print len(index.index[0])
+
     for i, doc in enumerate(index.index):
-        docScores[names[i]] = computeCosineDistance(index[doc], sims)
+        docScores[names[i]] = round(1.0- scipy.spatial.distance.cosine(index[doc], sims), 6)  #much faster than own cosine distance implementation
 
     result = dict()
 
