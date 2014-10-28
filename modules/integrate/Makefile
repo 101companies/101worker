@@ -26,7 +26,7 @@ deploy:
 
 # Remove local temporary files, if any
 clean:  
-	rm -r ${modulesDir}/integrate
+	rm -rf ${modulesDir}/integrate
 	mkdir -p ${modulesDir}/integrate
 
 # Remove files created by this module
