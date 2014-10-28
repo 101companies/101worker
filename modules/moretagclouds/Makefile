@@ -9,5 +9,6 @@ generate:
 
 deploy:
 	@cp *.html *.css ${viewsDir}
+	mkdir -p ${dumpsDir}/moretagclouds
 	@cp *.js *.json ${dumpsDir}/moretagclouds
 
