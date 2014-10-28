@@ -10,6 +10,7 @@ run:
 	make deploy
 
 bootstrap:
+	mkdir -p ${integrateDir}; cd ${integrateDir}/../ ; git clone https://github.com/101companies/101integrate.git
 	cd ${integrateDir}/src; python bootstrap.py 	
 
 integrate:
