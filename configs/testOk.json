@@ -1,1 +1,1 @@
-["modules = testOkNoOp testOkWrite testOkReadWrite", ""]
+["testOkNoOp", "testOkWrite", "testOkReadWrite"]

@@ -3,7 +3,7 @@ report:
 	@python tools/reporter.py
 
 # Run modules of a .config file
-%.run:
+%.run: init
 	make $*.clean
 	cd modules; make $*.run
 	make $*.archive
@@ -45,6 +45,7 @@ init:
 	@mkdir -p ../101web/data/resources/languages
 	@mkdir -p ../101web/data/resources/technologies
 	@mkdir -p ../101web/data/resources/themes
+	@mkdir -p ../101web/logs
 
 # Git-related convenience
 push:
