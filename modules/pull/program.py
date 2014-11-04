@@ -35,4 +35,4 @@ for target in repos:
         ret |= e.errno
 
 print('\n\nFinished updating repos with {0}errors'.format('' if ret else 'no '))
-sys.exit(exitcode)
+sys.exit(ret)
