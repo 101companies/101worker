@@ -9,5 +9,6 @@
       "propertyName" : "extractor",
       "className" : "Extractor"
     }
-  ]
+  ],
+  "dependencies" : ["matches101meta"]
 }

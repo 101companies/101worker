@@ -1,7 +1,7 @@
 # Invoke runner and cleaner per module
 
 %.run:
-	python ../tools/runner.py $*.json; 
+	../tools/parallel_runner $*.json; 
 
 %.debug:
 	python ../tools/runner.py $*.json verbose; 

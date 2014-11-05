@@ -9,5 +9,6 @@
       "propertyName": "matches",
       "className" : "Matches"
     }
-  ]
+  ],
+  "dependencies" : ["rules101meta"]
 }

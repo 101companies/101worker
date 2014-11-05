@@ -4,7 +4,7 @@
         "targetdir" : "../../../101results/101dev"
     },
     {
-    	"repo": "https://github.com/101companies/101integrate.git",
-    	"targetdir" : "../../../101results/repos/101integrate"
+        "repo": "https://github.com/101companies/101integrate.git",
+        "targetdir" : "../../../101results/repos/101integrate"
     }
 ]
