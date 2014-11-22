@@ -6,6 +6,8 @@ report:
 %.run: init
 	make $*.clean
 	cd modules; make $*.run
+	tools/filedepend ../101results/depend configs/$*.json \
+                   > ../101results/depend/graph.yml
 	make $*.archive
 	@git pull -q # upgrade past every run
 
@@ -16,7 +18,7 @@ report:
 
 # Arcives the log files from the last execution
 %.archive:
-	mkdir -p ~/101web/logs
+	mkdir -p ../101web/logs
 	cd modules; make $*.archive
 
 # What is this?
