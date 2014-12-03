@@ -14,6 +14,9 @@ framework.
 
 """
 import os
+import sys
+
+sys.path.append('/home/worker/101worker/services')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "services.settings")
 
