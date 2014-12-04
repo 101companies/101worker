@@ -1,0 +1,44 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Slurp qw(slurp);
+use Graph;
+use JSON;
+use YAML;
+
+die 'Usage: filedepend RESULT_DIRECTORY MODULE_LIST' if @ARGV != 2;
+
+my $result_dir = shift;
+$result_dir =~ s|/$||g;
+
+my $modules;
+eval { $modules = decode_json scalar slurp shift };
+die "Error decoding modules: $!" if $!;
+
+sub load_changes {
+    my $data = decode_json scalar slurp "$result_dir/$_[0].json";
+    ($data->{modified} || [], $data->{accessed} || []);
+}
+
+my %files;
+my $graph = Graph->new;
+
+for my $module (@$modules) {
+    my ($modified, $accessed) = load_changes($module);
+    my %deps;
+
+    for (@$modified) {
+        $deps{$files{$_}} = 1 if exists $files{$_};
+        $files{$_} = $module;
+    }
+
+    for (@$accessed) {
+        $deps{$files{$_}} = 1 if exists $files{$_};
+    }
+
+    delete $deps{$module};
+    $graph->add_vertex($module);
+    $graph->add_edge($_, $module) for keys %deps;
+}
+
+print Dump($graph);

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -CS
+#!/usr/bin/perl
 use strict;
 use warnings;
 use Cwd qw(abs_path);
@@ -7,39 +7,11 @@ use File::Slurp qw(slurp);
 use Getopt::Long;
 use Graph;
 use JSON;
+use YAML;
 
-our $modules_path = (dirname dirname abs_path $0) . '/modules';
+my $modules_path = (dirname dirname abs_path $0) . '/modules';
 GetOptions('modules=s' => \$modules_path);
 $modules_path =~ s{/$}{};
-
-die 'Usage: depend [--modules=PATH] JSONFILE' if not @ARGV;
-my $modules = decode_json slurp shift;
-
-
-my $graph = Graph->new;
-for my $module (@$modules) {
-    $graph->add_vertex($module);
-    my $deps = load_dependencies($module);
-    $graph->add_edge($_, $module) for @$deps;
-}
-
-
-print "digraph G {\n";
-print "    node [shape=plaintext];\n";
-print '    ', $_, ";\n"                       for sort $graph->vertices;
-print '    ', $_->[0], ' -> ', $_->[1], ";\n" for sort $graph->edges;
-print "}\n";
-
-
-while ($graph->vertices) {
-    my %roots = map { $_ => undef } $graph->vertices;
-    delete $roots{$_->[1]} for ($graph->edges);
-    while (my ($r, undef) = each %roots) {
-        print "$r\n";
-        $graph->delete_vertex($r);
-    }
-    print '-' x 10, "\n";
-}
 
 
 sub load_dependencies {
@@ -62,5 +34,18 @@ sub load_dependencies {
     if (!$deps->{dependencies}) {
         print STDERR "No dependencies found for $module, assuming none\n";
     }
-    $deps->{dependencies};
+    $deps->{dependencies} || [];
 }
+
+
+die 'Usage: depend [--modules=PATH] JSONFILE' if not @ARGV;
+my $modules = decode_json slurp shift;
+
+my $graph = Graph->new;
+for my $module (@$modules) {
+    $graph->add_vertex($module);
+    my $deps = load_dependencies($module);
+    $graph->add_edge($_, $module) for @$deps;
+}
+
+print Dump($graph);
