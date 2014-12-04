@@ -1,4 +1,4 @@
 {
     "targets"      : [],
-    "dependencies" : ["gatherGeshi", "matches101meta"]
+    "dependencies" : ["pull101repo", "gatherGeshi", "matches101meta"]
 }

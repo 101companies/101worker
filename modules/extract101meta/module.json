@@ -10,5 +10,5 @@
       "className" : "Extractor"
     }
   ],
-  "dependencies" : ["matches101meta"]
+  "dependencies" : ["pull101repo", "build"]
 }

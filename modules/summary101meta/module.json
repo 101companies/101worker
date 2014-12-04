@@ -9,11 +9,10 @@
     }
   ],
   "dependencies" : [
-    "matches101meta",
     "predicates101meta",
+    "matches101meta",
     "fragments101meta",
     "metrics101meta",
     "refineTokens"
   ]
 }
-

@@ -10,5 +10,5 @@
       "className" : "Matches"
     }
   ],
-  "dependencies" : ["rules101meta"]
+  "dependencies" : ["rules101meta", "pull101repo"]
 }

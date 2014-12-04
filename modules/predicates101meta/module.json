@@ -8,6 +8,6 @@
       "language" : "JSON"
     }
   ],
-  "dependencies" : ["rules101meta"]
+  "dependencies" : ["extract101meta", "pull101repo"]
 }
 
