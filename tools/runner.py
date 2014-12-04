@@ -5,7 +5,7 @@ import json
 import commands
 
 from threading import Timer
-from time import gmtime, strftime
+from time import gmtime, strftime, time, sleep
 
 VERBOSE = False
 #log = open('../../101logs/runner.log', 'a+')
@@ -50,6 +50,18 @@ def run(proc, timeout_sec):
     timer.cancel()
     return proc.returncode, str(stdout), timeout["value"]
 
+
+def changes(time, module):
+    print('Gathering changes')
+
+    resultdir = '../../101results/depend'
+    if not os.path.exists(resultdir):
+        os.makedirs(resultdir)
+
+    os.system('../tools/changes {0} ../.. > {1}/{2}.json'\
+                         .format(time, resultdir, module))
+
+
 def main(config, is_verbose):
     global VERBOSE
     VERBOSE = is_verbose
@@ -61,6 +73,9 @@ def main(config, is_verbose):
         module = module.strip()
         if module.__len__() < 2:
             continue
+
+        t = time()
+        sleep(1)
 
         write2log('\n'+module)
         write2log(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
@@ -96,6 +111,8 @@ def main(config, is_verbose):
         #remove PID file when the process finished
         if os.path.isfile(os.getcwd() + '/' + pidFileName):
             os.remove(os.getcwd() + '/' + pidFileName)
+
+        changes(t, module)
 
     sys.exit(0)
 
