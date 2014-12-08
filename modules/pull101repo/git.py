@@ -9,11 +9,13 @@ import const101
 
 class ChangeObject():
     @classmethod
-    def parse(cls, output):
+    def parse(cls, output, path=None):
         results = []
         lines = output.splitlines()
         for line in lines:
             op, file = line.split("\t")
+            if path:
+                os.path.join(path, file)
             results.append(ChangeObject(op, file))
 
         return results
@@ -60,7 +62,7 @@ class Repo():
         @type path: str
         @type url: str
         """
-        self.__path = path
+        self.__path = os.path.abspath(path)
         self.__url = url
 
     @property
@@ -85,7 +87,8 @@ class Repo():
         return added
 
     def pull(self):
-        cmd = "git --git-dir={} pull".format(os.path.join(self.__path, ".git"))
+        cmd = "git --git-dir={} --work-tree={} pull"\
+              .format(os.path.join(self.__path, ".git"), self.__path)
         status, output = commands.getstatusoutput(cmd)
         if not status == 0: raise Exception(output)
 
@@ -93,4 +96,4 @@ class Repo():
             return []
 
         cmd = "git --git-dir={} diff --name-status HEAD^ HEAD".format(os.path.join(self.__path, ".git"))
-        return ChangeObject.parse(commands.getoutput(cmd))
+        return ChangeObject.parse(commands.getoutput(cmd), self.__path)
