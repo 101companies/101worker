@@ -32,4 +32,4 @@ my $changes = pull101repo(
     repos     => fetch_repo_list,
 );
 
-write_file('changes.json', encode_json($changes));
+write_file('changes.json', JSON->new->utf8->pretty->encode($changes));
