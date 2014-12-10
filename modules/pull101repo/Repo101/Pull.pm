@@ -73,7 +73,7 @@ sub extract_repo_info
 {
     my ($self, $url) = @_;
 
-    $url =~ m{https://github\.com/([^/]+)/([^/]+)(?:/tree/master/?(.*))?$}
+    $url =~ m{^https://github\.com/([^/]+)/([^/]+)(?:/tree/master/?(.*))?$}
         or die "Couldn't match repository URL: $url";
     my ($user, $repo_name, $suffix) = ($1, $2, $3);
 
