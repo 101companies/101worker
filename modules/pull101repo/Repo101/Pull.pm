@@ -96,8 +96,8 @@ sub extract_repo_info
 sub symlink
 {
     my (undef, $src, $dst) = @_;
-    unlink $dst if -e $dst && -l $dst;
-    symlink($src, $dst) || die "Couldn't link $src to $dst: $!" if not -e $dst;
+    unlink        $dst  || die "Couldn't remove $dst: $!" if -e $dst;
+    symlink($src, $dst) || die "Couldn't link $src to $dst: $!";
 }
 
 
@@ -209,7 +209,8 @@ TODO
 
 =head2 $self->symlink($src, $dst)
 
-TODO
+Creates a symlink at C<$dst> pointing to C<$src>. If C<$dst> already exists, it
+is removed first.
 
 =head2 $self->clean_link($repos, $link)
 
