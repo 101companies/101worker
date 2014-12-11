@@ -1,6 +1,9 @@
 run:
 	./pull101repo
 
+clean:
+	rm -rf module.log TEST-*
+
 test:
 	rm -rf TEST-*
 	perl -E 'say, system("perl", $$_) && die $$! for sort glob "t/*"'
