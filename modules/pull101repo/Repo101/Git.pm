@@ -67,8 +67,8 @@ Contains a few git functions for pull101repo based on Git::Repository.
 
 =head2 git($repo, @args) or git(@gather_changes)
 
-Dispatches to C<$repo-E<gt>run(@args)> if a L<Git::Repository> C<$repo> is
-given as the first argument and to C<Git::Repository-E<gt>run(@args)>
+Dispatches to C<< $repo->run(@args) >> if a L<Git::Repository> C<$repo> is
+given as the first argument and to C<< Git::Repository->run(@args) >>
 otherwise. Dies if any exit code but C<0> is returned by the git command and
 propagates the return from the C<run> function.
 
