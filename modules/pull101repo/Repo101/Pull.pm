@@ -59,19 +59,20 @@ sub pull_repo
 sub merge_diffs
 {
     my ($self, $diff, $oldpath, $newpath) = @_;
-    $oldpath //= $self->root_path;
+    my $changes                           = $self->changes;
 
-    my $regex = quotemeta $oldpath;
+    my $regex = quotemeta($oldpath // $self->root_path);
     for (keys %$diff)
     {
         if (m{^$regex/(.+)$})
         {
             my $key = defined $newpath ? "$newpath/$1" : $1;
-            $self->changes->{$key} = delete $diff->{$_};
+            die "Already got a diff entry for $key" if exists $changes->{$key};
+            $changes->{$key} = delete $diff->{$_};
         }
     }
 
-    $self->changes
+    $changes
 }
 
 
@@ -98,8 +99,9 @@ sub extract_repo_info
 sub symlink
 {
     my (undef, $src, $dst) = @_;
-    unlink        $dst  || die "Couldn't remove $dst: $!" if -e $dst;
-    symlink($src, $dst) || die "Couldn't link $src to $dst: $!";
+    die "Not a directory: $src" if not -d $src;
+    unlink $dst                 if     -e $dst;
+    symlink $src, $dst or die "Couldn't link $src to $dst: $!";
 }
 
 
