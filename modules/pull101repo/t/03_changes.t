@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More    tests => 6;
 use Cwd           qw(abs_path);
 use File::Slurp   qw(write_file append_file);
 use Repo101::Git  qw(clone_or_pull git);
@@ -42,15 +42,15 @@ sub build_repo
 
     add_repo_files($local, $arg{local}, $arg{files});
 
-    git($local, qw(commit -m initial)                );
-    git($local, qw(remote add origin), $arg{remote}  );
-    git($local, qw(push --set-upstream origin master));
+    git($local, qw(commit -qm initial)                  );
+    git($local, qw(remote add origin), $arg{remote}     );
+    git($local, qw(push -q --set-upstream origin master));
 
     ($local, $remote)
 }
 
 
-my $test_dir = abs_path "TEST-02";
+my $test_dir = abs_path('TEST') . "/changes$$";
 
 my ($local_repo, $remote_repo) = build_repo(
     local  => "$test_dir/local/101repo",
@@ -121,8 +121,8 @@ for ($local_repo, $local_dep1)
     append_file($_->work_tree . "/Class.java", "private class Class\n");
     git($_, 'add', 'added', 'Class.java');
     git($_, 'rm', 'README.md');
-    git($_, 'commit', '-m', 'modified');
-    git($_, 'push');
+    git($_, 'commit', '-qm', 'modified');
+    git($_, 'push', '-q');
 }
 
 is_deeply pull101repo(%pull), {

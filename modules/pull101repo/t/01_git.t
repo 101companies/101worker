@@ -7,7 +7,7 @@ use File::Compare;
 use File::Slurp    qw(write_file append_file);
 use Repo101::Git   qw(clone_or_pull git);
 
-my   $test_dir = abs_path "TEST-01";
+my   $test_dir = abs_path('TEST') . "/git$$";
 my  $local_dir = "$test_dir/local";
 my $remote_dir = "$test_dir/remote";
 my  $clone_dir = "$test_dir/clone";
@@ -24,10 +24,10 @@ my $remote = Git::Repository->new(work_tree => $remote_dir);
 
 my @files = qw(test1 test2 test3);
 write_file("$local_dir/$_", map { "$_\n" } $_, @files) for @files;
-lives git($local, qw(add), @files                      ), 'add test files';
-lives git($local, qw(commit -m initial)                ), 'commit test files';
-lives git($local, qw(remote add origin), $remote_dir   ), 'remote add origin';
-lives git($local, qw(push --set-upstream origin master)), 'push test files';
+lives git($local, qw(add), @files                         ), 'add test files';
+lives git($local, qw(commit -qm initial)                  ), 'commit files';
+lives git($local, qw(remote add origin), $remote_dir      ), 'add origin';
+lives git($local, qw(push -q --set-upstream origin master)), 'push test files';
 
 {
     my $expected = {map { ("$clone_dir/$_" => 'A') } @files};
@@ -40,11 +40,11 @@ is_deeply clone_or_pull($clone_dir, $remote_dir), {}, 'empty pull';
 append_file("$local_dir/test1", "asdf\n");
 write_file ("$local_dir/test4", "public static void main(String[] args)\n");
 $files[1] = 'test4';
-lives git($local, qw(add test1)         ), 'modify test1';
-lives git($local, qw(rm  test2)         ), 'remove test2';
-lives git($local, qw(add test4)         ), 'add test4';
-lives git($local, qw(commit -m modified)), 'commit modifications';
-lives git($local, qw(push)              ), 'push modifications';
+lives git($local, qw(add test1)          ), 'modify test1';
+lives git($local, qw(rm  test2)          ), 'remove test2';
+lives git($local, qw(add test4)          ), 'add test4';
+lives git($local, qw(commit -qm modified)), 'commit modifications';
+lives git($local, qw(push -q)            ), 'push modifications';
 
 {
     my $expected = {

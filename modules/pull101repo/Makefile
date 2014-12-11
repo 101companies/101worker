@@ -2,14 +2,13 @@ run:
 	./pull101repo
 
 clean:
-	rm -rf module.log TEST-*
+	rm -rf module.log TEST
 
 test:
-	rm -rf TEST-*
-	perl -E 'say, system("perl", $$_) && die $$! for sort glob "t/*"'
+	prove
 
 install:
 	cpan install Class::Tiny File::Slurp Git::Repository LWP::Simple JSON \
                  Test::Exception
 
-.PHONY: run test install
+.PHONY: run clean test install
