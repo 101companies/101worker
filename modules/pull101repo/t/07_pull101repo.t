@@ -74,10 +74,21 @@ my ($local_dep1, $remote_dep1) = build_repo(
     },
 );
 
+my ($local_dep2, $remote_dep2) = build_repo(
+    local  => "$test_dir/local/dep2",
+    remote => "$test_dir/remote/dep2",
+    files  => {
+        'README.md'  => "dep2 readme.\n",
+    },
+);
+
 
 my $repos = {
     contributions => {
         dependency1 => "$test_dir/gitdeps/dep1\t$test_dir/remote/dep1",
+    },
+    modules       => {
+        dependency2 => "$test_dir/gitdeps/dep2\t$test_dir/remote/dep2",
     },
 };
 
@@ -110,6 +121,7 @@ is_deeply pull101repo(%pull), {
               'contributions/repo_contribution/README.md'  => 'A',
               'contributions/dependency1/README.md'        => 'A',
               'contributions/dependency1/Class.java'       => 'A',
+              'modules/dependency2/README.md'              => 'A',
           }, 'clone';
 
 is_deeply pull101repo(%pull), {}, 'empty pull';

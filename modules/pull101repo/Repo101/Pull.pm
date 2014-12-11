@@ -113,7 +113,8 @@ sub clean_link
     my $member = basename($link);
     return if exists $repos->{$member};
 
-    my $real    = readlink $link or die "Couldn't resolve $link: $!";
+    my $real    = readlink $link;
+    die "Couldn't resolve $link: $!" unless $real && -d $real;
     my $repo    = Git::Repository->new(work_tree => $link);
     my $deleted = Repo101::Git::gather_changes($repo, 'HEAD', undef);
     my $newpath = substr $link, 1 + length $self->root_path;
