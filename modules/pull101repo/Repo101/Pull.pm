@@ -1,6 +1,6 @@
 package Repo101::Pull;
 use Exporter qw(import);
-@EXPORT_OK = qw(pull101repo extract_repo_info);
+@EXPORT_OK = qw(pull101repo);
 
 use strict;
 use warnings;
@@ -70,6 +70,8 @@ sub merge_diffs
             $self->changes->{$key} = delete $diff->{$_};
         }
     }
+
+    $self->changes
 }
 
 
@@ -201,7 +203,7 @@ If an entry in the C<$diff> starts with the given C<$oldpath>, it is deleted
 from C<$diff> and inserted into C<< $self->changes >>. Its path will have
 C<"$oldpath/"> stripped and, if it is defined, have C<"$newpath/"> prefixed.
 
-Returns nothing useful.
+Returns C<< $self->changes >>.
 
 =head2 $self->extract_repo_info($url)
 
