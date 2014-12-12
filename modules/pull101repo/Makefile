@@ -10,8 +10,14 @@ test:
 cover:
 	cover -test -ignore_re \.t$$
 
+doc:
+	rm -rf doc
+	mkdir doc
+	pod2markdown Repo101/Git.pm  doc/Repo101::Git.md
+	pod2markdown Repo101/Pull.pm doc/Repo101::Pull.md
+
 install:
 	cpan install Class::Tiny File::Slurp Git::Repository LWP::Simple JSON \
                  Test::Exception
 
-.PHONY: run clean test install
+.PHONY: run clean test cover doc install

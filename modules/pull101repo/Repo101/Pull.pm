@@ -157,7 +157,13 @@ absolute path.
 
 =item repos
 
-Repo list as per http://101companies.org/pullRepo.json TODO. Required.
+Repo list as per http://101companies.org/pullRepo.json. Required.
+
+The repo list is a mapping of namespaces (like contributions, modules, services
+etc.) to namespace members. Each namespace member is a mapping from the member
+name (like simpleJava or refineTokens) to the GitHub URL, which may include
+a sub-directory in the master branch. See the tests in C<t/02_extract_repo_info>
+to see which paths are allowed.
 
 =item changes
 
@@ -210,15 +216,44 @@ Returns C<< $self->changes >>.
 
 =head2 $self->extract_repo_info($url)
 
-TODO
+Extracts user name, repo name and suffix path (if given) from a GitHub repo URL.
+Returns C<undef> if the user is C<101companies> and the repo is C<101repo>,
+because we don't care about pulling the root repo a bunch of times. Otherwise
+returns a hashref with the following contents:
+
+=over
+
+=item repo_path
+
+The local path where the repo should be cloned or pulled to.
+
+=item repo_url
+
+The remote URL of the repo.
+
+=item dep_path
+
+The path inside of the contribution that should be symlinked to. Will be
+identical to the C<repo_path> if no suffix path is given in the URL.
+
+=back
+
+See also the tests in C<t/02_extract_repo_info>.
 
 =head2 $self->symlink($src, $dst)
 
-Creates a symlink at C<$dst> pointing to C<$src>. If C<$dst> already exists, it
-is removed first.
+Creates a symlink at C<$dst> pointing to the directory C<$src>. If C<$dst>
+already exists, it is removed first. Returns nothing useful.
 
 =head2 $self->clean_link($repos, $link)
 
-TODO
+If the given C<$link> really is a symlink and it is not a member in the
+C<$repos> hashref, the C<$link> and whatever it points to is deleted and the
+deletions are added to C<< $self->diff >>.
+
+If C<$link> isn't a symlink or it's still a member of C<$repos>, this does
+nothing.
+
+Returns nothing useful.
 
 =cut

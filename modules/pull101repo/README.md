@@ -14,7 +14,12 @@ or Debian-like Linux should have those), just run `sudo make install`.
 Otherwise, you need a moderately recent perl and install the CPAN modules that
 you see in the Makefile.
 
-After installing, run `make test` to see if everything works fine.
+Testing
+-------
+
+Run `make test` to run the test suite using `prove`. You can also run
+`make cover` to build code coverage information using `cover` into the folder
+`cover_db`.
 
 Running
 -------
