@@ -36,16 +36,16 @@ is_deeply $pull->extract_repo_info("$g/101companies/101repo"),
           undef, '101companies/101repo gets skipped';
 
 is_deeply $pull->extract_repo_info("$g/101companies/not101repo"), {
-                                       repo_path => '/test/gitdeps/101companies/not101repo',
-                                       dep_path  => '/test/gitdeps/101companies/not101repo',
-                                       repo_url  => "$g/101companies/not101repo",
-                                   }, '101companies/not101repo does not get skipped';
+               repo_path => '/test/gitdeps/101companies/not101repo',
+               dep_path  => '/test/gitdeps/101companies/not101repo',
+               repo_url  => "$g/101companies/not101repo",
+           }, '101companies/not101repo does not get skipped';
 
 is_deeply $pull->extract_repo_info("$g/not101companies/101repo"), {
-                                       repo_path => '/test/gitdeps/not101companies/101repo',
-                                       dep_path  => '/test/gitdeps/not101companies/101repo',
-                                       repo_url  => "$g/not101companies/101repo",
-                                   }, 'not101companies/101repo does not get skipped';
+               repo_path => '/test/gitdeps/not101companies/101repo',
+               dep_path  => '/test/gitdeps/not101companies/101repo',
+               repo_url  => "$g/not101companies/101repo",
+           }, 'not101companies/101repo does not get skipped';
 
 dies_ok { $pull->extract_repo_info("$g/user/repo/") }
         'excessive slash fails';

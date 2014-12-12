@@ -28,7 +28,7 @@ sub pull101repo
     {
         my $namespace_dir = join '/', $self->root_path, $namespace;
 
-        if (!-e $namespace_dir)
+        if (!-d $namespace_dir)
         {   mkdir $namespace_dir or die "Couldn't create $namespace_dir: $!" }
 
         my $repos = $self->repos->{$namespace};
