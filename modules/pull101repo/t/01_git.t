@@ -14,7 +14,6 @@ my  $local_dir = "$test_dir/local";
 my $remote_dir = "$test_dir/remote";
 my  $clone_dir = "$test_dir/clone";
 
-ok !-e $test_dir, "directory $test_dir doesn't exist yet" or BAIL_OUT;
 
 sub run_git # helper to test a bunch of git commands in a row
 {

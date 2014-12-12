@@ -7,7 +7,7 @@ use File::Slurp     qw(write_file append_file);
 use Repo101::Git    qw(clone_or_pull git);
 use Repo101::Pull   qw(pull101repo);
 
-my $test_dir = abs_path('TEST') . "/changes$$";
+my $test_dir = abs_path('TEST') . "/pull101repo$$";
 
 # monkey-patch because we don't want to pull anything from GitHub
 {

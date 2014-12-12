@@ -1,5 +1,5 @@
 run:
-	./pull101repo
+	perl pull101repo
 
 clean:
 	rm -rf module.log TEST cover_db
