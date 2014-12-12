@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More      tests => 22;
+use Test::More      tests => 21;
 use Test::Exception;
 use Cwd             qw(abs_path);
 use File::Compare;
