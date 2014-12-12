@@ -5,6 +5,20 @@ pull101Repo
 from GitHub. It also gathers a diff off all the files changed since it was
 last run.
 
+Architecture
+------------
+
+This module is written in Perl. `pull101repo` is the main script that will pull
+101repo in production mode.
+
+The folder `Repo101` contains two Perl modules with the actual functionality
+and their documentation in POD at the bottom. This documentation is replicated
+in markdown in the `doc` folder.
+
+Tests can be found in the `t` folder and can be run using `prove`. If a bug is
+found in this module, a test case to replicate the error should be created
+before the bug fix is attempted.
+
 Installation
 ------------
 
