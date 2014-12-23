@@ -9,12 +9,12 @@ Constants that contain URLs must end with `url`, like `repo101url`. If a URL var
 
 Examples follow where the path to 101worker is `/var/101worker`.
 
-Definition                                            | Resulting Environment Variable
------------------------------------------------------ | ---------------------------------------------------
-repo101       : 101results/101repo                    |       repo101=/var/101results/101repo
-gitdeps101    : 101results/gitdeps/                   |    gitdeps101=/var/101results/gitdeps
-repo101url    : test/reposource                       |    repo101url=file:///var/test/reposource
-gitdeps101url : http://101companies.org/pullRepo.json | gitdeps101url=http://101companies.org/pullRepo.json
+Name          | Definition                             | Resulting Environment Variable
+--------------|--------------------------------------- | -------------------------------------
+repo101       | 101results/101repo                     | /var/101results/101repo
+gitdeps101    | 101results/gitdeps/                    | /var/101results/gitdeps
+repo101url    | test/reposource                        | file:///var/test/reposource
+gitdeps101url | http\://101companies.org/pullRepo.json | http\://101companies.org/pullRepo.json
 
 const101.py
 -----------
