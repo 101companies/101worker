@@ -1,0 +1,5 @@
+# Test values
+repo101       : test/101results/101repo
+gitdeps101    : test/101results/gitdeps
+repo101url    : test/reposource
+gitdeps101url : test/pullRepo.json

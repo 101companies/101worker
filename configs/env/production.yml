@@ -1,0 +1,5 @@
+# Production values for enviroment variable constants.
+repo101       : 101results/101repo
+gitdeps101    : 101results/gitdeps
+repo101url    : https://github.com/101companies/101repo
+gitdeps101url : http://101companies.org/pullRepo.json
