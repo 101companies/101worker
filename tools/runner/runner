@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Cwd            qw(abs_path);
+use File::Basename qw(dirname);
+use Getopt::Long;
+use POSIX          qw(strftime);
+use YAML           qw(Load LoadFile);
+use Runner101::Env qw(load_vars);
+
+sub write_log
+{   print strftime('[%Y-%m-%d %H:%M:%S] ', gmtime), @_, "\n"; }
+
+sub get_command
+{
+    my ($path, $module) = @_;
+    "cd $path/$module; timeout -s KILL 1h make >module.log 2>&1"
+}
+
+my $config      = do { local $/; YAML::Load(<STDIN>) } or die $!;
+my $worker_dir  = dirname dirname abs_path $0;
+my $root_dir    = dirname $worker_dir;
+my $modules_dir = "$worker_dir/modules";
+GetOptions('root=s' => \$root_dir, 'modules=s' => \$modules_dir);
+
+chdir $root_dir or die "Could not change directory to $root_dir: $!";
+load_vars($config);
+
+#for my $module (@{LoadFile(shift)})
+#{
+#    write_log("Running $module");
+#    my $code = system get_command($path, $module);
+#    write_log("$module exited with code $code");
+#    <STDIN>
+#}

@@ -1,27 +1,24 @@
 Environment Variable Definitions
 ================================
 
-Constants for 101worker are defined in environment variables. These consist of file paths and URLs.
+Constants for 101worker are defined in environment variables. These consist of file paths, directory paths and URLs.
 
-All file paths must be given relative to the directory that 101worker is in. They will be turned into absolute paths by the runner. The absolute file paths for directories will never end with a slash.
+File paths and directory paths are similar to each other: they are given relative to the directory that the 101worker directory is in and will be turned into absolute paths by the runner. Directory paths *must* and file paths *must not* not end with a slash, that way the runner can disambiguate between a file and a directory paths. All directories that appear in any path will be created automatically if they don't exist. Nonexistent files will *not* be created (which is why there is a need for disambiguation). However, the resulting environment variables *will never have a trailing slash*!
 
-Constants that contain URLs must end with `url`, like `repo101url`. If a URL variable does not start with a protocol (like `http://` or `https://`), it is assumed to be a file path and will be turned into an absolute `file://` URL.
+You can also reference other paths by their key. For example, if there is the definition like `dumps101dir : 101web/data/dumps/`, then you can reference that path like `wikiDump101 : [dumps101dir, wiki.json]`. The result will be `wikiDump101=/path/to/worker/101web/data/dumps/wiki.json`.
 
-Examples follow where the path to 101worker is `/var/101worker`.
+URLs are only special if they start with the `file://` scheme. In that case, their path will be turned into an absolute `file://` URL as described above. The same rule for trailing slashes apply. Other URLs like `http://` or `https://` won't be touched.
 
-Name          | Definition                             | Resulting Environment Variable
---------------|--------------------------------------- | -------------------------------------
-repo101       | 101results/101repo                     | /var/101results/101repo
-gitdeps101    | 101results/gitdeps/                    | /var/101results/gitdeps
-repo101url    | test/reposource                        | file:///var/test/reposource
-gitdeps101url | http\://101companies.org/pullRepo.json | http\://101companies.org/pullRepo.json
+For examples, see the definition files in the folder of this README.
 
-const101.py
------------
+Intent
+------
 
-This is intended to replace `libraries/101meta/const101.py`, which is just a Python module that holds a bunch of hard-coded strings, which is redundant with the existence of environment variables and inflexible because it can't be fed different values for testing.
+This is primarily intended to replace `libraries/101meta/const101.py`, which is just a Python module that holds a bunch of hard-coded strings, which is silly and inflexible. It also replaces the redundant definitions in `101worker/Makefile.vars` and probably various other Makefiles and hard-coded paths in modules.
 
-The const101 Python module is therefore deprecated and all instances using it should be using `os.environ` instead (see below).
+The environment variable approach fulfills the “Single Point of Truth” or “Once and Only Once” rule: they are defined in one place and can be accessed from virtually any programming environment. It is also much more flexible and allows creation of a test environment.
+
+The const101 Python module and Makefile.vars are therefore *deprecated* and will hopefully be removed soon.
 
 Accessing Environment Variables
 -------------------------------
@@ -56,3 +53,37 @@ repo_url  = ENV['repo101url']
 $repo_path = $_ENV['repo101'   ];
 $repo_url  = $_ENV['repo101url'];
 ```
+
+Constant Documentation
+----------------------
+
+These are the constants that are currently in use.
+
+Name                   | Type      | Description
+---------------------- | --------- | -----------------------------------------------------
+config101              | File      | Module configuration file, used by runner
+repo101dir             | Directory | Where 101repo gets pulled to
+gitdeps101dir          | Directory | Where 101repo dependencies get pulled to
+targets101dir          | Directory | 
+dumps101dir            | Directory | Where dump results go
+views101dir            | Directory | Where view results go
+rulesDump101           | File      | Location of 101meta rules dump
+matchesDump101         | File      | 
+predicatesDump101      | File      | 
+fragmentsDump101       | File      | 
+geshiDump101           | File      | 
+validatorDump101       | File      | 
+extractorDump101       | File      | 
+metricsDump101         | File      | 
+fragmentMetricsDump101 | File      | 
+summaryDump101         | File      | 
+suffixesDump101        | File      | 
+importsDump101         | File      | 
+resolutionDump101      | File      | 
+wikiDump101            | File      | 
+repo101url             | URL       | Remote URL for 101repo
+gitdeps101url          | URL       | URL with the JSON definition for 101repo dependencies
+wiki101url             | URL       | 
+explorer101url         | URL       | 
+endpoint101url         | URL       | 
+data101url             | URL       | 

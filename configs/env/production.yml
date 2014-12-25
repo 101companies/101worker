@@ -1,5 +1,40 @@
 # Production values for enviroment variable constants.
-repo101       : 101results/101repo
-gitdeps101    : 101results/gitdeps
-repo101url    : https://github.com/101companies/101repo
-gitdeps101url : http://101companies.org/pullRepo.json
+# Even though there's comments in this file, please see the README.md for
+# more details.
+
+# Directories
+# These MUST end with a slash so that they can be disambiguated from files,
+# but the resulting environment variable WILL NOT have a trailing slash!
+repo101dir             : 101results/101repo/
+gitdeps101dir          : 101results/gitdeps/
+targets101dir          : 101web/data/resources/
+dumps101dir            : 101web/data/dumps/
+views101dir            : 101web/data/views/
+
+# Files
+# These MUST NOT end with a slash, otherwise they are mistaken for directories.
+config101              : 101worker/configs/production.json
+rulesDump101           : [dumps101dir,             rules.json]
+matchesDump101         : [dumps101dir,           matches.json]
+predicatesDump101      : [dumps101dir,        predicates.json]
+fragmentsDump101       : [dumps101dir,         fragments.json]
+geshiDump101           : [dumps101dir,             geshi.json]
+validatorDump101       : [dumps101dir,         validator.json]
+extractorDump101       : [dumps101dir,         extractor.json]
+metricsDump101         : [dumps101dir,           metrics.json]
+fragmentMetricsDump101 : [dumps101dir, fragments.metrics.json]
+summaryDump101         : [dumps101dir,           summary.json]
+suffixesDump101        : [dumps101dir,          suffixes.json]
+importsDump101         : [dumps101dir,           imports.json]
+resolutionDump101      : [dumps101dir,        resolution.json]
+wikiDump101            : [dumps101dir,              wiki.json]
+
+# URLs
+# If these don't start with a protocol, they are assumed to be directories or
+# files (disambiguated by trailing slash) and are turned into file:// URLs.
+repo101url             : https://github.com/101companies/101repo
+gitdeps101url          : http://101companies.org/pullRepo.json
+wiki101url             : http://101companies.org/wiki/
+explorer101url         : http://101companies.org/resources/
+endpoint101url         : http://101companies.org/endpoint/
+data101url             : http://data.101companies.org/
