@@ -13,7 +13,9 @@ views101dir            : 101web/data/views/
 
 # Files
 # These MUST NOT end with a slash, otherwise they are mistaken for directories.
-config101              : 101worker/configs/production.json
+config101              : 101worker/configs/dev.json
+config101schema        : 101worker/schemas/config.schema.json
+module101schema        : 101worker/schemas/module.schema.json
 rulesDump101           : [dumps101dir,             rules.json]
 matchesDump101         : [dumps101dir,           matches.json]
 predicatesDump101      : [dumps101dir,        predicates.json]

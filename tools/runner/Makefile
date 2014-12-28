@@ -16,6 +16,6 @@ doc:
 	pod2markdown Repo101/Env.pm doc/Repo101::Env.md
 
 install:
-	cpan install Test::Exception URI::URL YAML
+	cpan install File::Slurp JSON JSON::Schema Test::Exception URI::URL
 
 .PHONY: run clean test cover doc install
