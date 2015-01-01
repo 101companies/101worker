@@ -48,7 +48,7 @@ Contains functions to handle the diff protocol between the runner and modules.
 
 The diff protocol is a simple line-based protocol.
 
-See C<101worker/libraries/incremental> for a Python library for this protocol,
+See F<101worker/libraries/incremental> for a Python library for this protocol,
 use that instead of writing a new implementation.
 
 =head3 Output From Module

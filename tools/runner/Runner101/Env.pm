@@ -60,7 +60,7 @@ Module to load the runner's environment variables.
     load_vars(\%vars)
 
 Loads the environment variables given in the hashref C<$vars> into the actual
-environment C<%ENV>. See the C<101worker/configs/env/README.md> for
+environment C<%ENV>. See the F<101worker/configs/env/README.md> for
 documentation about how these variables should be defined.
 
 Returns nothing useful and might die if L</load_path> or L</load_url> dies.
