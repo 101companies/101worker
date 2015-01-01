@@ -13,9 +13,14 @@ cover:
 doc:
 	rm -rf doc
 	mkdir doc
-	pod2markdown Repo101/Env.pm doc/Repo101::Env.md
+	perl -e 'for (glob "Runner101/*.pm")'                              \
+         -e '{'                                                        \
+         -e '    m{Runner101/(.+)\.pm$$};'                             \
+         -e '    system "pod2markdown", $$_, "doc/Runner101::$$1.md";' \
+         -e '}'
 
 install:
-	cpan install File::Slurp JSON JSON::Schema Test::Exception URI::URL
+	cpan install File::Slurp IPC::Run JSON JSON::Schema List::MoreUtils \
+                 Test::Exception Try::Tiny URI::URL
 
 .PHONY: run clean test cover doc install

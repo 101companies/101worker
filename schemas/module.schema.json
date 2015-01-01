@@ -1,9 +1,15 @@
 {
     "title"      : "Module Description Schema",
     "type"       : "object",
-    "required"   : ["dependencies"],
+    "required"   : ["dependencies", "environment"],
     "properties" : {
         "dependencies" : {
+            "type"        : "array",
+            "items"       : {"type" : "string"},
+            "uniqueItems" : true,
+            "required"    : true
+        },
+        "environment"  : {
             "type"        : "array",
             "items"       : {"type" : "string"},
             "uniqueItems" : true,

@@ -6,10 +6,9 @@ use Cwd             qw(abs_path);
 use Runner101::Env  qw(load_vars load_url load_path);
 
 
-if (!-d 'TEST')
-{   mkdir 'TEST' or die "Could not mkdir TEST: $!" }
+mkdir 'TEST'       or die "Could not mkdir TEST: $!" if not -d 'TEST';
 mkdir "TEST/env$$" or die "Could not mkdir TEST/env$$: $!";
-chdir "TEST/env$$" or die "Could not change directory to TEST/env$$: $!";
+chdir "TEST/env$$" or die "Could not cd into TEST/env$$: $!";
 my $pwd = abs_path;
 
 

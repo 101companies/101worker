@@ -4,72 +4,20 @@ use warnings;
 use Cwd            qw(abs_path);
 use File::Basename qw(dirname);
 use Getopt::Long;
-use File::Slurp    qw(slurp);
-use JSON;
-use JSON::Schema;
-use POSIX          qw(strftime);
 use YAML           qw(Load);
 BEGIN { push @::INC, dirname $0 }
 use Runner101::Env qw(load_vars);
 
 
-sub write_log
-{   print strftime('[%Y-%m-%d %H:%M:%S] ', gmtime), @_, "\n"; }
+my $config     = do { local $/; YAML::Load(<STDIN>) } or die $!;
+my $worker_dir = dirname dirname dirname abs_path $0;
+my %options    = (
+    root_dir    => dirname $worker_dir,
+    modules_dir => "$worker_dir/modules",
+);
+GetOptions(\%options, qw(root=s modules=s));
 
-sub get_command
-{
-    my ($path, $module) = @_;
-    "cd $path/$module; timeout -s KILL 1h make >module.log 2>&1"
-}
-
-sub slurp_json
-{
-    my ($path) = @_;
-    my  $json  = slurp $path or die "Can't read $path: $!";
-    decode_json $json        or die "Can't decode JSON file $path: $!"
-}
-
-sub slurp_json_env
-{
-    map
-    {
-        die "Missing environment variable: $_" if not exists $ENV{$_};
-        slurp_json($ENV{$_})
-    } @_
-}
-
-
-my $config      = do { local $/; YAML::Load(<STDIN>) } or die $!;
-my $worker_dir  = dirname dirname dirname abs_path $0;
-my $root_dir    = dirname $worker_dir;
-my $modules_dir = "$worker_dir/modules";
-GetOptions('root=s' => \$root_dir, 'modules=s' => \$modules_dir);
-
-chdir $root_dir or die "Could not change directory to $root_dir: $!";
+chdir $options{root_dir} or die "Could not cd into $options{root_dir}: $!";
 load_vars($config);
 
-
-my @module_names = do
-{
-    my ($json, $schema) = slurp_json_env(qw(config101 config101schema));
-    my $val             = JSON::Schema->new($schema)->validate($json);
-    die join "\n - ", 'Invalid configuration:', $val->errors if not $val;
-    @$json
-};
-
-
-my $schema  = JSON::Schema->new(slurp_json_env('module101schema')) or die $!;
-my @modules = map
-{
-    my $path = "$worker_dir/modules/$_";
-    my $json = slurp_json("$path/module.json");
-    my $val  = $schema->validate($json);
-    die join "\n - ", "Invalid module.json for $_", $val->errors if not $val;
-    {%$json, path => $path}
-} @module_names;
-
-
-for (@modules)
-{
-    
-}
+Runner101::Modules::run(\%options);
