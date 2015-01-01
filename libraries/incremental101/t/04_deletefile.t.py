@@ -1,7 +1,7 @@
 from TAP.Simple import *
 from StringIO   import StringIO
 import os
-import incremental as inc
+import incremental101 as inc
 
 plan(4)
 

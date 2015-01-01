@@ -1,8 +1,5 @@
-run:
-	python incremental.py
-
 test:
-	PYTHONPATH="$$PYTHONPATH:`pwd`" prove --ext=.t.py --exec=python
+	PYTHONPATH="$$PYTHONPATH:$$(dirname $$(pwd))" prove --ext=.t.py -e python
 
 clean:
 	rm -rf TEST
