@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use File::Slurp        qw(slurp);
 use List::MoreUtils    qw(first_index);
-use List::Utils        qw(pairmap);
+use List::Util         qw(pairmap);
 use Runner101::Helpers qw(slurp_json validate_json);
 use Runner101::Module;
 
@@ -47,17 +47,18 @@ sub BUILD
 }
 
 
+sub push_error
+{
+    my ($self, $type, $key, $value) = @_;
+    push $self->errors->{$type}{$key} //= [], $value;
+}
+
+
 sub ensure_envs_exist
 {
     my ($self, $name) = (shift, shift);
     for (ref $_[0] ? @{$_[0]} : @_)
-    {
-        if (!exists $ENV{$_})
-        {
-            $self->errors->{env}{$_} //= [];
-            push @{$self->errors->{env}{$_}}, $name;
-        }
-    }
+    {   $self->push_error(env => $_, $name) if not exists $ENV{$_} }
 }
 
 
@@ -68,20 +69,14 @@ sub ensure_dependencies
     {
         my $found = first_index { $_ eq $dep } @{$self->names};
         if ($found < 0)
-        {
-            $self->errors->{missing}{$dep} //= [];
-            push @{$self->errors->{missing}{$dep}}, $module->name;
-        }
+        {   $self->push_error(missing => $dep, $module->name) }
         elsif ($found > $module->index)
-        {
-            $self->errors->{late}{$_} //= [];
-            push @{$self->errors->{late}{$dep}}, $module->name;
-        }
+        {   $self->push_error(late    => $dep, $module->name) }
     }
 }
 
 
-use constant ERROR_MESSAGES => (
+our @ERROR_MESSAGES = (
     env     => 'Missing environment variable %s required by %s',
     missing => 'Module %s required before %s, but is missing',
     late    => 'Module %s required before %s, but appears after instead',
@@ -96,8 +91,8 @@ sub die_if_invalid
     die join "\n - ", "Validation errors:", @{$errors->{other}}, pairmap
     {
         my ($msgs, $fmt) = ($errors->{$a}, $b);
-        map { sprintf $fmt => $_, join ', ', $msgs->{$_} } keys %{$msgs}
-    } ERROR_MESSAGES;
+        map { sprintf $fmt => $_, join ', ', @{$msgs->{$_}} } keys %{$msgs}
+    } @ERROR_MESSAGES;
 }
 
 

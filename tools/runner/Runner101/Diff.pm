@@ -28,12 +28,12 @@ sub run_diff
     my ($command, $diffs) = @_;
 
     my $out;
-    my $in        = join "\n", @$diffs;
-    my $exit_code = IPC::Run::run($command, \$in, \$out);
+    my $in = join "\n", @$diffs;
+    IPC::Run::run($command, \$in, \$out);
 
     parse($_, $diffs) // print $_, "\n" for split /\n/, $out;
 
-    $exit_code
+    $? # child process exit code
 }
 
 
