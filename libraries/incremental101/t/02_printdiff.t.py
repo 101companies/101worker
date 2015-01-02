@@ -11,10 +11,10 @@ def doline(*args):
 
 
 eq_ok(inc.linesread, 0, "no lines read yet")
-eq_ok(doline(), "0 - -\n", "empty diff")
+eq_ok(doline(), "\n0 - -\n", "empty diff")
 
 inc.linesread = 5
-eq_ok(doline(), "5 - -\n", "empty diff with appropriate line count")
+eq_ok(doline(), "\n5 - -\n", "empty diff with appropriate line count")
 
 inc.linesread = 123
-eq_ok(doline("A", "/path/to/file"), "123 A /path/to/file\n", "diff with path")
+eq_ok(doline("A", "/path/to/file"), "\n123 A /path/to/file\n", "diff with path")

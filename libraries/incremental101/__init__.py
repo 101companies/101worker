@@ -1,5 +1,13 @@
 """
+Python module for incrementality in 101worker. Implements the diff protocol used
+by the runner to communicate changes to and from modules.
 
+In short: modules receive diff information (added, modified and deleted files)
+on their stdin and output their own diff information on stdout. Anything that is
+not recognized as a diff line by the runner is assumed to be noise and ignored,
+because the existing modules sure are noisy.
+
+See 101worker/tools/runner for more information on the runner side of things.
 """
 
 import os
@@ -8,11 +16,33 @@ import sys
 
 
 instream  = sys.stdin
+"""
+The stream that diff info is read from, defaults to stdin. Leave this alone in
+production, it's only here so that tests can use StringIO instead of stdin.
+"""
+
 outstream = sys.stdout
+"""
+The stream that diff info is written to, defaults to stdout. Same as with
+instream, leave it alone.
+"""
+
 linesread = 0
+"""
+How many lines of diff have been read so far. Automatically incremented whenever
+nextdiff is called and used in printdiff. Don't modify this.
+"""
 
 
 def nextdiff():
+    """
+    Reads the next line from stdin and parses it as a diff. Returns a tuple of
+    the operation ("A" for added, "M" for modified and "D" for deleted) as the
+    first element and the absolute file path as the second.
+
+    Raises an exception if the line is not a diff. Don't catch this exception,
+    it means that the runner is broken and is outputting garbage.
+    """
     line = instream.readline()
     if not line:
         return None
@@ -28,11 +58,33 @@ def nextdiff():
 
 
 def printdiff(op="-", path="-"):
+    """
+    Prints a line of diff, padded by newlines on both ends. If no parameters are
+    given, this prints an empty diff with only the diff lines read so far being
+    communicated. Otherwise both parameters shall be given, op being the diff
+    operation ("A" for an added file, "M" for a modified file and "D" for a
+    deleted file" and path being the absolute file path.
+
+    Don't call this directly, use writefile and deletefile instead.
+    """
     global linesread
-    outstream.write("{} {} {}\n".format(linesread, op, path))
+    outstream.write("\n{} {} {}\n".format(linesread, op, path))
 
 
 def writefile(path, content):
+    """
+    Writes the given content to the file at the given path and communicates an
+    appropriate diff (added or modified) to the runner. The path is turned into
+    an absolute path automatically, if it wasn't absolute already.
+
+    If the file already exists, its content will be compared to the given
+    content. If they are equal, the file is not actually written and no modify
+    diff is communicated. If the content is different, the old file is
+    overwritten with the new content.
+
+    If the file doesn't exist, it is created, obviously.
+    """
+    path       = os.path.abspath(path)
     oldcontent = None
     try:
         with open(path) as f: oldcontent = f.read()
@@ -47,7 +99,16 @@ def writefile(path, content):
 
 
 def deletefile(path):
+    """
+    Deletes the file at the given path and communicates an appropriate delete
+    diff to the runner. The path is turned into an absolute path automatically,
+    if it wasn't absolute already.
+
+    If the file doesn't exist, nothing happens and no delete diff is
+    communicated.
+    """
     if os.path.exists(path):
+        path = os.path.abspath(path)
         os.unlink(path)
         printdiff("D", path)
     else:
