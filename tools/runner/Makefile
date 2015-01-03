@@ -2,7 +2,7 @@ run:
 	perl runner
 
 clean:
-	rm -rf TEST cover_db
+	rm -rf cover_db
 
 test:
 	prove
