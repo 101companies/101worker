@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Class::Tiny;
 use List::Util         qw(pairmap);
-use Test::More         tests => 4;
+use Test::More         tests => 7;
 use Test::Exception;
 use Runner101::Modules;
 use constant MODULE  => 'Runner101::Module';
@@ -18,8 +18,13 @@ sub new
     bless $self => MODULES;
     for (0 .. 5)
     {
-        my $module = bless {name => "module$_", index => $_} => MODULE;
-        push @{$self->modules}, $module;
+        my $module = {
+            index        => $_,
+            name         => "module$_",
+            dependencies => [],
+        };
+        push @{$self->names  }, $module->{name};
+        push @{$self->modules}, bless $module => MODULE;
     }
     $self
 }
@@ -43,7 +48,20 @@ is_deeply $self->errors, {env => {
                          }}, 'ensure missing envs causes errors';
 
 # ensure_dependencies
+$self = new;
+$self->ensure_dependencies($self->modules->[0]);
+is_deeply $self->errors, {}, 'empty dependencies';
 
+$self->modules->[3]->dependencies([qw(module0 module1 module2)]);
+$self->ensure_dependencies($self->modules->[3]);
+is_deeply $self->errors, {}, 'valid dependencies';
+
+$self->modules->[1]->dependencies([qw(module0 module1 module2 nonexistent)]);
+$self->ensure_dependencies($self->modules->[1]);
+is_deeply $self->errors, {
+              late    => {module2     => ['module1']},
+              missing => {nonexistent => ['module1']},
+          }, 'invalid dependencies lead to correct errors';
 
 
 # die_if_invalid
