@@ -1,35 +1,28 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Cwd           qw(abs_path);
 use File::Slurp   qw(write_file);
+use LWP::Simple   qw(get);
 use JSON          qw(encode_json decode_json);
 use Repo101::Pull qw(pull101repo);
 
-# TODO put these in a JSON somewhere sensible
-our %urls  = (
-    root => 'https://github.com/101companies/101repo',
-    deps => 'http://101companies.org/pullRepo.json',
-);
-our %paths = (
-    root => abs_path('../../../101results/101repo'),
-    deps => abs_path('../../../101results/gitdeps'),
-);
+my %paths = map { ($_ => $ENV{$_} || die "Missing environment variable: $_") }
+                qw(repo101 gitdeps101 repo101url gitdeps101url);
 
-
-sub fetch_repo_list
+my $repos = do
 {
-    use LWP::Simple;
-    my $content = get($urls{deps}) or die "Couldn't fetch $urls{deps}";
-    decode_json($content)          or die "Couldn't decode $content"
-}
-
+    my $url     = $paths{gitdeps101url};
+    my $content = get($url) or die "Couldn't fetch $url";
+    decode_json($content)   or die "Couldn't decode JSON: $content"
+};
 
 my $changes = pull101repo(
-    root_path => $paths{root},
-    deps_path => $paths{deps},
-    root_url  => $urls{root},
-    repos     => fetch_repo_list,
+    root_path => $paths{repo101   },
+    deps_path => $paths{gitdeps101},
+    root_url  => $paths{repo101url},
+    repos     => $repos,
 );
 
 write_file('changes.json', JSON->new->utf8->pretty->encode($changes));
+open my $fh, '>', 'changes' or die "Couldn't write to changes: $!";
+print $fh "$changes->{$_} $_\n" for sort keys $changes;

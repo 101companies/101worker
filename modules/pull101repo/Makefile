@@ -2,7 +2,7 @@ run:
 	perl pull101repo
 
 clean:
-	rm -rf module.log TEST cover_db
+	rm -rf module.log cover_db
 
 test:
 	prove

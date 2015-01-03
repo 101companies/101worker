@@ -4,10 +4,11 @@ use Test::More      tests => 9;
 use Test::Exception;
 use Cwd             qw(abs_path);
 use File::Slurp     qw(write_file append_file);
+use File::Temp;
 use Repo101::Git    qw(clone_or_pull git);
 use Repo101::Pull   qw(pull101repo);
 
-my $test_dir = abs_path('TEST') . "/pull101repo$$";
+my $test_dir = File::Temp->newdir;
 
 # monkey-patch because we don't want to pull anything from GitHub
 {
