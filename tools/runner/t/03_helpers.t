@@ -4,13 +4,11 @@ use Test::More         tests => 9;
 use Test::Exception;
 use Cwd                qw(abs_path);
 use File::Slurp        qw(write_file);
+use File::Temp;
 use JSON;
 use Runner101::Helpers qw(slurp_json guess_json validate_json);
 
-my $path = "TEST/helpers$$";
-mkdir 'TEST' or die "Could not mkdir TEST: $!" if not -d 'TEST';
-mkdir $path  or die "Could not mkdir $path: $!";
-
+my $path = File::Temp->newdir;
 
 # slurp_json
 write_file "$path/some.json", '{"a" : "b", "c" : ["d", "e"]}';

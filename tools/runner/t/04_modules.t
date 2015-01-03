@@ -5,16 +5,23 @@ use List::Util         qw(pairmap);
 use Test::More         tests => 4;
 use Test::Exception;
 use Runner101::Modules;
-use constant CLASS => 'Runner101::Modules';
+use constant MODULE  => 'Runner101::Module';
+use constant MODULES => 'Runner101::Modules';
 
 
 # Circumvent BUILD method
-my @def = %{Class::Tiny->get_all_attribute_defaults_for(CLASS)};
+my @def = %{Class::Tiny->get_all_attribute_defaults_for(MODULES)};
 
 sub new
 {
-    my %self = pairmap { ($a => ref $b ? $b->() : $b) } @def;
-    bless \%self => CLASS
+    my $self = {pairmap { ($a => ref $b ? $b->() : $b) } @def};
+    bless $self => MODULES;
+    for (0 .. 5)
+    {
+        my $module = bless {name => "module$_", index => $_} => MODULE;
+        push @{$self->modules}, $module;
+    }
+    $self
 }
 
 my $self;
@@ -36,6 +43,7 @@ is_deeply $self->errors, {env => {
                          }}, 'ensure missing envs causes errors';
 
 # ensure_dependencies
+
 
 
 # die_if_invalid

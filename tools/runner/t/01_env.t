@@ -3,13 +3,14 @@ use warnings;
 use Test::More      tests => 19;
 use Test::Exception;
 use Cwd             qw(abs_path);
+use File::Temp;
 use Runner101::Env  qw(load_vars load_url load_path);
 
 
-mkdir 'TEST'       or die "Could not mkdir TEST: $!" if not -d 'TEST';
-mkdir "TEST/env$$" or die "Could not mkdir TEST/env$$: $!";
-chdir "TEST/env$$" or die "Could not cd into TEST/env$$: $!";
-my $pwd = abs_path;
+my $tmpdir = File::Temp->newdir;
+my $olddir = abs_path;
+chdir "$tmpdir" or die "Could not cd into $tmpdir: $!";
+my $pwd    = abs_path;
 
 
 my %hash = (
@@ -81,3 +82,6 @@ my %expected = (
     gitdeps101url => "file://$pwd/101results/gitdepsrc",
 );
 is_deeply \%given, \%expected, 'load variables into environment';
+
+
+chdir $olddir;
