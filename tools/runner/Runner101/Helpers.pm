@@ -1,10 +1,10 @@
 package Runner101::Helpers;
 use Exporter qw(import);
-@EXPORT_OK = qw(slurp_json guess_json validate_json);
+@EXPORT_OK = qw(slurp_json spew_json guess_json validate_json);
 
 use strict;
 use warnings;
-use File::Slurp  qw(slurp);
+use File::Slurp  qw(slurp write_file);
 use JSON         qw(decode_json);
 use JSON::Schema;
 
@@ -14,6 +14,13 @@ sub slurp_json
     my ($path) = @_;
     my  $json  = slurp $path // die "Can't read $_: $!";
     decode_json $json
+}
+
+
+sub spew_json
+{
+    my ($path, $content) = @_;
+    write_file $path, JSON->new->utf8->pretty->encode($content)
 }
 
 
@@ -51,6 +58,13 @@ Contains a few helper functions used in various places of the runner.
 
 Reads the contents of the file given in C<$path> and JSON-decodes its content.
 Returns the decoding result or dies if an error reading or decoding occurs.
+
+=head2 spew_json
+
+    spew_json($path, $content)
+
+JSON-encodes the given C<$content> and writes it to the file at C<$path>.
+Returns nothing useful and dies if an error encoding or writing the file occurs.
 
 =head2 guess_json
 

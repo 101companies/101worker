@@ -9,6 +9,13 @@ Contains a few helper functions used in various places of the runner.
 Reads the contents of the file given in `$path` and JSON-decodes its content.
 Returns the decoding result or dies if an error reading or decoding occurs.
 
+## spew\_json
+
+    spew_json($path, $content)
+
+JSON-encodes the given `$content` and writes it to the file at `$path`.
+Returns nothing useful and dies if an error encoding or writing the file occurs.
+
 ## guess\_json
 
     guess_json($thing = $_)

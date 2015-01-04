@@ -14,8 +14,7 @@ my @def = %{Class::Tiny->get_all_attribute_defaults_for(MODULES)};
 
 sub new
 {
-    my $self = {pairmap { ($a => ref $b ? $b->() : $b) } @def};
-    bless $self => MODULES;
+    my $self = bless {} => MODULES;
     for (0 .. 5)
     {
         my $module = {

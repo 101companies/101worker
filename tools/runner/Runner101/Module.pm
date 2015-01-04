@@ -13,10 +13,14 @@ sub BUILD
     my  $parent       = $args->{parent};
 
     my $json = try
-    {   validate_json($self->dir . '/module.json', $args->{schema}) }
+    {
+        validate_json($self->dir . '/module.json', $args->{schema})
+    }
     catch
-    {   push @{$parent->errors->{other}}, $_ };
-    return if not ref $json;
+    {
+        push @{$parent->errors->{other}}, $_;
+        {}
+    };
 
     $self->environment ($json->{environment } // []);
     $self->dependencies($json->{dependencies} // []);

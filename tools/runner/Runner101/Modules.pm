@@ -31,16 +31,16 @@ sub BUILD
     $self->names(validate_json(@ENV{qw(config101 config101schema)}));
     my $module_schema = slurp_json($ENV{module101schema});
 
-    for (my $i = 0; $i < @{$self->names}; ++$i)
+    for (0 .. $#{$self->names})
     {
-        my $name = $self->names->[$i];
-        Repo101::Module->new(
-            index  => $i,
+        my $name = $self->names->[$_];
+        push @{$self->modules}, Repo101::Module->new(
+            index  => $_,
             name   => $name,
             dir    => "$args->{modules_dir}/$name",
             parent => $self,
             schema => $module_schema,
-        )
+        );
     }
 
     $self->die_if_invalid;
