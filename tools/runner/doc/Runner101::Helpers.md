@@ -43,3 +43,9 @@ to a JSON file.
 
 Returns the (decoded, if necessary) `$json` on successful validation and dies
 with a diagnostic message on validation failure.
+
+## write\_log
+
+    write_log(@message)
+
+Prints the current date and time, its arguments and then a newline.

@@ -2,9 +2,13 @@ package Runner101::Module;
 use strict;
 use warnings;
 use Try::Tiny;
+use Runner101::Diff    qw(run_diff);
 use Runner101::Helpers qw(slurp_json validate_json);
 
-use Class::Tiny qw(index name dir environment dependencies command);
+use Class::Tiny qw(index name dir environment dependencies);
+
+our $SIGNAL  = 'KILL';
+our $TIMEOUT = '1h';
 
 
 sub BUILD
@@ -22,19 +26,19 @@ sub BUILD
         {}
     };
 
-    $self->environment ($json->{environment } // []);
-    $self->dependencies($json->{dependencies} // []);
+    $self->environment ($json->{environment } // []  );
+    $self->dependencies($json->{dependencies} // []  );
 
     $parent->ensure_envs_exist  ($self->environment);
     $parent->ensure_dependencies($self             );
 }
 
 
-sub execute
+sub run
 {
-    my ($self) = @_;
+    my ($self, $parent) = @_;
     chdir $self->dir or die "Couldn't cd into " . $self->dir;
-    system @{$self->command}
+    run_diff(['timeout', '-s', $SIGNAL, $TIMEOUT, 'make'], $parent->diff)
 }
 
 

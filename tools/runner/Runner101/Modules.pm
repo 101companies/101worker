@@ -4,13 +4,15 @@ use warnings;
 use File::Slurp        qw(slurp);
 use List::MoreUtils    qw(first_index);
 use List::Util         qw(pairmap);
-use Runner101::Helpers qw(slurp_json validate_json);
+use Proc::ChildError   qw(explain_child_error);
+use Runner101::Helpers qw(slurp_json validate_json write_log);
 use Runner101::Module;
 
 use Class::Tiny {
     errors  => sub { {} },
     names   => sub { [] },
     modules => sub { [] },
+    diff    => sub { [] },
 };
 
 use constant RUNNER_ENVS => qw(config101 config101schema module101schema);
@@ -18,7 +20,18 @@ use constant RUNNER_ENVS => qw(config101 config101schema module101schema);
 
 sub run
 {
-    ...
+    my $self = __PACKAGE__->new(@_);
+    for (@{$self->modules})
+    {
+        my $prog      = 'Module ' . $_->name;
+        write_log("Running $prog");
+
+        my $exit_code = $_->run($self);
+
+        write_log($exit_code
+                ? explain_child_error({prog => $prog}, $exit_code, $!)
+                : "$prog exited with code 0.");
+    }
 }
 
 

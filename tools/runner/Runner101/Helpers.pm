@@ -1,12 +1,13 @@
 package Runner101::Helpers;
 use Exporter qw(import);
-@EXPORT_OK = qw(slurp_json spew_json guess_json validate_json);
+@EXPORT_OK = qw(slurp_json spew_json guess_json validate_json write_log);
 
 use strict;
 use warnings;
 use File::Slurp  qw(slurp write_file);
 use JSON         qw(decode_json);
 use JSON::Schema;
+use POSIX        qw(strftime);
 
 
 sub slurp_json
@@ -42,6 +43,12 @@ sub validate_json
     my $val  = JSON::Schema->new(guess_json($_[1]))->validate($json);
     die join "\n - ", "$_[0] is invalid per $_[1]:", $val->errors if not $val;
     $json
+}
+
+
+sub write_log
+{
+    print strftime('[%Y-%m-%d %H:%M:%S] ', gmtime), @_, "\n";
 }
 
 
@@ -93,5 +100,11 @@ to a JSON file.
 
 Returns the (decoded, if necessary) C<$json> on successful validation and dies
 with a diagnostic message on validation failure.
+
+=head2 write_log
+
+    write_log(@message)
+
+Prints the current date and time, its arguments and then a newline.
 
 =cut
