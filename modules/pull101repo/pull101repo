@@ -7,7 +7,7 @@ use JSON          qw(encode_json decode_json);
 use Repo101::Pull qw(pull101repo);
 
 my %paths = map { ($_ => $ENV{$_} || die "Missing environment variable: $_") }
-                qw(repo101 gitdeps101 repo101url gitdeps101url);
+                qw(repo101dir gitdeps101dir repo101url gitdeps101url);
 
 my $repos = do
 {
@@ -17,12 +17,11 @@ my $repos = do
 };
 
 my $changes = pull101repo(
-    root_path => $paths{repo101   },
-    deps_path => $paths{gitdeps101},
-    root_url  => $paths{repo101url},
+    root_path => $paths{repo101dir   },
+    deps_path => $paths{gitdeps101dir},
+    root_url  => $paths{repo101url   },
     repos     => $repos,
 );
 
 write_file('changes.json', JSON->new->utf8->pretty->encode($changes));
-open my $fh, '>', 'changes' or die "Couldn't write to changes: $!";
-print $fh "$changes->{$_} $_\n" for sort keys $changes;
+print "$changes->{$_} $paths{repo101dir}/$_\n" for sort keys $changes;

@@ -20,7 +20,7 @@ our $null_tree = git(qw(hash-object -t tree /dev/null));
 sub clone_or_pull
 {
     my ($dir) = @_;
-    -e $dir ? pull(@_) : clone(@_)
+    -e "$dir/.git" ? pull(@_) : clone(@_)
 }
 
 sub clone
