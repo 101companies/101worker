@@ -10,7 +10,7 @@ import sys
 import const101
 import requests
 import requests_cache
-requests_cache.install_cache('discovery_cache', expire_after=60*60*60)
+requests_cache.install_cache('discovery_cache', expire_after=60*60*60, backend='memory')
 
 print os.getcwd()
 
