@@ -23,7 +23,7 @@ sub run
     my $self = __PACKAGE__->new(@_);
     for (@{$self->modules})
     {
-        my $prog      = 'Module ' . $_->name;
+        my $prog = 'module ' . $_->name;
         write_log("Running $prog");
 
         my $exit_code = $_->run($self);
@@ -47,7 +47,7 @@ sub BUILD
     for (0 .. $#{$self->names})
     {
         my $name = $self->names->[$_];
-        push @{$self->modules}, Repo101::Module->new(
+        push @{$self->modules}, Runner101::Module->new(
             index  => $_,
             name   => $name,
             dir    => "$args->{modules_dir}/$name",

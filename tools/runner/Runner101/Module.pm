@@ -26,8 +26,8 @@ sub BUILD
         {}
     };
 
-    $self->environment ($json->{environment } // []  );
-    $self->dependencies($json->{dependencies} // []  );
+    $self->environment ($json->{environment } // []);
+    $self->dependencies($json->{dependencies} // []);
 
     $parent->ensure_envs_exist  ($self->environment);
     $parent->ensure_dependencies($self             );
