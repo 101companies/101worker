@@ -20,6 +20,9 @@ sys.path.append('/home/worker/101worker/services')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "services.settings")
 
+import logging 
+logging.warn('WSGI sends to the Apache2 error_log.')
+
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
