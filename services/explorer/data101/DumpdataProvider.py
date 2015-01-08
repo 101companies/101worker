@@ -8,6 +8,9 @@ import urllib
 import sys
 #sys.path.append('../../../libraries/101meta')
 import const101
+import requests
+import requests_cache
+requests_cache.install_cache('discovery_cache', expire_after=60*60*60)
 
 print os.getcwd()
 
@@ -101,8 +104,8 @@ def getMembers(dir):
     return []
 
 def getGithub(namespace, member):
-    response = urllib.urlopen('http://101companies.org/pullRepo.json') #json.load(open(const101.pullRepoDump, 'r'))
-    pullRepoDump = json.loads(response.read())
+    # response = urllib.urlopen('http://101companies.org/pullRepo.json') #json.load(open(const101.pullRepoDump, 'r'))
+    pullRepoDump = requests.get('http://101companies.org/pullRepo.json').json()
     if namespace in pullRepoDump:
         if member in pullRepoDump[namespace]:
             return pullRepoDump[namespace][member]
