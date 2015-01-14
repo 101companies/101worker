@@ -1,7 +1,7 @@
-{#  <co:headline>{{ headline.decode('utf_8') }}</co:headline>#}
-<co:name>{{ name.decode('utf_8') }}</co:name>
-<co:namespace>{{ namespace.decode('utf-8') }}</co:namespace>
-<co:classifier>{{ classifier.decode('utf_8') }}</co:classifier>
+{#  <co:headline>{{ headline }}</co:headline>#}
+<co:name>{{ name }}</co:name>
+<co:namespace>{{ namespace }}</co:namespace>
+<co:classifier>{{ classifier }}</co:classifier>
 {% if geshi %}
 	<co:geshi>{{ geshi }}</co:geshi>
 {% endif %}

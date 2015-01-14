@@ -10,6 +10,7 @@ jsonschema==2.4.0
 paramiko==1.15.2
 pycrypto==2.6.1
 pysftp==0.2.8
+python-memcached==1.53
 requests==2.5.1
 requests-cache==0.4.8
 termcolor==1.1.0

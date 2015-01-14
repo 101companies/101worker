@@ -1,29 +1,32 @@
+{% load back %}
+{% load has_key %}
+
 <div class="span5 box info-box red-top">
     <div class="box-header">
         Parts
         {% if not name == 'Namespace' %}
-            {% if classifier not in ['File', 'Folder', 'Namespace member', 'Namespace'] %}
+            {% if classifier != 'File' and classifier != 'Folder' and classifier !=  'Namespace member' and classifier !=  'Namespace' %}
             {#  If we are looking at a fragment, we have to go two steps back (Total.java/class/Total => Total.java)  #}
-                <a href="{{ back(back( uri.decode('utf_8') )) }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
+                <a href="{{ uri|back|back }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
             {% else %}
-                <a href="{{ back( uri.decode('utf_8') ) }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
+                <a href="{{ uri|back }}?format=html" class="pull-right btn btn-danger btn-small"><i class="icon-arrow-left"></i> Back</a>
             {% endif %}
         {% endif %}
     </div>
     <div class="box-content">
 
-        {% if fragments or fragments == [] %}
+        {% if fragments or fragments|length == 0 %}
             <div class="box-content-fragment">
                 <b>Fragments:</b>
-                {% if fragments == [] %}
+                {% if fragments|length == 0 %}
                     None
                 {% else %}
                     <ul>
                         {% for fragment in fragments %}
                             <li>
-                                <a href="{{fragment.resource.decode('utf_8')}}?format=html">
-                                    {{fragment.name.decode('utf_8')}}
-                                    {% if fragment.has_key('index') %}
+                                <a href="{{fragment.resource}}?format=html">
+                                    {{fragment.name}}
+                                    {% if fragment|has_key:'index' %}
                                         ({{fragment.index}})
                                     {% endif %}
                                 </a>
@@ -34,41 +37,41 @@
             </div>
         {% endif %}
 
-        {% if folders or folders == [] %}
+        {% if folders or folders|length == 0 %}
             <div class="box-content-fragment">
                 <b>Folders </b>
-                {% if folders == [] %}
+                {% if folders|length == 0 %}
                     None
                 {% else %}
                     <ul>
                         {% for folder in folders %}
-                            <li><a href="{{ folder.resource.decode('utf_8') }}?format=html">{{ folder.name.decode('utf_8') }}</a></li>
+                            <li><a href="{{ folder.resource }}?format=html">{{ folder.name }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}
             </div>
         {% endif %}
 
-        {% if files or files == [] %}
+        {% if files or files|length == 0 %}
             <div class="box-content-fragment">
                 <b>Files </b>
-                {% if files == [] %}
+                {% if files|length == 0 %}
                     None
                 {% else %}
                     <ul>
                         {% for file in files %}
-                            <li><a href="{{ file.resource.decode('utf_8') }}?format=html">{{ file.name.decode('utf_8') }}</a></li>
+                            <li><a href="{{ file.resource }}?format=html">{{ file.name }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endif %}
             </div>
         {% endif %}
 
-        {% if members or members == [] %}
+        {% if members or members|length == 0 %}
             <div class="box-content">
                 <div class="box-content-fragment">
                     <b>Members </b>
-                    {% if members == [] %}
+                    {% if members|length == 0 %}
                         None
                     {% else %}
                         <ul>

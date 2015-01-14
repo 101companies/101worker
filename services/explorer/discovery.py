@@ -15,6 +15,9 @@ from data101 import DumpdataProvider
 from data101 import WikidataProvider
 from data101 import TripledataProvider
 
+from django.conf import settings
+from django.core.cache import cache
+
 
 class DiscoveryException(Exception):
     def __init__(self, status, msg):
@@ -37,7 +40,7 @@ class ResourceNotFoundException(DiscoveryException):
     def __init__(self):
         DiscoveryException.__init__(self, '404 Not found', 'Requested resource not found')
 
-base_uri = ''
+base_uri = settings.BASE_URL
 
 
 def find(fragment, query, basePath=None):
@@ -78,7 +81,17 @@ def mapFragment(filePath, fragmentPath, fragment):
 
 
 def setWikidata(response, namespace, member):
-    wikiUrl, headline = WikidataProvider.getWikiData(namespace,member)
+    key = "wikidata-{}-{}".format(namespace, member)
+    cached = cache.get(key)
+    if not cached:
+        wikiUrl, headline = WikidataProvider.getWikiData(namespace,member)
+        cached = json.dumps({ 'wikiUrl': wikiUrl, 'headline': headline })
+        cache.set(key, cached)
+    else:
+        parsed_cache = json.loads(cached)
+        wikiUrl = parsed_cache['wikiUrl']
+        headline = parsed_cache['headline']
+
     response['headline'] = headline
     response['wiki'] = wikiUrl
 
@@ -133,9 +146,11 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     #gather member data
     lineNumbers = None
+    print extractor
     if extractor:
         try:
             extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+            print extractedFacts
             #TODO There has to be a better way to do this
             for f1 in extractedFacts['fragments']:
                 selected, fragmentPath = find(f1, fragment)
@@ -205,7 +220,7 @@ def discoverMemberFile(namespace, member, path, file):
             for fragment in extractedFacts.get('fragments', []):
                 fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
                 response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
-        except:
+        except OSError:
             pass
 
 

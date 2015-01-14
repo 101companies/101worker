@@ -1,9 +1,10 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>101explorer</title>
 	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="{{ static_uri }}/static/discovery/style.css" type="text/css">
+	<link rel="stylesheet" href="{% static 'discovery/style.css' %}" type="text/css">
 
 	<meta charset="utf-8">
 </head>
@@ -30,7 +31,7 @@
                 </div>
                 <form class="pull-right navbar-search form-horizontal">
                     <div class="input-append">
-                        <input id="locator" style="text-align: right;" class="search-query span8" type="text" disabled value="{{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '').decode('utf_8') }}">
+                        <input id="locator" style="text-align: right;" class="search-query span8" type="text" disabled value="{{ uri }}">
                     </div>
                 </form>
             {% endif %}
@@ -43,41 +44,41 @@
 {% if not classifier == 'Namespace' %}
 
     <div id="locator-path" style="display:none; visibility: hidden;">
-        {{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '').decode('utf_8') }}
+        {{ uri }}
     </div>
 
     <div id="relative-path" style="display: none; visibility: hidden;">
         {% if not classifier == 'Namespace member' %}
-            {{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}
+            {{ uri }}
         {% endif %}
     </div>
 
     <div id="with-absolute-markup" style="display: none; visibility: hidden;">
-        {%- if not classifier == 'Namespace member' -%}
-            {%- if classifier == 'Folder' -%}
-               &lt;folder url="{{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '').decode('utf_8') }}" /&gt;
-            {%- elif classifier == 'File' -%}
-                &lt;file url="{{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '').decode('utf_8') }}" /&gt;
-            {%- else -%}
-                &lt;fragment url="{{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '').decode('utf_8') }}" /&gt;
-            {%- endif -%}
-        {%- else -%}
-            &lt;folder url="{{ uri.replace('http://101companies.org/resources', '').replace('http://localhost/services/discovery', '').decode('utf_8') }}" /&gt;
-        {%- endif -%}
+        {% if not classifier == 'Namespace member' %}
+            {% if classifier == 'Folder' %}
+               &lt;folder url="{{ uri }}" /&gt;
+            {% elif classifier == 'File' %}
+                &lt;file url="{{ uri }}" /&gt;
+            {% else %}
+                &lt;fragment url="{{ uri }}" /&gt;
+            {% endif %}
+        {% else %}
+            &lt;folder url="{{ uri }}" /&gt;
+        {% endif %}
     </div>
 
     <div id="with-relative-markup" style="display: none; visibility: hidden;">
-        {%- if not classifier == 'Namespace member' -%}
-            {%- if classifier == 'Folder' -%}
-               &lt;folder url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
-            {%- elif classifier == 'File' -%}
-                &lt;file url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
-            {%- else -%}
-                &lt;fragment url="{{ uri.replace('http://101companies.org/resources/', '').replace('http://localhost/services/discovery/', '').split('/',2)[2].decode('utf_8') }}" /&gt;
-            {%- endif -%}
-        {%- else -%}
+        {% if not classifier == 'Namespace member' %}
+            {% if classifier == 'Folder' %}
+               &lt;folder url="{{ uri }}" /&gt;
+            {% elif classifier == 'File' %}
+                &lt;file url="{{ uri }}" /&gt;
+            {% else %}
+                &lt;fragment url="{{ uri }}" /&gt;
+            {% endif %}
+        {% else %}
             &lt;folder url="" /&gt;
-        {%- endif -%}
+        {% endif %}
     </div>
 
 {% endif %}
@@ -90,7 +91,7 @@
 
     <footer>
         <a href="http://101companies.org/wiki/@explorer">What's the 101explorer?</a> <br />
-        Switch from HTML format to <a href="{{ uri.decode('utf_8') }}">JSON format</a> or <a href="{{ uri.decode('utf_8') }}?format=rdf">RDF format</a>.<br />
+        Switch from HTML format to <a href="{{ uri }}">JSON format</a> or <a href="{{ uri }}?format=rdf">RDF format</a>.<br />
 
         Powered by <a href="http://twitter.github.com/bootstrap/">Twitter Bootstrap</a>,
         <a href="http://jquery.com/">JQuery</a> and <a href="http://masonry.desandro.com/">Masonry</a>
@@ -102,8 +103,8 @@
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="http://www.steamdev.com/zclip/js/jquery.zclip.min.js"></script>
 
-<script src="{{ static_uri }}/static/discovery/js/libs/jquery.masonry.min.js"></script>
-{#<script src="{{ static_uri }}/static/discovery/js/libs/ZeroClipboard.min.js"></script>#}
-<script src="{{ static_uri }}/static/discovery/js/base.js"></script>
+<script src="{% static 'discovery/js/libs/jquery.masonry.min.js' %}"></script>
+{#<script src="{% static 'discovery/js/libs/ZeroClipboard.min.js'}"></script>#}
+<script src="{% static 'discovery/js/base.js' %}"></script>
 </body>
 </html>

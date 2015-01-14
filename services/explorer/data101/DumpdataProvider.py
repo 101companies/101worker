@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import json
-import commands
 import os
 import codecs
 import urllib
 import sys
-#sys.path.append('../../../libraries/101meta')
 import const101
+import subprocess
+
 import requests
 import requests_cache
 requests_cache.install_cache('discovery_cache', expire_after=60*60*60, backend='memory')
@@ -50,11 +50,9 @@ def getTerms(file):
 def getFragment(file, fragment, locator):
     fullFile = os.path.join(const101.sRoot, file)
     fullLocator = os.path.join(const101.sRoot, locator)
-    command = '{0} {1} < {2}'.format(fullLocator, fragment, fullFile)
-    #escape some shell symbols
-    command = command.replace(';', '\;').replace('|', '\|').replace("'", "\\'")
-    status, output = commands.getstatusoutput(command)
-    if not status == 0: raise Exception('Fragment location failed: {0} \n command was {1}\n locator was {2}'.format(output, command, fullLocator))
+
+    with open(fullFile) as f:
+        output = subprocess.check_output([fullLocator, fragment], stdin=f)
 
     return json.loads(output)
 
@@ -67,11 +65,15 @@ def getFacts(file, extractor):
 
     fullFile = os.path.join(const101.sRoot, file)
     fullExtractor = os.path.join(const101.sRoot, extractor)
-    command = '{0} < {1}'.format(fullExtractor, fullFile)
-    #escape some shell symbols
-    command = command.replace(';', '\;').replace('|', '\|').replace('&', '\&').replace("'", "\\'")
-    status, output = commands.getstatusoutput(command)
-    if not status == 0: raise Exception('Fact extraction failed: {0}'.format(output))
+    # print fullExtractor
+    # command = '{0} < {1}'.format(fullExtractor, fullFile)
+    # #escape some shell symbols
+    # command = command.replace(';', '\;').replace('|', '\|').replace('&', '\&').replace("'", "\\'")
+    # status, output = commands.getstatusoutput(command)
+    # if not status == 0: raise Exception('Fact extraction failed: {0}'.format(output))
+
+    with open(fullFile) as f:
+        output = subprocess.check_output([fullExtractor, fullFile], stdin=f)
 
     return json.loads(output)
 
@@ -141,30 +143,31 @@ def getDerivedFiles(filePath):
     fullDir = os.path.dirname(fullPath)
     basename = os.path.basename(fullPath)
 
-    cmd = 'ls {0} | grep {1}'.format(fullDir, basename)
-    status, output = commands.getstatusoutput(cmd)
+    # cmd = 'ls {0} | grep {1}'.format(fullDir, basename)
+    # status, output = commands.getstatusoutput(cmd)
+
+    output = [f for f in os.listdir(fullDir) if f.startswith(basename)]
 
     result = []
-    if status == 0:
-        moduleSummary = json.load(open(const101.moduleSummaryDump, 'r'))['resource']
-        for str in output.split('\n'):
-            ext = '.' + '.'.join(str.rsplit('.', 2)[1:])
-            summary = moduleSummary.get(ext, None)
-            producedBy = None
-            description = None
-            headline = None
-            if summary:
-                producedBy = os.path.join('http://101companies.org/resources/modules', summary.get('name'))
-                headline   = summary['info']['headline']
-                description= os.path.join(producedBy, 'module.json')
+    moduleSummary = json.load(open(const101.moduleSummaryDump, 'r'))['resource']
+    for str in output:
+        ext = '.' + '.'.join(str.rsplit('.', 2)[1:])
+        summary = moduleSummary.get(ext, None)
+        producedBy = None
+        description = None
+        headline = None
+        if summary:
+            producedBy = os.path.join('http://101companies.org/resources/modules', summary.get('name'))
+            headline   = summary['info']['headline']
+            description= os.path.join(producedBy, 'module.json')
 
-            result.append({
-                'name'      : str,
-                'resource'  : 'http://data.101companies.org/resources/{}'.format(os.path.join(os.path.dirname(filePath), str)),
-                'producedBy': producedBy,
-                'headline'   : headline,
-                'description': description
-            })
+        result.append({
+            'name'      : str,
+            'resource'  : 'http://data.101companies.org/resources/{}'.format(os.path.join(os.path.dirname(filePath), str)),
+            'producedBy': producedBy,
+            'headline'   : headline,
+            'description': description
+        })
 
     return result
 

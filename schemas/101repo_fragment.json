@@ -1,7 +1,7 @@
 {
     "title": "Fragment schema",
     "type": "object",
-    "required": ["wiki", "github", "name", "headline", "namespace", "sesame", "endpoint", "classifier", "geshi", "language", "content", "fragments"],
+    "required": ["wiki", "github", "name", "headline", "namespace", "sesame", "classifier", "geshi", "language", "content", "fragments"],
     "properties": {
         "wiki": {
             "type": "string",
@@ -28,11 +28,6 @@
         "sesame": {
             "type": "string",
             "description": "link to the sesame triplestore",
-            "format": "uri"
-        },
-        "endpoint": {
-            "type": "string",
-            "description": "link to the semantic endpoint triples",
             "format": "uri"
         },
         "classifier": {

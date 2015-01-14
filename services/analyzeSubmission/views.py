@@ -48,14 +48,7 @@ def handle_request(input_data):
     else:
         result = json.load(open(os.path.join(path, 'summary.json'), 'r'))
 
-    result['error'] = error
-
-    #result = json.dumps({
-    #    'concepts': ['total'],
-    #    'features'; [],
-    #    'languages': ['Ruby'],
-    #    'technologies': ['rails']
-    #})
+    result['error'] = str(error)
 
     # make request
     headers = {'content-type': 'application/json'}
@@ -68,7 +61,7 @@ def analyze(request):
     if request.method != 'POST':
         return HttpResponseNotAllowed('Only get allowed')
     
-    input_data = json.loads(request.raw_post_data)
+    input_data = json.loads(request.body)
     
     p = Process(target=handle_request, args=(input_data, ))
     p.start() 
