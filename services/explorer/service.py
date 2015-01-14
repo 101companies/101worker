@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from jsonschema import validate
 import os
 import json
-import filters
 from django.conf import settings
 import discovery
 from data101 import DumpdataProvider
