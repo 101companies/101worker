@@ -5,6 +5,8 @@ Constants for 101worker are defined in environment variables. These consist of f
 
 File paths and directory paths are similar to each other: they are given relative to the directory that the 101worker directory is in and will be turned into absolute paths by the runner. Directory paths *must* and file paths *must not* not end with a slash, that way the runner can disambiguate between a file and a directory paths. All directories that appear in any path will be created automatically if they don't exist. Nonexistent files will *not* be created (which is why there is a need for disambiguation). However, the resulting environment variables *will never have a trailing slash*!
 
+You can reference the absolute paths to the worker and the absolute path to the result directory using *$worker* and *$results* respectively.
+
 You can also reference other paths by their key. For example, if there is the definition like `dumps101dir : 101web/data/dumps/`, then you can reference that path like `wikiDump101 : [dumps101dir, wiki.json]`. The result will be `wikiDump101=/path/to/worker/101web/data/dumps/wiki.json`.
 
 URLs are only special if they start with the `file://` scheme. In that case, their path will be turned into an absolute `file://` URL as described above. The same rule for trailing slashes apply. Other URLs like `http://` or `https://` won't be touched.

@@ -33,6 +33,9 @@ from `$vars` and the second element being a path relative to that. The `$ref`
 is then loaded from `$vars` and the result is joined with the `$rest` before
 proceeding. This only makes sense if `$ref` references a directory.
 
+If `$value` contains the text _$worker_ or _$result_, they are replaced with
+the absolute paths to the local 101worker and result directory, respectively.
+
 ## load\_url
 
     load_url(\%vars, $value)

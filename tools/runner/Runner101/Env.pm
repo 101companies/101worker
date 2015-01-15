@@ -87,6 +87,9 @@ from C<$vars> and the second element being a path relative to that. The C<$ref>
 is then loaded from C<$vars> and the result is joined with the C<$rest> before
 proceeding. This only makes sense if C<$ref> references a directory.
 
+If C<$value> contains the text I<$worker> or I<$result>, they are replaced with
+the absolute paths to the local 101worker and result directory, respectively.
+
 =head2 load_url
 
     load_url(\%vars, $value)
