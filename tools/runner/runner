@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use Cwd                qw(abs_path);
 use File::Basename     qw(dirname);
-use Getopt::Long;
 use YAML               qw(Load);
 
 BEGIN { push @INC, dirname $0 }
@@ -13,16 +12,15 @@ use Runner101::Modules;
 
 
 my $config     = do { local $/; YAML::Load(<STDIN>) } or die $!;
-my $worker_dir = dirname dirname dirname abs_path $0;
-
-my %options    = (
-    root_dir    => (dirname $worker_dir),
-    modules_dir => "$worker_dir/modules",
+my $worker_dir = $ENV{worker101dir} // dirname dirname dirname abs_path $0;
+our %options    = (
+    config      => $config,
+    worker      => $worker_dir,
+    results     => ($ENV{results101dir} // dirname $worker_dir),
+    modules_dir => ($ENV{modules101dir} // "$worker_dir/modules"),
 );
-GetOptions(\%options, qw(root=s modules=s));
 
-chdir $options{root_dir} or die "Could not cd into $options{root_dir}: $!";
-load_vars($config);
+load_vars(\%options);
 
 my $diff = Runner101::Modules::run(\%options);
 print $_, "\n" for @$diff;

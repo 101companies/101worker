@@ -13,19 +13,20 @@ URI::URL::strict(1);
 
 sub load_vars
 {
-    my ($vars) = @_;
-    while (my ($key, $value) = each %$vars)
+    my ($options) = @_;
+    while (my ($key, $value) = each %{$options->{config}})
     {
         my $func   = $value =~ m{^[^:/]+://} ? \&load_url : \&load_path;
-        $ENV{$key} = $func->($vars, $value);
+        $ENV{$key} = $func->($options, $value);
     }
 }
 
 
 sub load_path
 {
-    my ($vars, $value) = @_;
-    $value = "$vars->{$value->[0]}$value->[1]" if ref $value;
+    my ($options, $value) = @_;
+    $value = "$options->{config}{$value->[0]}$value->[1]" if ref $value;
+    $value =~ s/\$(\w+)/$options->{$1} || die "Invalid folder: $1"/e;
 
     my ($dir, $file) = $value =~ m{/$}
                      ? ($value,          ''                    )
@@ -40,10 +41,10 @@ sub load_path
 
 sub load_url
 {
-    my ($vars, $value) = @_;
+    my ($config, $value) = @_;
     my $url = URI::URL->new($value);
     if ($url->scheme eq 'file')
-    {   $url = URI::URL->newlocal(load_path($vars, $url->host . $url->path)) }
+    {   $url = URI::URL->newlocal(load_path($config, $url->host . $url->path)) }
     "$url"
 }
 

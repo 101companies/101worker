@@ -21,7 +21,7 @@ sub clone_or_pull
 {
     my ($dir, $url, $branch) = @_;
     my ($repo, $revision) = -e "$dir/.git" ? pull(@_) : clone(@_);
-    git($repo, 'checkout', $branch) if defined $branch;
+    git($repo, 'checkout', '-q', $branch) if defined $branch;
     gather_changes($repo, $revision, 'HEAD')
 }
 
