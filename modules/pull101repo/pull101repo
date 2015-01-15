@@ -9,6 +9,10 @@ use Repo101::Pull qw(pull101repo);
 my %paths = map { ($_ => $ENV{$_} || die "Missing environment variable: $_") }
                 qw(repo101dir gitdeps101dir repo101url gitdeps101url);
 
+my $branches = exists $ENV{repo101branch}
+             ? {$paths{repo101url} => $ENV{repo101branch}
+             : {};
+
 my $repos = do
 {
     my $url     = $paths{gitdeps101url};
@@ -21,7 +25,7 @@ my $changes = pull101repo(
     deps_path => $paths{gitdeps101dir},
     root_url  => $paths{repo101url   },
     repos     => $repos,
+    branches  => $branches,
 );
 
-write_file('changes.json', JSON->new->utf8->pretty->encode($changes));
 print "$changes->{$_} $paths{repo101dir}/$_\n" for sort keys $changes;

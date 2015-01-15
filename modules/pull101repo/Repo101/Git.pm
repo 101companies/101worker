@@ -19,8 +19,10 @@ our $null_tree = git(qw(hash-object -t tree /dev/null));
 
 sub clone_or_pull
 {
-    my ($dir) = @_;
-    -e "$dir/.git" ? pull(@_) : clone(@_)
+    my ($dir, $url, $branch) = @_;
+    my ($repo, $revision) = -e "$dir/.git" ? pull(@_) : clone(@_);
+    git($repo, 'checkout', $branch) if defined $branch;
+    gather_changes($repo, $revision, 'HEAD')
 }
 
 sub clone
@@ -28,17 +30,17 @@ sub clone
     my ($dir, $url) = @_;
     print "clone\t$dir\t$url\n";
     git('clone', '-q', $url, $dir);
-    gather_changes(Git::Repository->new(work_tree => $dir), undef, 'HEAD')
+    (Git::Repository->new(work_tree => $dir), undef)
 }
 
 sub pull
 {
-    my ($dir) = @_;
+    my ($dir, undef, $branch) = @_;
     print "pull\t$dir\n";
     my $repo     = Git::Repository->new(work_tree => $dir);
     my $revision = git($repo, 'rev-parse', 'HEAD');
     git($repo, 'pull', '-q');
-    gather_changes($repo, $revision, 'HEAD')
+    ($repo, $revision)
 }
 
 

@@ -15,6 +15,7 @@ use Class::Tiny {
     repos     => undef,
     changes   => sub { {} },
     pulled    => sub { {} },
+    branches  => sub { {} },
 };
 
 

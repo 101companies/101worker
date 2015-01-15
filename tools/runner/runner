@@ -24,4 +24,5 @@ GetOptions(\%options, qw(root=s modules=s));
 chdir $options{root_dir} or die "Could not cd into $options{root_dir}: $!";
 load_vars($config);
 
-Runner101::Modules::run(\%options);
+my $diff = Runner101::Modules::run(\%options);
+print $_, "\n" for @$diff;
