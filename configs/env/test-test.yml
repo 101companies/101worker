@@ -1,8 +1,8 @@
 # Test values
-repo101dir      : test/test/101results/101repo/
-gitdeps101dir   : test/test/101results/gitdeps/
+repo101dir      : test/test/101repo/
+gitdeps101dir   : test/test/gitdeps/
 repo101url      : https://github.com/101companies/101test
-gitdeps101url   : file://101worker/configs/gitdeps/empty.json
+gitdeps101url   : file://101worker/configs/empty.json
 config101       : 101worker/configs/pull.json
 config101schema : 101worker/schemas/config.schema.json
 module101schema : 101worker/schemas/module.schema.json

@@ -51,7 +51,7 @@ sub pull101repo
 sub pull_repo
 {
     my ($self, $dir, $url) = @_;
-    $self->pulled->{$url} = clone_or_pull($dir, $url)
+    $self->pulled->{$url} = clone_or_pull($dir, $url, $self->branches->{$url})
         if not exists $self->pulled->{$url};
     $self->pulled->{$url}
 }

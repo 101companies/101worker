@@ -28,7 +28,6 @@ sub clone_or_pull
 sub clone
 {
     my ($dir, $url) = @_;
-    print "clone\t$dir\t$url\n";
     git('clone', '-q', $url, $dir);
     (Git::Repository->new(work_tree => $dir), undef)
 }
@@ -36,7 +35,6 @@ sub clone
 sub pull
 {
     my ($dir, undef, $branch) = @_;
-    print "pull\t$dir\n";
     my $repo     = Git::Repository->new(work_tree => $dir);
     my $revision = git($repo, 'rev-parse', 'HEAD');
     git($repo, 'pull', '-q');

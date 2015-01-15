@@ -32,6 +32,7 @@ sub run
                 ? explain_child_error({prog => $prog}, $exit_code, $!)
                 : "$prog exited with code 0.");
     }
+    $self->diff
 }
 
 
