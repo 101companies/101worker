@@ -1,7 +1,4 @@
-use strict;
-use warnings;
-use Test::More tests => 11;
-use Test::Exception;
+use Test::Most    tests => 11;
 use Repo101::Pull;
 
 my $g = 'https://github.com';

@@ -1,7 +1,4 @@
-use strict;
-use warnings;
-use Test::More      tests => 7;
-use Test::Exception;
+use Test::Most      tests => 7;
 use Runner101::Diff qw(run_diff parse);
 
 

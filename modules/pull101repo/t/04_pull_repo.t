@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-use Test::More    tests => 4;
+use Test::Most    tests => 4;
 use Repo101::Pull;
 
 # monkey-patch, because we don't actually care about git in this test

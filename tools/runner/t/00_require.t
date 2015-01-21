@@ -1,9 +1,22 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More;
 
-for (qw(File::Slurp IPC::Run JSON JSON::Schema List::MoreUtils
-        Proc::ChildError Test::Exception Try::Tiny URI::URL))
+my @modules = qw(
+    File::Slurp
+    IPC::Run
+    JSON
+    JSON::Schema
+    List::MoreUtils
+    Proc::ChildError
+    Test::Most
+    Try::Tiny
+    URI::URL
+);
+
+plan tests => scalar @modules;
+
+for (@modules)
 {
     require_ok $_ or BAIL_OUT "Couldn't load module: $_, please "
                             . "install it with ``cpan install $_''";

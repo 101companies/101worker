@@ -1,9 +1,6 @@
-use strict;
-use warnings;
-use Cwd        qw(abs_path);
+use Test::Most    tests => 6;
+use Cwd           qw(abs_path);
 use File::Temp;
-use Test::More tests => 6;
-use Test::Exception;
 use Repo101::Pull;
 
 my $test_dir = File::Temp->newdir;

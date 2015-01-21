@@ -1,7 +1,5 @@
-use strict;
-use warnings;
+use Test::Most         tests => 3;
 use File::Temp;
-use Test::More         tests => 3;
 use Runner101::Helpers qw(slurp_json spew_json);
 use Runner101::Module;
 use Runner101::Modules;

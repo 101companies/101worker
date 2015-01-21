@@ -21,6 +21,6 @@ doc:
 
 install:
 	cpan install File::Slurp IPC::Run JSON JSON::Schema List::MoreUtils \
-                 Proc::ChildError Test::Exception Try::Tiny URI::URL
+                 Proc::ChildError Test::Most Try::Tiny URI::URL
 
 .PHONY: run clean test cover doc install

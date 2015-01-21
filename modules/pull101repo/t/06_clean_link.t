@@ -1,12 +1,9 @@
-use strict;
-use warnings;
+use Test::Most      tests => 9;
 use Cwd             qw(abs_path);
 use File::Path      qw(make_path);
 use File::Slurp     qw(write_file);
 use File::Temp;
 use Git::Repository;
-use Test::More      tests => 9;
-use Test::Exception;
 use Repo101::Git    qw(git);
 use Repo101::Pull;
 

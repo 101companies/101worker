@@ -1,9 +1,6 @@
-use strict;
-use warnings;
+use Test::Most         tests => 7;
 use Class::Tiny;
 use List::Util         qw(pairmap);
-use Test::More         tests => 7;
-use Test::Exception;
 use Runner101::Modules;
 use constant MODULE  => 'Runner101::Module';
 use constant MODULES => 'Runner101::Modules';

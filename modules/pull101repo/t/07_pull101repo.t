@@ -1,7 +1,4 @@
-use strict;
-use warnings;
-use Test::More      tests => 9;
-use Test::Exception;
+use Test::Most      tests => 9;
 use Cwd             qw(abs_path);
 use File::Slurp     qw(write_file append_file);
 use File::Temp;

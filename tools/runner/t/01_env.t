@@ -1,7 +1,4 @@
-use strict;
-use warnings;
-use Test::More      tests => 22;
-use Test::Exception;
+use Test::Most      tests => 22;
 use Cwd             qw(abs_path);
 use File::Temp;
 use Runner101::Env  qw(load_vars load_url load_path);
