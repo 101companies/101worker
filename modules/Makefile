@@ -1,10 +1,7 @@
-# Invoke runner and cleaner per module
-
+# add 101worker/libraries to PYTHONPATH and run the runner
 %.run:
-	../tools/runner/runner <../configs/env/$*.yml
-
-%.debug:
-	python ../tools/runner.py $*.json verbose
+	PYTHONPATH="$$PYTHONPATH:$$(dirname $$(pwd))/libraries" \
+	    ../tools/runner/runner <../configs/env/$*.yml
 
 %.archive:
 	python ../tools/archiver.py $*.json
