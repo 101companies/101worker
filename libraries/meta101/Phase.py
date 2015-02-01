@@ -24,12 +24,10 @@ class Phase(object):
         for op, path in incremental101.gendiff():
             if path.startswith(repodir):
                 target = path.replace(repodir, targetdir, 1) + self.suffix()
-                switch[op](**{
-                    "target"   : target,
-                    "filename" : path,
-                    "dirname"  : os.path.dirname (path),
-                    "basename" : os.path.basename(path),
-                })
+                switch[op](target  =target,
+                           filename=path,
+                           dirname =os.path.dirname (path),
+                           basename=os.path.basename(path))
 
 
     def onfile(self, **kwargs):
