@@ -24,7 +24,12 @@ class Phase(object):
         for op, path in incremental101.gendiff():
             if path.startswith(repodir):
                 target = path.replace(repodir, targetdir, 1) + self.suffix()
-                switch[op](source=path, target=target)
+                switch[op](**{
+                    "target"   : target,
+                    "filename" : path,
+                    "dirname"  : os.path.dirname (path),
+                    "basename" : os.path.basename(path),
+                })
 
 
     def onfile(self, **kwargs):
@@ -52,7 +57,7 @@ class Phase(object):
 
         result = {"id" : index}
         for key in rule:
-            func = getattr(self, "check{}".format(key), None)
+            func = getattr(self, "check" + key, None)
             if func and not func(rule[key], key=key, rule=rule, **kwargs):
                 return None
 
