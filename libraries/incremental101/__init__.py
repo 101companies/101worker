@@ -110,7 +110,8 @@ def writefile(path, content):
     diff is communicated. If the content is different, the old file is
     overwritten with the new content.
 
-    If the file doesn't exist, it is created, obviously.
+    If the file doesn't exist, it is created, obviously. If the directory the
+    file is to be put into doesn't exist, it is also created.
     """
     path       = os.path.abspath(path)
     oldcontent = None
@@ -120,7 +121,9 @@ def writefile(path, content):
         pass
 
     if not oldcontent or content != oldcontent:
-        with open(path, "w") as f: f.write(content)
+        os.makedirs(os.path.dirname(path))
+        with open(path, "w") as f:
+            f.write(content)
         printdiff("M" if oldcontent else "A", path)
     else:
         printdiff()

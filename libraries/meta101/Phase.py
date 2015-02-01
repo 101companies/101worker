@@ -67,7 +67,7 @@ class Phase(object):
                 survivals.append(unit)
         units = survivals
 
-        incremental101.writefile(target, json.dumps(units))
+        incremental101.writefile(target, json.dumps(units, sort_keys=True))
         if units:
             self.matches.append({
                 "filename" : kwargs["filename"],
@@ -112,16 +112,7 @@ class Phase(object):
         return any(self.matchname(v, filename) for v in tolist(values))
 
     def checkbasename(self, values, basename, **kwargs):
-        return self.checkfilename(values, basename)
-
-
-    def matchdirname(self, want, path):
-        pattern = stripregex(want)
-        if pattern:
-            match = re.search(pattern, path)
-            return match and value[match.end() + 1] == "/"
-        else:
-            return path == want or path.startswith(want + "/")
+        return any(self.matchname(v, basename) for v in tolist(values))
 
     def checkdirname(self, values, dirname, **kwargs):
-        return any(self.matchdirname(v, dirname) for v in tolist(values))
+        return any(self.matchname(v,  dirname) for v in tolist(values))
