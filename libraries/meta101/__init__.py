@@ -1,5 +1,6 @@
 import json
 import os
+from Phase      import Phase
 from Basics     import Basics
 from Predicates import Predicates
 from Fragments  import Fragments
@@ -20,13 +21,3 @@ def matchall(phasekey):
     with open(os.env['rulesDump101']) as f:
         rules = json.load(f)["results"]["rules"]
     return getphase(phasekey)(rules).run()
-
-
-def tolist(thing):
-    return thing if isinstance(thing, list) else [thing]
-
-
-def stripregex(pattern, default=None):
-    if pattern.startswith("#") and pattern.endswith("#"):
-        return pattern[1:len(pattern) - 2]
-    return default

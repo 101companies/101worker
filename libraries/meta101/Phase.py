@@ -1,14 +1,18 @@
 import abc
+import json
 import os
+import re
 import incremental101
+from   util           import stripregex, tolist
 
 
 class Phase(object):
     __metaclass__ = abc.ABCMeta
 
 
-    def __init__(rules):
-        self.rules = rules
+    def __init__(self, rules):
+        self.rules   = rules
+        self.matches = []
 
 
     @abc.abstractmethod
@@ -23,11 +27,13 @@ class Phase(object):
 
         for op, path in incremental101.gendiff():
             if path.startswith(repodir):
-                target = path.replace(repodir, targetdir, 1) + self.suffix()
+                target  = path.replace(repodir, targetdir, 1) + self.suffix()
                 switch[op](target  =target,
                            filename=path,
-                           dirname =os.path.dirname (path),
+                           dirname =os.path.dirname(path)[len(repodir):],
                            basename=os.path.basename(path))
+
+        return self.matches
 
 
     def onfile(self, **kwargs):
@@ -41,6 +47,33 @@ class Phase(object):
                     result["metadata"] = metadata
                     units.append(result.clone())
 
+        # TODO fix this dominator code
+        keys     = []
+        for unit in units:
+            metadata = unit["metadata"]
+            if "dominator" in metadata:
+                keys.append(metadata["dominator"])
+        removals = []
+        for key in keys:
+            for unit in units:
+                metadata = unit["metadata"]
+                if key in metadata \
+                and (not "dominator" in metadata
+                     or not metadata["dominator"] == key):
+                    removals.append(unit)
+        survivals = []
+        for unit in units:
+            if not unit in removals:
+                survivals.append(unit)
+        units = survivals
+
+        incremental101.writefile(target, json.dumps(units))
+        if units:
+            self.matches.append({
+                "filename" : kwargs["filename"],
+                "units"    : units,
+            })
+
 
     def ondelete(self, target, **kwargs):
         incremental101.deletefile(target)
@@ -53,13 +86,22 @@ class Phase(object):
         if not self.applicable(rule):
             return None
 
-        result = {"id" : index}
+        kwargs["result"] = {"id" : index}
         for key in rule:
             func = getattr(self, "check" + key, None)
             if func and not func(rule[key], key=key, rule=rule, **kwargs):
                 return None
 
-        return result
+        return kwargs["result"]
+
+
+    def checksuffix(self, suffixes, basename, **kwargs):
+        return any(basename.endswith(suffix) for suffix in tolist(suffixes))
+
+
+    def checkcontent(self, pattern, filename, **kwargs):
+        with open(filename) as f:
+            return re.search(stripregex(pattern, pattern), f.read())
 
 
     def matchname(self, want, path):
@@ -83,12 +125,3 @@ class Phase(object):
 
     def checkdirname(self, values, dirname, **kwargs):
         return any(self.matchdirname(v, dirname) for v in tolist(values))
-
-
-    def checksuffix(self, suffixes, basename, **kwargs):
-        return any(basename.endswith(suffix) for suffix in tolist(suffixes))
-
-
-    def checkcontent(self, pattern, source, **kwargs):
-        with open(source) as f:
-            return re.search(stripregex(pattern, pattern), f.read())
