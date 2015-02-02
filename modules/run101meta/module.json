@@ -1,0 +1,8 @@
+{
+    "command"      : "python program.py",
+    "dependencies" : ["rules101meta"],
+    "environment"  : [
+        "rulesDump101",
+        "targets101dir"
+    ]
+}
