@@ -1,4 +1,8 @@
 import os
+from warnings import warn
+
+warn("const101.py is DEPRECATED, see 101worker/configs/env instead")
+
 
 url101wiki = "http://101companies.org/wiki/"
 url101explorer = "http://101companies.org/resources/"
