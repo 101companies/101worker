@@ -18,6 +18,6 @@ def getphase(key):
 
 
 def matchall(phasekey):
-    with open(os.env['rulesDump101']) as f:
+    with open(os.environ['rulesDump101']) as f:
         rules = json.load(f)["results"]["rules"]
     return getphase(phasekey)(rules).run()

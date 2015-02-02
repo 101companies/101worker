@@ -17,7 +17,7 @@ config101              : $worker/configs/dev.json
 config101schema        : $worker/schemas/config.schema.json
 module101schema        : $worker/schemas/module.schema.json
 rulesDump101           : [dumps101dir,             rules.json]
-matchesDump101         : [dumps101dir,           matches.json]
+basicsDump101          : [dumps101dir,           matches.json]
 predicatesDump101      : [dumps101dir,        predicates.json]
 fragmentsDump101       : [dumps101dir,         fragments.json]
 geshiDump101           : [dumps101dir,             geshi.json]

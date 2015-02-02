@@ -10,6 +10,7 @@ because the existing modules sure are noisy.
 See 101worker/tools/runner for more information on the runner side of things.
 """
 
+import json
 import os
 import re
 import sys
@@ -97,6 +98,13 @@ def printdiff(op="-", path="-"):
     """
     global linesread
     outstream.write("\n{} {} {}\n".format(linesread, op, path))
+
+
+def writejson(path, data):
+    """
+    Converts the given data into canonical JSON and then calls writefile.
+    """
+    writefile(path, json.dumps(data, sort_keys=True))
 
 
 def writefile(path, content):

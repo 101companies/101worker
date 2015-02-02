@@ -33,8 +33,8 @@ class Phase(object):
 
 
     def run(self):
-        repodir   = os.env[   "repo101dir"]
-        targetdir = os.env["targets101dir"]
+        repodir   = os.environ[   "repo101dir"]
+        targetdir = os.environ["targets101dir"]
         switch    = {"A" : self.onfile, "M" : self.onfile, "D" : self.ondelete}
 
         for op, path in incremental101.gendiff():
@@ -79,7 +79,7 @@ class Phase(object):
                 survivals.append(unit)
         units = survivals
 
-        incremental101.writefile(target, json.dumps(units, sort_keys=True))
+        incremental101.writejson(target, units)
         if units:
             self.matches.append({
                 "filename" : kwargs["filename"],
