@@ -42,15 +42,20 @@ sub BUILD
     $self->ensure_envs_exist(runner => RUNNER_ENVS);
     $self->die_if_invalid;
 
-    $self->names(validate_json(@ENV{qw(config101 config101schema)}));
-    my $module_schema = slurp_json($ENV{module101schema});
+    my $config        = validate_json(@ENV{qw(config101 config101schema)});
+    my $module_schema = slurp_json   ($ENV{module101schema});
 
-    for (0 .. $#{$self->names})
+    $self->names([map { ref $_ ? $_->[0] : $_ } @$config]);
+
+    for my $index (0 .. $#$config)
     {
-        my $name = $self->names->[$_];
+        my  $cfg          = $config->[$index];
+        my ($name, @rest) = (ref $cfg ? @$cfg : $cfg);
+
         push @{$self->modules}, Runner101::Module->new(
-            index  => $_,
+            index  => $index,
             name   => $name,
+            args   => \@rest,
             dir    => "$args->{modules_dir}/$name",
             parent => $self,
             schema => $module_schema,

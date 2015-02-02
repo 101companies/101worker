@@ -5,7 +5,7 @@ use Try::Tiny;
 use Runner101::Diff    qw(run_diff);
 use Runner101::Helpers qw(slurp_json validate_json);
 
-use Class::Tiny qw(index name dir environment dependencies);
+use Class::Tiny qw(index name args dir command environment dependencies);
 
 our $SIGNAL  = 'KILL';
 our $TIMEOUT = '1h';
@@ -26,6 +26,7 @@ sub BUILD
         {}
     };
 
+    $self->command     ([split /\s+/, $json->{command} || '']);
     $self->environment ($json->{environment } // []);
     $self->dependencies($json->{dependencies} // []);
 
@@ -38,7 +39,8 @@ sub run
 {
     my ($self, $parent) = @_;
     chdir $self->dir or die "Couldn't cd into " . $self->dir;
-    run_diff(['timeout', '-s', $SIGNAL, $TIMEOUT, 'make'], $parent->diff)
+    run_diff(['timeout', '-s', $SIGNAL, $TIMEOUT,
+              @{$self->command}, @{$self->args}], $parent->diff)
 }
 
 

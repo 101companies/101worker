@@ -1,4 +1,4 @@
-use Test::Most         tests => 3;
+use Test::Most         tests => 4;
 use File::Temp;
 use Runner101::Helpers qw(slurp_json spew_json);
 use Runner101::Module;
@@ -35,7 +35,14 @@ cmp_ok scalar @{$parent->errors->{other}}, '==', 1,
 
 
 $parent->errors({});
-spew_json("$dir/module.json", {dependencies => [], environment => []});
-Runner101::Module->new($args);
+spew_json("$dir/module.json", {
+              command      => 'python program.py',
+              dependencies => [],
+              environment  => [],
+          });
+
+my $module = Runner101::Module->new($args);
+is_deeply $module->command, [qw(python program.py)],
+          'Command gets split by whitespace';
 
 ok !exists $parent->errors->{other}, 'Valid module file causes no error';

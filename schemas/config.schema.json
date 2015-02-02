@@ -1,6 +1,6 @@
 {
     "title"       : "Runner Config Schema",
     "type"        : "array",
-    "items"       : {"type" : "string"},
-    "uniqueItems" : true
+    "uniqueItems" : true,
+    "items"       : {"type" : ["string", "array"]}
 }

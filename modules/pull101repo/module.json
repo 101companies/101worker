@@ -1,5 +1,5 @@
 {
-    "targets"      : [],
+    "command"      : "perl pull101repo",
     "dependencies" : [],
     "environment"  : [
         "repo101dir",
