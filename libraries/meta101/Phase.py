@@ -11,13 +11,25 @@ class Phase(object):
 
 
     def __init__(self, rules):
-        self.rules   = rules
-        self.matches = []
+        self.rules    = rules
+        self.matches  = []
+        self.failures = []
 
 
     @abc.abstractmethod
     def suffix(self):
         pass
+
+    @abc.abstractmethod
+    def applicable(self, rule):
+        pass
+
+    def dump(self):
+        return {
+            "matches"  : self.matches,
+            "failures" : self.failures,
+            "rules"    : self.rules,
+        }
 
 
     def run(self):
@@ -33,7 +45,7 @@ class Phase(object):
                            dirname =os.path.dirname(path)[len(repodir):],
                            basename=os.path.basename(path))
 
-        return self.matches
+        return self.dump()
 
 
     def onfile(self, **kwargs):
@@ -78,9 +90,6 @@ class Phase(object):
     def ondelete(self, target, **kwargs):
         incremental101.deletefile(target)
 
-
-    def applicable(self, rule):
-        return "fpredicate" not in rule
 
     def match(self, index, rule, **kwargs):
         if not self.applicable(rule):
