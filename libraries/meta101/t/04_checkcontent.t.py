@@ -4,7 +4,7 @@ import meta101
 
 plan(5)
 
-phase = meta101.Basics({})
+phase = meta101.Basics()
 
 
 def dies_ok(code, message=None):

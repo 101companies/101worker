@@ -3,7 +3,7 @@ import meta101
 
 plan(6)
 
-phase = meta101.Basics({})
+phase = meta101.Basics()
 
 
 ok(    phase.checksuffix( ".py",              "a.py"), "match suffix")

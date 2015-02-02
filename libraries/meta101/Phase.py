@@ -10,7 +10,7 @@ class Phase(object):
     __metaclass__ = abc.ABCMeta
 
 
-    def __init__(self, rules):
+    def __init__(self, rules={}):
         self.rules    = rules
         self.matches  = []
         self.failures = []
@@ -70,8 +70,8 @@ class Phase(object):
             for unit in units:
                 metadata = unit["metadata"]
                 if key in metadata \
-                and (not "dominator" in metadata
-                     or not metadata["dominator"] == key):
+                and ("dominator" not in metadata
+                     or metadata["dominator"] != key):
                     removals.append(unit)
         survivals = []
         for unit in units:

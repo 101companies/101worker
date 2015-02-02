@@ -3,7 +3,7 @@ import meta101
 
 plan(24)
 
-phase = meta101.Basics({})
+phase = meta101.Basics()
 
 
 for what in ["filename", "basename", "dirname"]:

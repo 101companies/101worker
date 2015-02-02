@@ -16,7 +16,7 @@ class TestPhase(meta101.Phase):
         result["stuff"] = stuff + add
         return add
 
-phase = TestPhase({})
+phase = TestPhase()
 
 
 is_ok(phase.match(0, {"ignorme" : 123}), None, "non-applicable rule ignored")
