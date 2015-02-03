@@ -3,6 +3,6 @@ repo101dir      : $results/101repo/
 gitdeps101dir   : $results/gitdeps/
 repo101url      : https://github.com/101companies/101test
 gitdeps101url   : file://$worker/configs/empty.json
-config101       : $worker/configs/pull.json
+config101       : $worker/configs/test/pull.json
 config101schema : $worker/schemas/config.schema.json
 module101schema : $worker/schemas/module.schema.json
