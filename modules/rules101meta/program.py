@@ -1,12 +1,9 @@
 #! /usr/bin/env python
-
 import os
 import fnmatch
-import sys
-import simplejson as json
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
+import json
+import incremental101
+
 
 # Check rule for validity
 def validRule(rule):
@@ -84,11 +81,12 @@ dump["problems"] = problems
 dump["numbers"] = numbers
 
 # Main loop
-for root, dirs, files in os.walk(const101.sRoot, followlinks=True):
+repo101dir = os.environ["repo101dir"]
+for root, dirs, files in os.walk(repo101dir, followlinks=True):
     for basename in fnmatch.filter(files, "*.101meta"):
         filename = os.path.join(root, basename)
         print filename
-        rFilename = filename[len(const101.sRoot)+1:] # relative file name
+        rFilename = filename[len(repo101dir) + 1:] # relative file name
         numberOfFiles += 1
 
         # Shield against JSON encoding errors
@@ -114,11 +112,4 @@ numbers["numberOfProblems"] = len(unreadableFiles) + len(invalidFiles)
 numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 
-# Write to files and stdout if there have been changes
-#if not os.path.exists(const101.rulesDump) or not json.load(open(const101.rulesDump, 'r')) == dump:
-rulesFile = open(const101.rulesDump, 'w')
-rulesFile.write(json.dumps(dump, indent=4))
-#else:
-#   print 'write ommited since there were no changes'
-tools101.releaseDump(dump)
-sys.exit(0)
+incremental101.writejson(os.environ["rulesDump101"], dump)
