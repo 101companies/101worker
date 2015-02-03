@@ -122,14 +122,18 @@ def writefile(path, content):
     file is to be put into doesn't exist, it is also created.
     """
     path       = os.path.abspath(path)
+    dirname    = os.path.dirname(path)
     oldcontent = None
-    try:
-        with open(path) as f: oldcontent = f.read()
-    except IOError:
-        pass
+
+    if os.path.exists(dirname):
+        try:
+            with open(path) as f: oldcontent = f.read()
+        except IOError:
+            pass
+    else:
+        os.makedirs(os.path.dirname(path))
 
     if not oldcontent or content != oldcontent:
-        os.makedirs(os.path.dirname(path))
         with open(path, "w") as f:
             f.write(content)
         printdiff("M" if oldcontent else "A", path)
