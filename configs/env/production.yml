@@ -16,20 +16,20 @@ views101dir            : $results/101web/data/views/
 config101              : $worker/configs/dev.json
 config101schema        : $worker/schemas/config.schema.json
 module101schema        : $worker/schemas/module.schema.json
-rulesDump101           : [dumps101dir,             rules.json]
-basicsDump101          : [dumps101dir,           matches.json]
-predicatesDump101      : [dumps101dir,        predicates.json]
-fragmentsDump101       : [dumps101dir,         fragments.json]
-geshiDump101           : [dumps101dir,             geshi.json]
-validatorDump101       : [dumps101dir,         validator.json]
-extractorDump101       : [dumps101dir,         extractor.json]
-metricsDump101         : [dumps101dir,           metrics.json]
-fragmentMetricsDump101 : [dumps101dir, fragments.metrics.json]
-summaryDump101         : [dumps101dir,           summary.json]
-suffixesDump101        : [dumps101dir,          suffixes.json]
-importsDump101         : [dumps101dir,           imports.json]
-resolutionDump101      : [dumps101dir,        resolution.json]
-wikiDump101            : [dumps101dir,              wiki.json]
+rules101dump           : [dumps101dir,             rules.json]
+basics101dump          : [dumps101dir,           matches.json]
+predicates101dump      : [dumps101dir,        predicates.json]
+fragments101dump       : [dumps101dir,         fragments.json]
+geshi101dump           : [dumps101dir,             geshi.json]
+validator101dump       : [dumps101dir,         validator.json]
+extractor101dump       : [dumps101dir,         extractor.json]
+metrics101dump         : [dumps101dir,           metrics.json]
+fragmentMetrics101dump : [dumps101dir, fragments.metrics.json]
+summary101dump         : [dumps101dir,           summary.json]
+suffixes101dump        : [dumps101dir,          suffixes.json]
+imports101dump         : [dumps101dir,           imports.json]
+resolution101dump      : [dumps101dir,        resolution.json]
+wiki101dump            : [dumps101dir,              wiki.json]
 
 # URLs
 # If these don't start with a protocol, they are assumed to be directories or

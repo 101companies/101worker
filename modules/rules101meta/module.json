@@ -5,6 +5,6 @@
     ],
     "environment"  : [
         "repo101dir",
-        "rulesDump101"
+        "rules101dump"
     ]
 }

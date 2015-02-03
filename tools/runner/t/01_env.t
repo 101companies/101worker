@@ -16,7 +16,7 @@ my %hash = (
     dumps101      => '101web/dumps/',
     views101      => '101web/views/',
     config101     => '101worker/configs/file',
-    rulesDump101  => [qw(dumps101 rules.json)],
+    rules101dump  => [qw(dumps101 rules.json)],
     repo101url    => 'https://github.com/101repo',
     data101url    => 'http://data.101companies.org/',
     gitdeps101url => 'file://101results/gitdepsrc/',
@@ -47,7 +47,7 @@ is load_path($options, $hash{'config101'}), "$pwd/101worker/configs/file",
 ok  -d "$pwd/101worker/configs",      'dirs are created';
 ok !-e "$pwd/101worker/configs/file", 'but file is not';
 
-is load_path($options, $hash{'rulesDump101'}), "$pwd/101web/dumps/rules.json",
+is load_path($options, $hash{'rules101dump'}), "$pwd/101web/dumps/rules.json",
                                        'load path with references';
 ok  -d "$pwd/101web/dumps",            'create path with references';
 ok !-e "$pwd/101web/dumps/rules.json", 'only folders are created';
@@ -86,7 +86,7 @@ my %expected = (
     views101      => "$pwd/101web/views",
     repo101       => "$pwd/101results/101repo",
     config101     => "$pwd/101worker/configs/file",
-    rulesDump101  => "$pwd/101web/dumps/rules.json",
+    rules101dump  => "$pwd/101web/dumps/rules.json",
     repo101url    => 'https://github.com/101repo',
     data101url    => 'http://data.101companies.org/',
     gitdeps101url => "file://$pwd/101results/gitdepsrc",

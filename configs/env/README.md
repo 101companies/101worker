@@ -7,7 +7,7 @@ File paths and directory paths are similar to each other: they are given relativ
 
 You can reference the absolute paths to the worker and the absolute path to the result directory using *$worker* and *$results* respectively.
 
-You can also reference other paths by their key. For example, if there is the definition like `dumps101dir : 101web/data/dumps/`, then you can reference that path like `wikiDump101 : [dumps101dir, wiki.json]`. The result will be `wikiDump101=/path/to/worker/101web/data/dumps/wiki.json`.
+You can also reference other paths by their key. For example, if there is the definition like `dumps101dir : 101web/data/dumps/`, then you can reference that path like `wiki101dump : [dumps101dir, wiki.json]`. The result will be `wiki101dump=/path/to/worker/101web/data/dumps/wiki.json`.
 
 URLs are only special if they start with the `file://` scheme. In that case, their path will be turned into an absolute `file://` URL as described above. The same rule for trailing slashes apply. Other URLs like `http://` or `https://` won't be touched.
 
@@ -69,20 +69,20 @@ gitdeps101dir          | Directory | Where 101repo dependencies get pulled to
 targets101dir          | Directory | 
 dumps101dir            | Directory | Where dump results go
 views101dir            | Directory | Where view results go
-rulesDump101           | File      | Location of 101meta rules dump
-matchesDump101         | File      | 
-predicatesDump101      | File      | 
-fragmentsDump101       | File      | 
-geshiDump101           | File      | 
-validatorDump101       | File      | 
-extractorDump101       | File      | 
-metricsDump101         | File      | 
-fragmentMetricsDump101 | File      | 
-summaryDump101         | File      | 
-suffixesDump101        | File      | 
-importsDump101         | File      | 
-resolutionDump101      | File      | 
-wikiDump101            | File      | 
+rules101dump           | File      | Location of 101meta rules dump
+matches101dump         | File      | 
+predicates101dump      | File      | 
+fragments101dump       | File      | 
+geshi101dump           | File      | 
+validator101dump       | File      | 
+extractor101dump       | File      | 
+metrics101dump         | File      | 
+fragmentMetrics101dump | File      | 
+summary101dump         | File      | 
+suffixes101dump        | File      | 
+imports101dump         | File      | 
+resolution101dump      | File      | 
+wiki101dump            | File      | 
 repo101url             | URL       | Remote URL for 101repo
 gitdeps101url          | URL       | URL with the JSON definition for 101repo dependencies
 wiki101url             | URL       | 

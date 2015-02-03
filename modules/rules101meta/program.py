@@ -112,4 +112,4 @@ numbers["numberOfProblems"] = len(unreadableFiles) + len(invalidFiles)
 numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 
-incremental101.writejson(os.environ["rulesDump101"], dump)
+incremental101.writejson(os.environ["rules101dump"], dump)
