@@ -35,8 +35,8 @@ $ENV{"env$_"} = $_ for 1 .. 3;
 $self->ensure_envs_exist(test1 => qw(env1 env2 env3));
 is_deeply $self->errors, {}, 'ensure existing envs';
 
-$self->ensure_envs_exist(test2 => [qw(env3 env4 env5)]);
-$self->ensure_envs_exist(test3 =>  qw(env1 env5 env6));
+$self->ensure_envs_exist(test2 => qw(env3 env4 env5));
+$self->ensure_envs_exist(test3 => qw(env1 env5 env6));
 is_deeply $self->errors, {env => {
                               env4 => ['test2'         ],
                               env5 => ['test2', 'test3'],

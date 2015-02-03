@@ -75,8 +75,11 @@ sub push_error
 
 sub ensure_envs_exist
 {
-    my ($self, $name) = (shift, shift);
-    for (ref $_[0] ? @{$_[0]} : @_)
+    my ($self, $module) = (shift, shift);
+    my ($name, $envs  ) = ref $module
+                        ? ($module->name, $module->environment)
+                        : ($module,       \@_                 );
+    for (@$envs)
     {   $self->push_error(env => $_, $name) if not exists $ENV{$_} }
 }
 
@@ -107,7 +110,7 @@ sub die_if_invalid
     my $errors = $self->errors;
     return if not %$errors;
 
-    die join "\n - ", "Validation errors:", @{$errors->{other}}, pairmap
+    die join "\n - ", "Validation errors:", @{$errors->{other} || []}, pairmap
     {
         my ($msgs, $fmt) = ($errors->{$a}, $b);
         map { sprintf $fmt => $_, join ', ', @{$msgs->{$_}} } keys %{$msgs}
