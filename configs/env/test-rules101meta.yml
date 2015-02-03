@@ -6,3 +6,6 @@ gitdeps101url   : file://$worker/configs/test/empty.json
 config101       : $worker/configs/test/rules101meta.json
 config101schema : $worker/schemas/config.schema.json
 module101schema : $worker/schemas/module.schema.json
+
+dumps101dir     : $results/101web/data/dumps/
+rules101dump    : [dumps101dir, rules.json]
