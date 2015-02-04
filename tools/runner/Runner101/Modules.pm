@@ -45,17 +45,22 @@ sub BUILD
     my $config        = validate_json(@ENV{qw(config101 config101schema)});
     my $module_schema = slurp_json   ($ENV{module101schema});
 
-    $self->names([map { ref $_ ? $_->[0] : $_ } @$config]);
-
-    for my $index (0 .. $#$config)
+    my (@names, @args);
+    for (@$config)
     {
-        my  $cfg          = $config->[$index];
-        my ($name, @rest) = (ref $cfg ? @$cfg : $cfg);
+        my ($name, @rest) = split;
+        push @names, $name;
+        push @args, \@rest;
+    }
+    $self->names(\@names);
 
+    for my $index (0 .. $#names)
+    {
+        my $name = $names[$index];
         push @{$self->modules}, Runner101::Module->new(
             index  => $index,
             name   => $name,
-            args   => \@rest,
+            args   => $args[$index],
             dir    => "$args->{modules_dir}/$name",
             parent => $self,
             schema => $module_schema,

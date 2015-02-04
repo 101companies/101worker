@@ -2,5 +2,5 @@
     "title"       : "Runner Config Schema",
     "type"        : "array",
     "uniqueItems" : true,
-    "items"       : {"type" : ["string", "array"]}
+    "items"       : {"type" : "string"}
 }
