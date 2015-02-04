@@ -1,4 +1,3 @@
-# Test values
 repo101dir      : $results/101repo/
 gitdeps101dir   : $results/gitdeps/
 repo101url      : https://github.com/101companies/101test
