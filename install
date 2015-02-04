@@ -10,7 +10,7 @@ find sub {
     return if not $_ eq 'Makefile';
     my $code = system "make -nsf '$File::Find::name' install >/dev/null 2>&1";
     push @make, $File::Find::dir if $code == 0;
-}, getcwd;
+}, glob getcwd . '/*';
 
 for (@make)
 {
