@@ -11,7 +11,7 @@ parser.add_argument('--phase', required=True, type=str, help="the 101meta "
 args = parser.parse_args()
 
 
-path = os.environ[args.phase + "Dump101"]
+path = os.environ[args.phase + "101dump"]
 dump = meta101.matchall(args.phase)
 
 incremental101.writejson(path, dump)
