@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Cwd;
+use File::Find;
+
+my @make;
+
+find sub {
+    return if not $_ eq 'Makefile';
+    my $code = system "make -nsf '$File::Find::name' install >/dev/null 2>&1";
+    push @make, $File::Find::dir if $code == 0;
+}, getcwd;
+
+for (@make)
+{
+    my $prompt;
+    do
+    {
+        print "run sudo make install in $_? [Y/n] ";
+        my $read = <STDIN>;
+        $prompt = 1 if $read =~ /^\s*y?\s*$/i;
+        $prompt = 0 if $read =~ /^\s*n\s*$/i;
+    }
+    while not defined $prompt;
+
+    if ($prompt)
+    {
+        chdir;
+        system qw(sudo make install);
+    }
+}
