@@ -105,7 +105,7 @@ def writejson(path, data):
     Converts the given data into canonical JSON and then calls writefile.
     """
     writefile(path, json.dumps(data, sort_keys=True, indent=4,
-                               separators=(',', ' : ')), + "\n")
+                               separators=(',', ' : ')) + "\n")
 
 
 def writefile(path, content):
