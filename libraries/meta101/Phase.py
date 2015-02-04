@@ -3,7 +3,7 @@ import json
 import os
 import re
 import incremental101
-from   util           import stripregex, tolist
+from   .util          import stripregex, tolist
 
 
 class Phase(object):
@@ -113,15 +113,17 @@ class Phase(object):
             return re.search(stripregex(pattern, pattern), f.read())
 
 
-    def matchname(self, want, path):
-        pattern = stripregex(want)
-        return re.search(pattern, path) if pattern else path == want
+    def matchnames(self, values, path):
+        def matchname(want):
+            pattern = stripregex(want)
+            return re.search(pattern, path) if pattern else path == want
+        return any(matchname(v) for v in tolist(values))
 
     def checkfilename(self, values, filename, **kwargs):
-        return any(self.matchname(v, filename) for v in tolist(values))
+        return self.matchnames(values, filename)
 
     def checkbasename(self, values, basename, **kwargs):
-        return any(self.matchname(v, basename) for v in tolist(values))
+        return self.matchnames(values, basename)
 
     def checkdirname(self, values, dirname, **kwargs):
-        return any(self.matchname(v,  dirname) for v in tolist(values))
+        return self.matchnames(values, dirname)
