@@ -19,6 +19,7 @@ our %options    = (
     results     => ($ENV{results101dir} // dirname $worker_dir),
     modules_dir => ($ENV{modules101dir} // "$worker_dir/modules"),
 );
+@ENV{qw(results101dir modules101dir)} = @options{qw(results modules_dir)};
 
 load_vars(\%options);
 
