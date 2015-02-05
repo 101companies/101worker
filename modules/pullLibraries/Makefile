@@ -1,13 +1,7 @@
-include ../Makefile.vars
-
-run: ${workerTimeLibrariesDir} ${webTimeLibrariesDir}
-	php pullLibraries.php ${pulledLibrariesConfig} ${workerTimeLibrariesDir} ${webTimeLibrariesDir} ${basedir}
-	
-${workerTimeLibrariesDir}:
-	@ mkdir ${workerTimeLibrariesDir}
-	
-${webTimeLibrariesDir}:
-	@ mkdir ${webTimeLibrariesDir}
+run:
+	mkdir -p "$$results101dir/101results/libraries"
+	mkdir -p "$$results101dir/101web/libraries"
+	php pullLibraries.php "$$worker101dir/configs/all.libraries.json" "$$results101dir/101results/libraries" "$$results101dir/101web/libraries" "$$results101dir"
 
 clean:
-	rm -f -r ${workerTimeLibrariesDir} ${webTimeLibrariesDir}
+	rm -f -r "$$results101dir/101results/libraries" "$$results101dir/101web/libraries"
