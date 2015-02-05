@@ -1,4 +1,5 @@
 {
-    "targets"      : [],
-    "dependencies" : []
+    "command"      : "python program.py",
+    "dependencies" : ["pull101repo"],
+    "environment"  : ["results101dir"]
 }

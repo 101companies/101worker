@@ -3,9 +3,11 @@
 import sys
 import os
 import json
+import re
 
 def update(repo, path):
-    cwd = os.getcwd()
+    cwd  = os.getcwd()
+    path = re.sub('\$(\w+)', lambda match: os.environ[match.group(1)], path)
 
     if os.path.exists(path):
         os.chdir(path)
