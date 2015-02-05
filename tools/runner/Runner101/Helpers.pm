@@ -41,7 +41,7 @@ sub validate_json
 {
     my $json = guess_json($_[0]);
     my $val  = JSON::Schema->new(guess_json($_[1]))->validate($json);
-    die join "\n - ", "$_[0] is invalid per $_[1]:", $val->errors if not $val;
+    die join "\n - ", "$_[0] is invalid:", $val->errors if not $val;
     $json
 }
 
