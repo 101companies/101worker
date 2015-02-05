@@ -4,12 +4,12 @@ report:
 
 # Run modules of a .config file
 %.run: init
-	make $*.clean
+	#make $*.clean
 	cd modules; make $*.run
-	tools/filedepend ../101results/depend configs/$*.json \
-                   > ../101results/depend/graph.yml
-	make $*.archive
-	@git pull -q # upgrade past every run
+	#tools/filedepend ../101results/depend configs/$*.json \
+    #               > ../101results/depend/graph.yml
+	#make $*.archive
+	#@git pull -q # upgrade past every run
 
 # Like %.run but without logging, with stdout
 %.debug:
