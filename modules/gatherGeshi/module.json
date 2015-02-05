@@ -1,4 +1,8 @@
 {
-    "targets"      : [],
-    "dependencies" : ["pull101repo"]
+    "command"      : "make",
+    "dependencies" : ["pull101repo"],
+    "environment"  : [
+        "results101dir",
+        "repo101dir"
+    ]
 }
