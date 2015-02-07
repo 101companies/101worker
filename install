@@ -12,12 +12,12 @@ find sub {
     push @make, $File::Find::dir if $code == 0;
 }, glob getcwd . '/*';
 
-for (@make)
+for my $path (@make)
 {
     my $prompt;
     do
     {
-        print "run sudo make install in $_? [Y/n] ";
+        print "run sudo make install in $path? [Y/n] ";
         my $read = <STDIN>;
         $prompt = 1 if $read =~ /^\s*y?\s*$/i;
         $prompt = 0 if $read =~ /^\s*n\s*$/i;
@@ -26,7 +26,7 @@ for (@make)
 
     if ($prompt)
     {
-        chdir;
+        chdir $path;
         system qw(sudo make install);
     }
 }
