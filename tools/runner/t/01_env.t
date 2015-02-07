@@ -1,4 +1,4 @@
-use Test::Most      tests => 22;
+use Test::Most      tests => 23;
 use Cwd             qw(abs_path);
 use File::Temp;
 use Runner101::Env  qw(load_vars load_url load_path);
@@ -104,3 +104,15 @@ is_deeply \%given, \%expected, 'load variables into environment';
 
 
 chdir $olddir;
+
+
+%Runner101::Env::loaded = ();
+throws_ok {
+    local $SIG{__WARN__} = sub { die @_ };
+    load_vars({
+        config => {
+            circular  => '$reference',
+            reference => '$circular',
+        },
+    });
+} qr/Deep recursion/, 'circular references lead to infinite loops';
