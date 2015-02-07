@@ -31,11 +31,7 @@ sub load_var
 
     if (!exists $loaded{$key})
     {
-        my $value     = $config->{$key};# // die "Missing key in config: $key";
-        if (!defined $value) {
-            use Data::Dumper;
-            die "Missing $key\n" . Dumper($config);
-        }
+        my $value     = $config->{$key} // die "Missing key in config: $key";
         my $func      = $value =~ m{^[^:/]+://} ? \&load_url : \&load_path;
         $loaded{$key} = $func->($config, $value);
     }
