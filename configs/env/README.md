@@ -5,9 +5,15 @@ Constants for 101worker are defined in environment variables. These consist of f
 
 File paths and directory paths are similar to each other: they are given relative to the directory that the 101worker directory is in and will be turned into absolute paths by the runner. Directory paths *must* and file paths *must not* not end with a slash, that way the runner can disambiguate between a file and a directory paths. All directories that appear in any path will be created automatically if they don't exist. Nonexistent files will *not* be created (which is why there is a need for disambiguation). However, the resulting environment variables *will never have a trailing slash*!
 
-You can reference the absolute paths to the worker and the absolute path to the result directory using *$worker* and *$results* respectively.
+You can also reference other paths using `$keyname`. For example, if you want to put the file *matches.json* into the folder defined by *dumps101dir*, you'd just write `$dumps101dir/matches.json`.
 
-You can also reference other paths by their key. For example, if there is the definition like `dumps101dir : 101web/data/dumps/`, then you can reference that path like `wiki101dump : [dumps101dir, wiki.json]`. The result will be `wiki101dump=/path/to/worker/101web/data/dumps/wiki.json`.
+There are a handful of special paths you can reference:
+
+* `$output` - The directory where all the results should go.
+
+* `$worker` - The directory of 101worker.
+
+* `$modules_dir` - The directory the worker modules are in. Probably not useful here.
 
 URLs are only special if they start with the `file://` scheme. In that case, their path will be turned into an absolute `file://` URL as described above. The same rule for trailing slashes apply. Other URLs like `http://` or `https://` won't be touched.
 
@@ -59,7 +65,7 @@ $repo_url  = $_ENV['repo101url'];
 Constant Documentation
 ----------------------
 
-These are the constants that are currently in use.
+These are the constants that are currently in use. This is a big TODO.
 
 Name                   | Type      | Description
 ---------------------- | --------- | -----------------------------------------------------

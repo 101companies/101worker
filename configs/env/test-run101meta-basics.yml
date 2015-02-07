@@ -1,12 +1,12 @@
-repo101dir      : $results/101repo/
-gitdeps101dir   : $results/gitdeps/
+repo101dir      : $output/101repo/
+gitdeps101dir   : $output/gitdeps/
 repo101url      : https://github.com/101companies/101test
 gitdeps101url   : file://$worker/configs/test/empty.json
 config101       : $worker/configs/test/run101meta-basics.json
 config101schema : $worker/schemas/config.schema.json
 module101schema : $worker/schemas/module.schema.json
 
-dumps101dir     : $results/101web/data/dumps/
-targets101dir   : $results/101web/data/resources/
-rules101dump    : [dumps101dir,   rules.json]
-basics101dump   : [dumps101dir, matches.json]
+dumps101dir     : $output/101web/data/dumps/
+targets101dir   : $output/101web/data/resources/
+rules101dump    : $dumps101dir/rules.json
+basics101dump   : $dumps101dir/matches.json

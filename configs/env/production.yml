@@ -5,31 +5,36 @@
 # Directories
 # These MUST end with a slash so that they can be disambiguated from files,
 # but the resulting environment variable WILL NOT have a trailing slash!
-repo101dir             : $results/101results/101repo/
-gitdeps101dir          : $results/101results/gitdeps/
-targets101dir          : $results/101web/data/resources/
-dumps101dir            : $results/101web/data/dumps/
-views101dir            : $results/101web/data/views/
+results101dir          : $output/101results/
+logs101dir             : $output/101logs/
+web101dir              : $output/101results/
+temps101dir            : $output/101results/
+
+repo101dir             : $results101dir/101repo/
+gitdeps101dir          : $results101dir/gitdeps/
+targets101dir          : $web101dir/data/resources/
+dumps101dir            : $web101dir/data/dumps/
+views101dir            : $web101dir/data/views/
 
 # Files
 # These MUST NOT end with a slash, otherwise they are mistaken for directories.
 config101              : $worker/configs/production.json
 config101schema        : $worker/schemas/config.schema.json
 module101schema        : $worker/schemas/module.schema.json
-rules101dump           : [dumps101dir,             rules.json]
-basics101dump          : [dumps101dir,           matches.json]
-predicates101dump      : [dumps101dir,        predicates.json]
-fragments101dump       : [dumps101dir,         fragments.json]
-geshi101dump           : [dumps101dir,             geshi.json]
-validator101dump       : [dumps101dir,         validator.json]
-extractor101dump       : [dumps101dir,         extractor.json]
-metrics101dump         : [dumps101dir,           metrics.json]
-fragmentMetrics101dump : [dumps101dir, fragments.metrics.json]
-summary101dump         : [dumps101dir,           summary.json]
-suffixes101dump        : [dumps101dir,          suffixes.json]
-imports101dump         : [dumps101dir,           imports.json]
-resolution101dump      : [dumps101dir,        resolution.json]
-wiki101dump            : [dumps101dir,              wiki.json]
+rules101dump           : $dumps101dir/rules.json
+basics101dump          : $dumps101dir/matches.json
+predicates101dump      : $dumps101dir/predicates.json
+fragments101dump       : $dumps101dir/fragments.json
+geshi101dump           : $dumps101dir/geshi.json
+validator101dump       : $dumps101dir/validator.json
+extractor101dump       : $dumps101dir/extractor.json
+metrics101dump         : $dumps101dir/metrics.json
+fragmentMetrics101dump : $dumps101dir/fragments.metrics.json
+summary101dump         : $dumps101dir/summary.json
+suffixes101dump        : $dumps101dir/suffixes.json
+imports101dump         : $dumps101dir/imports.json
+resolution101dump      : $dumps101dir/resolution.json
+wiki101dump            : $dumps101dir/wiki.json
 
 # URLs
 # If these don't start with a protocol, they are assumed to be directories or
