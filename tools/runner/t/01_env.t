@@ -16,19 +16,22 @@ my %hash = (
     dumps101      => '101web/dumps/',
     views101      => '101web/views/',
     config101     => '101worker/configs/file',
-    rules101dump  => [qw(dumps101 rules.json)],
+    rules101dump  => '$dumps101/rules.json',
     repo101url    => 'https://github.com/101repo',
     data101url    => 'http://data.101companies.org/',
     gitdeps101url => 'file://101results/gitdepsrc/',
-    ref101        => '$results/somedir/somefile',
+    dir101        => '$output/somedir/',
+    ref101        => '$dir101/somefile',
 );
+
 my $options = {
     config  => \%hash,
-    results => "$tmpdir/results",
+    output  => "$tmpdir/output",
 };
 
+$Runner101::Env::loaded{output} = $options->{output};
 
-# load_path
+
 sub check_path($$)
 {
     my ($key, $message) = @_;
@@ -42,42 +45,46 @@ check_path results101 => 'single folder';
 check_path repo101    => 'existing folder';
 check_path views101   => 'multiple folders';
 
-is load_path($options, $hash{'config101'}), "$pwd/101worker/configs/file",
+
+is load_path(\%hash, $hash{'config101'}), "$pwd/101worker/configs/file",
                                       'load dirs and file';
 ok  -d "$pwd/101worker/configs",      'dirs are created';
 ok !-e "$pwd/101worker/configs/file", 'but file is not';
 
-is load_path($options, $hash{'rules101dump'}), "$pwd/101web/dumps/rules.json",
+
+is load_path(\%hash, $hash{'rules101dump'}), "$pwd/101web/dumps/rules.json",
                                        'load path with references';
 ok  -d "$pwd/101web/dumps",            'create path with references';
 ok !-e "$pwd/101web/dumps/rules.json", 'only folders are created';
+
 
 my @depth = $pwd =~ m{/}g;  # make a path like ../../../../../
 my $bogus = '../' x @depth; # that goes all the way to the root
 dies_ok { load_path({}, $bogus) } 'bogus path dies';
 dies_ok { load_path({}, "\0?/") } 'invalid path dies';
 
-is load_path($options, $hash{ref101}), "$options->{results}/somedir/somefile",
+
+is load_path(\%hash, $hash{ref101}), "$options->{output}/somedir/somefile",
   'load path with $variable';
-ok -d "$options->{results}/somedir",
+ok -d "$options->{output}/somedir",
   'path with $variable is created';
 
-dies_ok { load_path($options, '$nonexistent/asdf') }
+
+dies_ok { load_path(\%hash, '$nonexistent/asdf') }
        'nonexistent $variable dies';
 
 
-# load_url
-is load_url($options, $hash{'repo101url'}), 'https://github.com/101repo',
+is load_url(\%hash, $hash{'repo101url'}), 'https://github.com/101repo',
   'load https URL';
-is load_url($options, $hash{'data101url'}), 'http://data.101companies.org/',
+is load_url(\%hash, $hash{'data101url'}), 'http://data.101companies.org/',
   'load http URL';
-is load_url($options, $hash{'gitdeps101url'}), "file://$pwd/101results/gitdepsrc",
+is load_url(\%hash, $hash{'gitdeps101url'}), "file://$pwd/101results/gitdepsrc",
   'load local path as URL';
 
 dies_ok { load_url({}, 'C:\Documents and Settings') } 'invalid URL dies';
 
 
-# load_vars
+%Runner101::Env::loaded = ();
 load_vars($options);
 my %given    = map { ($_ => $ENV{$_}) } keys %hash;
 my %expected = (
@@ -90,7 +97,8 @@ my %expected = (
     repo101url    => 'https://github.com/101repo',
     data101url    => 'http://data.101companies.org/',
     gitdeps101url => "file://$pwd/101results/gitdepsrc",
-    ref101        => "$options->{results}/somedir/somefile"
+    dir101        => "$options->{output}/somedir",
+    ref101        => "$options->{output}/somedir/somefile"
 );
 is_deeply \%given, \%expected, 'load variables into environment';
 

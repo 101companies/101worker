@@ -11,22 +11,43 @@ use URI::URL;
 URI::URL::strict(1);
 
 
+our %loaded;
+
+
 sub load_vars
 {
     my ($options) = @_;
-    while (my ($key, $value) = each %{$options->{config}})
+
+    while (my ($key, $value) = each %$options)
+    {   $loaded{$key} = $value if not ref $value }
+
+    $ENV{$_} = load_var($options->{config}, $_) for keys %{$options->{config}};
+}
+
+
+sub load_var
+{
+    my ($config, $key) = @_;
+
+    if (!exists $loaded{$key})
     {
-        my $func   = $value =~ m{^[^:/]+://} ? \&load_url : \&load_path;
-        $ENV{$key} = $func->($options, $value);
+        my $value     = $config->{$key};# // die "Missing key in config: $key";
+        if (!defined $value) {
+            use Data::Dumper;
+            die "Missing $key\n" . Dumper($config);
+        }
+        my $func      = $value =~ m{^[^:/]+://} ? \&load_url : \&load_path;
+        $loaded{$key} = $func->($config, $value);
     }
+
+    $loaded{$key}
 }
 
 
 sub load_path
 {
-    my ($options, $value) = @_;
-    $value = "$options->{config}{$value->[0]}$value->[1]" if ref $value;
-    $value =~ s/\$(\w+)/$options->{$1} || die "Invalid folder: $1"/e;
+    my ($config, $value) = @_;
+    $value =~ s/\$(\w+)/load_var($config, $1)/e while $value =~ /\$\w+/;
 
     my ($dir, $file) = $value =~ m{/$}
                      ? ($value,          ''                    )

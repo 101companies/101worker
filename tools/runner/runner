@@ -13,13 +13,13 @@ use Runner101::Modules;
 
 my $config     = do { local $/; YAML::Load(<STDIN>) } or die $!;
 my $worker_dir = $ENV{worker101dir} // dirname dirname dirname abs_path $0;
-our %options    = (
+my %options    = (
     config      => $config,
     worker      => $worker_dir,
-    results     => ($ENV{results101dir} // dirname $worker_dir),
+    output      => ($ENV{output101dir } // dirname $worker_dir),
     modules_dir => ($ENV{modules101dir} // "$worker_dir/modules"),
 );
-@ENV{qw(results101dir modules101dir)} = @options{qw(results modules_dir)};
+@ENV{qw(output101dir modules101dir)} = @options{qw(output modules_dir)};
 
 load_vars(\%options);
 
