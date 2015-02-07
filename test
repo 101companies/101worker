@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Cwd;
+use File::Basename qw(dirname);
+use File::Find;
+
+my $cwd  = getcwd;
+my $dir  = dirname $cwd;
+my @make;
+
+find sub {
+    return if not $_ eq 'Makefile';
+    my $code = system "make -nsf '$File::Find::name' test >/dev/null 2>&1";
+    push @make, $File::Find::dir if $code == 0;
+}, $cwd;
+
+for my $path (@make)
+{
+    chdir $path or die "Couldn't cd into $path";
+    $path =~ s{^\Q$dir\E/?}{};
+    print '-' x 70, "\n\nRunning make test for $path\n\n";
+    system qw(make -s test);
+    print "\n";
+}
+
+print '-' x 70, "\n";
