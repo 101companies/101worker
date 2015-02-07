@@ -73,19 +73,38 @@ __END__
 
 Module to load the runner's environment variables.
 
+=head2 %loaded
+
+    %Runner101::Env::loaded
+
+Cache for already loaded variables.
+
 =head2 load_vars
 
-    load_vars(\%vars)
+    load_vars(\%options)
 
-Loads the environment variables given in the hashref C<$vars> into the actual
-environment C<%ENV>. See the F<101worker/configs/env/README.md> for
+First, loads all string values from C<$option> into L</%loaded>. In practice,
+these are the values for B<output>, B<worker> and B<modules_dir>.
+
+Then loads the environment variables given in C<< $options->{config} >> into
+the actual environment C<%ENV>. See the F<101worker/configs/env/README.md> for
 documentation about how these variables should be defined.
 
-Returns nothing useful and might die if L</load_path> or L</load_url> dies.
+Returns nothing useful and might die if L<load_var>, L</load_path> or
+L</load_url> dies.
+
+=head2 load_var
+
+    load_var(\%config, $key)
+
+If L</%loaded> already contains the C<$key>, that value is returned.
+
+Otherwise L</load_path> or L</load_url> is called, the result is cached in
+L</%loaded> and then returned.
 
 =head2 load_path
 
-    load_path(\%vars, $value)
+    load_path(\%config, $value)
 
 Turns a relative into an absolute path and, if necessary, creates its
 directories. Returns the resulting absolute path with no trailing slashes.
@@ -97,19 +116,13 @@ slash, it is assumed to be a path to a directory and the full path will be
 created as folders. Note that the resulting absolute path will have slashes
 stripped though!
 
-    load_path(\%vars, [$ref, $rest])
-
-C<$value> may also be a tuple with the first element referencing another key
-from C<$vars> and the second element being a path relative to that. The C<$ref>
-is then loaded from C<$vars> and the result is joined with the C<$rest> before
-proceeding. This only makes sense if C<$ref> references a directory.
-
-If C<$value> contains the text I<$worker> or I<$result>, they are replaced with
-the absolute paths to the local 101worker and result directory, respectively.
+All occurrences of C</\$\w+> (that is, variables like C<$output> or
+C<$web101dir>) are replaced with the value they reference, obtained by calling
+L</load_var>. Circular references will lead to infinite loops.
 
 =head2 load_url
 
-    load_url(\%vars, $value)
+    load_url(\%config, $value)
 
 Checks if C<$value> is a valid URL and returns it again. Dies on an invalid URL.
 
