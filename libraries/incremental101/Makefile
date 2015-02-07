@@ -1,5 +1,6 @@
 test:
 	PYTHONPATH="$$PYTHONPATH:$$(dirname $$(pwd))" prove --ext=.t.py -e python
+	rm -rf TEST
 
 clean:
 	rm -rf TEST
