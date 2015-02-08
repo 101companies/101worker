@@ -28,4 +28,10 @@ my $changes = pull101repo(
     branches  => $branches,
 );
 
-print "$changes->{$_} $paths{repo101dir}/$_\n" for sort keys $changes;
+my @keys = sort keys %$changes;
+for my $i (0 .. $#keys)
+{
+    my $path = $keys[$i];
+    my $op   = $changes->{$path};
+    print "$i $op $paths{repo101dir}/$path\n";
+}
