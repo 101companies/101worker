@@ -13,7 +13,7 @@ is_deeply                $diffs,  [],    'No diffs were gathered';
 my @diff1 = ('A somefile', 'M someotherfile', 'D yetanotherfile');
 my @diff2 = (@diff1, @diff1);
 
-is run_diff(['perl', '-pe', '++$i; $_ = "$i $_"'], \@diff1), 0,
-                            'successful run returns exit code 0';
-is_deeply \@diff1, \@diff2, 'diff result is correct';
-ok run_diff(['false'], []), 'failing run returns non-zero';
+is run_diff(['perl', '-pe', '++$i; $_ = "$i $_"'], \@diff1, \*STDOUT, 1), 0,
+                                          'successful run returns exit code 0';
+is_deeply \@diff1, \@diff2,               'diff result is correct';
+ok run_diff(['false'], [], \*STDOUT, 1), 'failing run returns non-zero';

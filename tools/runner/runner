@@ -24,13 +24,17 @@ my %options    = (
 $options{logs_dir} = $ENV{logs101dir} // "$options{output}/101logs";
 
 
-$ENV{$_->[0]} = $options{$_->[1]} for pairs qw(output101dir  output
-                                               worker101dir  worker
-                                               modules101dir modules_dir
-                                               logs101dir    logs_dir);
+for (pairs qw(output101dir  output
+              worker101dir  worker
+              modules101dir modules_dir
+              logs101dir    logs_dir))
+{
+    $config->{$_->[0]} //= "$options{$_->[1]}/";
+}
 
 
 load_vars(\%options);
 
 my $diff = Runner101::Modules::run(\%options);
+print "DIFF FOLLOWS\n";
 print $_, "\n" for @$diff;

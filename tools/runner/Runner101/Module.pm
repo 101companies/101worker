@@ -42,14 +42,13 @@ sub run
     open my $log, '>>', $self->log or die "Couldn't write to " . $self->log;
 
     my $command = [qw(timeout -s KILL 1h), @{$self->command}, @{$self->args}];
-    my $diff    = $self->wantdiff ? $parent->diff : [];
 
     write_log($log, "----- ${\$self->name} -----");
     write_log($log, 'directory : ', $self->dir);
     write_log($log, "command   : @$command");
     write_log($log, 'wantdiff  : ', $self->wantdiff, "\n");
 
-    run_diff($command, $diff, $log)
+    run_diff($command, $parent->diff, $log, $self->wantdiff)
 }
 
 
