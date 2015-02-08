@@ -11,6 +11,7 @@ class Phase(object):
 
 
     def __init__(self, rules={}):
+        # TODO make incrementality work for the big dump
         self.rules    = rules
         self.matches  = []
         self.failures = []
