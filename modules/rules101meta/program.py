@@ -44,16 +44,16 @@ def countRule(rule):
 # Check validity upfront.
 # Qualify rule with origin information.
 #
-def handleRule(rule):
+def handleRule(rule, filename):
     countRule(rule)
     if validRule(rule):
         normalizeRule(rule)
-        entry = dict()
-        entry['filename'] = rFilename
-        entry['rule'] = rule
-        rules.append(entry)
+        rules.append({
+            "filename" : filename,
+            "rule"     : rule,
+        })
     else:
-        invalidFiles.append(rFilename)
+        invalidFiles.append(filename)
 
 print "Gathering 101meta rules from 101repo."
 
@@ -84,27 +84,25 @@ dump["numbers"] = numbers
 repo101dir = os.environ["repo101dir"]
 for root, dirs, files in os.walk(repo101dir, followlinks=True):
     for basename in fnmatch.filter(files, "*.101meta"):
-        filename = os.path.join(root, basename)
-        print filename
-        rFilename = filename[len(repo101dir) + 1:] # relative file name
+        filename  = os.path.join(root, basename)
         numberOfFiles += 1
 
         # Shield against JSON encoding errors
         try:
-            jsonfile = open(filename, "r")
-            data = json.load(jsonfile)
+            with open(filename) as jsonfile:
+                data = json.load(jsonfile)
 
             # Handle lists of rules
             if isinstance(data, list):
                 for rule in data:
-                    handleRule(rule)
+                    handleRule(rule, filename)
             else:
-                handleRule(data)
+                handleRule(data, filename)
             break
 
-        except json.decoder.JSONDecodeError:
-            print "Unreadable file: " + rFilename + " (JSONDecodeError)"
-            unreadableFiles.append(rFilename)
+        except ValueError as e:
+            print "Unreadable file {}: {}".format(filename, e)
+            unreadableFiles.append(filename)
 
 # Completion of dump
 numbers["numberOfRules"] = len(rules)
