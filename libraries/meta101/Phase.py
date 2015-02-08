@@ -68,12 +68,14 @@ class Phase(object):
                 survivals.append(unit)
         units = survivals
 
-        incremental101.writejson(target, units)
         if units:
+            incremental101.writejson(kwargs["target"], units)
             self.matches.append({
                 "filename" : kwargs["filename"],
                 "units"    : units,
             })
+        else:
+            incremental101.deletefile(kwargs["target"])
 
 
     def ondelete(self, target, **kwargs):
