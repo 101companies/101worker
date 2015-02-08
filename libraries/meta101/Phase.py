@@ -46,7 +46,7 @@ class Phase(object):
             if result and "metadata" in rule:
                 for metadata in tolist(rule["metadata"]):
                     result["metadata"] = metadata
-                    units.append(result.clone())
+                    units.append(result.copy())
 
         # TODO fix this dominator code
         keys     = []
