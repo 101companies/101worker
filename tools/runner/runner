@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Cwd                qw(abs_path);
 use File::Basename     qw(dirname);
+use List::Util         qw(pairs);
 use YAML               qw(Load);
 
 BEGIN { push @INC, dirname $0 }
@@ -19,7 +20,15 @@ my %options    = (
     output      => ($ENV{output101dir } // dirname $worker_dir),
     modules_dir => ($ENV{modules101dir} // "$worker_dir/modules"),
 );
-@ENV{qw(output101dir modules101dir)} = @options{qw(output modules_dir)};
+
+$options{logs_dir} = $ENV{logs101dir} // "$options{output}/101logs";
+
+
+$ENV{$_->[0]} = $options{$_->[1]} for pairs qw(output101dir  output
+                                               worker101dir  worker
+                                               modules101dir modules_dir
+                                               logs101dir    logs_dir);
+
 
 load_vars(\%options);
 
