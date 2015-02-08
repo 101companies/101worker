@@ -1,4 +1,4 @@
-use Test::Most      tests => 8;
+use Test::Most      tests => 9;
 use Runner101::Diff qw(run_diff parse);
 
 
@@ -11,13 +11,29 @@ is_deeply                $diffs,  [],    'No diffs were gathered';
 
 
 my @diff1 = ('A somefile', 'M someotherfile', 'D yetanotherfile');
-my @diff2 = (@diff1, @diff1);
+my @diff2 = (@diff1, map { "$_.suffix" } @diff1);
 
-is run_diff(['perl', '-pe', '++$i; $_ = "$i $_"'], \@diff1, \*STDOUT, 1), 0,
-                                         'successful run returns exit code 0';
-is_deeply \@diff1, \@diff2,              'diff result is correct';
+my $testscript = q{
+    /^\s*([AMD])\s+(.+?)\s*$/ or die;
+    ++$i;
+    print "got op: $1\n";
+    print "$i - -\n";
+    print "$i $1 $2.suffix\n";
+};
+
+my $buf = '';
+open my $out, '>', \$buf;
+
+is run_diff([qw(perl -ne), $testscript], \@diff1, $out, 1), 0,
+            'successful run returns exit code 0';
+
+is_deeply \@diff1, \@diff2, 'diff result is correct';
+
+is $buf, "got op: A\ngot op: M\ngot op: D\n", 'other output is correct';
+
 
 ok run_diff(['false'], [], \*STDOUT, 0), 'failing run returns non-zero';
+
 
 dies_ok {
     local $SIG{__WARN__} = sub { die @_ };

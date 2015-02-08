@@ -1,9 +1,10 @@
-use Test::Most         tests => 11;
+use Test::Most         tests => 12;
 use Cwd                qw(abs_path);
 use File::Slurp        qw(write_file);
 use File::Temp;
 use JSON;
-use Runner101::Helpers qw(slurp_json spew_json guess_json validate_json);
+use Runner101::Helpers qw(slurp_json spew_json guess_json
+                          validate_json write_log);
 
 my $path = File::Temp->newdir;
 my $json = {a => 'b', c => [qw(d e)]};
@@ -47,3 +48,10 @@ is_deeply validate_json([qw(a b c)], $schema), [qw(a b c)],
 
 dies_ok { validate_json([qw(a b b)], $schema) }
           'validating invalid JSON against schema dies';
+
+
+# write_log
+my $buf = '';
+open my $out, '>', \$buf;
+write_log($out, 'hello', ' ', 'world!');
+like $buf, qr/hello world!\n$/, 'write log';
