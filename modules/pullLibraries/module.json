@@ -1,5 +1,6 @@
 {
     "command"      : "make",
+    "wantdiff"     : false,
     "dependencies" : ["pull101repo"],
     "environment"  : [
         "output101dir",

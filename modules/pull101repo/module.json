@@ -1,5 +1,6 @@
 {
     "command"      : "perl pull101repo",
+    "wantdiff"     : false,
     "dependencies" : [],
     "environment"  : [
         "repo101dir",

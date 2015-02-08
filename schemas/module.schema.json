@@ -1,10 +1,14 @@
 {
     "title"      : "Module Description Schema",
     "type"       : "object",
-    "required"   : ["command", "dependencies", "environment"],
+    "required"   : ["command", "wantdiff", "dependencies", "environment"],
     "properties" : {
         "command"      : {
             "type"        : "string",
+            "required"    : true
+        },
+        "wantdiff"     : {
+            "type"        : "boolean",
             "required"    : true
         },
         "dependencies" : {
