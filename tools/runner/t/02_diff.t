@@ -1,4 +1,4 @@
-use Test::Most      tests => 7;
+use Test::Most      tests => 8;
 use Runner101::Diff qw(run_diff parse);
 
 
@@ -18,3 +18,8 @@ is run_diff(['perl', '-pe', '++$i; $_ = "$i $_"'], \@diff1, \*STDOUT, 1), 0,
 is_deeply \@diff1, \@diff2,              'diff result is correct';
 
 ok run_diff(['false'], [], \*STDOUT, 0), 'failing run returns non-zero';
+
+dies_ok {
+    local $SIG{__WARN__} = sub { die @_ };
+    run_diff([], [], \*STDOUT, 1);
+} 'invalid command causes warning';
