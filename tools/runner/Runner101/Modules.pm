@@ -62,6 +62,7 @@ sub BUILD
             name   => $name,
             args   => $args[$index],
             dir    => "$args->{modules_dir}/$name",
+            log    => "$args->{logs_dir}/$name.log",
             parent => $self,
             schema => $module_schema,
         );

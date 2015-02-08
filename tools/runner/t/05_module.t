@@ -37,6 +37,7 @@ cmp_ok scalar @{$parent->errors->{other}}, '==', 1,
 $parent->errors({});
 spew_json("$dir/module.json", {
               command      => 'python program.py',
+              wantdiff     => 1,
               dependencies => [],
               environment  => [],
           });

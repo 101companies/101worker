@@ -25,14 +25,17 @@ sub parse
 
 sub run_diff
 {
-    my ($command, $diffs) = @_;
+    my ($command, $diffs, $log) = @_;
+    $log //= \*STDOUT;
+
+    local $SIG{PIPE} = sub { warn "broken pipe\n" };
 
     my    $out;
     my    $in = join "\n", @$diffs;
     local $?;
     IPC::Run::run($command, \$in, \$out);
 
-    parse($_, $diffs) // print $_, "\n" for split /\n/, $out;
+    parse($_, $diffs) // print $log $_, "\n" for split /\n/, $out;
 
     $?
 }

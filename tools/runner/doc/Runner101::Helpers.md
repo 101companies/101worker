@@ -47,5 +47,7 @@ with a diagnostic message on validation failure.
 ## write\_log
 
     write_log(@message)
+    write_log($out, @message)
 
-Prints the current date and time, its arguments and then a newline.
+Prints the current date, followed by `@message`, to the given `$out`
+filehandle or, if no filehandle is given, to `STDOUT`.

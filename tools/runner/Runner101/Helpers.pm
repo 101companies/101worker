@@ -48,7 +48,8 @@ sub validate_json
 
 sub write_log
 {
-    print strftime('[%Y-%m-%d %H:%M:%S] ', gmtime), @_, "\n";
+    my $out = ref $_[0] ? shift : \*STDOUT;
+    print $out strftime('[%Y-%m-%d %H:%M:%S] ', gmtime), @_, "\n";
 }
 
 
@@ -104,7 +105,9 @@ with a diagnostic message on validation failure.
 =head2 write_log
 
     write_log(@message)
+    write_log($out, @message)
 
-Prints the current date and time, its arguments and then a newline.
+Prints the current date, followed by C<@message>, to the given C<$out>
+filehandle or, if no filehandle is given, to C<STDOUT>.
 
 =cut
