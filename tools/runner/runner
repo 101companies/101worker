@@ -36,5 +36,4 @@ for (pairs qw(output101dir  output
 load_vars(\%options);
 
 my $diff = Runner101::Modules::run(\%options);
-print "DIFF FOLLOWS\n";
 print $_, "\n" for @$diff;

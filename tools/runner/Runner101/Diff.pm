@@ -4,7 +4,8 @@ use Exporter qw(import);
 
 use strict;
 use warnings;
-use IPC::Run qw();
+use IPC::Run  qw();
+use Try::Tiny;
 
 
 sub parse
@@ -30,10 +31,13 @@ sub run_diff
     my $out;
     my $exit_code = do {
         local $?;
-        local $SIG{PIPE} = sub { warn "broken pipe\n" };
+        local $SIG{PIPE} = 'IGNORE';
 
         my $in = $wantdiff ? join "\n", @$diffs : undef;
-        IPC::Run::run($command, \$in, \$out);
+        try
+        {   IPC::Run::run($command, \$in, \$out) }
+        catch
+        {   warn $_ };
 
         $?
     };
@@ -114,10 +118,16 @@ if it could parse the line and C<undef> otherwise.
 
 =head2 run_diff
 
-    run_diff(\@command, \@diffs)
+    run_diff(\@command, \@diffs, $log, $wantdiff)
 
 Executes the given C<$command>, which is an arrayref containing the arguments
-of the command. The given C<$diffs> goes into the stdin and the output gets
-L</parse>d. Returns the exit code of the C<$command> run.
+of the command. If C<$wantdiff> is true, the given C<$diffs> are piped into
+it.
+
+After the command ran, its output is L</parse>d for diff output (even if
+C<$wantdiff> is false!) and any diffs found are added to the given C<$diffs>.
+Any other output is printed to the given C<$log> filehandle.
+
+Returns the exit code of the process run and warns on errors like broken pipe.
 
 =cut

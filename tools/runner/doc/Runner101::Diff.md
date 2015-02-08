@@ -56,8 +56,14 @@ if it could parse the line and `undef` otherwise.
 
 ## run\_diff
 
-    run_diff(\@command, \@diffs)
+    run_diff(\@command, \@diffs, $log, $wantdiff)
 
 Executes the given `$command`, which is an arrayref containing the arguments
-of the command. The given `$diffs` goes into the stdin and the output gets
-["parse"](#parse)d. Returns the exit code of the `$command` run.
+of the command. If `$wantdiff` is true, the given `$diffs` are piped into
+it.
+
+After the command ran, its output is ["parse"](#parse)d for diff output (even if
+`$wantdiff` is false!) and any diffs found are added to the given `$diffs`.
+Any other output is printed to the given `$log` filehandle.
+
+Returns the exit code of the process run and warns on errors like broken pipe.
