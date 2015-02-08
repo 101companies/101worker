@@ -3,7 +3,7 @@ import json
 import os
 import re
 import incremental101
-from   .util          import stripregex, tolist
+from   .util          import stripregex, tolist, diff
 
 
 class Phase(object):
@@ -33,18 +33,7 @@ class Phase(object):
 
 
     def run(self):
-        repodir   = os.environ[   "repo101dir"]
-        targetdir = os.environ["targets101dir"]
-        switch    = {"A" : self.onfile, "M" : self.onfile, "D" : self.ondelete}
-
-        for op, path in incremental101.gendiff():
-            if path.startswith(repodir):
-                target  = path.replace(repodir, targetdir, 1) + self.suffix()
-                switch[op](target  =target,
-                           filename=path,
-                           dirname =os.path.dirname(path)[len(repodir):],
-                           basename=os.path.basename(path))
-
+        diff(self.suffix(), A=self.onfile, M=self.onfile, D=self.ondelete)
         return self.dump()
 
 
