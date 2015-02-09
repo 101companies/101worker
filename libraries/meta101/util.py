@@ -30,7 +30,7 @@ def diff(suffix, **switch):
             target = sourcetotarget(path) + suffix
             switch[op](target  =target,
                        filename=path,
-                       dirname =os.path.dirname(path)[len(repodir):],
+                       dirname =os.path.dirname(path),
                        basename=os.path.basename(path))
         except ValueError:
             pass
