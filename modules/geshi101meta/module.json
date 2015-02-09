@@ -1,4 +1,13 @@
 {
-    "targets"      : [],
-    "dependencies" : ["pull101repo", "gatherGeshi", "matches101meta"]
+    "command"      : "python program.py",
+    "wantdiff"     : true,
+    "dependencies" : [
+        "pull101repo",
+        "gatherGeshi",
+        "run101meta"
+    ],
+    "environment"  : [
+        "gatheredGeshi101dir",
+        "geshi101dump"
+    ]
 }
