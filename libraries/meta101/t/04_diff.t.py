@@ -18,9 +18,9 @@ def dies_ok(code, message=None):
 
 called = []
 switch = {
-    "A" : lambda target, **kwargs: called.append(["A", target]),
-    "M" : lambda target, **kwargs: called.append(["M", target]),
-    "D" : lambda target, **kwargs: called.append(["D", target]),
+    "A" : lambda **kwargs: called.append(["A", kwargs]),
+    "M" : lambda **kwargs: called.append(["M", kwargs]),
+    "D" : lambda **kwargs: called.append(["D", kwargs]),
 }
 
 
@@ -46,7 +46,22 @@ D /some/totally/different/path
 
 diff(".suffix", **switch)
 eq_ok(called, [
-          ["A", "/path/targets/added.json.suffix"],
-          ["M", "/path/targets/somedir/modified.java.suffix"],
-          ["D", "/path/targets/some/more/dirs/deleted.suffix"],
+          ["A", {
+              "target"   : "/path/targets/added.json.suffix",
+              "filename" : "/path/repo/added.json",
+              "dirname"  : "",
+              "basename" : "added.json",
+          }],
+          ["M", {
+              "target"   : "/path/targets/somedir/modified.java.suffix",
+              "filename" : "/path/repo/somedir/modified.java",
+              "dirname"  : "somedir",
+              "basename" : "modified.java",
+          }],
+          ["D", {
+              "target"   : "/path/targets/some/more/dirs/deleted.suffix",
+              "filename" : "/path/repo/some/more/dirs/deleted",
+              "dirname"  : "some/more/dirs",
+              "basename" : "deleted",
+          }],
       ], "repo paths are called correctly, other paths are ignored")

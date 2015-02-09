@@ -27,10 +27,11 @@ def sourcetotarget(path):
 def diff(suffix, **switch):
     for op, path in incremental101.gendiff():
         try:
-            target = sourcetotarget(path) + suffix
+            target  = sourcetotarget(path) + suffix
+            repodir = sourcetotarget.dirs[0]
             switch[op](target  =target,
                        filename=path,
-                       dirname =os.path.dirname(path),
+                       dirname =os.path.dirname(path)[len(repodir) + 1:],
                        basename=os.path.basename(path))
         except ValueError:
             pass
