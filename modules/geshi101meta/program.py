@@ -19,6 +19,9 @@ def derive(geshicode, filename, **kwargs):
     raise RuntimeError("{} exited with {}".format(" ".join(command), status))
 
 
+# TODO load old dump
+
+
 dump = meta101.derive(key="geshi", suffix=".geshi.html", callback=derive)
 dump["geshicodes"] = list(geshicodes)
 
