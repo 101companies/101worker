@@ -27,8 +27,8 @@ class Deriver(object):
     def onfile(self, target, **kwargs):
         self.rmdump(target)
 
-        matchesfile = sourcetotarget(kwargs["filename"]) + ".matches.json"
         try:
+            matchesfile = sourcetotarget(kwargs["filename"]) + ".matches.json"
             with open(matchesfile) as f:
                 matches = json.load(f)
             metadata = map(lambda match: match["metadata"], matches)
