@@ -1,22 +1,13 @@
 {
-  "targets" : [
-    {
-      "headline" : "Metrics",
-      "classifier" : "resource",
-      "scope" : "file",
-      "suffix" : ".metrics.json",
-      "language" : "JSON",
-      "propertyName": "metrics",
-      "className" : "Metrics"
-    },
-    {
-      "headline" : "Tokens",
-      "classifier" : "resource",
-      "scope" : "file",
-      "suffix" : ".tokens.json",
-      "language" : "JSON"
-    }
-  ],
-  "dependencies" : ["matches101meta"]
+    "command"      : "python program.py",
+    "wantdiff"     : true,
+    "environment"  : [
+        "metrics101dump",
+        "output101dir"
+    ],
+    "dependencies" : [
+        "gatherGeshi",
+        "run101meta"
+    ]
 }
 

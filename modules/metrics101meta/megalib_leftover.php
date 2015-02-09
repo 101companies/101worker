@@ -217,11 +217,9 @@ class GeSHiExtended extends GeSHi {
     $r = array() ;
     $geshi = new GeSHiExtended() ;
     $languages = $geshi->get_supported_languages() ;
-    //echo count($languages). " languages descriptions founded" ;
+
     foreach($languages as $language) {
-      // echo "Loading language $language..." ;
       $r[$language] = self::getLanguageDescription($language) ;
-      // echo "done <br/>" ;
     }
     return $r ;
   }
@@ -474,7 +472,7 @@ class SourceCode {
       $linesTruncated=array() ;
       $lines = explode("\n",$this->plainSourceCode) ;
       $nbOfLines = count($lines) ;
-      // echo $nbOfLines ;
+
       $n = 0 ;
       while ($n < $nbOfLines && $n < MAX_NB_OF_LINES) {
         $line = $lines[$n];
@@ -483,7 +481,7 @@ class SourceCode {
             "line #".($n+1)." has been truncated to "
             .MAX_LINE_LENGTH." characters (out of ".strlen($line)." characters)\n" ;          
           $lines[$n] = substr($lines[$n],0,MAX_LINE_LENGTH)."... TRUNCATED" ;
-          echo $msg ; 
+          trigger_error($msg) ;
         }
         $text .= $line."\n" ;
         $n++ ;
@@ -497,7 +495,7 @@ class SourceCode {
       if ($nbOfLines > MAX_NB_OF_LINES) {
         $msg = "\nFILE truncated to ".MAX_NB_OF_LINES." lines (out of ".$nbOfLines." lines)\n" ;
         $text .= $msg ;
-        echo $msg ;
+        trigger_error($msg) ;
       }
       
       $geshi = new GeSHi() ;
