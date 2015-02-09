@@ -3,7 +3,7 @@ from StringIO   import StringIO
 import os
 import incremental101 as inc
 
-plan(7)
+plan(9)
 
 def doline(*args):
     inc.outstream = StringIO()
@@ -13,7 +13,6 @@ def doline(*args):
 if not os.path.exists("TEST"): os.mkdir("TEST")
 path = "TEST/writefile{}".format(os.getpid())
 absp = os.path.abspath(path)
-ok(not os.path.exists(path), "file doesn't exist yet")
 
 
 content = "file content\n"
@@ -33,3 +32,15 @@ eq_ok(doline(path, content), "\n0 M {}\n".format(absp),
                              "modify diff is printed")
 with open(path) as f:
     eq_ok(f.read(), content, "file content has changed")
+
+
+longpath = "TEST/writefolder{}/dir/file".format(os.getpid())
+longabsp = os.path.abspath(longpath)
+
+eq_ok(doline(longpath, content), "\n0 A {}\n".format(longabsp),
+      "diff with nonexistent folders runs fine")
+
+ok(os.path.exists(longpath), "missing folders are created")
+
+with open(longpath) as f:
+    eq_ok(f.read(), content, "file contains given content")
