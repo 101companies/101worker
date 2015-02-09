@@ -1,8 +1,8 @@
 import os
 from TAP.Simple   import *
-from meta101.util import *
+from meta101.util import sourcetotarget
 
-plan(13)
+plan(5)
 
 def dies_ok(code, message=None):
     try:
@@ -13,27 +13,6 @@ def dies_ok(code, message=None):
         exception = None
     ok(exception, message)
 
-
-# stripregex
-
-is_ok(stripregex( "thing" ), None,    "stripregex 'thing' does nothing")
-is_ok(stripregex("#thing" ), None,    "stripregex '#thing' does nothing")
-is_ok(stripregex( "thing#"), None,    "stripregex 'thing#' does nothing")
-eq_ok(stripregex("#thing#"), "thing", "stripregex '#thing#' returns 'thing'")
-
-eq_ok(stripregex( "thing",  123), 123,
-      "stripregex 'thing' with default returns the default")
-eq_ok(stripregex("#thing#", 123), "thing",
-      "stripregex '#thing#' with default returns 'thing'")
-
-
-# tolist
-
-eq_ok(tolist( "thing" ), ["thing"], "single thing tolist becomes a list")
-eq_ok(tolist(["thing"]), ["thing"], "list tolist remains the same")
-
-
-# sourcetotarget
 
 dies_ok(lambda: sourcetotarget("whatever"),
         "missing environment variables in sourcetotarget dies")
