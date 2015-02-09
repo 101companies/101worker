@@ -1,6 +1,5 @@
 import json
 import os
-import subprocess
 from  warnings   import warn
 from .Phase      import Phase
 from .Basics     import Basics
@@ -28,11 +27,3 @@ def matchall(phasekey):
 
 def derive(*args, **kwargs):
     return Deriver(*args, **kwargs).derive()
-
-
-def runcommand(*args):
-    try :
-        return (0, subprocess.check_output(args))
-    except subprocess.CalledProcessError as e:
-        warn(e)
-        return (e.returncode, e.output)
