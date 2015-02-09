@@ -26,8 +26,8 @@ def matchall(phasekey):
     return getphase(phasekey)(rules).run()
 
 
-def derive(key, suffix, callback):
-    return Deriver(key, suffix, callback).derive()
+def derive(*args, **kwargs):
+    return Deriver(*args, **kwargs).derive()
 
 
 def runcommand(*args):

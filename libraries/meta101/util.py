@@ -35,3 +35,8 @@ def diff(suffix, **switch):
                        basename=os.path.basename(path))
         except ValueError:
             pass
+
+
+def valuebykey(deriver, matches):
+    metadata = map(lambda match: match["metadata"], matches)
+    return [m[deriver.key] for m in metadata if deriver.key in m][0]

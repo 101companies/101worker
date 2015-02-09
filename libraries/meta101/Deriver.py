@@ -1,17 +1,23 @@
 import json
 import os
 import incremental101
-from   .util          import diff, sourcetotarget
+from   .util          import diff, sourcetotarget, valuebykey
 
 
 class Deriver(object):
 
 
-    def __init__(self, key, suffix, callback, dump={"problems" : {}}):
+    def __init__(self,
+                 suffix,
+                 callback,
+                 key     =None,
+                 getvalue=valuebykey,
+                 dump    ={"problems" : {}}):
         self.key      = key
         self.suffix   = suffix
         self.callback = callback
         self.dump     = dump
+        self.getvalue = getvalue
 
 
     def derive(self):
@@ -31,8 +37,7 @@ class Deriver(object):
             matchesfile = sourcetotarget(kwargs["filename"]) + ".matches.json"
             with open(matchesfile) as f:
                 matches = json.load(f)
-            metadata = map(lambda match: match["metadata"], matches)
-            value    = [m[self.key] for m in metadata if self.key in m][0]
+            value = self.getvalue(self, matches)
         except Exception:
             return
 
