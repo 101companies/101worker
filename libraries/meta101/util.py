@@ -25,7 +25,7 @@ def sourcetotarget(path):
 
 
 def diff(suffix, **switch):
-    for op, path in incremental101.gendiff():
+    for op, path in incremental101.eachdiff():
         try:
             target  = sourcetotarget(path) + suffix
             repodir = sourcetotarget.dirs[0]

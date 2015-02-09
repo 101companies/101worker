@@ -35,27 +35,27 @@ nextdiff is called and used in printdiff. Don't modify this.
 """
 
 
-def eachdiff(**kwargs):
+def eachdiff():
     """
-    Usage:
-        eachdiff(A=addfunction, M=modifyfunction, D=deletefunction)
-    """
-    for op, path in gendiff():
-        kwargs[op](op, path)
-
-
-def gendiff():
-    """
-    Generator over nextdiff(). You probably want eachdiff() instead.
+    Generator over nextdiff(), so that you can use a for loop.
 
     Usage:
-        for op, path in gendiff():
+        for op, path in eachdiff():
             if   op == "A":
                 handle_added_file(path)
             elif op == "M":
                 handle_modified_file(path)
             elif op == "D":
                 handle_deleted_file(path)
+
+    Or alternatively, you can use functions in a dict:
+        switch = {
+            "A" : addcallback,
+            "M" : modifycallback,
+            "D" : deletecallback,
+        }
+        for op, path in eachdiff():
+            switch[op](path)
     """
     diff = nextdiff()
     while diff:
