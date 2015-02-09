@@ -15,6 +15,7 @@ gitdeps101dir          : $results101dir/gitdeps/
 targets101dir          : $web101dir/data/resources/
 dumps101dir            : $web101dir/data/dumps/
 views101dir            : $web101dir/data/views/
+gatheredGeshi101dir    : $results101dir/geshi/
 
 # Files
 # These MUST NOT end with a slash, otherwise they are mistaken for directories.
