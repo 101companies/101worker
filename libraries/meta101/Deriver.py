@@ -1,6 +1,7 @@
+import json
 import os
 import incremental101
-from   .util          import diff
+from   .util          import diff, sourcetotarget
 
 
 class Deriver(object):
@@ -10,6 +11,7 @@ class Deriver(object):
         self.key      = key
         self.suffix   = suffix
         self.callback = callback
+        self.dump     = dump
 
 
     def derive(self):
@@ -17,19 +19,25 @@ class Deriver(object):
         return self.dump
 
 
-    def rmdump(self, key):
-        if key in dump["problems"]:
-            del dump["problems"][key]
+    def rmdump(self, target):
+        if target in self.dump["problems"]:
+            del self.dump["problems"][target]
 
 
     def onfile(self, target, **kwargs):
         self.rmdump(target)
 
-        if not MATCHES:
+        matchesfile = sourcetotarget(kwargs["filename"]) + ".matches.json"
+        try:
+            with open(matchesfile) as f:
+                matches = json.load(f)
+            metadata = map(lambda match: match["metadata"], matches)
+            value    = [m[self.key] for m in metadata if self.key in m][0]
+        except Exception:
             return
 
         try:
-            result = self.callback(VALUE, target=target, **kwargs)
+            result = self.callback(value, target=target, **kwargs)
             if result is None:
                 incremental101.deletefile(target)
             elif type(result) in [dict, list]:
@@ -42,5 +50,5 @@ class Deriver(object):
 
 
     def ondelete(self, target, **kwargs):
-        self.rmdump(filename)
+        self.rmdump(target)
         incremental101.deletefile(target)
