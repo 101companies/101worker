@@ -19,11 +19,11 @@ class Phase(object):
 
     @abc.abstractmethod
     def suffix(self):
-        pass
+        pass # pragma: no cover
 
     @abc.abstractmethod
     def applicable(self, rule):
-        pass
+        pass # pragma: no cover
 
     def dump(self):
         return {
