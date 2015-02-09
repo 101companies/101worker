@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import os
+import subprocess
 import incremental101
 import meta101
+
 
 geshi      = os.environ["gatheredGeshi101dir"] + "/run.php"
 geshicodes = set()
@@ -9,14 +11,8 @@ geshicodes = set()
 
 def derive(geshicode, filename, **kwargs):
     geshicodes.add(geshicode)
-
-    command        = ["php", geshi, filename, "php://stdout", geshicode]
-    status, output = meta101.runcommand(*command)
-
-    if status == 0:
-        return output
-
-    raise RuntimeError("{} exited with {}".format(" ".join(command), status))
+    command = ["php", geshi, filename, "php://stdout", geshicode]
+    return subprocess.check_output(command)
 
 
 # TODO load old dump

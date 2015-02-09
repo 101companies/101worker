@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import json
+import subprocess
 import incremental101
 import meta101
 
@@ -25,13 +26,7 @@ def derive(value, filename, **kwargs):
     if geshicode:
         geshicodes.add(geshicode)
         command = ["php", "helper.php", filename, geshicode, relevance]
-        status, output = meta101.runcommand(*command)
-
-        if status == 0:
-            return json.loads(output)
-
-        raise RuntimeError("{} exited with {}".format(" ".join(command),
-                                                      status))
+        return json.loads(subprocess.check_output(command))
     else:
         return {
             "size"      : 0,
