@@ -7,7 +7,7 @@ cover:
 	rm -rf .coverage htmlcov
 	for f in t/*.t.py; \
 	do \
-	    ${pp} coverage run -a --branch --source=. '--omit=t/*' "$$f"; \
+	    ${pp} coverage run -a --branch --source=. '--omit=t/*.t.py' "$$f"; \
 	done;
 	coverage html
 	@echo See htmlcov/index.html for coverage output.
