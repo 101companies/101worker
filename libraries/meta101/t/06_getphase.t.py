@@ -1,17 +1,9 @@
 from TAP.Simple import *
 import meta101
+execfile("t/dies_ok.py")
 
 plan(4)
 
-
-def dies_ok(code, message=None):
-    try:
-        code()
-    except Exception as e:
-        exception = e
-    else:
-        exception = None
-    ok(exception, message)
 
 dies_ok(lambda: meta101.getphase("a"), "invalid phase dies")
 

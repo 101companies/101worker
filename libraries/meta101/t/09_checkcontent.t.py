@@ -1,20 +1,12 @@
 from TAP.Simple import *
 import os
 import meta101
+execfile("t/dies_ok.py")
 
 plan(5)
 
 phase = meta101.Basics()
 
-
-def dies_ok(code, message=None):
-    try:
-        code()
-    except Exception as e:
-        exception = e
-    else:
-        exception = None
-    ok(exception, message)
 
 dies_ok(lambda: phase.checkcontent("irrelevant", "nonexistent"),
         "nonexistent file dies")

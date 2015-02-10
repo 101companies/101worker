@@ -3,17 +3,9 @@ from   StringIO       import StringIO
 from   TAP.Simple     import *
 from   meta101.util   import diff
 import incremental101 as     inc
+execfile("t/dies_ok.py")
 
 plan(3)
-
-def dies_ok(code, message=None):
-    try:
-        code()
-    except Exception as e:
-        exception = e
-    else:
-        exception = None
-    ok(exception, message)
 
 
 called = []

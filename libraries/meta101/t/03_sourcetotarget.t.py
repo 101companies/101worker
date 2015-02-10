@@ -1,17 +1,9 @@
 import os
 from TAP.Simple   import *
 from meta101.util import sourcetotarget
+execfile("t/dies_ok.py")
 
 plan(5)
-
-def dies_ok(code, message=None):
-    try:
-        code()
-    except Exception as e:
-        exception = e
-    else:
-        exception = None
-    ok(exception, message)
 
 
 dies_ok(lambda: sourcetotarget("whatever"),
