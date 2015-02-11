@@ -5,6 +5,9 @@ import json
 import incremental101
 
 
+repo101dir = os.environ["repo101dir"]
+
+
 # Check rule for validity
 def validRule(rule):
     return True
@@ -81,10 +84,10 @@ dump["problems"] = problems
 dump["numbers"] = numbers
 
 # Main loop
-repo101dir = os.environ["repo101dir"]
 for root, dirs, files in os.walk(repo101dir, followlinks=True):
     for basename in fnmatch.filter(files, "*.101meta"):
-        filename  = os.path.join(root, basename)
+        filename = os.path.join(root, basename)
+        relative = filename[len(repo101dir) + 1:]
         numberOfFiles += 1
 
         # Shield against JSON encoding errors
@@ -95,14 +98,14 @@ for root, dirs, files in os.walk(repo101dir, followlinks=True):
             # Handle lists of rules
             if isinstance(data, list):
                 for rule in data:
-                    handleRule(rule, filename)
+                    handleRule(rule, relative)
             else:
-                handleRule(data, filename)
+                handleRule(data, relative)
             break
 
         except ValueError as e:
             print "Unreadable file {}: {}".format(filename, e)
-            unreadableFiles.append(filename)
+            unreadableFiles.append(relative)
 
 # Completion of dump
 numbers["numberOfRules"] = len(rules)
