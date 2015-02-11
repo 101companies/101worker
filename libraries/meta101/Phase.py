@@ -42,6 +42,7 @@ class Phase(object):
         units = []
 
         for index, value in enumerate(self.rules):
+            # TODO short-circuit if the rule doesn't contain metadata?
             rule   = value["rule"]
             result = self.match(index, rule, **kwargs)
             if result and "metadata" in rule:
