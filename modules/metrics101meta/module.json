@@ -8,6 +8,24 @@
     "dependencies" : [
         "gatherGeshi",
         "run101meta"
+    ],
+    "targets" : [
+        {
+            "headline"     : "Metrics",
+            "classifier"   : "resource",
+            "scope"        : "file",
+            "suffix"       : ".metrics.json",
+            "language"     : "JSON",
+            "propertyName" : "metrics",
+            "className"    : "Metrics"
+        },
+        {
+            "headline"     : "Tokens",
+            "classifier"   : "resource",
+            "scope"        : "file",
+            "suffix"       : ".tokens.json",
+            "language"     : "JSON"
+        }
     ]
 }
 

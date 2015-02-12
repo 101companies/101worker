@@ -22,6 +22,41 @@
             "items"       : {"type" : "string"},
             "uniqueItems" : true,
             "required"    : true
+        },
+        "targets"      : {
+            "type"        : "array",
+            "items"       : {
+                "type"       : "object",
+                "required"   : ["headline", "classifier", "scope", "language"],
+                "properties" : {
+                    "headline"   : {
+                        "type"        : "string",
+                        "description" : "Headline for this type of files",
+                        "required"    : true
+                    },
+                    "classifier" : {
+                        "type"        : "string",
+                        "enum"        : ["resource"],
+                        "required"    : true
+                    },
+                    "scope"      : {
+                        "type"        : "string",
+                        "enum"        : ["file", "folder", "dump"],
+                        "required"    : true
+                    },
+                    "language"   : {
+                        "type"        : "string",
+                        "enum"        : ["JSON", "RDF"],
+                        "required"    : true
+                    },
+                    "suffix"     : {
+                        "type"        : "string"
+                    },
+                    "filename"   : {
+                        "type"        : "string"
+                    }
+                }
+            }
         }
     }
 }
