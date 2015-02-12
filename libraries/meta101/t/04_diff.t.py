@@ -5,7 +5,7 @@ from   meta101.util   import diff
 import incremental101 as     inc
 execfile("t/dies_ok.py")
 
-plan(3)
+plan(5)
 
 
 called = []
@@ -36,24 +36,42 @@ D /path/repo/some/more/dirs/deleted
 D /some/totally/different/path
 """)
 
+called = []
+want   = [
+    ["A", {
+        "target"   : "/path/targets/added.json.suffix",
+        "filename" : "/path/repo/added.json",
+        "dirname"  : "",
+        "basename" : "added.json",
+    }],
+    ["M", {
+        "target"   : "/path/targets/somedir/modified.java.suffix",
+        "filename" : "/path/repo/somedir/modified.java",
+        "dirname"  : "somedir",
+        "basename" : "modified.java",
+    }],
+    ["D", {
+        "target"   : "/path/targets/some/more/dirs/deleted.suffix",
+        "filename" : "/path/repo/some/more/dirs/deleted",
+        "dirname"  : "some/more/dirs",
+        "basename" : "deleted",
+    }],
+]
 diff(".suffix", **switch)
-eq_ok(called, [
-          ["A", {
-              "target"   : "/path/targets/added.json.suffix",
-              "filename" : "/path/repo/added.json",
-              "dirname"  : "",
-              "basename" : "added.json",
-          }],
-          ["M", {
-              "target"   : "/path/targets/somedir/modified.java.suffix",
-              "filename" : "/path/repo/somedir/modified.java",
-              "dirname"  : "somedir",
-              "basename" : "modified.java",
-          }],
-          ["D", {
-              "target"   : "/path/targets/some/more/dirs/deleted.suffix",
-              "filename" : "/path/repo/some/more/dirs/deleted",
-              "dirname"  : "some/more/dirs",
-              "basename" : "deleted",
-          }],
-      ], "repo paths are called correctly, other paths are ignored")
+eq_ok(called, want, "repo paths are called correctly, other paths are ignored")
+
+
+
+for entry in want:
+    target = entry[1]["target"]
+    entry[1]["target"] = [target + "1", target + "2"]
+
+called = []
+inc.instream.seek(0)
+diff([".suffix1", ".suffix2"], **switch)
+eq_ok(called, want, "multiple suffixes using a list")
+
+called = []
+inc.instream.seek(0)
+diff((".suffix1", ".suffix2"), **switch)
+eq_ok(called, want, "multiple suffixes using a tuple")
