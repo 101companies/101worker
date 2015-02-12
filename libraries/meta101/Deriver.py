@@ -1,7 +1,7 @@
 import json
 import os
 import incremental101
-from   .util          import diff, sourcetotarget, valuebykey
+from   .util          import diff, tolist, sourcetotarget, valuebykey
 
 
 class Deriver(object):
@@ -31,7 +31,7 @@ class Deriver(object):
 
 
     def onfile(self, target, **kwargs):
-        self.rmdump(target)
+        self.rmdump(str(target))
 
         try:
             matchesfile = sourcetotarget(kwargs["filename"]) + ".matches.json"
@@ -43,17 +43,23 @@ class Deriver(object):
 
         try:
             result = self.callback(value, target=target, **kwargs)
-            if result is None:
-                incremental101.deletefile(target)
-            elif type(result) in [dict, list]:
-                incremental101.writejson(target, result)
-            else:
-                incremental101.writefile(target, result)
+
+            if type(result) is not tuple:
+                result = (result,)
+
+            for r, t in zip(result, tolist(target)):
+                if r is None:
+                    incremental101.deletefile(t)
+                elif type(r) in [dict, list]:
+                    incremental101.writejson(t, r)
+                else:
+                    incremental101.writefile(t, r)
 
         except Exception as e:
-            self.dump["problems"][target] = str(e)
+            self.dump["problems"][str(target)] = str(e)
 
 
     def ondelete(self, target, **kwargs):
-        self.rmdump(target)
-        incremental101.deletefile(target)
+        self.rmdump(str(target))
+        for t in tolist(target):
+            incremental101.deletefile(t)

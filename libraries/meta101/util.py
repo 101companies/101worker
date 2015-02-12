@@ -27,8 +27,14 @@ def sourcetotarget(path):
 def diff(suffix, **switch):
     for op, path in incremental101.eachdiff():
         try:
-            target  = sourcetotarget(path) + suffix
-            repodir = sourcetotarget.dirs[0]
+            targetbase = sourcetotarget(path)
+            repodir    = sourcetotarget.dirs[0]
+
+            if type(suffix) is not str:
+                target = [targetbase + s for s in suffix]
+            else:
+                target = targetbase + suffix
+
             switch[op](target  =target,
                        filename=path,
                        dirname =os.path.dirname(path)[len(repodir) + 1:],

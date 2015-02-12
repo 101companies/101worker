@@ -26,21 +26,24 @@ def derive(value, filename, **kwargs):
     if geshicode:
         geshicodes.add(geshicode)
         command = ["php", "helper.php", filename, geshicode, relevance]
-        return json.loads(subprocess.check_output(command))
+        result  = json.loads(subprocess.check_output(command))
+        return (result["metrics"], result["tokens"])
     else:
-        return {
-            "size"      : 0,
-            "loc"       : 0,
-            "sloc"      : 0,
-            "relevance" : relevance,
-            "tokens"    : [],
-        }
+        return (
+            {
+                "size"      : 0,
+                "loc"       : 0,
+                "sloc"      : 0,
+                "relevance" : relevance,
+            },
+            []
+        )
 
 
 # TODO load old dump
 
 
-dump = meta101.derive(suffix  =".metrics.json",
+dump = meta101.derive(suffix  =[".metrics.json", ".tokens.json"],
                       callback=derive,
                       getvalue=getgeshi)
 

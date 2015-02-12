@@ -20,11 +20,13 @@ $content = file_get_contents($input);
 $sc      = new SourceCode($content, $language);
 $summary = $sc->getSummary();
 $result  = array(
-    'size'      => $summary['size'],
-    'loc'       => $summary['nloc'],
-    'ncloc'     => $summary['ncloc'],
-    'relevance' => $relevance,
-    'tokens'    => $sc->getTokens(),
+    'metrics' => array(
+        'size'      => $summary['size'],
+        'loc'       => $summary['nloc'],
+        'ncloc'     => $summary['ncloc'],
+        'relevance' => $relevance,
+    ),
+    'tokens'  => $sc->getTokens(),
 );
 
 echo json_encode($result);
