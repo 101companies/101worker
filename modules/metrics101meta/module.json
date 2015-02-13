@@ -7,7 +7,7 @@
     ],
     "dependencies" : [
         "gatherGeshi",
-        "run101meta"
+        "matches101meta"
     ],
     "targets" : [
         {

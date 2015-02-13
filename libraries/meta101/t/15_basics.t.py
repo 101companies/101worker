@@ -9,6 +9,7 @@ plan(14)
 
 os.environ[   "repo101dir"] = "/repo"
 os.environ["targets101dir"] = "/targets"
+os.environ["basics101dump"] = "nonexistent"
 
 # monkey-patch functions in incremental101
 written = []
@@ -17,11 +18,12 @@ inc.writejson  = lambda path, data: written.append([path, data])
 inc.deletefile = lambda path      : deleted.append(path)
 inc.outstream  = StringIO()
 
-def testmatchall(wantmatches, wantwritten, wantdeleted, comment):
-    global written, deleted
+def testbasics(wantmatches, wantwritten, wantdeleted, comment):
+    global written, deleted, dump
     written = []
     deleted = []
-    eq_ok(meta101.matchall("basics")["matches"], wantmatches, comment)
+    meta101.matchall("basics")
+    eq_ok(written.pop()[1]["matches"], wantmatches, comment)
     eq_ok(written, wantwritten, "...correct files and data written")
     eq_ok(deleted, wantdeleted, "...correct files deleted")
 
@@ -45,7 +47,7 @@ inc.instream = StringIO("""A /repo/added
 M /repo/modified
 D /repo/deleted""")
 
-testmatchall({}, [], [
+testbasics({}, [], [
                  "/targets/added.matches.json",
                  "/targets/modified.matches.json",
                  "/targets/deleted.matches.json"
@@ -54,7 +56,7 @@ testmatchall({}, [], [
 
 os.environ["rules101dump"] = "t/rules/rules.json"
 inc.instream = StringIO()
-testmatchall({}, [], [], "no input gives empty matches")
+testbasics({}, [], [], "no input gives empty matches")
 
 
 # TODO also test dominators
@@ -88,21 +90,21 @@ units = {
     ],
 }
 
-testmatchall({
-                 "file.py"      : units["python"],
-                 "dir/Makefile" : units["make"  ],
-                 "Main.java"    : units["java"  ],
-                 "t/test.t.py"  : units["pytap" ],
-             },
-             [
-                 ["/targets/file.py.matches.json",      units["python"]],
-                 ["/targets/dir/Makefile.matches.json", units["make"  ]],
-                 ["/targets/Main.java.matches.json",    units["java"  ]],
-                 ["/targets/t/test.t.py.matches.json",  units["pytap" ]],
-             ],
-             [
-                 "/targets/some.py.matches.json",
-                 "/targets/file.rb.matches.json",
-                 "/targets/test.sh.matches.json",
-                 "/targets/main.c.matches.json",
-             ], "rules with input match correctly")
+testbasics({
+               "file.py"      : units["python"],
+               "dir/Makefile" : units["make"  ],
+               "Main.java"    : units["java"  ],
+               "t/test.t.py"  : units["pytap" ],
+           },
+           [
+               ["/targets/file.py.matches.json",      units["python"]],
+               ["/targets/dir/Makefile.matches.json", units["make"  ]],
+               ["/targets/Main.java.matches.json",    units["java"  ]],
+               ["/targets/t/test.t.py.matches.json",  units["pytap" ]],
+           ],
+           [
+               "/targets/some.py.matches.json",
+               "/targets/file.rb.matches.json",
+               "/targets/test.sh.matches.json",
+               "/targets/main.c.matches.json",
+           ], "rules with input match correctly")

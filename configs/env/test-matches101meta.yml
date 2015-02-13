@@ -2,7 +2,7 @@ repo101dir      : $output/101repo/
 gitdeps101dir   : $output/gitdeps/
 repo101url      : https://github.com/101companies/101test
 gitdeps101url   : file://$worker/configs/test/empty.json
-config101       : $worker/configs/test/run101meta-basics.json
+config101       : $worker/configs/test/matches101meta.json
 config101schema : $worker/schemas/config.schema.json
 module101schema : $worker/schemas/module.schema.json
 

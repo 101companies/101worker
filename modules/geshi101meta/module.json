@@ -4,7 +4,7 @@
     "dependencies" : [
         "pull101repo",
         "gatherGeshi",
-        "run101meta"
+        "matches101meta"
     ],
     "environment"  : [
         "gatheredGeshi101dir",

@@ -1,9 +1,0 @@
-{
-    "command"      : "python program.py",
-    "wantdiff"     : true,
-    "dependencies" : ["rules101meta"],
-    "environment"  : [
-        "rules101dump",
-        "targets101dir"
-    ]
-}
