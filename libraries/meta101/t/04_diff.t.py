@@ -41,18 +41,21 @@ want   = [
     ["A", {
         "target"   : "/path/targets/added.json.suffix",
         "filename" : "/path/repo/added.json",
+        "relative" : "added.json",
         "dirname"  : "",
         "basename" : "added.json",
     }],
     ["M", {
         "target"   : "/path/targets/somedir/modified.java.suffix",
         "filename" : "/path/repo/somedir/modified.java",
+        "relative" : "somedir/modified.java",
         "dirname"  : "somedir",
         "basename" : "modified.java",
     }],
     ["D", {
         "target"   : "/path/targets/some/more/dirs/deleted.suffix",
         "filename" : "/path/repo/some/more/dirs/deleted",
+        "relative" : "some/more/dirs/deleted",
         "dirname"  : "some/more/dirs",
         "basename" : "deleted",
     }],

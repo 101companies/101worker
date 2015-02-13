@@ -41,11 +41,11 @@ class Phase(object):
     def onfile(self, **kwargs):
         units = []
 
-        for index, value in enumerate(self.rules):
+        for value in self.rules:
             # TODO short-circuit if the rule doesn't contain metadata?
             rule   = value["rule"]
-            result = self.match(index, rule, **kwargs)
-            if result and "metadata" in rule:
+            result = self.match(rule, **kwargs)
+            if result is not None and "metadata" in rule:
                 for metadata in tolist(rule["metadata"]):
                     result["metadata"] = metadata
                     units.append(result.copy())
@@ -73,7 +73,7 @@ class Phase(object):
         if units:
             incremental101.writejson(kwargs["target"], units)
             self.matches.append({
-                "filename" : kwargs["filename"],
+                "filename" : kwargs["relative"],
                 "units"    : units,
             })
         else:
@@ -84,11 +84,11 @@ class Phase(object):
         incremental101.deletefile(target)
 
 
-    def match(self, index, rule, **kwargs):
+    def match(self, rule, **kwargs):
         if not self.applicable(rule):
             return None
 
-        kwargs["result"] = {"id" : index}
+        kwargs["result"] = {}
         for key in rule:
             func = getattr(self, "check" + key, None)
             if func and not func(rule[key], key=key, rule=rule, **kwargs):

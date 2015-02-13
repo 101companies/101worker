@@ -70,66 +70,39 @@ D /repo/main.c""")
 
 units = {
     "java" : [
-        {
-            "id"       : 0,
-            "metadata" : {"geshi" : "java"},
-        },
-        {
-            "id"       : 0,
-            "metadata" : {"language" : "Java"},
-        },
+        {"metadata" : {"geshi"    : "java"}},
+        {"metadata" : {"language" : "Java"}},
     ],
     "make" : [
-        {
-            "id"       : 1,
-            "metadata" : {"geshi" : "text"},
-        },
-        {
-            "id"       : 1,
-            "metadata" : {"dependsOn" : "make"},
-        },
+        {"metadata" : {"geshi"     : "text"}},
+        {"metadata" : {"dependsOn" : "make"}},
     ],
     "python" : [
-        {
-            "id"       : 2,
-            "metadata" : {"geshi" : "python"},
-        },
-        {
-            "id"       : 2,
-            "metadata" : {"language" : "Python"},
-        },
+        {"metadata" : {"geshi"    : "python"}},
+        {"metadata" : {"language" : "Python"}},
     ],
     "pytap" : [
-        {
-            "id"       : 2,
-            "metadata" : {"geshi" : "python"},
-        },
-        {
-            "id"       : 2,
-            "metadata" : {"language" : "Python"},
-        },
-        {
-            "id"       : 3,
-            "metadata" : {"dependsOn" : "PyTAP"},
-        },
+        {"metadata" : {"geshi"     : "python"}},
+        {"metadata" : {"language"  : "Python"}},
+        {"metadata" : {"dependsOn" : "PyTAP" }},
     ],
 }
 
 testmatchall([
                  {
-                      "filename" : "/repo/file.py",
+                      "filename" : "file.py",
                       "units"    : units["python"],
                  },
                  {
-                      "filename" : "/repo/dir/Makefile",
+                      "filename" : "dir/Makefile",
                       "units"    : units["make"],
                  },
                  {
-                      "filename" : "/repo/Main.java",
+                      "filename" : "Main.java",
                       "units"    : units["java"],
                  },
                  {
-                      "filename" : "/repo/t/test.t.py",
+                      "filename" : "t/test.t.py",
                       "units"    : units["pytap"],
                  },
              ],

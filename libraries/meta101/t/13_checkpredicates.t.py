@@ -15,9 +15,8 @@ phase       = meta101.Predicates()
 
 def testpredicate(comment, rule, success, predicates, failures,
                   filename="whatever"):
-
-    result = phase.match(0, rule, filename=filename)
-    ok(result, comment) if success else ok(not result, comment)
+    result = phase.match(rule, filename=filename)
+    ok(result is not None, comment) if success else ok(result is None, comment)
     eq_ok(len(phase.predicates), predicates,
           "...predicate count is {}".format(predicates))
     eq_ok(len(phase.failures),   failures,

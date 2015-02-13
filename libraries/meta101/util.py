@@ -37,6 +37,7 @@ def diff(suffix, **switch):
 
             switch[op](target  =target,
                        filename=path,
+                       relative=path[len(repodir) + 1:],
                        dirname =os.path.dirname(path)[len(repodir) + 1:],
                        basename=os.path.basename(path))
         except ValueError:
