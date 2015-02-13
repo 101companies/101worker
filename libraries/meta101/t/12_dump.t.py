@@ -6,20 +6,20 @@ plan(3)
 
 eq_ok(meta101.Basics().dump(), {
           "rules"      : {},
-          "matches"    : [],
+          "matches"    : {},
           "failures"   : [],
       }, "basics dump");
 
 eq_ok(meta101.Predicates().dump(), {
           "rules"      : {},
-          "matches"    : [],
+          "matches"    : {},
           "failures"   : [],
           "predicates" : [],
       }, "predicates dump");
 
 eq_ok(meta101.Fragments().dump(), {
           "rules"      : {},
-          "matches"    : [],
+          "matches"    : {},
           "failures"   : [],
           "locators"   : [],
       }, "fragments dump");

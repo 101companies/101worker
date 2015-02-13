@@ -45,7 +45,7 @@ inc.instream = StringIO("""A /repo/added
 M /repo/modified
 D /repo/deleted""")
 
-testmatchall([], [], [
+testmatchall({}, [], [
                  "/targets/added.matches.json",
                  "/targets/modified.matches.json",
                  "/targets/deleted.matches.json"
@@ -54,7 +54,7 @@ testmatchall([], [], [
 
 os.environ["rules101dump"] = "t/rules/rules.json"
 inc.instream = StringIO()
-testmatchall([], [], [], "no input gives empty matches")
+testmatchall({}, [], [], "no input gives empty matches")
 
 
 # TODO also test dominators
@@ -88,24 +88,12 @@ units = {
     ],
 }
 
-testmatchall([
-                 {
-                      "filename" : "file.py",
-                      "units"    : units["python"],
-                 },
-                 {
-                      "filename" : "dir/Makefile",
-                      "units"    : units["make"],
-                 },
-                 {
-                      "filename" : "Main.java",
-                      "units"    : units["java"],
-                 },
-                 {
-                      "filename" : "t/test.t.py",
-                      "units"    : units["pytap"],
-                 },
-             ],
+testmatchall({
+                 "file.py"      : units["python"],
+                 "dir/Makefile" : units["make"  ],
+                 "Main.java"    : units["java"  ],
+                 "t/test.t.py"  : units["pytap" ],
+             },
              [
                  ["/targets/file.py.matches.json",      units["python"]],
                  ["/targets/dir/Makefile.matches.json", units["make"  ]],

@@ -13,7 +13,7 @@ class Phase(object):
     def __init__(self, rules={}):
         # TODO make incrementality work for the big dump
         self.rules    = rules
-        self.matches  = []
+        self.matches  = {}
         self.failures = []
 
 
@@ -72,10 +72,7 @@ class Phase(object):
 
         if units:
             incremental101.writejson(kwargs["target"], units)
-            self.matches.append({
-                "filename" : kwargs["relative"],
-                "units"    : units,
-            })
+            self.matches[kwargs["relative"]] = units
         else:
             incremental101.deletefile(kwargs["target"])
 
