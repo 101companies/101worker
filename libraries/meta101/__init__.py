@@ -18,10 +18,10 @@ def getphase(key):
     return phases[key]
 
 
-def matchall(phasekey, matches={}):
+def matchall(phasekey, matches={}, entirerepo=False):
     with open(os.environ['rules101dump']) as f:
         rules = json.load(f)["results"]["rules"]
-    return getphase(phasekey)(rules, matches).run()
+    return getphase(phasekey)(rules, matches).run(entirerepo)
 
 
 def derive(*args, **kwargs):

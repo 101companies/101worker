@@ -12,36 +12,52 @@ def tolist(thing):
     return thing if isinstance(thing, list) else [thing]
 
 
-def sourcetotarget(path):
-    if not hasattr(sourcetotarget, "dirs"):
-        sourcetotarget.dirs = (os.environ[   "repo101dir"],
-                               os.environ["targets101dir"])
-    repodir, targetdir = sourcetotarget.dirs
+def repodir():
+    return os.environ["repo101dir"]
 
-    if path.startswith(repodir):
-        return targetdir + path[len(repodir):]
+
+def sourcetotarget(path):
+    targetdir = os.environ["targets101dir"]
+
+    if path.startswith(repodir()):
+        return targetdir + path[len(repodir()):]
 
     raise ValueError()
 
 
+def handlepath(suffix, callback, path):
+    try:
+        targetbase = sourcetotarget(path)
+
+        if type(suffix) is not str:
+            target = [targetbase + s for s in suffix]
+        else:
+            target = targetbase + suffix
+
+        callback(target  =target,
+                 filename=path,
+                 relative=path[len(repodir()) + 1:],
+                 dirname =os.path.dirname(path)[len(repodir()) + 1:],
+                 basename=os.path.basename(path))
+    except ValueError:
+        pass
+
+
 def diff(suffix, **switch):
     for op, path in incremental101.eachdiff():
+        if op in switch:
+            handlepath(suffix, switch[op], path)
+
+
+def walk(suffix, callback):
+    for root, dirs, files in os.walk(repodir(), followlinks=True):
         try:
-            targetbase = sourcetotarget(path)
-            repodir    = sourcetotarget.dirs[0]
-
-            if type(suffix) is not str:
-                target = [targetbase + s for s in suffix]
-            else:
-                target = targetbase + suffix
-
-            switch[op](target  =target,
-                       filename=path,
-                       relative=path[len(repodir) + 1:],
-                       dirname =os.path.dirname(path)[len(repodir) + 1:],
-                       basename=os.path.basename(path))
+            dirs.remove(".git")
         except ValueError:
             pass
+
+        for f in files:
+            handlepath(suffix, callback, os.path.join(root, f))
 
 
 def valuebykey(deriver, matches):

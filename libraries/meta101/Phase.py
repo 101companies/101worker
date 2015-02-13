@@ -3,7 +3,7 @@ import json
 import os
 import re
 import incremental101
-from   .util          import stripregex, tolist, diff
+from   .util          import stripregex, tolist, diff, walk
 
 
 class Phase(object):
@@ -33,8 +33,12 @@ class Phase(object):
         }
 
 
-    def run(self):
-        diff(self.suffix(), A=self.onfile, M=self.onfile, D=self.ondelete)
+    def run(self, entirerepo=False):
+        if entirerepo:
+            walk(self.suffix(), self.onfile)
+            diff(self.suffix(), D=self.ondelete)
+        else:
+            diff(self.suffix(), A=self.onfile, M=self.onfile, D=self.ondelete)
         return self.dump()
 
 
@@ -74,11 +78,13 @@ class Phase(object):
             incremental101.writejson(kwargs["target"], units)
             self.matches[kwargs["relative"]] = units
         else:
-            incremental101.deletefile(kwargs["target"])
+            self.ondelete(**kwargs)
 
 
-    def ondelete(self, target, **kwargs):
+    def ondelete(self, target, relative, **kwargs):
         incremental101.deletefile(target)
+        if relative in self.matches:
+            del self.matches[relative]
 
 
     def match(self, rule, **kwargs):
