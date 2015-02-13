@@ -6,7 +6,7 @@ use File::Basename     qw(dirname);
 use List::Util         qw(pairs);
 use YAML               qw(Load);
 
-BEGIN { push @INC, dirname $0 }
+use lib                dirname $0;
 use Runner101::Env     qw(load_vars);
 use Runner101::Module;
 use Runner101::Modules;
