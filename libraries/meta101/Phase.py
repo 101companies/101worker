@@ -10,10 +10,10 @@ class Phase(object):
     __metaclass__ = abc.ABCMeta
 
 
-    def __init__(self, rules={}):
+    def __init__(self, rules={}, matches={}):
         # TODO make incrementality work for the big dump
         self.rules    = rules
-        self.matches  = {}
+        self.matches  = matches
         self.failures = []
 
 
