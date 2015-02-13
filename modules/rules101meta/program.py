@@ -113,4 +113,10 @@ numbers["numberOfProblems"] = len(unreadableFiles) + len(invalidFiles)
 numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 
+# sort everything so it can actually be tested
+rules          .sort(key=lambda rule: rule["filename"])
+suffixes       .sort()
+unreadableFiles.sort()
+invalidFiles   .sort()
+
 incremental101.writejson(os.environ["rules101dump"], dump)
