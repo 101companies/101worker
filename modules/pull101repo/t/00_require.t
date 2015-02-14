@@ -9,6 +9,7 @@ my @modules = qw(
     LWP::Simple
     JSON
     Test::Most
+    Try::Tiny
 );
 
 plan tests => scalar @modules;

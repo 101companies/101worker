@@ -18,6 +18,6 @@ doc:
 
 install:
 	cpan install Class::Tiny File::Slurp Git::Repository LWP::Simple JSON \
-                 Test::Most
+                 Try::Tiny Test::Most
 
 .PHONY: run clean test cover doc install
