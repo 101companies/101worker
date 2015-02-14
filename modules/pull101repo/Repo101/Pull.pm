@@ -7,6 +7,7 @@ use warnings;
 use File::Basename qw(basename);
 use File::Path     qw(remove_tree);
 use Repo101::Git   qw(clone_or_pull);
+use Try::Tiny;
 
 use Class::Tiny {
     root_path => undef,
@@ -35,16 +36,27 @@ sub pull101repo
         my $repos = $self->repos->{$namespace};
         for my $member (keys %$repos)
         {
-            my $info = $self->extract_repo_info($repos->{$member}) or next;
-            my $diff = $self->pull_repo($info->{repo_path}, $info->{repo_url});
-            $self->merge_diffs($diff, $info->{dep_path}, "$namespace/$member");
-            $self->symlink($info->{dep_path}, "$namespace_dir/$member");
+            try
+            {   $self->member($member, $repos, $namespace, $namespace_dir) }
+            catch
+            {   warn "Error in member $member: $_" };
         }
 
         $self->clean_link($repos, $_) for glob "$namespace_dir/*";
     }
 
     $self->changes
+}
+
+
+sub member
+{
+    my ($self, $member, $repos, $namespace, $namespace_dir) = @_;
+    my  $info = $self->extract_repo_info($repos->{$member}) or return;
+
+    my $diff = $self->pull_repo($info->{repo_path}, $info->{repo_url});
+    $self->merge_diffs($diff, $info->{dep_path}, "$namespace/$member");
+    $self->symlink($info->{dep_path}, "$namespace_dir/$member");
 }
 
 
@@ -89,7 +101,7 @@ sub extract_repo_info
 
     my %info = (
         repo_path => $self->deps_path . "/$user/$repo_name",
-        repo_url  => "https://github.com/$user/$repo_name",
+        repo_url  => "https://git::\@github.com/$user/$repo_name",
     );
     $info{dep_path} = $suffix ? "$info{repo_path}/$suffix" : $info{repo_path};
 

@@ -5,7 +5,7 @@ use Exporter qw(import);
 use strict;
 use warnings;
 use Git::Repository;
-use Scalar::Util qw(blessed);
+use Scalar::Util    qw(blessed);
 
 
 sub git

@@ -1,7 +1,10 @@
 use Test::Most    tests => 11;
 use Repo101::Pull;
 
-my $g = 'https://github.com';
+# github url
+my $g    = 'https://github.com';
+# github url with no user and password
+my $nopw = 'https://git::@github.com';
 
 my $pull = Repo101::Pull->new(
     root_path => "/test/101repo",
@@ -13,7 +16,7 @@ my $pull = Repo101::Pull->new(
 my $expected = {
     repo_path => '/test/gitdeps/user/repo',
     dep_path  => '/test/gitdeps/user/repo',
-    repo_url  => "$g/user/repo",
+    repo_url  => "$nopw/user/repo",
 };
 
 is_deeply $pull->extract_repo_info("$g/user/repo"),
@@ -35,13 +38,13 @@ is_deeply $pull->extract_repo_info("$g/101companies/101repo"),
 is_deeply $pull->extract_repo_info("$g/101companies/not101repo"), {
                repo_path => '/test/gitdeps/101companies/not101repo',
                dep_path  => '/test/gitdeps/101companies/not101repo',
-               repo_url  => "$g/101companies/not101repo",
+               repo_url  => "$nopw/101companies/not101repo",
            }, '101companies/not101repo does not get skipped';
 
 is_deeply $pull->extract_repo_info("$g/not101companies/101repo"), {
                repo_path => '/test/gitdeps/not101companies/101repo',
                dep_path  => '/test/gitdeps/not101companies/101repo',
-               repo_url  => "$g/not101companies/101repo",
+               repo_url  => "$nopw/not101companies/101repo",
            }, 'not101companies/101repo does not get skipped';
 
 dies_ok { $pull->extract_repo_info("$g/user/repo/") }
