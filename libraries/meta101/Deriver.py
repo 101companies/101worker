@@ -7,43 +7,53 @@ from   .util          import diff, tolist, sourcetotarget, valuebykey
 class Deriver(object):
 
 
-    def __init__(self,
-                 suffix,
-                 callback,
-                 key     =None,
-                 getvalue=valuebykey,
-                 dump    ={"problems" : {}}):
+    def __init__(self, suffix, dump, callback, key=None, oninit=None,
+                 getvalue=valuebykey, ondump=None):
         self.key         = key
         self.suffix      = suffix
+        self.dumppath    = dump
+        self.dump        = self.loaddump(dump)
         self.suffixcount = 1 if type(suffix) is str else len(suffix)
         self.callback    = callback
-        self.dump        = dump
         self.getvalue    = getvalue
+        self.ondump      = ondump
+        if oninit:
+            oninit(self)
 
 
     def derive(self):
         diff(self.suffix, A=self.onfile, M=self.onfile, D=self.ondelete)
-        return self.dump
+        if self.ondump:
+            self.ondump(self)
+        incremental101.writejson(self.dumppath, self.dump)
 
 
-    def rmdump(self, target):
-        if target in self.dump["problems"]:
-            del self.dump["problems"][target]
+    def loaddump(self, path):
+        try:
+            with open(path) as f:
+                return json.load(f)
+        except IOError:
+            return {"problems" : {}}
 
 
-    def onfile(self, target, **kwargs):
-        self.rmdump(str(target))
+    def rmdump(self, key):
+        if key in self.dump["problems"]:
+            del self.dump["problems"][key]
+
+
+    def onfile(self, **kwargs):
+        self.rmdump(kwargs["relative"])
 
         try:
             matchesfile = sourcetotarget(kwargs["filename"]) + ".matches.json"
             with open(matchesfile) as f:
                 matches = json.load(f)
-            value = self.getvalue(self, matches)
+            value = self.getvalue(self, matches, **kwargs)
         except Exception:
             return
 
         try:
-            result = self.callback(value, target=target, **kwargs)
+            result = self.callback(self, value, **kwargs)
         except Exception as e:
             self.dump["problems"][kwargs["relative"]] = str(e)
             return
@@ -56,7 +66,7 @@ class Deriver(object):
                             "{}-tuple instead: {}".format(self.suffixcount,
                             self.suffix, len(result), result))
 
-        for r, t in zip(result, tolist(target)):
+        for r, t in zip(result, tolist(kwargs["target"])):
             if r is None:
                 incremental101.deletefile(t)
             elif type(r) in [dict, list]:
@@ -65,7 +75,7 @@ class Deriver(object):
                 incremental101.writefile(t, r)
 
 
-    def ondelete(self, target, **kwargs):
-        self.rmdump(target)
+    def ondelete(self, target, relative, **kwargs):
+        self.rmdump(relative)
         for t in tolist(target):
             incremental101.deletefile(t)

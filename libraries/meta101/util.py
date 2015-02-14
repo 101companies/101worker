@@ -60,6 +60,6 @@ def walk(suffix, callback):
             handlepath(suffix, callback, os.path.join(root, f))
 
 
-def valuebykey(deriver, matches):
+def valuebykey(deriver, matches, **kwargs):
     metadata = map(lambda match: match["metadata"], matches)
     return [m[deriver.key] for m in metadata if deriver.key in m][0]

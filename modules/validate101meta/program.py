@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 import os
 import subprocess
-import incremental101
 import meta101
 
 
-validators = set()
 repo101dir = os.environ["repo101dir"]
+
+
+def initdump(deriver):
+    if "validators" in deriver.dump:
+        deriver.dump["validators"] = set(deriver.dump["validators"])
+    else:
+        deriver.dump["validators"] = set()
 
 
 def checkpath(validator):
@@ -47,13 +52,13 @@ def derive(validator, filename, **kwargs):
     }
 
 
-# TODO load old dump
+def preparedump(deriver):
+    deriver.dump["validators"] = sorted(list(deriver.dump["validators"]))
 
 
-dump = meta101.derive(key     ="validator",
-                      suffix  =".validator.json",
-                      callback=derive)
-
-dump["validators"] = list(validators)
-
-incremental101.writejson(os.environ["validator101dump"], dump)
+meta101.derive(suffix  =".validator.json",
+               dump    =os.environ["validator101dump"],
+               oninit  =initdump,
+               key     ="validator",
+               callback=derive,
+               ondump  =preparedump)

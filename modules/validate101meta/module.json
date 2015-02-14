@@ -1,5 +1,5 @@
 {
-    "command"      : "python new.py",
+    "command"      : "python program.py",
     "wantdiff"     : true,
     "environment"  : [
         "repo101dir",

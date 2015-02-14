@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 import os
 import subprocess
-import incremental101
 import meta101
 
 
-geshi      = os.environ["gatheredGeshi101dir"] + "/run.php"
-geshicodes = set()
+geshi = os.environ["gatheredGeshi101dir"] + "/run.php"
+
+
+def initdump(deriver):
+    if "geshicodes" in deriver.dump:
+        deriver.dump["geshicodes"] = set(deriver.dump["geshicodes"])
+    else:
+        deriver.dump["geshicodes"] = set()
 
 
 def derive(geshicode, filename, **kwargs):
@@ -15,10 +20,13 @@ def derive(geshicode, filename, **kwargs):
     return subprocess.check_output(command)
 
 
-# TODO load old dump
+def preparedump(deriver):
+    deriver.dump["geshicodes"] = sorted(list(deriver.dump["geshicodes"]))
 
 
-dump = meta101.derive(key="geshi", suffix=".geshi.html", callback=derive)
-dump["geshicodes"] = list(geshicodes)
-
-incremental101.writejson(os.environ["geshi101dump"], dump)
+meta101.derive(suffix  =".geshi.html",
+               dump    =os.environ["geshi101dump"],
+               oninit  =initdump,
+               key     ="geshi",
+               callback=derive,
+               ondump  =preparedump)

@@ -2,14 +2,17 @@
 import os
 import json
 import subprocess
-import incremental101
 import meta101
 
 
-geshicodes = set()
+def initdump(deriver):
+    if "geshicodes" in deriver.dump:
+        deriver.dump["geshicodes"] = set(deriver.dump["geshicodes"])
+    else:
+        deriver.dump["geshicodes"] = set()
 
 
-def getgeshi(deriver, matches):
+def getgeshi(deriver, matches, **kwargs):
     meta = {"relevance" : "system"}
     for m in matches:
         if "relevance" in m["metadata"]:
@@ -19,12 +22,12 @@ def getgeshi(deriver, matches):
     return meta
 
 
-def derive(value, filename, **kwargs):
+def derive(deriver, value, filename, **kwargs):
     relevance = value["relevance"]
     geshicode = value.get("geshi")
 
     if geshicode:
-        geshicodes.add(geshicode)
+        deriver.dump["geshicodes"].add(geshicode)
         command = ["php", "helper.php", filename, geshicode, relevance]
         result  = json.loads(subprocess.check_output(command))
         return (result["metrics"], result["tokens"])
@@ -40,13 +43,13 @@ def derive(value, filename, **kwargs):
         )
 
 
-# TODO load old dump
+def preparedump(deriver):
+    deriver.dump["geshicodes"] = sorted(list(deriver.dump["geshicodes"]))
 
 
-dump = meta101.derive(suffix  =[".metrics.json", ".tokens.json"],
-                      callback=derive,
-                      getvalue=getgeshi)
-
-dump["geshicodes"] = list(geshicodes)
-
-incremental101.writejson(os.environ["metrics101dump"], dump)
+meta101.derive(suffix  =[".metrics.json", ".tokens.json"],
+               dump    =os.environ["metrics101dump"],
+               oninit  =initdump,
+               getvalue=getgeshi,
+               callback=derive,
+               ondump  =preparedump)

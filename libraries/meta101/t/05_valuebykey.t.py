@@ -8,6 +8,7 @@ plan(4)
 matches = []
 deriver = meta101.Deriver(key     ="key",
                           suffix  =".suffix",
+                          dump    ="nonexistent",
                           callback=lambda *args, **kwargs: None)
 
 
