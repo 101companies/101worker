@@ -45,7 +45,8 @@ class Deriver(object):
         try:
             result = self.callback(value, target=target, **kwargs)
         except Exception as e:
-            self.dump["problems"][str(target)] = str(e)
+            self.dump["problems"][kwargs["relative"]] = str(e)
+            return
 
         if type(result) is not tuple:
             result = (result,)
