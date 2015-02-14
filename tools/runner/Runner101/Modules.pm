@@ -4,6 +4,7 @@ use warnings;
 use File::Slurp        qw(slurp);
 use List::MoreUtils    qw(first_index);
 use List::Util         qw(pairmap);
+use POSIX              qw(strftime);
 use Proc::ChildError   qw(explain_child_error);
 use Runner101::Helpers qw(slurp_json validate_json write_log);
 use Runner101::Module;
@@ -23,14 +24,19 @@ sub run
     my $self = __PACKAGE__->new(@_);
     for (@{$self->modules})
     {
-        my $prog = 'module ' . $_->name;
+        my $prog = $_->name;
         write_log("Running $prog");
 
+        my $start     = time;
         my $exit_code = $_->run($self);
+        my $taken     = time - $start;
 
-        write_log($exit_code
-                ? explain_child_error({prog => $prog}, $exit_code, $!)
-                : "$prog exited with code 0.");
+        my $time   = strftime('%H:%M:%S', gmtime $taken);
+        my $reason = $exit_code
+                   ? explain_child_error({prog => $prog}, $exit_code, $!)
+                   : "$prog exited with value 0";
+
+        write_log("$reason after $time");
     }
     $self->diff
 }
