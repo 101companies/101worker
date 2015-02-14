@@ -35,7 +35,7 @@ sub run_diff
 
         my $in = $wantdiff ? join "\n", @$diffs : undef;
         try
-        {   IPC::Run::run($command, \$in, \$out) }
+        {   IPC::Run::run($command, \$in, \$out, $log) }
         catch
         {   warn $_ };
 
