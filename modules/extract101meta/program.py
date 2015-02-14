@@ -1,50 +1,49 @@
-#! /usr/bin/env python
-
+#!/usr/bin/env python
 import os
-import sys
-import simplejson as json
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
+import json
+import subprocess
+import meta101
+import kludge101
 
 
-# Per-file functinonality
-def derive(extractor, rFilename, sFilename, tFilename):
-
-   # Housekeeping for extractor
-   extractors.add(extractor)
-   
-   print "Extract facts from " + rFilename + " with " + extractor + "."
-   command = "{0} < \"{1}\" > \"{2}\"".format(os.path.join(const101.sRoot, extractor),sFilename,tFilename)
-   (status, output) = tools101.run(command)
-
-   # Result aggregation
-   result = dict()
-   result["extractor"] = extractor
-   result["command"] = command
-   result["status"] = status
-   result["output"] = output
-
-   return result
+def initdump(deriver):
+    if "extractors" in deriver.dump:
+        deriver.dump["extractors"] = set(deriver.dump["extractors"])
+    else:
+        deriver.dump["extractors"] = set()
 
 
-print "Extracting facts from 101repo."
+def derive(deriver, extractor, filename, **kwargs):
+    deriver.dump["extractors"].add(extractor)
 
-# Initialize housekeeping
-extractors = set()
-dump = tools101.beforeMapMatches(const101.extractorDump)
-if "extractors" in dump:
-   extractors = set(dump["extractors"])
+    # FIXME move validators into worker so this isn't necessary
+    path = kludge101.checkpath(extractor)
+    if not path:
+        raise RuntimeError("foiled code injection: {}".format(extractor))
+    command = [path, filename]
 
-# Loop over matches
-dump = tools101.deriveByKey("extractor", ".extractor.json", derive)
+    # extractors take their input via stdin, so we gotta open the file
+    with open(filename) as f:
+        try:
+            output, status = (subprocess.check_output(command, stdin=f), 0)
+        except subprocess.CalledProcessError as e:
+            output, status = (e.output, e.returncode)
 
-# Convert set to list before dumping JSON
-extractors = list(extractors)
+    return {
+        "extractor" : extractor,
+        "command"   : command,
+        "status"    : status,
+        "output"    : output,
+    }
 
-# Assemble dump, save it, and exit
-dump = dict()
-dump["extractors"] = extractors
-dump["numbers"] = dict()
-dump["numbers"]["numberOfExtractors"] = len(extractors)
-tools101.afterMapMatches(dump, const101.extractorDump)
+
+def preparedump(deriver):
+    deriver.dump["extractors"] = sorted(list(deriver.dump["extractors"]))
+
+
+meta101.derive(suffix  =".extractor.json",
+               dump    =os.environ["extractor101dump"],
+               oninit  =initdump,
+               key     ="extractor",
+               callback=derive,
+               ondump  =preparedump)
