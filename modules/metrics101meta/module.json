@@ -2,8 +2,7 @@
     "command"      : "python program.py",
     "wantdiff"     : true,
     "environment"  : [
-        "metrics101dump",
-        "output101dir"
+        "metrics101dump"
     ],
     "dependencies" : [
         "gatherGeshi",
@@ -28,4 +27,3 @@
         }
     ]
 }
-
