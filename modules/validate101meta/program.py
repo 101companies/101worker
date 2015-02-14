@@ -1,51 +1,59 @@
-#! /usr/bin/env python
-
+#!/usr/bin/env python
 import os
-import sys
-import json
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
+import subprocess
+import incremental101
+import meta101
 
 
-# Per-file functinonality
-def check(validator, rFilename, sFilename):
-
-   # Housekeeping for validator
-   validators.add(validator)
-
-   # Command execution
-   print "Validate " + rFilename + " with " + validator + "."
-   command = os.path.join(const101.sRoot, validator) + " \"" + sFilename + "\""
-   (status, output) = tools101.run(command)
-
-   # Result aggregation
-   result = dict()
-   result["validator"] = validator
-   result["command"] = command
-   result["status"] = status
-   result["output"] = output
-
-   return result
-
-
-print "Validating 101repo."
-
-# Initialize housekeeping
 validators = set()
-dump = tools101.beforeMapMatches(const101.validatorDump)
-if "validators" in dump:
-   validators = set(dump["validators"])
+repo101dir = os.environ["repo101dir"]
 
-# Loop over matches
-tools101.checkByKey("validator", ".validator.json", check)
 
-# Convert set to list before dumping JSON
-validators = list(validators)
+def checkpath(validator):
+    path = os.path.abspath(os.path.join(repo101dir, validator))
+    # guard against paths with .. in them
+    if not path.startswith(repo101dir):
+        return None
+    # blow up if there's a symlink somewhere
+    dirs = path
+    while len(dirs) > len(repo101dir):
+        if os.path.islink(dirs):
+            return None
+        dirs = os.path.dirname(dirs)
+    # XXX hopefully a safe path that only points to something in 101repo
+    return path
 
-# Assemble dump, save it, and exit
-dump = dict()
-dump["validators"] = validators
-dump["numbers"] = dict()
-dump["numbers"]["numberOfValidators"] = len(validators)
-tools101.afterMapMatches(dump, const101.validatorDump)
+
+def derive(validator, filename, **kwargs):
+    validators.add(validator)
+
+    # FIXME move validators into worker so this isn't necessary
+    path = checkpath(validator)
+    if not path:
+        raise RuntimeError("foiled code injection: {}".format(validator))
+    command = [path, filename]
+
+    # subprocess has no safe getstatusoutput, so this'll have to do
+    try:
+        output, status = (subprocess.check_output(command), 0)
+    except subprocess.CalledProcessError as e:
+        output, status = (e.output, e.returncode)
+
+    return {
+        "validator" : validator,
+        "command"   : command,
+        "status"    : status,
+        "output"    : output,
+    }
+
+
+# TODO load old dump
+
+
+dump = meta101.derive(key     ="validator",
+                      suffix  =".validator.json",
+                      callback=derive)
+
+dump["validators"] = list(validators)
+
+incremental101.writejson(os.environ["validator101dump"], dump)
