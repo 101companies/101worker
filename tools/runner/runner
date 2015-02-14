@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Cwd                qw(abs_path);
 use File::Basename     qw(dirname);
+use File::Slurp        qw(write_file);
 use List::Util         qw(pairs);
 use YAML               qw(Load);
 
@@ -21,13 +22,15 @@ my %options    = (
     modules_dir => ($ENV{modules101dir} // "$worker_dir/modules"),
 );
 
-$options{logs_dir} = $ENV{logs101dir} // "$options{output}/101logs";
+$options{ logs_dir} = $ENV{ logs101dir} // "$options{output}/101logs";
+$options{diffs_dir} = $ENV{diffs101dir} // "$options{output}/101diffs";
 
 
 for (pairs qw(output101dir  output
               worker101dir  worker
               modules101dir modules_dir
-              logs101dir    logs_dir))
+              logs101dir    logs_dir
+              diffs101dir   diffs_dir))
 {
     $config->{$_->[0]} //= "$options{$_->[1]}/";
 }
@@ -36,4 +39,4 @@ for (pairs qw(output101dir  output
 load_vars(\%options);
 
 my $diff = Runner101::Modules::run(\%options);
-print $_, "\n" for @$diff;
+write_file("$options{diffs_dir}/result", map { "$_\n" } @$diff);
