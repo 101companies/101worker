@@ -14,8 +14,8 @@ def initdump(deriver):
         deriver.dump["geshicodes"] = set()
 
 
-def derive(geshicode, filename, **kwargs):
-    geshicodes.add(geshicode)
+def derive(deriver, geshicode, filename, **kwargs):
+    deriver.dump["geshicodes"].add(geshicode)
     command = ["php", geshi, filename, "php://stdout", geshicode]
     return subprocess.check_output(command)
 

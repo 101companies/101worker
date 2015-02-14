@@ -2,9 +2,7 @@
 import os
 import subprocess
 import meta101
-
-
-repo101dir = os.environ["repo101dir"]
+import kludge101
 
 
 def initdump(deriver):
@@ -14,26 +12,11 @@ def initdump(deriver):
         deriver.dump["validators"] = set()
 
 
-def checkpath(validator):
-    path = os.path.abspath(os.path.join(repo101dir, validator))
-    # guard against paths with .. in them
-    if not path.startswith(repo101dir):
-        return None
-    # blow up if there's a symlink somewhere
-    dirs = path
-    while len(dirs) > len(repo101dir):
-        if os.path.islink(dirs):
-            return None
-        dirs = os.path.dirname(dirs)
-    # XXX hopefully a safe path that only points to something in 101repo
-    return path
-
-
-def derive(validator, filename, **kwargs):
-    validators.add(validator)
+def derive(deriver, validator, filename, **kwargs):
+    deriver.dump["validators"].add(validator)
 
     # FIXME move validators into worker so this isn't necessary
-    path = checkpath(validator)
+    path = kludge101.checkpath(validator)
     if not path:
         raise RuntimeError("foiled code injection: {}".format(validator))
     command = [path, filename]
