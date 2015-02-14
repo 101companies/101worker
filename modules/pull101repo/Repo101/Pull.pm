@@ -242,7 +242,10 @@ The local path where the repo should be cloned or pulled to.
 
 =item repo_url
 
-The remote URL of the repo.
+The remote URL of the repo. This URL will start with
+C<https://git::@github.com>, the C<git::@> thing meaning that no username and
+password should be used, which is necessary because a password prompt locks up
+everything.
 
 =item dep_path
 
