@@ -1,18 +1,23 @@
 {
-  "targets" : [
-    {
-      "headline" : "Aggregate scattered metadata, metrics, et al. per file",
-      "classifier" : "resource",
-      "scope" : "file",
-      "suffix" : ".summary.json",
-      "language" : "JSON"
-    }
-  ],
-  "dependencies" : [
-    "predicates101meta",
-    "matches101meta",
-    "fragments101meta",
-    "metrics101meta",
-    "refineTokens"
-  ]
+    "command"      : "make run",
+    "wantdiff"     : false,
+    "dependencies" : [
+      "predicates101meta",
+      "matches101meta",
+      "fragments101meta",
+      "metrics101meta",
+      "refineTokens"
+    ],
+    "environment" : [
+      "tagets101dir"
+    ],
+    "targets" : [
+        {
+          "headline"   : "Aggregate scattered metadata, metrics, et al. per file",
+          "classifier" : "resource",
+          "scope"      : "file",
+          "suffix"     : ".summary.json",
+          "language"   : "JSON"
+        }
+    ]
 }

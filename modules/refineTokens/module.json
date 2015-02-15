@@ -1,12 +1,21 @@
 {
-  "targets" : [
-    {
-      "headline" : "Refined Tokens",
-      "classifier" : "resource",
-      "scope" : "file",
-      "suffix" : ".refinedTokens.json",
-      "language" : "JSON"
-    }
-  ],
-  "dependencies" : ["matches101meta"]
+    "command"      : "make run",
+    "wantdiff"     : false,
+    "dependencies" : [
+      "metrics101meta",
+      "fragmentMetrics101meta"
+    ],
+    "environment"  : [
+      "dumps101dir",
+      "matches101dump"
+    ],
+    "targets"      : [
+        {
+            "headline"   : "Refined Tokens",
+            "classifier" : "resource",
+            "scope"      : "file",
+            "suffix"     : ".refinedTokens.json",
+            "language"   : "JSON"
+        }
+    ]
 }
