@@ -2,7 +2,7 @@ import json
 import os
 import incremental101
 from .Phase      import Phase
-from .Basics     import Basics
+from .Matches    import Matches
 from .Predicates import Predicates
 from .Fragments  import Fragments
 from .Deriver    import Deriver
@@ -10,7 +10,7 @@ from .Deriver    import Deriver
 
 def getphase(key):
     phases = {
-        "basics"     : Basics,
+        "matches"    : Matches,
         "predicates" : Predicates,
         "fragments"  : Fragments,
     }

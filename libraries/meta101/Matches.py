@@ -1,7 +1,7 @@
 from .Phase import Phase
 
 
-class Basics(Phase):
+class Matches(Phase):
 
 
     def suffix(self):

@@ -7,9 +7,9 @@ execfile("t/dies_ok.py")
 
 plan(14)
 
-os.environ[   "repo101dir"] = "/repo"
-os.environ["targets101dir"] = "/targets"
-os.environ["basics101dump"] = "nonexistent"
+os.environ[   "repo101dir" ] = "/repo"
+os.environ["targets101dir" ] = "/targets"
+os.environ["matches101dump"] = "nonexistent"
 
 # monkey-patch functions in incremental101
 written = []
@@ -18,26 +18,26 @@ inc.writejson  = lambda path, data: written.append([path, data])
 inc.deletefile = lambda path      : deleted.append(path)
 inc.outstream  = StringIO()
 
-def testbasics(wantmatches, wantwritten, wantdeleted, comment):
+def testmatches(wantmatches, wantwritten, wantdeleted, comment):
     global written, deleted, dump
     written = []
     deleted = []
-    meta101.matchall("basics")
+    meta101.matchall("matches")
     eq_ok(written.pop()[1]["matches"], wantmatches, comment)
     eq_ok(written, wantwritten, "...correct files and data written")
     eq_ok(deleted, wantdeleted, "...correct files deleted")
 
 
-dies_ok(lambda: meta101.matchall("basics"), "missing environment variable dies")
+dies_ok(lambda: meta101.matchall("matches"), "missing environment variable dies")
 
 os.environ["rules101dump"] = "t/rules/nonexistent.json"
-dies_ok(lambda: meta101.matchall("basics"), "missing rules dump dies")
+dies_ok(lambda: meta101.matchall("matches"), "missing rules dump dies")
 
 os.environ["rules101dump"] = "t/rules/invalid.json"
-dies_ok(lambda: meta101.matchall("basics"), "invalid json in rules dump dies")
+dies_ok(lambda: meta101.matchall("matches"), "invalid json in rules dump dies")
 
 os.environ["rules101dump"] = "t/rules/malformed.json"
-dies_ok(lambda: meta101.matchall("basics"), "malformed rules dump dies")
+dies_ok(lambda: meta101.matchall("matches"), "malformed rules dump dies")
 
 os.environ["rules101dump"] = "t/rules/empty.json"
 dies_ok(lambda: meta101.matchall("whatever"), "invalid phase dies")
@@ -47,7 +47,7 @@ inc.instream = StringIO("""A /repo/added
 M /repo/modified
 D /repo/deleted""")
 
-testbasics({}, [], [
+testmatches({}, [], [
                  "/targets/added.matches.json",
                  "/targets/modified.matches.json",
                  "/targets/deleted.matches.json"
@@ -56,7 +56,7 @@ testbasics({}, [], [
 
 os.environ["rules101dump"] = "t/rules/rules.json"
 inc.instream = StringIO()
-testbasics({}, [], [], "no input gives empty matches")
+testmatches({}, [], [], "no input gives empty matches")
 
 
 # TODO also test dominators
@@ -90,7 +90,7 @@ units = {
     ],
 }
 
-testbasics({
+testmatches({
                "file.py"      : units["python"],
                "dir/Makefile" : units["make"  ],
                "Main.java"    : units["java"  ],

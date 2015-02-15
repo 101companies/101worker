@@ -5,7 +5,7 @@ execfile("t/dies_ok.py")
 
 plan(5)
 
-phase = meta101.Basics()
+phase = meta101.Matches()
 
 
 dies_ok(lambda: phase.checkcontent("irrelevant", "nonexistent"),

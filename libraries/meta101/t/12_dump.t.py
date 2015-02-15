@@ -4,11 +4,11 @@ import meta101
 plan(3)
 
 
-eq_ok(meta101.Basics().dump(), {
+eq_ok(meta101.Matches().dump(), {
           "rules"      : {},
           "matches"    : {},
           "failures"   : [],
-      }, "basics dump");
+      }, "matches dump");
 
 eq_ok(meta101.Predicates().dump(), {
           "rules"      : {},
