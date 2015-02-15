@@ -1,4 +1,28 @@
 {
-  "targets"      : [],
-  "dependencies" : ["matches101meta"]
+    "command"      : "python program.py",
+    "wantdiff"     : true,
+    "environment"  : [
+        "fragmentMetrics101dump"
+    ],
+    "dependencies" : [
+        "gatherGeshi",
+        "matches101meta",
+        "extract101meta"
+    ],
+    "targets" : [
+        {
+            "headline"     : "Fragment Metrics",
+            "classifier"   : "resource",
+            "scope"        : "file",
+            "suffix"       : ".fragments.metrics.json",
+            "language"     : "JSON"
+        },
+        {
+            "headline"     : "Fragment Tokens",
+            "classifier"   : "resource",
+            "scope"        : "file",
+            "suffix"       : ".fragments.tokens.json",
+            "language"     : "JSON"
+        }
+    ]
 }
