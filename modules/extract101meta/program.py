@@ -24,17 +24,7 @@ def derive(deriver, extractor, filename, **kwargs):
 
     # extractors take their input via stdin, so we gotta open the file
     with open(filename) as f:
-        try:
-            output, status = (subprocess.check_output(command, stdin=f), 0)
-        except subprocess.CalledProcessError as e:
-            output, status = (e.output, e.returncode)
-
-    return {
-        "extractor" : extractor,
-        "command"   : command,
-        "status"    : status,
-        "output"    : output,
-    }
+        return json.loads(subprocess.check_output(command, stdin=f))
 
 
 def preparedump(deriver):
