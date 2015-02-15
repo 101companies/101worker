@@ -8,7 +8,7 @@
 results101dir          : $output/101results/
 logs101dir             : $output/101logs/
 web101dir              : $output/101web/
-temps101dir            : $output/101temp/
+temps101dir            : $output/101temps/
 
 repo101dir             : $results101dir/101repo/
 gitdeps101dir          : $results101dir/gitdeps/
