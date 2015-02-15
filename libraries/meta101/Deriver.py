@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import incremental101
 from   .util          import diff, tolist, sourcetotarget, valuebykey
 
@@ -7,8 +8,8 @@ from   .util          import diff, tolist, sourcetotarget, valuebykey
 class Deriver(object):
 
 
-    def __init__(self, suffix, dump, callback, key=None, oninit=None,
-                 getvalue=valuebykey, ondump=None):
+    def __init__(self, suffix, dump, callback, oninit=None, ondump=None,
+                 getvalue=valuebykey, key=None, resources="json:.matches.json"):
         self.key         = key
         self.suffix      = suffix
         self.dumppath    = dump
@@ -17,6 +18,7 @@ class Deriver(object):
         self.callback    = callback
         self.getvalue    = getvalue
         self.ondump      = ondump
+        self.resources   = resources
         if oninit:
             oninit(self)
 
@@ -41,19 +43,38 @@ class Deriver(object):
             del self.dump["problems"][key]
 
 
+    def loadresources(self, filename):
+        target = sourcetotarget(filename)
+        loaded = []
+
+        for resource in tolist(self.resources):
+            what, suffix = resource.split(":", 2)
+            path         = target + suffix
+            if not os.path.exists(path):
+                raise ValueError()
+
+            if   what == "path":
+                loaded.append(path)
+            elif what == "json":
+                with open(path) as f:
+                    loaded.append(json.load(f))
+            else:
+                sys.exit("invalid resource {} in {}".format(what, resource))
+
+        return loaded[0] if type(self.resources) is str else loaded
+
+
     def onfile(self, **kwargs):
         self.rmdump(kwargs["relative"])
 
         try:
-            matchesfile = sourcetotarget(kwargs["filename"]) + ".matches.json"
-            with open(matchesfile) as f:
-                matches = json.load(f)
-            value = self.getvalue(self, matches, **kwargs)
+            resources = self.loadresources(kwargs["filename"])
+            value     = self.getvalue(self, resources, **kwargs)
         except Exception:
             return
 
         try:
-            result = self.callback(self, value, **kwargs)
+            result = self.callback(self, value, resources=resources, **kwargs)
         except Exception as e:
             self.dump["problems"][kwargs["relative"]] = str(e)
             return
@@ -62,9 +83,9 @@ class Deriver(object):
             result = (result,)
 
         if len(result) != self.suffixcount:
-            raise TypeError("Expected {}-tuple for suffix(es) {}, but got this "
-                            "{}-tuple instead: {}".format(self.suffixcount,
-                            self.suffix, len(result), result))
+            sys.exit("Expected {}-tuple for suffix(es) {}, but got this "
+                     "{}-tuple instead: {}".format(self.suffixcount,
+                     self.suffix, len(result), result))
 
         for r, t in zip(result, tolist(kwargs["target"])):
             if r is None:
