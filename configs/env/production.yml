@@ -23,7 +23,7 @@ config101              : $worker/configs/production.json
 config101schema        : $worker/schemas/config.schema.json
 module101schema        : $worker/schemas/module.schema.json
 rules101dump           : $dumps101dir/rules.json
-basics101dump          : $dumps101dir/matches.json
+matches101dump         : $dumps101dir/matches.json
 predicates101dump      : $dumps101dir/predicates.json
 fragments101dump       : $dumps101dir/fragments.json
 geshi101dump           : $dumps101dir/geshi.json
@@ -36,6 +36,9 @@ suffixes101dump        : $dumps101dir/suffixes.json
 imports101dump         : $dumps101dir/imports.json
 resolution101dump      : $dumps101dir/resolution.json
 wiki101dump            : $dumps101dir/wiki.json
+pullRepo101dump        : $dumps101dir/PullRepo.json
+moduleSummary101dump   : $dumps101dir/ModuleSummaryDump.json
+moduleSummary101temp   : $dumps101dir/tempModuleSummaryDump.json
 
 # URLs
 # These must start with a protocol. URLs with the file:// are treated as files
