@@ -3,6 +3,7 @@
 import os
 import sys
 import json
+import warnings
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101
@@ -15,12 +16,11 @@ def noMetrics():
 def readOrDefault(filename, default):
    try:
       return json.load(open(filename, 'r'))
-   except IOError:
+   except (IOError, ValueError):
       return default
 
 def fun(dirname, dirs, files):
    for basename in files:
-      tools101.tick()
       filename = os.path.join(dirname, basename)
       f1 = os.path.join(const101.tRoot, filename + ".matches.json")
       matches = readOrDefault(f1, [])
@@ -32,15 +32,22 @@ def fun(dirname, dirs, files):
       metrics = readOrDefault(f4, noMetrics())
       f5 = os.path.join(const101.tRoot, filename + ".refinedTokens.json")
       tokens = readOrDefault(f5, [])
-      tFilename = os.path.join(const101.tRoot, filename + ".summary.json")
-      tFile = open(tFilename, 'w')
-      dump = dict()
-      dump["units"] = matches
-      dump["metrics"] = metrics
-      dump["refinedTokens"] = tokens
-      tFile.write(json.dumps(dump))
 
-print "Summarizing 101repo."
+      try:
+         tDirname  = os.path.join(const101.tRoot, dirname)
+         if not os.path.exists(tDirname):
+            os.makedirs(tDirname)
+
+         tFilename = os.path.join(const101.tRoot, filename + ".summary.json")
+         with open(tFilename, 'w') as tFile:
+             json.dump({
+                "units"         : matches,
+                "metrics"       : metrics,
+                "refinedTokens" : tokens,
+             }, tFile)
+
+      except Exception as e:
+         warnings.warn(e)
+
+
 tools101.loopOverFiles(fun, True)
-print ""
-exit(0)
