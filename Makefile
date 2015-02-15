@@ -1,11 +1,11 @@
 # Run something given in configs/env/$*.yml
+# There's a chicken-and-egg problem with 101logs: the runner's output is
+# supposed to be piped into 101logs/runner.log, but the runner is what
+# creates the folders in the first place. To solve it, the 101logs folder
+# is created here if it doesn't exist.
 %.run:
-	# There's a chicken-and-egg problem with 101logs: the runner's output is
-	# supposed to be piped into 101logs/runner.log, but the runner is what
-	# creates the folders in the first place. To solve it, the 101logs folder
-	# is created here if it doesn't exist.
 	mkdir -p ../101logs
-	rm -f ../101logs/* # Logs are archived, so they're cleared on every run.
+	rm -f ../101logs/*
 	cd modules; make $*.run
 	make $*.archive
 	@git pull -q # upgrade past every run
