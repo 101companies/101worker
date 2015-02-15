@@ -38,8 +38,8 @@ resolution101dump      : $dumps101dir/resolution.json
 wiki101dump            : $dumps101dir/wiki.json
 
 # URLs
-# If these don't start with a protocol, they are assumed to be directories or
-# files (disambiguated by trailing slash) and are turned into file:// URLs.
+# These must start with a protocol. URLs with the file:// are treated as files
+# or directories, so the trailing slash thing also counts.
 repo101url             : https://github.com/101companies/101repo
 gitdeps101url          : http://101companies.org/pullRepo.json
 wiki101url             : http://101companies.org/wiki/
