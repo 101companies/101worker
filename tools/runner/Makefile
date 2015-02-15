@@ -20,7 +20,7 @@ doc:
          -e '}'
 
 install:
-	cpan install File::Slurp IPC::Run JSON JSON::Schema List::MoreUtils \
-                 Proc::ChildError Test::Most Try::Tiny URI::URL
+	cpan install Capture::Tiny File::Slurp IPC::Run JSON JSON::Schema \
+                 List::MoreUtils Proc::ChildError Test::Most Try::Tiny URI::URL
 
 .PHONY: run clean test cover doc install

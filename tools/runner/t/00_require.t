@@ -3,6 +3,7 @@ use warnings;
 use Test::More;
 
 my @modules = qw(
+    Capture::Tiny
     File::Slurp
     IPC::Run
     JSON

@@ -1,3 +1,4 @@
+use Capture::Tiny   qw(capture_stdout);
 use Test::Most      tests => 9;
 use Runner101::Diff qw(run_diff parse);
 
@@ -21,15 +22,15 @@ my $testscript = q{
     print "$i $1 $2.suffix\n";
 };
 
-my $buf = '';
-open my $out, '>', \$buf;
-
-is run_diff([qw(perl -ne), $testscript], \@diff1, $out, 1), 0,
-            'successful run returns exit code 0';
+my $output = capture_stdout
+{
+    is run_diff([qw(perl -ne), $testscript], \@diff1, \*STDOUT, 1), 0,
+                'successful run returns exit code 0';
+};
 
 is_deeply \@diff1, \@diff2, 'diff result is correct';
 
-is $buf, "got op: A\ngot op: M\ngot op: D\n", 'other output is correct';
+is $output, "got op: A\ngot op: M\ngot op: D\n", 'other output is correct';
 
 
 ok run_diff(['false'], [], \*STDOUT, 0), 'failing run returns non-zero';
