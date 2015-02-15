@@ -9,4 +9,4 @@ module101schema : $worker/schemas/module.schema.json
 dumps101dir     : $output/101web/data/dumps/
 targets101dir   : $output/101web/data/resources/
 rules101dump    : $dumps101dir/rules.json
-basics101dump   : $dumps101dir/matches.json
+matches101dump  : $dumps101dir/matches.json
