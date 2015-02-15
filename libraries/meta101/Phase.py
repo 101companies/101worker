@@ -10,11 +10,10 @@ class Phase(object):
     __metaclass__ = abc.ABCMeta
 
 
-    def __init__(self, rules={}, matches={}):
-        # TODO make incrementality work for the big dump
+    def __init__(self, rules={}, matches=[]):
         self.rules    = rules
-        self.matches  = matches
         self.failures = []
+        self.matches  = {m["filename"]: m["units"] for m in matches}
 
 
     @abc.abstractmethod
@@ -25,9 +24,16 @@ class Phase(object):
     def applicable(self, rule):
         pass # pragma: no cover
 
+
     def dump(self):
+        def tomatch(filename):
+            return {
+                "filename" : filename,
+                "units"    : self.matches[filename],
+            }
+
         return {
-            "matches"  : self.matches,
+            "matches"  : [tomatch(key) for key in sorted(self.matches.keys())],
             "failures" : self.failures,
             "rules"    : self.rules,
         }

@@ -23,7 +23,7 @@ def matchall(phasekey):
     dumpfile   = os.environ[phasekey + "101dump"]
     rulesfile  = os.environ["rules101dump"]
     entirerepo = False
-    matches    = {}
+    matches    = []
 
     if os.path.exists(dumpfile):
         entirerepo = os.path.getmtime(rulesfile) > os.path.getmtime(dumpfile)
