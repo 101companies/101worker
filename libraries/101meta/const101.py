@@ -1,6 +1,6 @@
 import os
-from warnings import warn
 
+from warnings import warn
 warn("const101.py is DEPRECATED, see 101worker/configs/env instead")
 
 
