@@ -1,7 +1,9 @@
-# add 101worker/libraries to PYTHONPATH and run the runner
-%.run:
-	PYTHONPATH="$$PYTHONPATH:$$(dirname $$(pwd))/libraries" \
-	    ../tools/runner/runner <../configs/env/$*.yml
+# For adding 101worker/libraries to PYTHONPATH
+pp = PYTHONPATH="$$PYTHONPATH:$$(dirname $$(pwd))/libraries"
 
-%.archive:
-	python ../tools/archiver.py $*.json
+%.run:
+	${pp} ../tools/runner/runner <../configs/env/$*.yml \
+	                             >../../101logs/runner.log 2>&1
+
+%.debug:
+	${pp} ../tools/runner/runner <../configs/env/$*.yml
