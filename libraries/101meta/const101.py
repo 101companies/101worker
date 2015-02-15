@@ -32,7 +32,7 @@ resolutionDump      = os.environ["resolution101dump"]
 wikiDump            = os.environ["wiki101dump"]
 pullRepoDump        = os.environ["pullRepo101dump"]
 moduleSummaryDump   = os.environ["moduleSummary101dump"]
-tModuleSummaryDump  = os.environ["tModuleSummary101dump"]
+tModuleSummaryDump  = os.environ["moduleSummary101temp"]
 
 
 def noMetrics():
