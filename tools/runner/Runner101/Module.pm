@@ -38,12 +38,12 @@ sub run
 {
     my ($self, $parent) = @_;
 
-    chdir $self->dir               or die "Couldn't cd into "  . $self->dir;
-    open my $log, '>>', $self->log or die "Couldn't write to " . $self->log;
+    chdir $self->dir              or die "Couldn't cd into "  . $self->dir;
+    open my $log, '>', $self->log or die "Couldn't write to " . $self->log;
 
     my $command = [qw(timeout -s KILL 1h), @{$self->command}, @{$self->args}];
 
-    write_log($log, "----- ${\$self->name} -----");
+    write_log($log, "${\$self->name}");
     write_log($log, 'directory : ', $self->dir);
     write_log($log, "command   : @$command");
     write_log($log, 'wantdiff  : ', $self->wantdiff, "\n");

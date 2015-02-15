@@ -42,6 +42,8 @@ sub run_diff
         $?
     };
 
+    print $log "\n";
+
     for (split /^/, $out)
     {
         next unless /\S/; # skip empty lines
