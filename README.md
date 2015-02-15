@@ -66,7 +66,7 @@ TODO talk about env, testing in 101test
 * incrementalization of modules:
 
 Module                      | Status
-----------------------------|----------
+----------------------------|:--------:
 pull101repo                 | ok
 pull                        | n/a
 pullLibraries               | n/a
