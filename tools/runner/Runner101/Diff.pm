@@ -42,7 +42,12 @@ sub run_diff
         $?
     };
 
-    parse($_, $diffs) // print $log $_, "\n" for split /\n/, $out;
+    for (split /^/, $out)
+    {
+        next unless /\S/; # skip empty lines
+        my $lines = parse($_, $diffs);
+        print $log $_ if not defined $lines;
+    }
 
     $exit_code
 }
