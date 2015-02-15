@@ -31,16 +31,13 @@ def derive(deriver, value, filename, **kwargs):
         command = ["php", "helper.php", filename, geshicode, relevance]
         result  = json.loads(subprocess.check_output(command))
         return (result["metrics"], result["tokens"])
-    else:
-        return (
-            {
+
+    return ({
                 "size"      : 0,
                 "loc"       : 0,
                 "sloc"      : 0,
                 "relevance" : relevance,
-            },
-            []
-        )
+            }, [])
 
 
 def preparedump(deriver):
