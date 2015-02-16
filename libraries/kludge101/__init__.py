@@ -10,9 +10,6 @@ warnings.warn("kludge101 is a kludge. Fix extractors, validators "
               "and friends to avoid code injection properly.")
 
 
-repo101dir = os.environ["repo101dir"]
-
-
 def checkpath(relpath):
     """
     Ensures that the given path relative to 101repo is actually in 101repo and
@@ -30,7 +27,8 @@ def checkpath(relpath):
     links. If a link is found, it is assumed to be unsafe since it probably
     points to gitdeps.
     """
-    path = os.path.abspath(os.path.join(repo101dir, relpath))
+    repo101dir = os.environ["repo101dir"]
+    path       = os.path.abspath(os.path.join(repo101dir, relpath))
 
     if not path.startswith(repo101dir):
         return None
