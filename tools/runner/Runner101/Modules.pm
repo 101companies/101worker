@@ -8,6 +8,7 @@ use POSIX               qw(strftime);
 use Proc::ChildError    qw(explain_child_error);
 use Try::Tiny;
 use Runner101::Changes;
+use Runner101::Env;
 use Runner101::Helpers  qw(slurp_json validate_json write_log);
 use Runner101::Module;
 
@@ -57,6 +58,8 @@ sub run
 sub BUILD
 {
     my ($self, $args) = @_;
+
+    Runner101::Env::load_vars($args);
     $self->ensure_envs_exist(runner => RUNNER_ENVS);
     $self->die_if_invalid;
 
@@ -79,8 +82,8 @@ sub BUILD
             index  => $index,
             name   => $name,
             args   => $args[$index],
-            dir    => "$args->{modules_dir}/$name",
-            log    => "$args->{logs_dir}/$name.log",
+            dir    => "$ENV{modules101dir}/$name",
+            log    => "$ENV{   logs101dir}/$name.log",
             parent => $self,
             schema => $module_schema,
         );
@@ -143,3 +146,20 @@ sub die_if_invalid
 
 
 1
+__END__
+
+=head1 Runner101::Modules
+
+A class for instantiating, validating and running a set of modules. From the
+outside, you probably just want to call L</run>.
+
+=head2 run
+
+    run(
+        config => \%config,
+        
+    )
+
+=back
+
+=cut

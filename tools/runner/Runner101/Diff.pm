@@ -129,11 +129,12 @@ if it could parse the line and C<undef> otherwise.
 
 Executes the given C<$command>, which is an arrayref containing the arguments
 of the command. If C<$wantdiff> is true, the given C<$diffs> are piped into
-it.
+it. The stdandard error of the command goes into the givnen C<$log> filehandle.
 
 After the command ran, its output is L</parse>d for diff output (even if
 C<$wantdiff> is false!) and any diffs found are added to the given C<$diffs>.
-Any other output is printed to the given C<$log> filehandle.
+Any other output is appended to the given C<$log> filehandle. Note that this
+means that the log will contain all stderr first and then all stdout.
 
 Returns the exit code of the process run and warns on errors like broken pipe.
 

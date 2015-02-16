@@ -5,10 +5,9 @@
 # Directories
 # These MUST end with a slash so that they can be disambiguated from files,
 # but the resulting environment variable WILL NOT have a trailing slash!
-results101dir          : $output/101results/
-logs101dir             : $output/101logs/
-web101dir              : $output/101web/
-temps101dir            : $output/101temps/
+results101dir          : $output101dir/101results/
+web101dir              : $output101dir/101web/
+temps101dir            : $output101dir/101temps/
 
 repo101dir             : $results101dir/101repo/
 gitdeps101dir          : $results101dir/gitdeps/
@@ -19,9 +18,9 @@ gatheredGeshi101dir    : $results101dir/geshi/
 
 # Files
 # These MUST NOT end with a slash, otherwise they are mistaken for directories.
-config101              : $worker/configs/production.json
-config101schema        : $worker/schemas/config.schema.json
-module101schema        : $worker/schemas/module.schema.json
+config101              : $worker101dir/configs/production.json
+config101schema        : $worker101dir/schemas/config.schema.json
+module101schema        : $worker101dir/schemas/module.schema.json
 rules101dump           : $dumps101dir/rules.json
 matches101dump         : $dumps101dir/matches.json
 predicates101dump      : $dumps101dir/predicates.json

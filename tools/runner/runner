@@ -4,39 +4,29 @@ use warnings;
 use Cwd                qw(abs_path);
 use File::Basename     qw(dirname);
 use File::Slurp        qw(write_file);
-use List::Util         qw(pairs);
-use YAML               qw(Load);
-
+use YAML               qw();
 use lib                dirname $0;
-use Runner101::Env     qw(load_vars);
-use Runner101::Module;
 use Runner101::Modules;
 
 
-my $config     = do { local $/; YAML::Load(<STDIN>) } or die $!;
-my $worker_dir = $ENV{worker101dir} // dirname dirname dirname abs_path $0;
-my %options    = (
-    config      => $config,
-    worker      => $worker_dir,
-    output      => ($ENV{output101dir } // dirname $worker_dir),
-    modules_dir => ($ENV{modules101dir} // "$worker_dir/modules"),
+my $config = do { local $/; YAML::Load(<STDIN>) } or die $!;
+
+
+# default values for necessary directories
+my $worker101dir = $ENV{worker101dir} // dirname dirname dirname abs_path $0;
+my $output101dir = $ENV{output101dir} // dirname $worker101dir;
+my %dirs         = (
+    worker101dir  => $worker101dir,
+    output101dir  => $output101dir,
+    modules101dir => ($ENV{modules101dir} // "$worker101dir/modules" ),
+    logs101dir    => ($ENV{   logs101dir} // "$output101dir/101logs" ),
+    diffs101dir   => ($ENV{  diffs101dir} // "$output101dir/101diffs"),
 );
 
-$options{ logs_dir} = $ENV{ logs101dir} // "$options{output}/101logs";
-$options{diffs_dir} = $ENV{diffs101dir} // "$options{output}/101diffs";
+# load them into the configuration if they're not already there
+$config->{$_} //= "$dirs{$_}/" for keys %dirs;
 
 
-for (pairs qw(output101dir  output
-              worker101dir  worker
-              modules101dir modules_dir
-              logs101dir    logs_dir
-              diffs101dir   diffs_dir))
-{
-    $config->{$_->[0]} //= "$options{$_->[1]}/";
-}
+my $diff = Runner101::Modules::run($config);
 
-
-load_vars(\%options);
-
-my $diff = Runner101::Modules::run(\%options);
-write_file("$options{diffs_dir}/result", map { "$_\n" } @$diff);
+write_file("$ENV{diffs101dir}/result", map { "$_\n" } @$diff);

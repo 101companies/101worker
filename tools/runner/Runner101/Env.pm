@@ -16,12 +16,8 @@ our %loaded;
 
 sub load_vars
 {
-    my ($options) = @_;
-
-    while (my ($key, $value) = each %$options)
-    {   $loaded{$key} = $value if not ref $value }
-
-    $ENV{$_} = load_var($options->{config}, $_) for keys %{$options->{config}};
+    my ($config) = @_;
+    $ENV{$_} = load_var($config, $_) for keys %$config;
 }
 
 
@@ -81,13 +77,10 @@ Cache for already loaded variables.
 
 =head2 load_vars
 
-    load_vars(\%options)
+    load_vars(\%config)
 
-First, loads all string values from C<$option> into L</%loaded>. In practice,
-these are the values for B<output>, B<worker> and B<modules_dir>.
-
-Then loads the environment variables given in C<< $options->{config} >> into
-the actual environment C<%ENV>. See the F<101worker/configs/env/README.md> for
+Loads the environment variables given in C<$config> into the actual
+environment C<%ENV>. See the F<101worker/configs/env/README.md> for
 documentation about how these variables should be defined.
 
 Returns nothing useful and might die if L<load_var>, L</load_path> or
