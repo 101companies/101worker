@@ -5,8 +5,8 @@ use Try::Tiny;
 use Runner101::Diff    qw(run_diff);
 use Runner101::Helpers qw(slurp_json validate_json write_log);
 
-use Class::Tiny qw(index name args dir log command
-                   environment dependencies wantdiff);
+use Class::Tiny qw(index name dir log environment
+                   command dependencies wantdiff);
 
 
 sub BUILD
@@ -41,7 +41,7 @@ sub run
     chdir $self->dir              or die "Couldn't cd into "  . $self->dir;
     open my $log, '>', $self->log or die "Couldn't write to " . $self->log;
 
-    my $command = [qw(timeout -s KILL 1h), @{$self->command}, @{$self->args}];
+    my $command = [qw(timeout -s KILL 1h), @{$self->command}];
 
     write_log($log, "${\$self->name}");
     write_log($log, 'directory : ', $self->dir);

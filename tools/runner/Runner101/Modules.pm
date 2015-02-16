@@ -63,25 +63,16 @@ sub BUILD
     $self->ensure_envs_exist(runner => RUNNER_ENVS);
     $self->die_if_invalid;
 
-    my $config        = validate_json(@ENV{qw(config101 config101schema)});
+    my $names         = validate_json(@ENV{qw(config101 config101schema)});
     my $module_schema = slurp_json   ($ENV{module101schema});
+    $self->names($names);
 
-    my (@names, @args);
-    for (@$config)
+    for my $index (0 .. $#$names)
     {
-        my ($name, @rest) = split;
-        push @names, $name;
-        push @args, \@rest;
-    }
-    $self->names(\@names);
-
-    for my $index (0 .. $#names)
-    {
-        my $name = $names[$index];
+        my $name = $names->[$index];
         push @{$self->modules}, Runner101::Module->new(
             index  => $index,
             name   => $name,
-            args   => $args[$index],
             dir    => "$ENV{modules101dir}/$name",
             log    => "$ENV{   logs101dir}/$name.log",
             parent => $self,
@@ -155,10 +146,7 @@ outside, you probably just want to call L</run>.
 
 =head2 run
 
-    run(
-        config => \%config,
-        
-    )
+    run(\%config)
 
 =back
 
