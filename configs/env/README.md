@@ -71,9 +71,13 @@ repo_url  = ENV['repo101url']
 
 ```php
 <?php
-// $_ENV is a superglobal array with the environment
-$repo_path = $_ENV['repo101dir'];
-$repo_url  = $_ENV['repo101url'];
+# Use the getenv function. It's case-insensitive for
+# some reason, but that shouldn't break anything.
+$repo_path = getenv('repo101dir');
+$repo_url  = getenv('repo101url');
+
+# There's also the superglobal array $_ENV, but don't use
+# that because it doesn't work with all configurations.
 ```
 
 ### Bourne Shell and Friends
