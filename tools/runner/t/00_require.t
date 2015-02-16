@@ -15,10 +15,13 @@ my @modules = qw(
     URI::URL
 );
 
-plan tests => scalar @modules;
+plan tests => 1 + scalar @modules;
 
 for (@modules)
 {
     require_ok $_ or BAIL_OUT "Couldn't load module: $_, please "
                             . "install it with ``cpan install $_''";
 }
+
+cmp_ok system('timeout'), '!=', -1, 'timeout command is available';
+diag "timeout didn't execute: $!" if $!;
