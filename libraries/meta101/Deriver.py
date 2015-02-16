@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import incremental101
+from   .Matches       import Matches
 from   .util          import diff, tolist, sourcetotarget, valuebykey
 
 
@@ -9,7 +10,7 @@ class Deriver(object):
 
 
     def __init__(self, suffix, dump, callback, oninit=None, ondump=None,
-                 getvalue=valuebykey, key=None, resources="json:.matches.json"):
+                 getvalue=valuebykey, key=None, resources=None):
         self.key         = key
         self.suffix      = suffix
         self.dumppath    = dump
@@ -18,7 +19,7 @@ class Deriver(object):
         self.callback    = callback
         self.getvalue    = getvalue
         self.ondump      = ondump
-        self.resources   = resources
+        self.resources   = resources or "json:" + Matches.suffix
         if oninit:
             oninit(self)
 

@@ -2,10 +2,7 @@ from .Phase import Phase
 
 
 class Matches(Phase):
-
-
-    def suffix(self):
-        return ".matches.json"
+    suffix = ".matches.json"
 
 
     def applicable(self, rule):

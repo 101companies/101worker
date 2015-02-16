@@ -17,10 +17,6 @@ class Phase(object):
 
 
     @abc.abstractmethod
-    def suffix(self):
-        pass # pragma: no cover
-
-    @abc.abstractmethod
     def applicable(self, rule):
         pass # pragma: no cover
 
@@ -41,10 +37,10 @@ class Phase(object):
 
     def run(self, entirerepo=False):
         if entirerepo:
-            walk(self.suffix(), self.onfile)
-            diff(self.suffix(), D=self.ondelete)
+            walk(self.suffix, self.onfile)
+            diff(self.suffix, D=self.ondelete)
         else:
-            diff(self.suffix(), A=self.onfile, M=self.onfile, D=self.ondelete)
+            diff(self.suffix, A=self.onfile, M=self.onfile, D=self.ondelete)
         return self.dump()
 
 
@@ -121,8 +117,8 @@ class Phase(object):
             return re.search(pattern, path) if pattern else path == want
         return any(matchname(v) for v in tolist(values))
 
-    def checkfilename(self, values, filename, **kwargs):
-        return self.matchnames(values, filename)
+    def checkfilename(self, values, relative, **kwargs):
+        return self.matchnames(values, relative)
 
     def checkbasename(self, values, basename, **kwargs):
         return self.matchnames(values, basename)

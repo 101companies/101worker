@@ -1,7 +1,7 @@
 pp = PYTHONPATH="$$PYTHONPATH:$$(dirname $$(pwd))"
 
 test:
-	${pp} prove --ext=.t.py -e python
+	${pp} prove --ext=.t.py -e 'python -W ignore'
 
 cover:
 	rm -rf .coverage htmlcov

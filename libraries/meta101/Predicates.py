@@ -1,10 +1,12 @@
 import imp
 import os
+import kludge101
 from   .Phase import Phase
 from   .util  import tolist
 
 
 class Predicates(Phase):
+    suffix = ".predicates.json"
 
 
     def __init__(self, *args):
@@ -18,18 +20,24 @@ class Predicates(Phase):
         return dump
 
 
-    def suffix(self):
-        return ".predicates.json"
-
-
     def applicable(self, rule):
         return "predicate" in rule
 
 
     def checkpredicate(self, predicate, key, rule, filename, **kwargs):
-        self.predicates.add(predicate)
         args = tolist(rule["args"]) if "args" in rule else []
-        path = os.path.join(os.environ["repo101dir"], predicate)
+
+        # XXX: move predicates into 101worker
+        path = kludge101.checkpath(predicate)
+        if not path:
+            self.failures.append({
+                "error" : "foiled code injection: {}".format(predicate),
+                "key"   : key,
+                "rule"  : rule,
+            })
+            return None
+
+        self.predicates.add(predicate)
 
         try:
             # Python cries about a missing parent module if the name contains
@@ -42,4 +50,4 @@ class Predicates(Phase):
                 "key"   : key,
                 "rule"  : rule,
             })
-            return None
+        return None

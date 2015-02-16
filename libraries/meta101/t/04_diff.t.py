@@ -39,25 +39,28 @@ D /some/totally/different/path
 called = []
 want   = [
     ["A", {
-        "target"   : "/path/targets/added.json.suffix",
-        "filename" : "/path/repo/added.json",
-        "relative" : "added.json",
-        "dirname"  : "",
-        "basename" : "added.json",
+        "target"     : "/path/targets/added.json.suffix",
+        "targetbase" : "/path/targets/added.json",
+        "filename"   : "/path/repo/added.json",
+        "relative"   : "added.json",
+        "dirname"    : "",
+        "basename"   : "added.json",
     }],
     ["M", {
-        "target"   : "/path/targets/somedir/modified.java.suffix",
-        "filename" : "/path/repo/somedir/modified.java",
-        "relative" : "somedir/modified.java",
-        "dirname"  : "somedir",
-        "basename" : "modified.java",
+        "target"     : "/path/targets/somedir/modified.java.suffix",
+        "targetbase" : "/path/targets/somedir/modified.java",
+        "filename"   : "/path/repo/somedir/modified.java",
+        "relative"   : "somedir/modified.java",
+        "dirname"    : "somedir",
+        "basename"   : "modified.java",
     }],
     ["D", {
-        "target"   : "/path/targets/some/more/dirs/deleted.suffix",
-        "filename" : "/path/repo/some/more/dirs/deleted",
-        "relative" : "some/more/dirs/deleted",
-        "dirname"  : "some/more/dirs",
-        "basename" : "deleted",
+        "target"     : "/path/targets/some/more/dirs/deleted.suffix",
+        "targetbase" : "/path/targets/some/more/dirs/deleted",
+        "filename"   : "/path/repo/some/more/dirs/deleted",
+        "relative"   : "some/more/dirs/deleted",
+        "dirname"    : "some/more/dirs",
+        "basename"   : "deleted",
     }],
 ]
 diff(".suffix", **switch)
