@@ -60,10 +60,11 @@ if it could parse the line and `undef` otherwise.
 
 Executes the given `$command`, which is an arrayref containing the arguments
 of the command. If `$wantdiff` is true, the given `$diffs` are piped into
-it.
+it. The stdandard error of the command goes into the givnen `$log` filehandle.
 
 After the command ran, its output is ["parse"](#parse)d for diff output (even if
 `$wantdiff` is false!) and any diffs found are added to the given `$diffs`.
-Any other output is printed to the given `$log` filehandle.
+Any other output is appended to the given `$log` filehandle. Note that this
+means that the log will contain all stderr first and then all stdout.
 
 Returns the exit code of the process run and warns on errors like broken pipe.

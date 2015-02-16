@@ -10,13 +10,10 @@ Cache for already loaded variables.
 
 ## load\_vars
 
-    load_vars(\%options)
+    load_vars(\%config)
 
-First, loads all string values from `$option` into ["%loaded"](#loaded). In practice,
-these are the values for **output**, **worker** and **modules\_dir**.
-
-Then loads the environment variables given in `$options->{config}` into
-the actual environment `%ENV`. See the `101worker/configs/env/README.md` for
+Loads the environment variables given in `$config` into the actual
+environment `%ENV`. See the `101worker/configs/env/README.md` for
 documentation about how these variables should be defined.
 
 Returns nothing useful and might die if [load\_var](https://metacpan.org/pod/load_var), ["load\_path"](#load_path) or

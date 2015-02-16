@@ -19,12 +19,15 @@ use Class::Tiny {
     diff    => sub { [] },
 };
 
-use constant RUNNER_ENVS => qw(config101 config101schema module101schema);
+use constant RUNNER_ENVS => qw(config101     config101schema module101schema
+                               diffs101dir   logs101dir      output101dir
+                               modules101dir worker101dir);
 
 
 sub run
 {
-    my $self = __PACKAGE__->new(@_);
+    my $self = __PACKAGE__->new(config => @_);
+
     for (@{$self->modules})
     {
         my $prog = $_->name;
@@ -59,7 +62,7 @@ sub BUILD
 {
     my ($self, $args) = @_;
 
-    Runner101::Env::load_vars($args);
+    Runner101::Env::load_vars($args->{config});
     $self->ensure_envs_exist(runner => RUNNER_ENVS);
     $self->die_if_invalid;
 
@@ -144,10 +147,111 @@ __END__
 A class for instantiating, validating and running a set of modules. From the
 outside, you probably just want to call L</run>.
 
+=head2 Attributes
+
+None of these attributes are required in the constructor and you should
+probably just let them use their default value.
+
+=over
+
+=item errors
+
+Errors that have occured so far. See L</push_error> and L</die_if_invalid>.
+
+=item names
+
+The list of names of all modules to be ran.
+
+=item modules
+
+The list of C<Runner101::Module> objects of all modules to be ran.
+
+=item diff
+
+Aggregates the diff. The modules will fill this on their own when they are ran.
+
+=back
+
 =head2 run
 
     run(\%config)
 
-=back
+Loads the given configuration (see F<101worker/configs/env>) into the
+environment and validates that all necessary environment variables exist (see
+L</RUNNER_ENVS>). Then loads the module list and validates it against its
+schema.
+
+If all that suceeded, it validates the C<module.json>s against their schema and
+ensures that all dependencies and necessary environment variables are in order.
+
+Finally, it runs each of the modules and gathers their diffs in-between.
+
+Returns the resulting diff or dies with an error message if any of the
+validation above failed.
+
+=head3 Gathering Dependencies
+
+If the environment variable C<runner101depend> is set, the runner will call
+C<Runner101::Changes::gather> to collect which files have been accessed and
+modified by each module. These changes are saved into the C<diffs101dir>
+with filenames like C<$timestamp.$module.changes>.
+
+See F<101worker/tools/depend> for a script that transforms those files into a
+graph and the C<%.depend> target in the F<101worker/Makefile> for doing a
+worker run with them and getting a PDF out of it in the end.
+
+=head2 new
+
+    Runner101::Modules->new( config => \%config )
+    Runner101::Modules->new({config => \%config})
+
+This instantiates a Runner101::Modules object and does the entire environment
+and validation stuff described in L</run>. It doesn't run the modules though,
+that's L</run>'s job.
+
+Dies if any environment loading or validation fails.
+
+=head2 push_error
+
+    $self->push_error($type, $key, $value)
+
+Adds the given value to C<< $self->errors >>list for the given C<$type> and
+C<$key>.
+
+For example, C<< $self->push_error('env', 'repo101dir', 'pull101repo') >>
+would add an error message about the missing  environment variable
+C<repo101dir> being required by the module C<pull101repo>.
+
+See L</@ERROR_MESSAGES>, L</ensure_envs_exist> and L</ensure_dependencies>.
+
+=head2 ensure_envs_exist
+
+    $self->ensure_envs_exist($name, @envs)
+    $self->ensure_envs_exist(Runner101::Module $module)
+
+Ensures that all environment variables given in C<@envs> or
+C<< $module->environment >> respectively actually exist in the environment. If
+any are missing, appropriate errors are L</push_error>'d.
+
+=head2 ensure_dependencies
+
+    $self->ensure_dependencies(Runner101::Module $module)
+
+Ensures that all dependencies on other modules in C<< $module->dependencies >>
+are fulfilled. If any of the dependencies is missing or comes after C<$module>,
+appropriate errors are L</push_error>'d.
+
+=head2 @ERROR_MESSAGES
+
+A mapping from error type to a printf format string. The format string receives
+two arguments, the error key and value. See also L</push_error> and
+L</die_if_invalid>.
+
+=head2 die_if_invalid
+
+    $self->die_if_invalid
+
+Dies with a formatted error message if there's anything in
+C<< $self->errors >>. Does nothing otherwise.
 
 =cut
