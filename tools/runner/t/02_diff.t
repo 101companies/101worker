@@ -30,7 +30,7 @@ my $output = capture_stdout
 
 is_deeply \@diff1, \@diff2, 'diff result is correct';
 
-is $output, "got op: A\ngot op: M\ngot op: D\n", 'other output is correct';
+is $output, "\ngot op: A\ngot op: M\ngot op: D\n", 'other output is correct';
 
 
 ok run_diff(['false'], [], \*STDOUT, 0), 'failing run returns non-zero';
