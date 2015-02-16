@@ -20,11 +20,10 @@ def derive(deriver, extractor, filename, **kwargs):
     path = kludge101.checkpath(extractor)
     if not path:
         raise RuntimeError("foiled code injection: {}".format(extractor))
-    command = [path, filename]
 
     # extractors take their input via stdin, so we gotta open the file
     with open(filename) as f:
-        return json.loads(subprocess.check_output(command, stdin=f))
+        return json.loads(subprocess.check_output([path], stdin=f))
 
 
 def preparedump(deriver):
