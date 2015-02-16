@@ -102,10 +102,10 @@ def printdiff(op="-", path="-"):
 
 def writejson(path, data):
     """
-    Converts the given data into canonical JSON and then calls writefile.
+    Converts the given data into canonical JSON (that is, sorted object keys so
+    that the resulting string can be compared) and then calls writefile.
     """
-    writefile(path, json.dumps(data, sort_keys=True, indent=4,
-                               separators=(',', ' : ')) + "\n")
+    writefile(path, json.dumps(data, sort_keys=True, separators=(',', ':')))
 
 
 def writefile(path, content):
