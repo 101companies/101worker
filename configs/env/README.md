@@ -39,6 +39,8 @@ Getting a value from an environment variable is utterly trivial in virtually any
 
 Here's examples on how to do it in the various languages used in 101worker:
 
+### Python
+
 ```python
 #!/usr/bin/env python
 # os.environ is a dict with the environment
@@ -47,12 +49,16 @@ repo_path = os.environ["repo101dir"]
 repo_url  = os.environ["repo101url"]
 ```
 
+### Perl
+
 ```perl
 #!/usr/bin/perl
 # %ENV is a hash with the environment
 my $repo_path = $ENV{repo101dir};
 my $repo_url  = $ENV{repo101url};
 ```
+
+### Ruby
 
 ```ruby
 #!/usr/bin/env ruby
@@ -61,6 +67,8 @@ repo_path = ENV['repo101dir']
 repo_url  = ENV['repo101url']
 ```
 
+### PHP
+
 ```php
 <?php
 // $_ENV is a superglobal array with the environment
@@ -68,10 +76,15 @@ $repo_path = $_ENV['repo101dir'];
 $repo_url  = $_ENV['repo101url'];
 ```
 
+### Bourne Shell and Friends
+
 ```sh
+#!/bin/sh
 ls "$repo101dir"
 wget "$repo101url"
 ```
+
+### Make
 
 ```make
 run: ${repo101dir}
