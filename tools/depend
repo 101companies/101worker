@@ -1,51 +1,54 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Cwd qw(abs_path);
-use File::Basename;
-use File::Slurp qw(slurp);
-use Getopt::Long;
+use File::Basename qw(basename);
 use Graph;
-use JSON;
-use YAML;
 
-my $modules_path = (dirname dirname abs_path $0) . '/modules';
-GetOptions('modules=s' => \$modules_path);
-$modules_path =~ s{/$}{};
-
-
-sub load_dependencies {
-    my ($module) = (@_);
-
-    my $file = "$modules_path/$module/module.json";
-    my $json;
-    eval { $json = slurp $file };
-    warn "$module ($file): $!\n" if $!;
-
-    if (!$json) {
-        print STDERR "Can't read $file, assuming no dependencies for $module\n";
-        return [];
-    }
-
-    my $deps = {};
-    eval { $deps = decode_json $json || {} };
-    warn "$module ($file): $!\n" if $!;
-
-    if (!$deps->{dependencies}) {
-        print STDERR "No dependencies found for $module, assuming none\n";
-    }
-    $deps->{dependencies} || [];
-}
-
-
-die 'Usage: depend [--modules=PATH] JSONFILE' if not @ARGV;
-my $modules = decode_json slurp shift;
 
 my $graph = Graph->new;
-for my $module (@$modules) {
+my %files;
+
+
+my @sorted = do
+{
+    no warnings 'numeric';
+    sort { basename($a) <=> basename($b) } @ARGV
+};
+
+for my $arg (@sorted)
+{
+    my %deps;
+    my $module = do
+    {
+        basename($arg) =~ /^\d+\.(.+)\.changes$/;
+        $1
+    };
+
+    open my $file, '<', $arg or die "Can't open $arg: $!";
+
+    while (<$file>)
+    {
+        /^([ma])\s+(.+?)\s*$/ or die "Malformed change entry in $arg: $_";
+
+        if ($1 eq 'm')
+        {
+            $deps{$files{$2}} = 1 if exists $files{$2};
+            $files{$2}        = $module;
+        }
+        elsif ($1 eq 'a')
+        {
+            $deps{$files{$2}} = 1 if exists $files{$2};
+        }
+    }
+
+    delete $deps{$module}; # don't depend on yourself
     $graph->add_vertex($module);
-    my $deps = load_dependencies($module);
-    $graph->add_edge($_, $module) for @$deps;
+    $graph->add_edge($_, $module) for keys %deps;
 }
 
-print Dump($graph);
+
+print "digraph G {\n";
+print "    node [shape=plaintext];\n";
+print '    ', $_, ";\n"                       for sort $graph->vertices;
+print '    ', $_->[0], ' -> ', $_->[1], ";\n" for sort $graph->edges;
+print "}\n";

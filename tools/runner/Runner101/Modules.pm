@@ -1,12 +1,14 @@
 package Runner101::Modules;
 use strict;
 use warnings;
-use File::Slurp        qw(slurp);
-use List::MoreUtils    qw(first_index);
-use List::Util         qw(pairmap);
-use POSIX              qw(strftime);
-use Proc::ChildError   qw(explain_child_error);
-use Runner101::Helpers qw(slurp_json validate_json write_log);
+use File::Slurp         qw(slurp);
+use List::MoreUtils     qw(first_index);
+use List::Util          qw(pairmap);
+use POSIX               qw(strftime);
+use Proc::ChildError    qw(explain_child_error);
+use Try::Tiny;
+use Runner101::Changes;
+use Runner101::Helpers  qw(slurp_json validate_json write_log);
 use Runner101::Module;
 
 use Class::Tiny {
@@ -25,7 +27,7 @@ sub run
     for (@{$self->modules})
     {
         my $prog = $_->name;
-        write_log("Running $prog");
+        write_log("running $prog");
 
         my $start     = time;
         my $exit_code = $_->run($self);
@@ -37,6 +39,16 @@ sub run
                    : "$prog exited with value 0";
 
         write_log("$reason after $time");
+
+        if ($ENV{runner101depend})
+        {
+            write_log("gathering changes for $prog");
+            try
+            {   Runner101::Changes::gather($start, $prog) }
+            catch
+            {   warn $_ };
+            sleep 1;
+        }
     }
     $self->diff
 }

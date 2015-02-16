@@ -13,9 +13,17 @@
 
 # Like %.run but without logging, with stdout
 %.debug:
-	# The debug runner output isn't piped into 101logs, so in this case we can
-	# fall back to the runner creating all directories.
 	cd modules; make $*.debug
+
+
+# Debug, gather changes and build dependency graph in GraphViz format.
+# The dot command needs to be available generate a PDF.
+# Everything dependency-related goes into ../101diffs
+%.depend:
+	rm -f ../101diffs/*.changes
+	runner101depend=1 make $*.debug
+	tools/depend ../101diffs/*.changes > ../101diffs/$*.dot
+	dot -Tpdf <../101diffs/$*.dot >../101diffs/$*.pdf
 
 
 # Archives the log files from the last execution
