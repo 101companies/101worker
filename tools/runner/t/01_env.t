@@ -11,6 +11,7 @@ my $pwd    = abs_path;
 
 
 my %hash = (
+    output101dir  => "$tmpdir/output",
     results101    => '101results/',
     repo101       => '101results/101repo/',
     dumps101      => '101web/dumps/',
@@ -20,16 +21,9 @@ my %hash = (
     repo101url    => 'https://github.com/101repo',
     data101url    => 'http://data.101companies.org/',
     gitdeps101url => 'file://101results/gitdepsrc/',
-    dir101        => '$output/somedir/',
+    dir101        => '$output101dir/somedir/',
     ref101        => '$dir101/somefile',
 );
-
-my $options = {
-    config  => \%hash,
-    output  => "$tmpdir/output",
-};
-
-$Runner101::Env::loaded{output} = $options->{output};
 
 
 sub check_path($$)
@@ -37,7 +31,7 @@ sub check_path($$)
     my ($key, $message) = @_;
     my $path = $hash{$key};
     $path =~ s{/$}{};
-    is load_path($options, $hash{$key}), "$pwd/$path", "load $message";
+    is load_path(\%hash, $hash{$key}), "$pwd/$path", "load $message";
     ok -d "$pwd/$path",                              "create $message";
 }
 
@@ -64,10 +58,9 @@ dies_ok { load_path({}, $bogus) } 'bogus path dies';
 dies_ok { load_path({}, "\0?/") } 'invalid path dies';
 
 
-is load_path(\%hash, $hash{ref101}), "$options->{output}/somedir/somefile",
-  'load path with $variable';
-ok -d "$options->{output}/somedir",
-  'path with $variable is created';
+is load_path(\%hash, $hash{ref101}), "$tmpdir/output/somedir/somefile",
+   'load path with $variable';
+ok -d "$tmpdir/output/somedir", 'path with $variable is created';
 
 
 dies_ok { load_path(\%hash, '$nonexistent/asdf') }
@@ -85,9 +78,12 @@ dies_ok { load_url({}, 'C:\Documents and Settings') } 'invalid URL dies';
 
 
 %Runner101::Env::loaded = ();
-load_vars($options);
+
+load_vars(\%hash);
 my %given    = map { ($_ => $ENV{$_}) } keys %hash;
+
 my %expected = (
+    output101dir  => "$tmpdir/output",
     results101    => "$pwd/101results",
     dumps101      => "$pwd/101web/dumps",
     views101      => "$pwd/101web/views",
@@ -97,9 +93,10 @@ my %expected = (
     repo101url    => 'https://github.com/101repo',
     data101url    => 'http://data.101companies.org/',
     gitdeps101url => "file://$pwd/101results/gitdepsrc",
-    dir101        => "$options->{output}/somedir",
-    ref101        => "$options->{output}/somedir/somefile"
+    dir101        => "$tmpdir/output/somedir",
+    ref101        => "$tmpdir/output/somedir/somefile"
 );
+
 is_deeply \%given, \%expected, 'load variables into environment';
 
 
@@ -110,9 +107,7 @@ chdir $olddir;
 throws_ok {
     local $SIG{__WARN__} = sub { die @_ };
     load_vars({
-        config => {
-            circular  => '$reference',
-            reference => '$circular',
-        },
+        circular  => '$reference',
+        reference => '$circular',
     });
 } qr/Deep recursion/, 'circular references lead to infinite loops';
