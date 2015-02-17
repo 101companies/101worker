@@ -5,7 +5,7 @@ from   meta101.util   import diff
 import incremental101 as     inc
 execfile("t/dies_ok.py")
 
-plan(5)
+plan(6)
 
 
 called = []
@@ -81,3 +81,11 @@ called = []
 inc.instream.seek(0)
 diff((".suffix1", ".suffix2"), **switch)
 eq_ok(called, want, "multiple suffixes using a tuple")
+
+
+want.pop()
+del switch["D"]
+called = []
+inc.instream.seek(0)
+diff((".suffix1", ".suffix2"), **switch)
+eq_ok(called, want, "missing entry in switch runs fine")
