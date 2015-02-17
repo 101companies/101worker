@@ -6,6 +6,9 @@ plan(5)
 
 class TestPhase(meta101.Phase):
 
+    def keys(self):
+        return ["stuff"]
+
     def suffix(self):
         return ".test.json"
 

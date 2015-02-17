@@ -27,6 +27,10 @@ class Fragments(Phase):
         return "fragment" in rule
 
 
+    def keys(self):
+        return super(Fragments, self).keys() + ["fragment"]
+
+
     def findlocator(self, matchespath):
         with open(matchespath) as f:
             matches = json.load(f)
@@ -73,8 +77,6 @@ class Fragments(Phase):
 
             result["lines"] = self.runlocator(locator, fragment, rule,
                                               filename, tempin, tempout)
-        except Exception as e:
-            self.failures.append({"error" : str(e), "rule" : rule})
         finally:
             for f in [tempin, tempout]:
                 if os.path.exists(f):

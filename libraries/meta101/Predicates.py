@@ -24,30 +24,21 @@ class Predicates(Phase):
         return "predicate" in rule
 
 
+    def keys(self):
+        return super(Predicates, self).keys() + ["predicate"]
+
+
     def checkpredicate(self, predicate, key, rule, filename, **kwargs):
         args = tolist(rule["args"]) if "args" in rule else []
 
         # XXX: move predicates into 101worker
         path = kludge101.checkpath(predicate)
         if not path:
-            self.failures.append({
-                "error" : "foiled code injection: {}".format(predicate),
-                "key"   : key,
-                "rule"  : rule,
-            })
-            return None
+            raise RuntimeError("foiled code injection: {}".format(predicate))
 
         self.predicates.add(predicate)
 
-        try:
-            # Python cries about a missing parent module if the name contains
-            # dots, so we just replace them with underscores to make it happy.
-            module = imp.load_source(predicate.replace(".", "_"), path)
-            return module.run(args=args, filePath=filename)
-        except Exception as e:
-            self.failures.append({
-                "error" : str(e),
-                "key"   : key,
-                "rule"  : rule,
-            })
-        return None
+        # Python cries about a missing parent module if the name contains
+        # dots, so we just replace them with underscores to make it happy.
+        module = imp.load_source(predicate.replace(".", "_"), path)
+        return module.run(args=args, filePath=filename)

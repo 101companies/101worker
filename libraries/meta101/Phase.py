@@ -10,15 +10,25 @@ class Phase(object):
     __metaclass__ = abc.ABCMeta
 
 
-    def __init__(self, rules={}, matches=[]):
+    def __init__(self, rules={}, matches=[], failures={}):
         self.rules    = rules
-        self.failures = []
         self.matches  = {m["filename"]: m["units"] for m in matches}
+        self.failures = failures
 
 
     @abc.abstractmethod
     def applicable(self, rule):
         pass # pragma: no cover
+
+
+    def keys(self):
+        return [
+            "suffix",
+            "filename",
+            "basename",
+            "dirname",
+            "content",
+        ]
 
 
     def dump(self):
@@ -44,11 +54,18 @@ class Phase(object):
         return self.dump()
 
 
+    def cleandump(self, relative):
+        if relative in self.matches:
+            del self.matches[relative]
+        if relative in self.failures:
+            del self.failures[relative]
+
+
     def onfile(self, **kwargs):
+        self.cleandump(kwargs["relative"])
         units = []
 
         for value in self.rules:
-            # TODO short-circuit if the rule doesn't contain metadata?
             rule   = value["rule"]
             result = self.match(rule, **kwargs)
             if result is not None and "metadata" in rule:
@@ -80,13 +97,25 @@ class Phase(object):
             incremental101.writejson(kwargs["target"], units)
             self.matches[kwargs["relative"]] = units
         else:
-            self.ondelete(**kwargs)
+            incremental101.deletefile(kwargs["target"])
 
 
     def ondelete(self, target, relative, **kwargs):
         incremental101.deletefile(target)
-        if relative in self.matches:
-            del self.matches[relative]
+        self.cleandump(relative)
+
+
+    def matchkey(self, key, rule, **kwargs):
+        try:
+            func = getattr(self, "check" + key, None)
+            return func(rule[key], key=key, rule=rule, **kwargs)
+        except Exception as e:
+            self.failures[kwargs["relative"]] = {
+                "error" : str(e),
+                "key"   : key,
+                "rule"  : rule,
+            }
+        return None
 
 
     def match(self, rule, **kwargs):
@@ -94,9 +123,8 @@ class Phase(object):
             return None
 
         kwargs["result"] = {}
-        for key in rule:
-            func = getattr(self, "check" + key, None)
-            if func and not func(rule[key], key=key, rule=rule, **kwargs):
+        for key in self.keys():
+            if key in rule and not self.matchkey(key, rule, **kwargs):
                 return None
 
         return kwargs["result"]

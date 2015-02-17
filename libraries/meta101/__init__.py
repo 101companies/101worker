@@ -23,17 +23,19 @@ def matchall(phasekey, force=False):
     dumpfile   = os.environ[phasekey + "101dump"]
     rulesfile  = os.environ["rules101dump"]
     entirerepo = False
-    matches    = []
+    args       = []
 
     if os.path.exists(dumpfile):
         entirerepo = os.path.getmtime(rulesfile) > os.path.getmtime(dumpfile)
         with open(dumpfile) as f:
-            matches = json.load(f)["matches"]
+            dump = json.load(f)
+            args.append(dump["matches" ])
+            args.append(dump["failures"])
 
     with open(rulesfile) as f:
-        rules = json.load(f)["results"]["rules"]
+        args.insert(0, json.load(f)["results"]["rules"])
 
-    dump = getphase(phasekey)(rules, matches).run(entirerepo or force)
+    dump = getphase(phasekey)(*args).run(entirerepo or force)
     incremental101.writejson(dumpfile, dump)
 
 
