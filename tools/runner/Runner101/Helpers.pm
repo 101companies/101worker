@@ -49,7 +49,7 @@ sub validate_json
 sub write_log
 {
     my $out = ref $_[0] ? shift : \*STDOUT;
-    print $out strftime('[%Y-%m-%d %H:%M:%S] ', gmtime), @_, "\n";
+    print $out strftime('[%Y-%m-%d %H:%M:%S] ', localtime), @_, "\n";
 }
 
 
