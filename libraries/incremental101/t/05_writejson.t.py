@@ -33,21 +33,8 @@ inc.writejson("path", {
     },
 })
 
-want = """{
-    "float" : 0.23,
-    "list" : [
-        1,
-        2,
-        3
-    ],
-    "other" : {
-        "False" : false,
-        "None" : null,
-        "True" : true
-    },
-    "string" : "string!"
-}
-"""
+want = '{"float":0.23,"list":[1,2,3],"other":{"False":false,' \
+       '"None":null,"True":true},"string":"string!"}'
 
 eq_ok(called, ["path", want], "data fit for json serializes correctly")
 
