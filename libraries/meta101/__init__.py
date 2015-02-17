@@ -19,7 +19,7 @@ def getphase(key):
     return phases[key]
 
 
-def matchall(phasekey):
+def matchall(phasekey, force=False):
     dumpfile   = os.environ[phasekey + "101dump"]
     rulesfile  = os.environ["rules101dump"]
     entirerepo = False
@@ -33,7 +33,7 @@ def matchall(phasekey):
     with open(rulesfile) as f:
         rules = json.load(f)["results"]["rules"]
 
-    dump = getphase(phasekey)(rules, matches).run(entirerepo)
+    dump = getphase(phasekey)(rules, matches).run(entirerepo or force)
     incremental101.writejson(dumpfile, dump)
 
 
