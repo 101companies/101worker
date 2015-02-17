@@ -51,7 +51,10 @@ def diff(suffix, **switch):
 
 
 def walk(suffix, callback):
-    for root, dirs, files in os.walk(repodir(), followlinks=True):
+    def err(e):
+        raise e
+
+    for root, dirs, files in os.walk(repodir(), onerror=err, followlinks=True):
         try:
             dirs.remove(".git")
         except ValueError:
