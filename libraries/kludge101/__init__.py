@@ -35,7 +35,6 @@ def checkpath(relpath):
 
     dirs = path
     while len(dirs) > len(repo101dir):
-        print dirs
         if os.path.islink(dirs):
             return None
         dirs = os.path.dirname(dirs)
