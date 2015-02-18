@@ -16,14 +16,17 @@
 	cd modules; make $*.debug
 
 
-# Debug, gather changes and build dependency graph in GraphViz format.
-# The dot command needs to be available generate a PDF.
+# Debug, gather changes and build dependency graph in Graphviz format.
+# The dot command needs to be available generate a PDF and the tred command
+# for transitive reduction.
 # Everything dependency-related goes into ../101diffs
-%.depend:
+%.depend: graphpm dot.graphviz tred.graphviz
 	rm -f ../101diffs/*.changes
 	runner101depend=1 make $*.debug
-	tools/depend ../101diffs/*.changes > ../101diffs/$*.dot
-	dot -Tpdf <../101diffs/$*.dot >../101diffs/$*.pdf
+	tools/depend ../101diffs/*.changes      >../101diffs/$*.dot
+	dot -Tpdf   <../101diffs/$*.dot         >../101diffs/$*.pdf
+	tred        <../101diffs/$*.dot         >../101diffs/$*.reduced.dot
+	dot -Tpdf   <../101diffs/$*.reduced.dot >../101diffs/$*.reduced.pdf
 
 
 # Archives the log files from the last execution
@@ -38,3 +41,26 @@ full-reset:
 
 download:
 	cd modules/zip; make download-and-extract
+
+
+graphpm:
+	@perl -MGraph -e 1; \
+	if [ $$? -ne 0 ]; \
+	then \
+	    echo 'ERROR: Graph.pm not found. Maybe try:' 1>&2; \
+	    echo '    sudo cpan Graph'                   1>&2; \
+	    exit 1; \
+	fi
+
+
+%.graphviz:
+	@type $*; \
+	if [ $$? -ne 0 ]; \
+	then \
+	    echo 'ERROR: Graphviz not found. Maybe try:' 1>&2; \
+	    echo '    sudo apt-get install graphviz'     1>&2; \
+	    exit 1; \
+	fi
+
+
+.PHONY: full-reset download graphpm graphviz
