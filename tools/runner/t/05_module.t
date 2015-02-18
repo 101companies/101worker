@@ -14,7 +14,6 @@ my $buf    = '';
 my $args   = {
     index    => 0,
     name     => 'module0',
-    args     => [],
     dir      => $dir,
     parent   => $parent,
     schema   => $schema,
@@ -47,8 +46,8 @@ spew_json("$dir/module.json", {
           });
 
 my $module = Runner101::Module->new($args);
-is_deeply $module->command, [qw(python program.py)],
-          'command gets split by whitespace';
+is_deeply $module->command, [qw(timeout -s KILL 1h python program.py)],
+          'command gets split by whitespace and prefixed with timeout';
 
 ok !exists $parent->errors->{other}, 'valid module file causes no error';
 
@@ -56,11 +55,11 @@ ok !exists $parent->errors->{other}, 'valid module file causes no error';
 # monkey-patch, because we don't test run_diff here
 {
     no warnings 'redefine';
-    *Runner101::Module::run_diff = sub { [@_[0, 1, 3]] };
+    *Runner101::Module::run_diff = sub { [@_[0, 1]] };
 }
 
 is_deeply $module->run($parent),
-          [[qw(timeout -s KILL 1h python program.py)], [], 1],
+          [$module, {}],
           'running module calls run_diff with correct arguments';
 
 $module->log('/');

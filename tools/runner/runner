@@ -6,6 +6,7 @@ use File::Basename     qw(dirname);
 use File::Slurp        qw(write_file);
 use YAML               qw();
 use lib                dirname $0;
+use Runner101::Diff;
 use Runner101::Modules;
 
 
@@ -28,5 +29,4 @@ $config->{$_} //= "$dirs{$_}/" for keys %dirs;
 
 
 my $diff = Runner101::Modules::run($config);
-
-write_file("$ENV{diffs101dir}/result", map { "$_\n" } @$diff);
+Runner101::Diff::store_diff(result => $diff);

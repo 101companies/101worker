@@ -16,7 +16,7 @@ use Class::Tiny {
     errors  => sub { {} },
     names   => sub { [] },
     modules => sub { [] },
-    diff    => sub { [] },
+    diff    => sub { {} },
 };
 
 use constant RUNNER_ENVS => qw(config101     config101schema module101schema

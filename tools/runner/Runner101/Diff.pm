@@ -1,20 +1,63 @@
 package Runner101::Diff;
 use Exporter qw(import);
-@EXPORT_OK = qw(run_diff parse);
+@EXPORT_OK = qw(store_diff run_diff parse);
 
 use strict;
 use warnings;
-use IPC::Run  qw();
+use List::Util         qw(pairmap);
+use IPC::Run           qw();
 use Try::Tiny;
+use Runner101::Helpers qw(write_log);
+
+
+our %merge_resolution = (
+    'AM' => 'A',
+    'AD' =>  '',
+    'MM' => 'M',
+    'MD' => 'D',
+    'DA' => 'A',
+    'AA' => 'A', # from here the cases don't really make sense, but we'll
+    'MA' => 'M', # handle them anyway so that the end result looks right
+    'DM' => 'A',
+    'DD' => 'D',
+);
+
+sub merge_diff
+{
+    my ($diff, $op, $file) = @_;
+    return $diff->{$file} = $op if not exists $diff->{$file};
+
+    my $key      = "$diff->{$file}$op";
+    my $resolved = $merge_resolution{$key} // die "Can't resolve $key";
+
+    if ($resolved)
+    {   $diff->{$file} = $op  }
+    else
+    {   delete $diff->{$file} }
+
+    $resolved
+}
+
+
+sub merge_diffs
+{
+    my ($old, $new) = @_;
+
+    my  $merged     = {%$old};
+    while (my ($file, $op) = each %$new)
+    {   merge_diff($merged, $op, $file) }
+
+    $merged
+}
 
 
 sub parse
 {
-    my ($line, $diffs) = @_;
+    my ($line, $diff) = @_;
 
-    if    ($line =~ /^\s*(\d+)\s+([AMD])\s+(.+?)\s*$/)
+    if ($line =~ /^\s*(\d+)\s+([AMD])\s+(.+?)\s*$/)
     {
-        push @$diffs, "$2 $3";
+        merge_diff($diff, $2, $3);
         $1
     }
     elsif ($line =~ /^\s*(\d+)\s+-\s+-\s*$/)
@@ -24,30 +67,91 @@ sub parse
 }
 
 
+sub store_diff
+{
+    my ($name, $diff) = @_;
+
+    my $path = "$ENV{diffs101dir}/$name.diff";
+    open my $out, '>', $path or die "Can't write to $path: $!";
+
+    while (my ($file, $op) = each %$diff)
+    {   print $out "$op $file\n" }
+}
+
+
+sub load_stored
+{
+    my ($name) = @_;
+    my  $path  = "$ENV{diffs101dir}/$name.diff";
+    my  $diff  = {};
+
+    if (-e $path)
+    {
+        open my $in, '<', $path or die "Can't read from $path: $!";
+        parse($_, $diff) while <$in>;
+    }
+
+    $diff
+}
+
+
+sub remove_stored
+{
+    my ($name) = @_;
+    my  $path  = "$ENV{diffs101dir}/$name.diff";
+    if (-e $path)
+    {   unlink $path or die "Can't unlink $path: $!" }
+}
+
+
+sub build_diff
+{
+    my ($module, $current, $log) = @_;
+    return {} if not $module->wantdiff;
+
+    my $recovery = load_stored($module->name);
+    if (%$recovery)
+    {
+        write_log($log, 'recovering stored diff');
+        my $last_result = load_stored('result');
+        merge_diffs(merge_diffs($recovery, $last_result), $current)
+    }
+    else
+    {   $current }
+}
+
+
 sub run_diff
 {
-    my ($command, $diffs, $log, $wantdiff) = @_;
+    my ($module, $diff, $log) = @_;
+
+    my $input_diff = build_diff($module, $diff, $log);
 
     my $out;
     my $exit_code = do {
         local $?;
         local $SIG{PIPE} = 'IGNORE';
 
-        my $in = $wantdiff ? join "\n", @$diffs : undef;
+        my $in = join "\n", pairmap { "$b $a" } %$input_diff;
         try
-        {   IPC::Run::run($command, \$in, \$out, $log) }
+        {   IPC::Run::run($module->command, \$in, \$out, $log) }
         catch
         {   warn $_ };
 
         $?
     };
 
+    if ($module->wantdiff && $exit_code)
+    {   store_diff($module->name, $input_diff) }
+    else
+    {   remove_stored($module->name)           }
+
     print $log "\n";
 
     for (split /^/, $out)
     {
         next unless /\S/; # skip empty lines
-        my $lines = parse($_, $diffs);
+        my $lines = parse($_, $diff);
         print $log $_ if not defined $lines;
     }
 

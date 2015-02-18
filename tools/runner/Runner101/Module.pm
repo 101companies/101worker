@@ -9,6 +9,9 @@ use Class::Tiny qw(index name dir log environment
                    command dependencies wantdiff);
 
 
+our @PREFIX = qw(timeout -s KILL 1h);
+
+
 sub BUILD
 {
     my ($self, $args) = @_;
@@ -24,10 +27,10 @@ sub BUILD
         {}
     };
 
-    $self->command     ([split /\s+/, $json->{command} || '']);
+    $self->command([@PREFIX, split /\s+/, $json->{command} || '']);
     $self->environment ($json->{environment } // []);
     $self->dependencies($json->{dependencies} // []);
-    $self->wantdiff    ($json->{wantdiff    }      );
+    $self->wantdiff($json->{wantdiff});
 
     $parent->ensure_envs_exist  ($self);
     $parent->ensure_dependencies($self);
@@ -41,14 +44,7 @@ sub run
     chdir $self->dir              or die "Couldn't cd into "  . $self->dir;
     open my $log, '>', $self->log or die "Couldn't write to " . $self->log;
 
-    my $command = [qw(timeout -s KILL 1h), @{$self->command}];
-
-    write_log($log, "${\$self->name}");
-    write_log($log, 'directory : ', $self->dir);
-    write_log($log, "command   : @$command");
-    write_log($log, 'wantdiff  : ', $self->wantdiff, "\n");
-
-    run_diff($command, $parent->diff, $log, $self->wantdiff)
+    run_diff($self, $parent->diff, $log)
 }
 
 
