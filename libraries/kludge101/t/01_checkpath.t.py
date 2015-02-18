@@ -2,7 +2,7 @@ import os
 from   TAP.Simple import *
 import kludge101
 
-plan(6)
+plan(5)
 
 repodir = os.path.abspath("t/101repo")
 
