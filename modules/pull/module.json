@@ -1,6 +1,8 @@
 {
-    "command"      : "python program.py",
-    "wantdiff"     : false,
-    "dependencies" : ["pull101repo"],
-    "environment"  : ["results101dir"]
+    "command" : "python program.py",
+    "dependencies" : [],
+    "environment" : [
+        "results101dir"
+    ],
+    "wantdiff" : false
 }

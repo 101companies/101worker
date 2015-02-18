@@ -1,15 +1,14 @@
 {
-    "command"      : "python program.py",
-    "wantdiff"     : true,
+    "command" : "python program.py",
     "dependencies" : [
-        "pull101repo",
-        "rules101meta",
         "matches101meta",
-        "predicates101meta"
+        "pull101repo",
+        "rules101meta"
     ],
-    "environment"  : [
+    "environment" : [
         "rules101dump",
         "targets101dir",
         "fragments101dump"
-    ]
+    ],
+    "wantdiff" : true
 }

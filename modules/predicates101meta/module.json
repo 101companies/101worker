@@ -1,23 +1,23 @@
 {
-    "command"      : "python program.py",
-    "wantdiff"     : true,
+    "command" : "python program.py",
     "dependencies" : [
+        "extract101meta",
         "pull101repo",
-        "rules101meta",
-        "matches101meta"
+        "rules101meta"
     ],
-    "environment"  : [
+    "environment" : [
         "rules101dump",
         "targets101dir",
         "predicates101dump"
     ],
-    "targets"      : [
+    "targets" : [
         {
-            "headline"   : "Predicate Matches",
             "classifier" : "resource",
-            "scope"      : "file",
-            "suffix"     : ".predicates.json",
-            "language"   : "JSON"
+            "headline" : "Predicate Matches",
+            "language" : "JSON",
+            "scope" : "file",
+            "suffix" : ".predicates.json"
         }
-    ]
+    ],
+    "wantdiff" : true
 }

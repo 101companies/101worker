@@ -1,20 +1,21 @@
 {
-    "command"      : "python program.py",
-    "wantdiff"     : true,
-    "environment"  : [
+    "command" : "python program.py",
+    "dependencies" : [
+        "matches101meta",
+        "pull101repo"
+    ],
+    "environment" : [
         "repo101dir",
         "validator101dump"
     ],
-    "dependencies" : [
-        "matches101meta"
-    ],
     "targets" : [
         {
-            "headline"     : "Validators",
-            "classifier"   : "resource",
-            "scope"        : "file",
-            "suffix"       : ".validator.json",
-            "language"     : "JSON"
+            "classifier" : "resource",
+            "headline" : "Validators",
+            "language" : "JSON",
+            "scope" : "file",
+            "suffix" : ".validator.json"
         }
-    ]
+    ],
+    "wantdiff" : true
 }

@@ -1,9 +1,11 @@
 {
-    "command"      : "make",
-    "wantdiff"     : false,
-    "dependencies" : ["pull101repo"],
-    "environment"  : [
+    "command" : "make",
+    "dependencies" : [
+        "pull101repo"
+    ],
+    "environment" : [
         "results101dir",
         "repo101dir"
-    ]
+    ],
+    "wantdiff" : false
 }

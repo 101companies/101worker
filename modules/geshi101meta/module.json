@@ -1,13 +1,13 @@
 {
-    "command"      : "python program.py",
-    "wantdiff"     : true,
+    "command" : "python program.py",
     "dependencies" : [
-        "pull101repo",
         "gatherGeshi",
-        "matches101meta"
+        "matches101meta",
+        "pull101repo"
     ],
-    "environment"  : [
+    "environment" : [
         "gatheredGeshi101dir",
         "geshi101dump"
-    ]
+    ],
+    "wantdiff" : true
 }

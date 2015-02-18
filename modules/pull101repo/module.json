@@ -1,11 +1,11 @@
 {
-    "command"      : "perl pull101repo",
-    "wantdiff"     : false,
+    "command" : "perl pull101repo",
     "dependencies" : [],
-    "environment"  : [
+    "environment" : [
         "repo101dir",
         "gitdeps101dir",
         "repo101url",
         "gitdeps101url"
-    ]
+    ],
+    "wantdiff" : false
 }

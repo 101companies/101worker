@@ -1,28 +1,29 @@
 {
-    "command"      : "python program.py",
-    "wantdiff"     : true,
-    "environment"  : [
-        "fragmentMetrics101dump"
-    ],
+    "command" : "python program.py",
     "dependencies" : [
-        "gatherGeshi",
+        "pull101repo",
+        "extract101meta",
         "matches101meta",
-        "extract101meta"
+        "pullLibraries"
+    ],
+    "environment" : [
+        "fragmentMetrics101dump"
     ],
     "targets" : [
         {
-            "headline"     : "Fragment Metrics",
-            "classifier"   : "resource",
-            "scope"        : "file",
-            "suffix"       : ".fragments.metrics.json",
-            "language"     : "JSON"
+            "classifier" : "resource",
+            "headline" : "Fragment Metrics",
+            "language" : "JSON",
+            "scope" : "file",
+            "suffix" : ".fragments.metrics.json"
         },
         {
-            "headline"     : "Fragment Tokens",
-            "classifier"   : "resource",
-            "scope"        : "file",
-            "suffix"       : ".fragments.tokens.json",
-            "language"     : "JSON"
+            "classifier" : "resource",
+            "headline" : "Fragment Tokens",
+            "language" : "JSON",
+            "scope" : "file",
+            "suffix" : ".fragments.tokens.json"
         }
-    ]
+    ],
+    "wantdiff" : true
 }

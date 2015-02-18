@@ -1,24 +1,24 @@
 {
-    "command"      : "python program.py",
-    "wantdiff"     : true,
+    "command" : "python program.py",
     "dependencies" : [
         "pull101repo",
         "rules101meta"
     ],
-    "environment"  : [
+    "environment" : [
         "rules101dump",
         "targets101dir",
         "matches101dump"
     ],
-    "targets"      : [
+    "targets" : [
         {
-            "headline"     : "Matches",
-            "classifier"   : "resource",
-            "scope"        : "file",
-            "suffix"       : ".matches.json",
-            "language"     : "JSON",
+            "className" : "Matches",
+            "classifier" : "resource",
+            "headline" : "Matches",
+            "language" : "JSON",
             "propertyName" : "matches",
-            "className"    : "Matches"
+            "scope" : "file",
+            "suffix" : ".matches.json"
         }
-    ]
+    ],
+    "wantdiff" : true
 }
