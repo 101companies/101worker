@@ -17,5 +17,5 @@ plan tests => scalar @modules;
 for (@modules)
 {
     require_ok $_ or BAIL_OUT "Couldn't load module: $_, please "
-                            . "install it with ``cpan install $_''";
+                            . "run sudo make install";
 }

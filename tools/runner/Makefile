@@ -23,7 +23,7 @@ install:
 	@type timeout >/dev/null 2>&1 || {                                  \
 	    echo >&2 WARNING: timeout command is required, please install it; \
 	}
-	cpan install Capture::Tiny File::Slurp IPC::Run JSON JSON::Schema \
-                 List::MoreUtils Proc::ChildError Test::Most Try::Tiny URI::URL
+	cpan Capture::Tiny File::Slurp IPC::Run JSON JSON::Schema \
+         List::MoreUtils Proc::ChildError Test::Most Try::Tiny URI::URL
 
 .PHONY: run clean test cover doc install

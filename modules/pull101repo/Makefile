@@ -17,7 +17,7 @@ doc:
 	pod2markdown Repo101/Pull.pm doc/Repo101::Pull.md
 
 install:
-	cpan install Class::Tiny File::Slurp Git::Repository LWP::Simple JSON \
-                 Try::Tiny Test::Most
+	cpan Class::Tiny File::Slurp Git::Repository LWP::Simple JSON \
+         Try::Tiny Test::Most
 
 .PHONY: run clean test cover doc install
