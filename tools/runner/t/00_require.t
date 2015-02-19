@@ -23,5 +23,4 @@ for (@modules)
                             . "install it with ``cpan install $_''";
 }
 
-cmp_ok system('timeout'), '!=', -1, 'timeout command is available';
-diag "timeout didn't execute: $!" if $!;
+cmp_ok system('timeout'), '!=', -1, 'timeout command is available' or diag $!;
