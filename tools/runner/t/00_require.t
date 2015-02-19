@@ -23,4 +23,9 @@ for (@modules)
                             . "install it with ``cpan install $_''";
 }
 
-cmp_ok system('timeout'), '!=', -1, 'timeout command is available' or diag $!;
+
+my $ret = system qw(timeout -s KILL 1 sleep 3);
+if ($ret == -1)
+{   fail "timeout command is not available: $!" }
+else
+{   cmp_ok $ret & 127, '==', 9, 'timeout command works correctly' }
