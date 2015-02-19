@@ -15,10 +15,10 @@ our %merge_resolution = (
     'AD' =>  '',
     'MM' => 'M',
     'MD' => 'D',
-    'DA' => 'A',
+    'DA' => 'M',
     'AA' => 'A', # from here the cases don't really make sense, but we'll
     'MA' => 'M', # handle them anyway so that the end result looks right
-    'DM' => 'A',
+    'DM' => 'M',
     'DD' => 'D',
 );
 
@@ -31,9 +31,9 @@ sub merge_diff
     my $resolved = $merge_resolution{$key} // die "Can't resolve $key";
 
     if ($resolved)
-    {   $diff->{$file} = $op  }
+    {   $diff->{$file} = $resolved }
     else
-    {   delete $diff->{$file} }
+    {   delete $diff->{$file}      }
 
     $resolved
 }
