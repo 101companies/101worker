@@ -1,3 +1,8 @@
+install:
+	cpan CPAN
+	apt-get install $$WORKER101_ASSUME_YES python-pip
+
+
 # Run something given in configs/env/$*.yml
 # There's a chicken-and-egg problem with 101logs: the runner's output is
 # supposed to be piped into 101logs/runner.log, but the runner is what
@@ -63,4 +68,4 @@ graphpm:
 	fi
 
 
-.PHONY: full-reset download graphpm graphviz
+.PHONY: full-reset download graphpm graphviz install
