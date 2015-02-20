@@ -2,9 +2,9 @@
 use strict;
 use warnings;
 use Email::Simple;
-use Email::Sender::Simple          qw(sendmail);
-use Email::Sender::Transport::SMTP;
-use File::Slurp                    qw(slurp);
+use Email::Sender::Simple           qw(sendmail);
+use Email::Sender::Transport::SMTPS;
+use File::Slurp                     qw(slurp);
 
 
 my $logs_url = 'http://worker.101companies.org/logs';
@@ -23,8 +23,9 @@ my $mail = Email::Simple->create(
     body   => sprintf $template, log_to_html($logfile),
 );
 
-sendmail($mail, {transport => Email::Sender::Transport::SMTP->new(
+sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
     host => 'deliver.uni-koblenz.de',
+    ssl  => 1,
 )});
 
 
