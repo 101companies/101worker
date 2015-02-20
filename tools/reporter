@@ -1,0 +1,95 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Email::Simple;
+use Email::Sender::Simple          qw(sendmail);
+use Email::Sender::Transport::SMTP;
+use File::Slurp                    qw(slurp);
+
+
+my $logs_url = 'http://worker.101companies.org/logs';
+my $template = slurp \*DATA;
+my $time     = slurp "../101web/logs/lastArchive";
+my $logfile  = "../101web/logs/$time/runner.log";
+
+
+my $mail = Email::Simple->create(
+    header => [
+        'From'         => 'softlang@uni-koblenz.de',
+        'To'           => '101companies@gmail.com',
+        'Subject'      => '[101worker] Execution Status Report',
+        'Content-Type' => 'text/html',
+    ],
+    body   => sprintf $template, log_to_html($logfile),
+);
+
+sendmail($mail, {transport => Email::Sender::Transport::SMTP->new(
+    host => 'deliver.uni-koblenz.de',
+)});
+
+
+sub log_to_html
+{
+    my ($file) = @_;
+
+    open my $log, '<', $file
+        or return qq(<tr><td colspan="3">Can't open $file: $!</td></tr>);
+
+    my ($table, $started);
+    my  $date = '\[.*(\d\d:\d\d:\d\d).*\]';
+    while (<$log>)
+    {
+        if (/^$date\s+running\s+\S+\s*$/io)
+        {
+            $started = $1;
+        }
+        elsif (/^$date\s+(\S+)\s+(.+)\s+after\s+(.+?)\s*$/io)
+        {
+            $table .= <<HTML;
+            <tr>
+                <td class="module"><a href="$logs_url/$time/$2.log">$2</a></td>
+                <td class="status">$3</td>
+                <td class="start">$started</td>
+                <td class="end">$1</td>
+                <td class="time">$4</td>
+            </tr>
+HTML
+        }
+    }
+
+    $table
+}
+
+
+__DATA__
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            td, th
+            {
+                padding-left  : 0.5em;
+                padding-right : 0.5em;
+                text-align    : center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>101worker Execution Status Report</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th class="module">Module</th>
+                    <th class="status">Status</th>
+                    <th class="start">Started</th>
+                    <th class="end">Ended</th>
+                    <th class="time">Time Taken</th>
+                </tr>
+            </thead>
+            <tbody>
+%s
+            </tbody>
+        </table>
+    </body>
+</html>
