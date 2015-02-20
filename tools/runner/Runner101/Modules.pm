@@ -38,10 +38,7 @@ sub run
         my $taken     = time - $start;
 
         my $time   = strftime('%H:%M:%S', gmtime $taken);
-        my $reason = $exit_code
-                   ? explain_child_error({prog => $prog}, $exit_code, $!)
-                   : "$prog exited with value 0";
-
+        my $reason = explain_child_error({prog => $prog}, $exit_code, $!);
         write_log("$reason after $time");
 
         if ($ENV{runner101depend})
