@@ -14,14 +14,19 @@ my $date     = slurp "../101web/logs/lastArchive";
 my $logfile  = "../101web/logs/$date/runner.log";
 
 
+my ($ok, $sanity, $table) = parse_log($logfile);
+my ($class, $subject)     = $ok
+                          ? (success => 'Execution Status Report')
+                          : (failure => 'FATAL RUNNER ERROR Report');
+
 my $mail = Email::Simple->create(
     header => [
         'From'         => 'softlang@uni-koblenz.de',
         'To'           => '101companies@gmail.com',
-        'Subject'      => '[101worker] Execution Status Report',
+        'Subject'      => "[101worker] $subject",
         'Content-Type' => 'text/html',
     ],
-    body   => sprintf $template, log_to_html($logfile),
+    body   => sprintf $template, $subject, $class, $sanity, $table || '',
 );
 
 sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
@@ -30,11 +35,11 @@ sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
 )});
 
 
-sub log_to_html
+sub parse_log
 {
     my ($file) = @_;
 
-    open my $log, '<', $file or return (failure => "can't open $file: $!", '');
+    open my $log, '<', $file or return (0, "can't open $file: $!");
 
     my ($table, $last_line);
     while (<$log>)
@@ -60,11 +65,11 @@ HTML
     }
 
     if ($last_line =~ /report-ok/)
-    {   (success => 'runner says ok', $table) }
+    {   (1, 'runner says ok', $table) }
     else
     {
-        (failure => "runner didn't say ok, please check if it's"
-                  . "fallen over or caught fire or something", $table)
+        (0, "runner didn't say ok, please check if it's "
+          . "fallen over or caught fire or something", $table)
     }
 }
 
@@ -86,7 +91,7 @@ __DATA__
         </style>
     </head>
     <body>
-        <h1>101worker Execution Status Report</h1>
+        <h1>101worker %s</h1>
         <p class="%s"><strong>Sanity:</strong> %s</p>
         <table>
             <thead>
