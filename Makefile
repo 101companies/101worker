@@ -11,7 +11,7 @@ install:
 %.run:
 	mkdir -p ../101logs
 	rm -f ../101logs/*
-	cd modules; make $*.run
+	-cd modules; make $*.run
 	make $*.archive
 	@git pull -q # upgrade past every run
 
