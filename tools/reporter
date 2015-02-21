@@ -14,10 +14,11 @@ my $date     = slurp "../101web/logs/lastArchive";
 my $logfile  = "../101web/logs/$date/runner.log";
 
 
-my ($ok, $sanity, $table) = parse_log($logfile);
-my ($class, $subject)     = $ok
-                          ? (success => 'Execution Status Report')
-                          : (failure => 'FATAL RUNNER ERROR Report');
+my ($failures, $message, $table) = parse_log($logfile);
+
+my ($sanity, $subject) = $failures < 0
+                       ? (failure => 'FATAL RUNNER ERROR Report')
+                       : (success => "Status Report ($failures Failures)");
 
 my $mail = Email::Simple->create(
     header => [
@@ -26,7 +27,7 @@ my $mail = Email::Simple->create(
         'Subject'      => "[101worker] $subject",
         'Content-Type' => 'text/html',
     ],
-    body   => sprintf $template, $subject, $class, $sanity, $table || '',
+    body   => sprintf $template, $subject, $sanity, $message, $table || '',
 );
 
 sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
@@ -39,16 +40,24 @@ sub parse_log
 {
     my ($file) = @_;
 
-    open my $log, '<', $file or return (0, "can't open $file: $!");
+    open my $log, '<', $file or return (-1, "can't open $file: $!");
+    my ($failures, $table, $last_line) = (0, '', '');
 
-    my ($table, $last_line);
     while (<$log>)
     {
         $last_line = $_;
         next unless /^report:/;
         my (undef, $module, $exit_code, $status, $start, $end) = split /\t/;
 
-        my $class     = $exit_code == 0 ? 'success' : 'failure';
+        my $class;
+        if ($exit_code == 0)
+        {   $class = 'success' }
+        else
+        {
+            ++$failures;
+            $class = 'failure';
+        }
+
         my $start_hms = strftime('%H:%M:%S', localtime $start    );
         my   $end_hms = strftime('%H:%M:%S', localtime $end      );
         my $taken_hms = strftime('%H:%M:%S', gmtime $end - $start);
@@ -65,11 +74,11 @@ HTML
     }
 
     if ($last_line =~ /report-ok/)
-    {   (1, 'runner says ok', $table) }
+    {   ($failures, 'runner says ok', $table) }
     else
     {
-        (0, "runner didn't say ok, please check if it's "
-          . "fallen over or caught fire or something", $table)
+        (-2, "runner didn't say ok, please check if it's "
+           . "fallen over or caught fire or something", $table)
     }
 }
 
