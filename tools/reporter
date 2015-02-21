@@ -24,34 +24,32 @@ my $mail = Email::Simple->create(
     body   => sprintf $template, log_to_html($logfile),
 );
 
-#sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
-#    host => 'deliver.uni-koblenz.de',
-#    ssl  => 1,
-#)});
-print $mail->body;
+sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
+    host => 'deliver.uni-koblenz.de',
+    ssl  => 1,
+)});
 
 
 sub log_to_html
 {
     my ($file) = @_;
-    my  $table = '';
 
-    open my $log, '<', $file or return ("can't open $file: $!", $table);
+    open my $log, '<', $file or return (failure => "can't open $file: $!", '');
 
-    my $last_line;
+    my ($table, $last_line);
     while (<$log>)
     {
         $last_line = $_;
         next unless /^report:/;
-        my (undef, $module, $exit_code, $reason, $start, $end) = split /\t/;
+        my (undef, $module, $exit_code, $status, $start, $end) = split /\t/;
 
-        my $status    = $exit_code == 0 ? $reason : "<strong>$reason</strong>";
+        my $class     = $exit_code == 0 ? 'success' : 'failure';
         my $start_hms = strftime('%H:%M:%S', localtime $start    );
         my   $end_hms = strftime('%H:%M:%S', localtime $end      );
         my $taken_hms = strftime('%H:%M:%S', gmtime $end - $start);
 
         $table .= <<HTML;
-                <tr>
+                <tr class="$class">
                     <td><a href="$logs_url/$date/$module.log">$module</a></td>
                     <td>$status</td>
                     <td>$start_hms</td>
@@ -61,11 +59,13 @@ sub log_to_html
 HTML
     }
 
-    my $message = $last_line =~ /report-ok/
-                ? 'runner says ok'
-                : "<em>runner didn't say ok</em>, please check if "
-                . "it's fallen over or caught fire or something";
-    ($message, $table)
+    if ($last_line =~ /report-ok/)
+    {   (success => 'runner says ok', $table) }
+    else
+    {
+        (failure => "runner didn't say ok, please check if it's"
+                  . "fallen over or caught fire or something", $table)
+    }
 }
 
 
@@ -75,6 +75,8 @@ __DATA__
     <head>
         <meta charset="utf-8">
         <style>
+            .success { background-color : #cfc; }
+            .failure { background-color : #fcc; }
             td, th
             {
                 padding-left  : 0.5em;
@@ -85,7 +87,7 @@ __DATA__
     </head>
     <body>
         <h1>101worker Execution Status Report</h1>
-        <p><strong>Sanity:</strong> %s</p>
+        <p class="%s"><strong>Sanity:</strong> %s</p>
         <table>
             <thead>
                 <tr>
