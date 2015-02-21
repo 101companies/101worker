@@ -5,12 +5,13 @@ use Email::Simple;
 use Email::Sender::Simple           qw(sendmail);
 use Email::Sender::Transport::SMTPS;
 use File::Slurp                     qw(slurp);
+use POSIX                           qw(strftime);
 
 
 my $logs_url = 'http://worker.101companies.org/logs';
-my $template = slurp \*DATA;
-my $time     = slurp "../101web/logs/lastArchive";
-my $logfile  = "../101web/logs/$time/runner.log";
+my $template = slurp \*DATA; # see __DATA__ at the end
+my $date     = slurp "../101web/logs/lastArchive";
+my $logfile  = "../101web/logs/$date/runner.log";
 
 
 my $mail = Email::Simple->create(
@@ -23,42 +24,48 @@ my $mail = Email::Simple->create(
     body   => sprintf $template, log_to_html($logfile),
 );
 
-sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
-    host => 'deliver.uni-koblenz.de',
-    ssl  => 1,
-)});
+#sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
+#    host => 'deliver.uni-koblenz.de',
+#    ssl  => 1,
+#)});
+print $mail->body;
 
 
 sub log_to_html
 {
     my ($file) = @_;
+    my  $table = '';
 
-    open my $log, '<', $file
-        or return qq(<tr><td colspan="3">Can't open $file: $!</td></tr>);
+    open my $log, '<', $file or return ("can't open $file: $!", $table);
 
-    my ($table, $started);
-    my  $date = '\[.*(\d\d:\d\d:\d\d).*\]';
+    my $last_line;
     while (<$log>)
     {
-        if (/^$date\s+running\s+\S+\s*$/io)
-        {
-            $started = $1;
-        }
-        elsif (/^$date\s+(\S+)\s+(.+)\s+after\s+(.+?)\s*$/io)
-        {
-            $table .= <<HTML;
-            <tr>
-                <td class="module"><a href="$logs_url/$time/$2.log">$2</a></td>
-                <td class="status">$3</td>
-                <td class="start">$started</td>
-                <td class="end">$1</td>
-                <td class="time">$4</td>
-            </tr>
+        $last_line = $_;
+        next unless /^report:/;
+        my (undef, $module, $exit_code, $reason, $start, $end) = split /\t/;
+
+        my $status    = $exit_code == 0 ? $reason : "<strong>$reason</strong>";
+        my $start_hms = strftime('%H:%M:%S', localtime $start    );
+        my   $end_hms = strftime('%H:%M:%S', localtime $end      );
+        my $taken_hms = strftime('%H:%M:%S', gmtime $end - $start);
+
+        $table .= <<HTML;
+                <tr>
+                    <td><a href="$logs_url/$date/$module.log">$module</a></td>
+                    <td>$status</td>
+                    <td>$start_hms</td>
+                    <td>$end_hms</td>
+                    <td>$taken_hms</td>
+                </tr>
 HTML
-        }
     }
 
-    $table
+    my $message = $last_line =~ /report-ok/
+                ? 'runner says ok'
+                : "<em>runner didn't say ok</em>, please check if "
+                . "it's fallen over or caught fire or something";
+    ($message, $table)
 }
 
 
@@ -78,14 +85,15 @@ __DATA__
     </head>
     <body>
         <h1>101worker Execution Status Report</h1>
+        <p><strong>Sanity:</strong> %s</p>
         <table>
             <thead>
                 <tr>
-                    <th class="module">Module</th>
-                    <th class="status">Status</th>
-                    <th class="start">Started</th>
-                    <th class="end">Ended</th>
-                    <th class="time">Time Taken</th>
+                    <th>Module</th>
+                    <th>Status</th>
+                    <th>Started</th>
+                    <th>Ended</th>
+                    <th>Time Taken</th>
                 </tr>
             </thead>
             <tbody>

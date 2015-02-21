@@ -35,11 +35,13 @@ sub run
 
         my $start     = time;
         my $exit_code = $_->run($self);
-        my $taken     = time - $start;
+        my $end       = time;
+        my $time      = strftime('%H:%M:%S', gmtime $end - $start);
 
-        my $time   = strftime('%H:%M:%S', gmtime $taken);
-        my $reason = explain_child_error({prog => $prog}, $exit_code, $!);
-        write_log("$reason after $time");
+        my $reason = explain_child_error($exit_code, $!);
+        write_log("$prog $reason after $time");
+
+        print "report:\t$prog\t$exit_code\t$reason\t$start\t$end\n";
 
         if ($ENV{runner101depend})
         {
@@ -51,6 +53,8 @@ sub run
             sleep 1;
         }
     }
+
+    print "report-ok\n";
     $self->diff
 }
 
