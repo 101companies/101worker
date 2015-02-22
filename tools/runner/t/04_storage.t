@@ -1,6 +1,6 @@
 use File::Slurp     qw(slurp);
 use File::Temp      qw(tempdir);
-use Test::Most      tests => 7;
+use Test::Most      tests => 9;
 use Runner101::Diff qw(store_diff load_stored remove_stored);
 
 
@@ -32,4 +32,13 @@ cmp_deeply load_stored('full'), $full,
          'storing and loading diff including invalid operation';
 
 
-dies_ok { store_diff("\0" => {}) } 'storing to invalid file dies';
+throws_ok { store_diff("\0" => {}) } qr/Can't write to/,
+          'storing to invalid file dies';
+
+chmod 0, "$tempdir/full.diff" or die "Can't chmod full.diff: $!";
+throws_ok { load_stored('full') } qr/Can't read from/,
+          'loading from invalid file dies';
+
+mkdir "$tempdir/dir.diff" or die "Can't mkdir dir.diff: $!";
+throws_ok { remove_stored('dir') } qr/Can't unlink/,
+          'removing invalid file dies';
