@@ -34,3 +34,45 @@ sub gather
 
 
 1
+__END__
+
+=head1 Runner101::Changes
+
+Gather changes between module runs using the file system's atime (acces time)
+and mtime (modification time) stamps for each file.
+
+=head2 Note
+
+On many Linux distributions, including Ubuntu, the default setting for atime
+is called C<relatime>. This is an optimization to prevent writing to the disk
+every time a file is accessed, and it will only update the atime if it isn't
+already greater than the file's mtime.
+
+This optimization breaks gathering dependencies and you need to turn it off to
+use them properly. The setting you want is called C<strictatime>.
+
+You can either use the command C<sudo mount -o remount,strictatime /> (or
+replace the C</> with whatever mount point your 101worker is on) or edit your
+C</etc/fstab> and add the C<strictatime> option to the appropriate mount mount.
+
+=head2 gather
+
+    gather($time, $module)
+
+Gathers changes that happened after the given C<$time> from the 101worker
+result directories and writes them to
+C<$ENV{diffs101dir}/$time.$module.changes>.
+
+Walks through the folders defined by the environment variables
+C<results101dir>, C<temps101dir> and C<web101dir> and looks at each file. If a
+file has been modified after the given C<$time>, a line that looks like
+C<m $filepath> is written into the output file. If the file has been accessed
+after the given C<$time>, C<a $filepath> is written instead. If neither
+occurred, nothing is written.
+
+See the C<%.depend> target in F<101worker/Makefile> and the script in
+F<101worker/tools/changes> for how to turn these changes files into graphs.
+
+Also, read the L</Note>, it's important.
+
+=cut
