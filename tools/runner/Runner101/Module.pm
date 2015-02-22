@@ -108,7 +108,7 @@ A list of other modules this module depends on.
 
 =back
 
-=head2 new
+=head2 BUILD
 
     Runner101::Module->new(
         parent => Runner101::Modules $parent,

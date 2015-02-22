@@ -9,7 +9,4 @@ plan skip_all => 'this requires the Test::Pod::Coverage module' if $@;
 
 my @modules = all_modules('Runner101');
 plan tests => scalar @modules;
-
-
-my $trustme = {trustme => [qr/^BUILD$/]};
-pod_coverage_ok($_, $trustme, $_) for map { "Runner101::$_" } @modules;
+pod_coverage_ok($_, "pod coverage for $_") for map { "Runner101::$_" } @modules;
