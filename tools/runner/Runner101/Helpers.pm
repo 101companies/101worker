@@ -13,7 +13,7 @@ use POSIX        qw(strftime);
 sub slurp_json
 {
     my ($path) = @_;
-    my  $json  = slurp $path // die "Can't read $_: $!";
+    my  $json  = slurp $path // die "Can't read $path: $!";
     decode_json $json
 }
 
