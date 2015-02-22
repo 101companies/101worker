@@ -1,11 +1,27 @@
-"""
-Checks if one of the given libraries appears in a ``using'' statement,
-similar to javaImport.sh from 101repo.
-"""
-import re
+#! /usr/bin/env python
 
-def run(filename, *args):
-    opts  = "|".join(map(re.escape, args))
-    regex = re.compile("^\s*import\s+(" + opts + ")\.")
-    with open(filename) as f:
-        return any(regex.match(line) for line in f)
+import sys
+sys.path.append('../../libraries/101meta')
+import const101
+import os
+import json
+
+def run(filePath, *args):
+
+    if const101.sRoot in filePath:
+        filePath = filePath[len(const101.sRoot) + 1:]
+
+    extractPath = os.path.join(const101.tRoot, filePath + '.extractor.json')
+
+    if not os.path.exists(extractPath):
+        return False
+
+    factsFile = open(extractPath)
+
+    facts = json.load(factsFile)
+    for x in facts["imports"]:
+        for arg in args:
+            if x == arg:
+                return True
+    else:
+        return False

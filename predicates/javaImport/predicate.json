@@ -1,8 +1,8 @@
 {
 
-	"name" : "JavaGrepImport.sh",
-	"args" : 2,
-	"dependencies" : [],
+	"name" : "JavaFragmentImport",
+	"args" : null,
+	"dependencies" : [extract101meta],
 	"metadata" : [],
 	
 }
