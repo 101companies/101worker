@@ -1,7 +1,7 @@
 package Runner101::Diff;
 use Exporter qw(import);
 @EXPORT_OK = qw(merge_diffs parse store_diff load_stored
-                remove_stored run_diff);
+                remove_stored build_diff run_diff);
 
 use strict;
 use warnings;
