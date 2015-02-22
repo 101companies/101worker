@@ -1,7 +1,7 @@
 use Capture::Tiny     qw(capture_stdout);
 use File::Temp        qw(tempdir);
 use List::Util        qw(pairmap);
-use Test::Most        tests => 12;
+use Test::Most        tests => 14;
 use Runner101::Diff   qw(run_diff parse);
 use Runner101::Module;
 
@@ -33,7 +33,7 @@ my $testscript = q{
     ++$i;
     print "got op: $1\n";
     print "$i - -\n";
-    print "$i $1 $2.suffix\n";
+    print "$i $1 $2.suffix\n\n";
 };
 
 my $module = bless {
@@ -56,12 +56,17 @@ is_deeply \%diff1, \%diff2, 'diff result is correct';
 ok $output =~ /^got op: A$/m && $output =~ /^got op: M$/m
    && $output =~ /^got op: D$/m, 'other output is correct';
 
-ok !-e $stored, "stored diff is deleted on success";
+ok !-e $stored, 'stored diff is deleted on success';
 
 
 $module->command(['false']);
 ok run_diff($module, {}, \*STDOUT), 'failing run returns non-zero';
-ok -e $stored, "diff is stored on failure";
+ok -e $stored, 'diff is stored on failure';
+
+
+$module->wantdiff(0);
+ok run_diff($module, {}, \*STDOUT), 'another failing run with no diff';
+ok !-e $stored, 'stored diff is removed on failure if the module takes no diff';
 
 
 $module->command([]);

@@ -1,4 +1,5 @@
-use Test::Most         tests => 12;
+use Test::Most         tests => 13;
+use Capture::Tiny      qw(capture);
 use Cwd                qw(abs_path);
 use File::Slurp        qw(write_file);
 use File::Temp;
@@ -54,4 +55,7 @@ dies_ok { validate_json([qw(a b b)], $schema) }
 my $buf = '';
 open my $out, '>', \$buf;
 write_log($out, 'hello', ' ', 'world!');
-like $buf, qr/hello world!\n$/, 'write log';
+like $buf, qr/^\[.+\] hello world!\n$/s, 'write log to filehandle';
+
+my $stdout = capture { write_log('another hello to everyone!') };
+like $stdout, qr/^\[.+\] another hello to everyone!\n$/s, 'write log to stdout';
