@@ -1,12 +1,13 @@
 import imp
 import os
-import kludge101
+import re
 from   .Phase import Phase
 from   .util  import tolist
 
 
 class Predicates(Phase):
     suffix = ".predicates.json"
+    regex  = re.compile("^\w+$")
 
 
     def __init__(self, *args):
@@ -29,16 +30,14 @@ class Predicates(Phase):
 
 
     def checkpredicate(self, predicate, key, rule, filename, **kwargs):
-        args = tolist(rule["args"]) if "args" in rule else []
+        if not self.regex.match(predicate):
+            raise ValueError("weird predicate name: " + predicate)
 
-        # XXX: move predicates into 101worker
-        path = kludge101.checkpath(predicate)
-        if not path:
-            raise RuntimeError("foiled code injection: {}".format(predicate))
+        args = tolist(rule["args"]) if "args" in rule else []
+        path = os.path.join(os.environ["predicates101dir"],
+                            predicate, "predicate.py")
 
         self.predicates.add(predicate)
 
-        # Python cries about a missing parent module if the name contains
-        # dots, so we just replace them with underscores to make it happy.
-        module = imp.load_source(predicate.replace(".", "_"), path)
-        return module.run(args=args, filePath=filename)
+        module = imp.load_source("PREDICATE_" + predicate, path)
+        return module.run(filename, *args)

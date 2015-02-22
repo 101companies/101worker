@@ -2,19 +2,23 @@ from TAP.Simple import *
 import os
 import meta101
 
-plan(33)
+plan(39)
 
-os.environ["repo101dir"] = os.getcwd()
-pdir        = "t/predicates/"
-noargs      = pdir + "noargs.py"
-using       = pdir + "using.py"
-using1      = pdir + "using1"
-using2      = pdir + "using2"
-nonexistent = pdir + "nonexistent-file"
-phase       = meta101.Predicates()
 
-def testpredicate(comment, rule, success, predicates, failures,
-                  filename="whatever"):
+using1      = "t/predicates/using1"
+using2      = "t/predicates/using2"
+nonexistent = "t/predicates/nonexistent-file"
+
+os.environ[      "repo101dir"] = os.getcwd()
+os.environ["predicates101dir"] = os.path.abspath("t/predicates")
+
+phase = meta101.Predicates()
+
+
+def testpredicate(comment, rule, success, predicates, failures, filename=None):
+    if not filename:
+        filename = "file{}-{}-{}-{}".format(rule, success, predicates, failures)
+
     result = phase.match(rule, filename=filename, relative=filename)
     ok(result is not None, comment) if success else ok(result is None, comment)
     eq_ok(len(phase.predicates), predicates,
@@ -23,7 +27,7 @@ def testpredicate(comment, rule, success, predicates, failures,
           "...failure count is {}"  .format(failures))
 
 
-rule = {"predicate" : noargs}
+rule = {"predicate" : "noargs"}
 testpredicate("no arguments predicate matches with no arguments", rule,
               success=True, predicates=1, failures=0)
 
@@ -36,7 +40,7 @@ testpredicate("no arguments predicate doesn't match with arguments", rule,
               success=False, predicates=1, failures=0)
 
 
-rule   = {"predicate" : using, "args" : "somelib"}
+rule   = {"predicate" : "using", "args" : "somelib"}
 testpredicate("dotNet predicate fails with nonexistent file", rule,
               success=False, predicates=2, failures=1, filename=nonexistent)
 
@@ -64,6 +68,14 @@ testpredicate("dotNet predicate matches both libs on using2", rule,
               success=True, predicates=2, failures=1, filename=using2)
 
 
-rule  = {"predicate" : nonexistent}
+rule  = {"predicate" : "missing"}
 testpredicate("match nonexistent predicate fails", rule,
               success=False, predicates=3, failures=2)
+
+rule  = {"predicate" : "wrongname"}
+testpredicate("match predicate not called predicate.py fails", rule,
+              success=False, predicates=4, failures=3)
+
+rule  = {"predicate" : "../weird"}
+testpredicate("non-alphanumeric predicate name is rejected", rule,
+              success=False, predicates=4, failures=4)
