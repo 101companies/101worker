@@ -1,7 +1,8 @@
+use Test::Most        tests => 14;
+
 use Capture::Tiny     qw(capture_stdout);
 use File::Temp        qw(tempdir);
 use List::Util        qw(pairmap);
-use Test::Most        tests => 14;
 use Runner101::Diff   qw(run_diff parse);
 use Runner101::Module;
 

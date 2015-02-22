@@ -1,6 +1,7 @@
+use Test::Most      tests => 9;
+
 use File::Slurp     qw(slurp);
 use File::Temp      qw(tempdir);
-use Test::Most      tests => 9;
 use Runner101::Diff qw(store_diff load_stored remove_stored);
 
 

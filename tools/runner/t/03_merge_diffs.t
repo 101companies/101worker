@@ -1,5 +1,6 @@
-use File::Temp      qw(tempdir);
 use Test::Most      tests => 5;
+
+use File::Temp      qw(tempdir);
 use Runner101::Diff qw(merge_diffs);
 
 
