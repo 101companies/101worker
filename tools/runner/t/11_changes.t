@@ -1,13 +1,11 @@
 use Test::Most;
+plan skip_all => 'irrelevant to production, set TEST101DEVEL environment '
+               . 'variable to run it' unless $ENV{TEST101DEVEL};
+plan tests    => 1;
 
 use File::Temp         qw(tempdir);
 use File::Slurp        qw(slurp);
 use Runner101::Changes;
-
-if ($ENV{TEST101CHANGES})
-{   plan tests => 1 }
-else
-{   plan skip_all => 'irrelevant to production, set TEST101CHANGES to run it' }
 
 
 my $dir = tempdir;
