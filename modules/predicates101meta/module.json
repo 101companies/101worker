@@ -8,6 +8,7 @@
     "environment" : [
         "rules101dump",
         "targets101dir",
+        "predicates101dir",
         "predicates101dump"
     ],
     "targets" : [
