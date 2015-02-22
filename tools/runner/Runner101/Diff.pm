@@ -1,6 +1,7 @@
 package Runner101::Diff;
 use Exporter qw(import);
-@EXPORT_OK = qw(store_diff merge_diffs parse run_diff);
+@EXPORT_OK = qw(merge_diffs parse store_diff load_stored
+                remove_stored run_diff);
 
 use strict;
 use warnings;
@@ -88,7 +89,12 @@ sub load_stored
     if (-e $path)
     {
         open my $in, '<', $path or die "Can't read from $path: $!";
-        parse($_, $diff) while <$in>;
+        while (<$in>)
+        {
+            chomp;
+            my ($op, $path) = split /\s+/, $_, 2;
+            $diff->{$path}  = $op;
+        }
     }
 
     $diff
