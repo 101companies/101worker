@@ -38,6 +38,9 @@ install:
 %.archive:
 	tools/archiver
 
+report:
+	tools/reporter
+
 
 # Remove ALL derived files
 full-reset:
