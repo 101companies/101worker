@@ -16,6 +16,7 @@
       "suffix" : ".tokens.json",
       "language" : "JSON"
     }
-  ]
+  ],
+  "dependencies" : ["matches101meta"]
 }
 

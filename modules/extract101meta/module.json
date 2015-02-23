@@ -9,5 +9,6 @@
       "propertyName" : "extractor",
       "className" : "Extractor"
     }
-  ]
+  ],
+  "dependencies" : ["pull101repo", "build"]
 }

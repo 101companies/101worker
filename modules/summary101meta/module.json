@@ -7,6 +7,12 @@
       "suffix" : ".summary.json",
       "language" : "JSON"
     }
+  ],
+  "dependencies" : [
+    "predicates101meta",
+    "matches101meta",
+    "fragments101meta",
+    "metrics101meta",
+    "refineTokens"
   ]
 }
-

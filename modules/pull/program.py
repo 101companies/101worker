@@ -9,21 +9,30 @@ def update(repo, path):
 
     if os.path.exists(path):
         os.chdir(path)
-        cmd = "git pull"
+        cmd = 'git pull'
     else:
-        os.chdir(os.path.dirname(path))
-        cmd = "git clone " + repo
+        os.makedirs(path)
+        os.chdir(path)
+        cmd = 'git clone {0} .'.format(repo)
 
     status = os.system(cmd)
     if status:
-        print "Failed to update {0}".format(repo)
-        sys.exit(status)
+        print('Failed to update {0}'.format(repo))
+        return status
 
     os.chdir(cwd)
+    return 0
+
 
 repos = json.load(open('repositories.json', 'r'))
+ret   = 0
 
 for target in repos:
-    update(target['repo'], target['targetdir'])
+    try:
+        ret |= update(target['repo'], target['targetdir'])
+    except os.error as e:
+        print(e.strerror)
+        ret |= e.errno
 
-print '\n\nFinished updating repos'
+print('\n\nFinished updating repos with {0}errors'.format('' if ret else 'no '))
+sys.exit(ret)

@@ -1,0 +1,13 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Graph;
+use YAML qw(LoadFile);
+
+my $graph = LoadFile(shift) or die;
+
+print "digraph G {\n";
+print "    node [shape=plaintext];\n";
+print '    ', $_, ";\n"                       for sort $graph->vertices;
+print '    ', $_->[0], ' -> ', $_->[1], ";\n" for sort $graph->edges;
+print "}\n";

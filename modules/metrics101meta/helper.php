@@ -14,7 +14,7 @@ define('DEBUG',10);
 define('ABSPATH_BASE',dirname(dirname(dirname(__DIR__))).'/');
 define('ABSPATH_EXTERNAL_LIBRARIES',ABSPATH_BASE.'101results/libraries/');
 define('ABSPATH_MEGALIB',ABSPATH_EXTERNAL_LIBRARIES.'megalib/');
-define('ABSPATH_SRC_GESHI_LIBRARY',ABSPATH_EXTERNAL_LIBRARIES.'geshi/');
+define('ABSPATH_SRC_GESHI_LIBRARY',ABSPATH_BASE.'101results/geshi/src/');
 
 require_once 'megalib_leftover.php';
 

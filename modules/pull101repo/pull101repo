@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Cwd           qw(abs_path);
+use File::Slurp   qw(write_file);
+use JSON          qw(encode_json decode_json);
+use Repo101::Pull qw(pull101repo);
+
+# TODO put these in a JSON somewhere sensible
+our %urls  = (
+    root => 'https://github.com/101companies/101repo',
+    deps => 'http://101companies.org/pullRepo.json',
+);
+our %paths = (
+    root => abs_path('../../../101results/101repo'),
+    deps => abs_path('../../../101results/gitdeps'),
+);
+
+
+sub fetch_repo_list
+{
+    use LWP::Simple;
+    my $content = get($urls{deps}) or die "Couldn't fetch $urls{deps}";
+    decode_json($content)          or die "Couldn't decode $content"
+}
+
+
+my $changes = pull101repo(
+    root_path => $paths{root},
+    deps_path => $paths{deps},
+    root_url  => $urls{root},
+    repos     => fetch_repo_list,
+);
+
+write_file('changes.json', JSON->new->utf8->pretty->encode($changes));
