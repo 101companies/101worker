@@ -8,10 +8,11 @@ use File::Slurp                     qw(slurp write_file);
 use POSIX                           qw(strftime);
 
 
-my $logs_url = 'http://worker.101companies.org/logs';
-my $template = slurp \*DATA; # see __DATA__ at the end
-my $date     = slurp "../101web/logs/lastArchive";
-my $logfile  = "../101web/logs/$date/runner.log";
+my $template   = slurp \*DATA; # see __DATA__ at the end
+my $date       = slurp "../101web/logs/lastArchive";
+my $logs_url   = 'http://worker.101companies.org/logs';
+my $report_url = "$logs_url/$date/report.html";
+my $logfile    = "../101web/logs/$date/runner.log";
 
 
 my ($failures, $message, $table) = parse_log($logfile);
@@ -20,7 +21,7 @@ my ($sanity, $subject) = $failures < 0
                        ? (failure => 'FATAL RUNNER ERROR Report')
                        : (success => "Status Report ($failures Failures)");
 
-my $html = sprintf $template, $subject, $sanity, $message, $table || '';
+my $html = sprintf $template, $subject, $report_url, $sanity, $message, $table;
 write_file "../101web/logs/$date/report.html" => $html;
 
 
@@ -105,6 +106,7 @@ __DATA__
     </head>
     <body>
         <h1>101worker %s</h1>
+        <p><a href="%s">View this on 101companies.org</a></p>
         <p class="%s"><strong>Sanity:</strong> %s</p>
         <table>
             <thead>
