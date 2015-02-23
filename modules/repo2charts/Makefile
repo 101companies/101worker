@@ -5,6 +5,7 @@ clean:
 	rm -rf *.pyc
 
 install:
+	apt-get install libfreetype6-dev
 	pip install --upgrade matplotlib
 
 reset:
