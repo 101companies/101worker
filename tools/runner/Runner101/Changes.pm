@@ -10,7 +10,7 @@ sub gather
     my ($time, $module) = @_;
 
     my $outpath = "$ENV{diffs101dir}/$time.$module.changes";
-    open my $out, '>', $outpath or die "Can't open $outpath: $!";
+    open my $out, '>', $outpath or die "Can't write to $outpath: $!";
 
     find sub
     {
