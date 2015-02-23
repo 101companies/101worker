@@ -20,14 +20,17 @@ def getphase(key):
     return phases[key]
 
 
-def matchall(phasekey, force=False):
+def newerthan(time, *files):
+    return any(os.path.exists(f) and time > os.path.getmtime(f) for f in files)
+
+
+def matchall(phasekey, entirerepo=False):
     dumpfile   = os.environ[phasekey + "101dump"]
     rulesfile  = os.environ["rules101dump"]
-    entirerepo = False
+    entirerepo = entirerepo or newerthan(os.path.getmtime(rulesfile), dumpfile)
     args       = []
 
     if os.path.exists(dumpfile):
-        entirerepo = os.path.getmtime(rulesfile) > os.path.getmtime(dumpfile)
         with open(dumpfile) as f:
             dump = json.load(f)
             args.append(dump["matches" ])
@@ -36,11 +39,11 @@ def matchall(phasekey, force=False):
     with open(rulesfile) as f:
         args.insert(0, json.load(f)["results"]["rules"])
 
-    dump = getphase(phasekey)(*args).run(entirerepo or force)
+    dump = getphase(phasekey)(*args).run(entirerepo)
     incremental101.writejson(dumpfile, dump)
 
 
 def derive(suffix, dump, callback, oninit=None, ondump=None,
-           getvalue=valuebykey, key=None, resources=None, force=False):
+           getvalue=valuebykey, key=None, resources=None, entirerepo=False):
     return Deriver(suffix, dump, callback, oninit,
-                   ondump, getvalue, key, resources).run(force)
+                   ondump, getvalue, key, resources).run(entirerepo)
