@@ -6,6 +6,7 @@ from .Matches    import Matches
 from .Predicates import Predicates
 from .Fragments  import Fragments
 from .Deriver    import Deriver
+from .util       import valuebykey
 
 
 def getphase(key):
@@ -39,5 +40,7 @@ def matchall(phasekey, force=False):
     incremental101.writejson(dumpfile, dump)
 
 
-def derive(*args, **kwargs):
-    return Deriver(*args, **kwargs).derive()
+def derive(suffix, dump, callback, oninit=None, ondump=None,
+           getvalue=valuebykey, key=None, resources=None, force=False):
+    return Deriver(suffix, dump, callback, oninit,
+                   ondump, getvalue, key, resources).run(force)

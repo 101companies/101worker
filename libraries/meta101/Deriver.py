@@ -3,7 +3,7 @@ import os
 import sys
 import incremental101
 from   .Matches       import Matches
-from   .util          import diff, tolist, sourcetotarget, valuebykey
+from   .util          import diff, tolist, sourcetotarget, valuebykey, walk
 
 
 class Deriver(object):
@@ -24,10 +24,16 @@ class Deriver(object):
             oninit(self)
 
 
-    def derive(self):
-        diff(self.suffix, A=self.onfile, M=self.onfile, D=self.ondelete)
+    def run(self, entirerepo=False):
+        if entirerepo:
+            walk(self.suffix, self.onfile)
+            diff(self.suffix, D=self.ondelete)
+        else:
+            diff(self.suffix, A=self.onfile, M=self.onfile, D=self.ondelete)
+
         if self.ondump:
             self.ondump(self)
+
         incremental101.writejson(self.dumppath, self.dump)
 
 
