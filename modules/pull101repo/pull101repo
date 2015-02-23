@@ -17,6 +17,7 @@ my $repos = do
 {
     my $url     = $paths{gitdeps101url};
     my $content = get($url) or die "Couldn't fetch $url";
+    write_file($ENV{pullRepo101dump} => $content);
     decode_json($content)   or die "Couldn't decode JSON: $content"
 };
 

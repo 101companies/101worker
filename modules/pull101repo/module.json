@@ -5,7 +5,8 @@
         "repo101dir",
         "gitdeps101dir",
         "repo101url",
-        "gitdeps101url"
+        "gitdeps101url",
+        "pullRepo101dump"
     ],
     "wantdiff" : false
 }

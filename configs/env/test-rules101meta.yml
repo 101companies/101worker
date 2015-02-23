@@ -8,3 +8,4 @@ module101schema : $worker101dir/schemas/module.schema.json
 
 dumps101dir     : $output101dir/101web/data/dumps/
 rules101dump    : $dumps101dir/rules.json
+pullRepo101dump : $dumps101dir/pullRepo.json

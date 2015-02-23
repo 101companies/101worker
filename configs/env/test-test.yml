@@ -1,5 +1,6 @@
 repo101dir      : $output101dir/101repo/
 gitdeps101dir   : $output101dir/gitdeps/
+pullRepo101dump : $output101dir/pullRepo.json
 repo101url      : https://github.com/101companies/101test
 gitdeps101url   : file://$worker101dir/configs/test/empty.json
 config101       : $worker101dir/configs/test/pull.json
