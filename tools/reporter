@@ -4,7 +4,7 @@ use warnings;
 use Email::Simple;
 use Email::Sender::Simple           qw(sendmail);
 use Email::Sender::Transport::SMTPS;
-use File::Slurp                     qw(slurp);
+use File::Slurp                     qw(slurp write_file);
 use POSIX                           qw(strftime);
 
 
@@ -20,6 +20,10 @@ my ($sanity, $subject) = $failures < 0
                        ? (failure => 'FATAL RUNNER ERROR Report')
                        : (success => "Status Report ($failures Failures)");
 
+my $html = sprintf $template, $subject, $sanity, $message, $table || '';
+write_file "../101web/logs/$date/report.html" => $html;
+
+
 my $mail = Email::Simple->create(
     header => [
         'From'         => 'softlang@uni-koblenz.de',
@@ -27,7 +31,7 @@ my $mail = Email::Simple->create(
         'Subject'      => "[101worker] $subject",
         'Content-Type' => 'text/html',
     ],
-    body   => sprintf $template, $subject, $sanity, $message, $table || '',
+    body   => $html,
 );
 
 sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
