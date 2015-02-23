@@ -52,7 +52,7 @@ See `101worker/tools/depend` for a script that transforms those files into a
 graph and the `%.depend` target in the `101worker/Makefile` for doing a
 worker run with them and getting a PDF out of it in the end.
 
-## new
+## BUILD
 
     Runner101::Modules->new( config => \%config )
     Runner101::Modules->new({config => \%config})
