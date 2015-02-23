@@ -51,9 +51,15 @@ already greater than the file's mtime.
 This optimization breaks gathering dependencies and you need to turn it off to
 use them properly. The setting you want is called C<strictatime>.
 
-You can either use the command C<sudo mount -o remount,strictatime /> (or
-replace the C</> with whatever mount point your 101worker is on) or edit your
-C</etc/fstab> and add the C<strictatime> option to the appropriate mount mount.
+You can use the command C<sudo mount -o remount,strictatime /> (or replace the
+C</> with whatever mount point your 101worker is on) to add the strictatime
+option during runtime
+
+Alternatively, you can edit your C</etc/fstab> and add the C<strictatime>
+option to the appropriate mount point to make it permanent.
+
+There is a test in F<t/11_changes.t> that will fail if you don't have
+C<strictatime> enabled, so use that to check for it.
 
 =head2 gather
 
