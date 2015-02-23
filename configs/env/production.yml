@@ -15,6 +15,7 @@ targets101dir          : $web101dir/data/resources/
 dumps101dir            : $web101dir/data/dumps/
 views101dir            : $web101dir/data/views/
 gatheredGeshi101dir    : $results101dir/geshi/
+themes101dir           : $targets101dir/themes/
 
 predicates101dir       : $worker101dir/predicates/
 

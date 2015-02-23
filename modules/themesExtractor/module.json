@@ -1,6 +1,6 @@
 {
     "command" : "make run",
     "dependencies" : [],
-    "environment" : [],
+    "environment" : ["themes101dir"],
     "wantdiff" : false
 }

@@ -15,8 +15,7 @@ import const101
 import tools101
 from mediawiki import remove_headline_markup
 
-output = os.path.join(const101.tRoot, 'themes')
-output = os.path.abspath(output)
+output = os.environ["themes101dir"]
 
 json_path = sys.argv[1]
 #json_path = "./wiki.json"
