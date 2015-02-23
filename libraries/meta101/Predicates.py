@@ -7,7 +7,7 @@ from   .util  import tolist
 
 class Predicates(Phase):
     suffix = ".predicates.json"
-    regex  = re.compile("^\w+$")
+    regex  = re.compile(r"^\w+$")
 
 
     def __init__(self, *args):
