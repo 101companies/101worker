@@ -1,4 +1,4 @@
-build:
+run:
 	@./program.py
 
 reset:
