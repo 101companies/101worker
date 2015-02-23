@@ -1,51 +1,74 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Cwd qw(abs_path);
-use File::Basename;
-use File::Slurp qw(slurp);
-use Getopt::Long;
+use File::Basename qw(basename);
 use Graph;
-use JSON;
-use YAML;
-
-my $modules_path = (dirname dirname abs_path $0) . '/modules';
-GetOptions('modules=s' => \$modules_path);
-$modules_path =~ s{/$}{};
 
 
-sub load_dependencies {
-    my ($module) = (@_);
+die <<'END' if not @ARGV;
+Usage: depend CHANGESFILE...
 
-    my $file = "$modules_path/$module/module.json";
-    my $json;
-    eval { $json = slurp $file };
-    warn "$module ($file): $!\n" if $!;
+CHANGESFILEs should be of the form TIMESTAMP.MODULE.EXTENSION.
+Example: 1424122533.matches101meta.changes
 
-    if (!$json) {
-        print STDERR "Can't read $file, assuming no dependencies for $module\n";
-        return [];
-    }
+Each line of a CHANGESFILE should be one of ``a FILEPATH'' for a file that
+was accessed or ``m FILEPATH'' for a file that was modified.
 
-    my $deps = {};
-    eval { $deps = decode_json $json || {} };
-    warn "$module ($file): $!\n" if $!;
+The CHANGESFILEs given are ordered by their TIMESTAMP, a missing one is
+treated as zero. Then a dependency graph is built from the accessed and
+modified files, which is printed in DOT format on stdout.
+END
 
-    if (!$deps->{dependencies}) {
-        print STDERR "No dependencies found for $module, assuming none\n";
-    }
-    $deps->{dependencies} || [];
-}
-
-
-die 'Usage: depend [--modules=PATH] JSONFILE' if not @ARGV;
-my $modules = decode_json slurp shift;
 
 my $graph = Graph->new;
-for my $module (@$modules) {
+my %files;
+
+
+my @sorted = do
+{
+    no warnings 'numeric';
+    sort { basename($a) <=> basename($b) } @ARGV
+};
+
+for my $arg (@sorted)
+{
+    my %deps;
+    my $module = do
+    {
+        my $base = basename($arg);
+        if ($base =~ /^\d+\.(.+)\.[^.]+$/)
+        {   $1 }
+        else
+        {
+            warn "File names should be of the form TIMESTAMP.MODULE.EXTENSION, "
+               . "but got ``$base''. Gonna use the entire name then.\n";
+            $base
+        }
+    };
+
+    open my $file, '<', $arg or die "Can't open $arg: $!\n";
+
+    while (<$file>)
+    {
+        unless (/^\s*([ma])\s+(.+?)\s*$/)
+        {
+            warn "Malformed change entry in $arg: $_";
+            next;
+        }
+        # depend on whoever last modified the file
+        $deps{$files{$2}} = 1 if exists $files{$2};
+        # if the file was modified, following modules must depend on this one
+        $files{$2} = $module if $1 eq 'm';
+    }
+
+    delete $deps{$module}; # don't depend on yourself
     $graph->add_vertex($module);
-    my $deps = load_dependencies($module);
-    $graph->add_edge($_, $module) for @$deps;
+    $graph->add_edge($_, $module) for keys %deps;
 }
 
-print Dump($graph);
+
+print qq(digraph G {\n);
+print qq(    node [shape=plaintext];\n);
+print qq(    "$_";\n)                   for sort $graph->vertices;
+print qq(    "$_->[0]" -> "$_->[1]";\n) for sort $graph->edges;
+print qq(}\n);

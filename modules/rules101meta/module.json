@@ -1,4 +1,11 @@
 {
-    "targets"      : [],
-    "dependencies" : ["pull101repo"]
+    "command" : "python program.py",
+    "dependencies" : [
+        "pull101repo"
+    ],
+    "environment" : [
+        "repo101dir",
+        "rules101dump"
+    ],
+    "wantdiff" : false
 }

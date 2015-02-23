@@ -1,0 +1,23 @@
+{
+    "command" : "make run",
+    "dependencies" : [
+        "extract101meta",
+        "geshi101meta",
+        "fragmentMetrics101meta",
+        "parseMegaL",
+        "summary101meta",
+        "fragments101meta",
+        "matches101meta",
+        "pull101repo",
+        "metrics101meta",
+        "summarizeModuleDescriptions",
+        "imports101meta",
+        "build",
+        "rules101meta",
+        "refineTokens",
+        "predicates101meta",
+        "validate101meta"
+    ],
+    "environment" : [],
+    "wantdiff" : false
+}

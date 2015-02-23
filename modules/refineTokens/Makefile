@@ -5,9 +5,6 @@ run:
 debug:
 	@./App.py -debug
 
-test:
-	@echo not yet implemented
-
 clean:
 	@rm -f *.pyc
 

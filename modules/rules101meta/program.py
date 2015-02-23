@@ -1,12 +1,12 @@
 #! /usr/bin/env python
-
 import os
 import fnmatch
-import sys
-import simplejson as json
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
+import json
+import incremental101
+
+
+repo101dir = os.environ["repo101dir"]
+
 
 # Check rule for validity
 def validRule(rule):
@@ -47,16 +47,16 @@ def countRule(rule):
 # Check validity upfront.
 # Qualify rule with origin information.
 #
-def handleRule(rule):
+def handleRule(rule, filename):
     countRule(rule)
     if validRule(rule):
         normalizeRule(rule)
-        entry = dict()
-        entry['filename'] = rFilename
-        entry['rule'] = rule
-        rules.append(entry)
+        rules.append({
+            "filename" : filename,
+            "rule"     : rule,
+        })
     else:
-        invalidFiles.append(rFilename)
+        invalidFiles.append(filename)
 
 print "Gathering 101meta rules from 101repo."
 
@@ -84,29 +84,28 @@ dump["problems"] = problems
 dump["numbers"] = numbers
 
 # Main loop
-for root, dirs, files in os.walk(const101.sRoot, followlinks=True):
+for root, dirs, files in os.walk(repo101dir, followlinks=True):
     for basename in fnmatch.filter(files, "*.101meta"):
         filename = os.path.join(root, basename)
-        print filename
-        rFilename = filename[len(const101.sRoot)+1:] # relative file name
+        relative = filename[len(repo101dir) + 1:]
         numberOfFiles += 1
 
         # Shield against JSON encoding errors
         try:
-            jsonfile = open(filename, "r")
-            data = json.load(jsonfile)
+            with open(filename) as jsonfile:
+                data = json.load(jsonfile)
 
             # Handle lists of rules
             if isinstance(data, list):
                 for rule in data:
-                    handleRule(rule)
+                    handleRule(rule, relative)
             else:
-                handleRule(data)
+                handleRule(data, relative)
             break
 
-        except json.decoder.JSONDecodeError:
-            print "Unreadable file: " + rFilename + " (JSONDecodeError)"
-            unreadableFiles.append(rFilename)
+        except ValueError as e:
+            print "Unreadable file {}: {}".format(filename, e)
+            unreadableFiles.append(relative)
 
 # Completion of dump
 numbers["numberOfRules"] = len(rules)
@@ -114,11 +113,10 @@ numbers["numberOfProblems"] = len(unreadableFiles) + len(invalidFiles)
 numbers["numberOfSuffixes"] = len(suffixes)
 numbers["numberOfPredicates"] = len(predicates)
 
-# Write to files and stdout if there have been changes
-#if not os.path.exists(const101.rulesDump) or not json.load(open(const101.rulesDump, 'r')) == dump:
-rulesFile = open(const101.rulesDump, 'w')
-rulesFile.write(json.dumps(dump, indent=4))
-#else:
-#   print 'write ommited since there were no changes'
-tools101.releaseDump(dump)
-sys.exit(0)
+# sort everything so it can actually be tested
+rules          .sort(key=lambda rule: rule["filename"])
+suffixes       .sort()
+unreadableFiles.sort()
+invalidFiles   .sort()
+
+incremental101.writejson(os.environ["rules101dump"], dump)

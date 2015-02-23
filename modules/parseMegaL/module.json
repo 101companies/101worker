@@ -1,0 +1,8 @@
+{
+    "command" : "make run",
+    "dependencies" : [
+        "pull101repo"
+    ],
+    "environment" : [],
+    "wantdiff" : false
+}

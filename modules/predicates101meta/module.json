@@ -1,13 +1,24 @@
 {
-  "targets" : [
-    {
-      "headline" : "Predicate Matches",
-      "classifier" : "resource",
-      "scope" : "file",
-      "suffix" : ".predicates.json",
-      "language" : "JSON"
-    }
-  ],
-  "dependencies" : ["extract101meta", "pull101repo"]
+    "command" : "python program.py",
+    "dependencies" : [
+        "extract101meta",
+        "pull101repo",
+        "rules101meta"
+    ],
+    "environment" : [
+        "rules101dump",
+        "targets101dir",
+        "predicates101dir",
+        "predicates101dump"
+    ],
+    "targets" : [
+        {
+            "classifier" : "resource",
+            "headline" : "Predicate Matches",
+            "language" : "JSON",
+            "scope" : "file",
+            "suffix" : ".predicates.json"
+        }
+    ],
+    "wantdiff" : true
 }
-

@@ -1,59 +1,71 @@
-# Creates a report with the last execution results and sends an email
-report:
-	@python tools/reporter.py
+install:
+	cpan CPAN
+	apt-get install $$WORKER101_ASSUME_YES python-pip
 
-# Run modules of a .config file
-%.run: init
-	make $*.clean
-	cd modules; make $*.run
-	tools/filedepend ../101results/depend configs/$*.json \
-                   > ../101results/depend/graph.yml
+
+# Run something given in configs/env/$*.yml
+# There's a chicken-and-egg problem with 101logs: the runner's output is
+# supposed to be piped into 101logs/runner.log, but the runner is what
+# creates the folders in the first place. To solve it, the 101logs folder
+# is created here if it doesn't exist.
+%.run:
+	mkdir -p ../101logs
+	rm -f ../101logs/*
+	-cd modules; make $*.run
 	make $*.archive
 	@git pull -q # upgrade past every run
 
+
 # Like %.run but without logging, with stdout
 %.debug:
-	make $*.clean
 	cd modules; make $*.debug
 
-# Arcives the log files from the last execution
-%.archive:
-	mkdir -p ../101web/logs
-	cd modules; make $*.archive
 
-# What is this?
-%.clean:
-	python tools/cleaner.py $*.json
+# Debug, gather changes and build dependency graph in Graphviz format.
+# The dot command needs to be available generate a PDF and the tred command
+# for transitive reduction.
+# Everything dependency-related goes into ../101diffs
+%.depend: graphpm dot.graphviz tred.graphviz
+	rm -f ../101diffs/*.changes
+	runner101depend=1 make $*.debug
+	tools/depend ../101diffs/*.changes      >../101diffs/$*.dot
+	dot -Tpdf   <../101diffs/$*.dot         >../101diffs/$*.pdf
+	tred        <../101diffs/$*.dot         >../101diffs/$*.reduced.dot
+	dot -Tpdf   <../101diffs/$*.reduced.dot >../101diffs/$*.reduced.pdf
+
+
+# Archives the log files from the last execution
+%.archive:
+	tools/archiver
+
 
 # Remove ALL derived files
 full-reset:
-	@rm -rf ../101web
-	@rm -rf ../101logs
-	@rm -rf ../101temps
-	@rm -rf ../101results
+	rm -rf ../101web ../101logs ../101temps ../101results ../101diffs
 
-# Initialize output directories
-init:
-	@mkdir -p ../101logs
-	@mkdir -p ../101temps
-	@mkdir -p ../101results
-	@mkdir -p ../101web
-	@mkdir -p ../101web/data
-	@mkdir -p ../101web/data/dumps
-	@mkdir -p ../101web/data/resources
-	@mkdir -p ../101web/data/views
-	@mkdir -p ../101web/data/onto
-	@mkdir -p ../101web/data/resources/contributions
-	@mkdir -p ../101web/data/resources/languages
-	@mkdir -p ../101web/data/resources/technologies
-	@mkdir -p ../101web/data/resources/themes
-	@mkdir -p ../101web/logs
-
-# Git-related convenience
-push:
-	git commit -a
-	git push
 
 download:
-	make init
 	cd modules/zip; make download-and-extract
+
+
+graphpm:
+	@perl -MGraph -e 1; \
+	if [ $$? -ne 0 ]; \
+	then \
+	    echo 'ERROR: Graph.pm not found. Maybe try:' 1>&2; \
+	    echo '    sudo cpan Graph'                   1>&2; \
+	    exit 1; \
+	fi
+
+
+%.graphviz:
+	@type $*; \
+	if [ $$? -ne 0 ]; \
+	then \
+	    echo 'ERROR: Graphviz not found. Maybe try:' 1>&2; \
+	    echo '    sudo apt-get install graphviz'     1>&2; \
+	    exit 1; \
+	fi
+
+
+.PHONY: full-reset download graphpm graphviz install

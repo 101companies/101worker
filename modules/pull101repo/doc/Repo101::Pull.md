@@ -93,7 +93,10 @@ returns a hashref with the following contents:
 
 - repo\_url
 
-    The remote URL of the repo.
+    The remote URL of the repo. This URL will start with
+    `https://git::@github.com`, the `git::@` thing meaning that no username and
+    password should be used, which is necessary because a password prompt locks up
+    everything.
 
 - dep\_path
 

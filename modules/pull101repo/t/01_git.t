@@ -1,15 +1,13 @@
-use strict;
-use warnings;
-use Test::More      tests => 21;
-use Test::Exception;
+use Test::Most      tests => 21;
 use Cwd             qw(abs_path);
 use File::Compare;
 use File::Slurp     qw(write_file append_file);
+use File::Temp;
 use List::Util      qw(pairs);
 use Scalar::Util    qw(blessed);
 use Repo101::Git    qw(clone_or_pull git);
 
-my   $test_dir = abs_path('TEST') . "/git$$";
+my   $test_dir = File::Temp->newdir;
 my  $local_dir = "$test_dir/local";
 my $remote_dir = "$test_dir/remote";
 my  $clone_dir = "$test_dir/clone";

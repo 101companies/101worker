@@ -1,66 +1,57 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
+import json
 import os
+import subprocess
+import meta101
 
-import sys
-import simplejson as json
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
 
-#used for the incrementally stuff
-def testFile(sFilename, tFilename):
-    return tools101.build(sFilename, tFilename)
-    # return True
+def initdump(deriver):
+    for key in ["geshicodes", "extractors"]:
+        if key in deriver.dump:
+            deriver.dump[key] = set(deriver.dump[key])
+        else:
+            deriver.dump[key] = set()
 
-#accept files that have  a geshi code - but also add the relevance of a file with respect to the default relevance
-def testEntry(entry):
-	meta = dict()
-	for m in entry["units"]:
-		if "extractor" in m["metadata"]:
-			meta["extractor"] = m["metadata"]["extractor"]
-		if "geshi" in m["metadata"]:
-			meta["geshi"] = m["metadata"]["geshi"]
-	return meta
 
-# Per-file functionality
-def derive(info, rFilename, sFilename, tFilename1):
-   if "geshi" in info and "extractor" in info:
-      tFilename2 = tFilename1[:-len(".fragments.metrics.json")]+".fragments.tokens.json"
-      extractorFile = tFilename1[:-len(".fragments.metrics.json")]+".extractor.json"
-      print "Process fragments of " + rFilename + " for GeSHi code " + info["geshi"] + "."
-      command = "php ../metrics101meta/helper.php" + " \"" + sFilename + "\" \"" + tFilename1 + "\" \"" + tFilename2 + "\" \"" + info["geshi"] + "\" \"" + "system"+ "\" \"" + extractorFile+ "\""
-      print command
-      (status, output) = tools101.run(command)
 
-      # Result aggregation
-      result = dict()
-      result["geshicode"] = info["geshi"]
-      result["command"] = command
-      result["status"] = status
-      result["output"] = output
-   else:
-	   result = dict()
-	   result["status"] = 0
+def getextractor(deriver, resources, **kwargs):
+    matches = resources[0]
+    meta    = {}
 
-   return result
+    for m in matches:
+        if "extractor" in m["metadata"]:
+            meta["extractor"] = m["metadata"]["extractor"]
+        if "geshi" in m["metadata"]:
+            meta["geshi"] = m["metadata"]["geshi"]
 
-print "Generating GeSHi-based metrics for 101repo."
+    if "geshi" in meta and "extractor" in meta:
+        return meta
 
-# Initialize housekeeping
-geshicodes = set()
-dump = tools101.beforeMapMatches(const101.fragmentMetricsDump)
-if "geshicodes" in dump:
-   geshicodes = set(dump["geshicodes"])
+    raise ValueError()
 
-# Loop over matches
-dump = tools101.mapMatches(testEntry, testFile, ".fragments.metrics.json", derive)
 
-# Convert set to list before dumping JSON
-geshicodes = list(geshicodes)
+def derive(deriver, value, resources, filename, **kwargs):
+    extractor     = value["extractor"]
+    geshicode     = value["geshi"]
+    extractorpath = resources[1]
 
-# Assemble dump, save it, and exit
-dump = dict()
-dump["geshicodes"] = geshicodes
-dump["numbers"] = dict()
-dump["numbers"]["numberOfGeshicodes"] = len(geshicodes)
-tools101.afterMapMatches(dump, const101.fragmentMetricsDump)
+    deriver.dump["geshicodes"].add(geshicode)
+    deriver.dump["extractors"].add(extractor)
+
+    command = ["php", "helper.php", filename, geshicode, extractorpath]
+    result  = json.loads(subprocess.check_output(command))
+    return (result["metrics"], result["tokens"])
+
+
+def preparedump(deriver):
+    for key in ["geshicodes", "extractors"]:
+        deriver.dump[key] = sorted(list(deriver.dump[key]))
+
+
+meta101.derive(suffix   =[".fragments.metrics.json", ".fragments.tokens.json"],
+               resources=["json:.matches.json", "path:.extractor.json"],
+               dump     =os.environ["fragmentMetrics101dump"],
+               oninit   =initdump,
+               getvalue =getextractor,
+               callback =derive,
+               ondump   =preparedump)

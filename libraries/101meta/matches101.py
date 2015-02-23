@@ -5,6 +5,11 @@ import commands
 import re
 import imp
 
+
+from warnings import warn
+warn("matches101.py is DEPRECATED, see 101worker/libraries/meta101 instead")
+
+
 sys.path.append('../../libraries/101meta')
 import const101
 import tools101

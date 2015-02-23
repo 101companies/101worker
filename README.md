@@ -1,33 +1,20 @@
-# The notion of module
+# Structure
 
-101worker components of execution are called modules.
+## modules
 
-All modules are located in "101worker/modules".
+## libraries
 
-See "101worker/modules/test*" for illustrative modules.
+## configs
 
-A module x can be executed as follows:
+## schemas
 
-* Change directory to "101worker".
-* Enter "make x.run".
+## services
 
-This mode of execution is good for testing.
-
-See the "test" target of "101worker/Makefile" for illustration.
-
-Modules would be added to the production list at some point; see below.
+## attic
 
 # Module Contracts
 
-Module could be written in any languages  but must follow the following
-constraints.
-
-Modules should access the file system as follows:
-
-* Module results are temporarily to be stored in "../101temps".
-* Module results are eventually to be stored in "../101results".
-* Module results for the web are eventually to be stored in "../101web".
-* Module arguments are to be fetched from "../101results".
+TODO
 
 All the mentioned directories are automatically created, if needed.
 
@@ -36,14 +23,14 @@ All the mentioned directories are automatically created, if needed.
 
 101worker repeatedly executes a certain list of modules.
 
-See the file "101worker/configs/production.json" for the list.
+See the file `101worker/configs/production.json` for the list.
 
-Module names are stored in  a json list.
+Module names are stored in a json list.
 
 The production cycle can be manually invoked as follows:
 
-* Change directory to "101worker".
-* Enter "make".
+* Change directory to `101worker`.
+* Enter `make`.
 
 The idea is that a cron job performs these commands regularly.
 
@@ -51,48 +38,69 @@ The idea is that a cron job performs these commands regularly.
 
 In this manner, production modules can also be added remotely.
 
-A log of the latest cycle is stored in "../101logs/runner.log".
-
-The log is sent via email to the 101gatekeepers, if any module failed.
+TODO talk about logging.
 
 
 # Adding a module
 
-Follow these steps:
-
-* Change directory to "101worker/modules".
-* Create a subdirectory for the new module, be it <x>.
-* Change to <x>.
-* Create a Makefile with a "run" target.
-* (You may want to create a "clean" target for any temporary stuff.)
-* Create a README.md file with some minimal documentation.
-
-Finally, also register the module:
-
-* Change directory to "101worker/config".
-* Add the module name to "production.json".
+TODO
 
 
 # Alternative module lists
 
-The default list is "101worker/configs/production.json".
+The default list is `101worker/configs/production.json`.
 
-Alternative module lists may be good for testing 101worker.
-
-However, testing is also reasonably supported by the make target "%.run".
-
-A list <x> can be selected as follows:
-
-* Change directory to "101worker".
-* Enter "make <x>.reconfigure".
-
-At the time of writing, these module lists <x> exist:
-
-* "testOk": positive tests.
-* "testFail": negative tests.
-* "production": production.
+TODO talk about env, testing in 101test
 
 
 # TODO
 
-NONE
+* this documentation
+
+* unit tests of meta101, runner, pull101repo
+
+* documentation of meta101
+
+* handling of module failure, saving its diff
+
+* incrementalization of modules:
+
+Module                      | Status
+----------------------------|:--------:
+pull101repo                 | ok
+pull                        | n/a
+pullLibraries               | n/a
+build                       | n/a
+gatherGeshi                 | n/a
+rules101meta                | ok
+matches101meta              | ok
+geshi101meta                | ok
+metrics101meta              | ok
+validate101meta             | ok
+extract101meta              | ok
+fragmentMetrics101meta      | ok
+refineTokens                | **not ok**
+predicates101meta           | ok
+fragments101meta            | ok
+summary101meta              | **not ok**
+imports101meta              | **not ok**
+wiki2json                   | **not ok**
+themesExtractor             | **not ok**
+languageExtractor           | **not ok**
+vocabulary                  | **not ok**
+wiki2tagclouds              | **not ok**
+moretagclouds               | **not ok**
+members                     | **not ok**
+summarizeModuleDescriptions | **not ok**
+resolve101meta              | **not ok**
+index101meta                | **not ok**
+repo2charts                 | **not ok**
+wiki101JsonToWiki101RDF     | **not ok**
+loadWiki101RDF              | **not ok**
+parseMegaL                  | **not ok**
+webDeployMegaModels         | **not ok**
+rebuildXmlCatTree           | **not ok**
+validateModuleDescriptions  | **not ok**
+zip                         | **not ok**
+extractClaferFeatureModel   | **not ok**
+integrate                   | **not ok**

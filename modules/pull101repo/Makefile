@@ -2,7 +2,7 @@ run:
 	perl pull101repo
 
 clean:
-	rm -rf module.log TEST cover_db
+	rm -rf module.log cover_db
 
 test:
 	prove
@@ -17,7 +17,7 @@ doc:
 	pod2markdown Repo101/Pull.pm doc/Repo101::Pull.md
 
 install:
-	cpan install Class::Tiny File::Slurp Git::Repository LWP::Simple JSON \
-                 Test::Exception
+	cpan Class::Tiny File::Slurp Git::Repository LWP::Simple JSON \
+         Try::Tiny Test::Most
 
 .PHONY: run clean test cover doc install

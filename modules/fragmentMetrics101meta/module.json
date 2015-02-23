@@ -1,4 +1,29 @@
 {
-  "targets"      : [],
-  "dependencies" : ["matches101meta"]
+    "command" : "python program.py",
+    "dependencies" : [
+        "pull101repo",
+        "extract101meta",
+        "matches101meta",
+        "pullLibraries"
+    ],
+    "environment" : [
+        "fragmentMetrics101dump"
+    ],
+    "targets" : [
+        {
+            "classifier" : "resource",
+            "headline" : "Fragment Metrics",
+            "language" : "JSON",
+            "scope" : "file",
+            "suffix" : ".fragments.metrics.json"
+        },
+        {
+            "classifier" : "resource",
+            "headline" : "Fragment Tokens",
+            "language" : "JSON",
+            "scope" : "file",
+            "suffix" : ".fragments.tokens.json"
+        }
+    ],
+    "wantdiff" : true
 }

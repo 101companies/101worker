@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-use Test::More tests => 7;
+use Test::Most      tests => 7;
 use Test::Exception;
 use Repo101::Pull;
 

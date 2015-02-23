@@ -7,6 +7,7 @@ use warnings;
 use File::Basename qw(basename);
 use File::Path     qw(remove_tree);
 use Repo101::Git   qw(clone_or_pull);
+use Try::Tiny;
 
 use Class::Tiny {
     root_path => undef,
@@ -15,6 +16,7 @@ use Class::Tiny {
     repos     => undef,
     changes   => sub { {} },
     pulled    => sub { {} },
+    branches  => sub { {} },
 };
 
 
@@ -34,10 +36,10 @@ sub pull101repo
         my $repos = $self->repos->{$namespace};
         for my $member (keys %$repos)
         {
-            my $info = $self->extract_repo_info($repos->{$member}) or next;
-            my $diff = $self->pull_repo($info->{repo_path}, $info->{repo_url});
-            $self->merge_diffs($diff, $info->{dep_path}, "$namespace/$member");
-            $self->symlink($info->{dep_path}, "$namespace_dir/$member");
+            try
+            {   $self->member($member, $repos, $namespace, $namespace_dir) }
+            catch
+            {   warn "Error in member $member: $_" };
         }
 
         $self->clean_link($repos, $_) for glob "$namespace_dir/*";
@@ -47,10 +49,21 @@ sub pull101repo
 }
 
 
+sub member
+{
+    my ($self, $member, $repos, $namespace, $namespace_dir) = @_;
+    my  $info = $self->extract_repo_info($repos->{$member}) or return;
+
+    my $diff = $self->pull_repo($info->{repo_path}, $info->{repo_url});
+    $self->merge_diffs($diff, $info->{dep_path}, "$namespace/$member");
+    $self->symlink($info->{dep_path}, "$namespace_dir/$member");
+}
+
+
 sub pull_repo
 {
     my ($self, $dir, $url) = @_;
-    $self->pulled->{$url} = clone_or_pull($dir, $url)
+    $self->pulled->{$url} = clone_or_pull($dir, $url, $self->branches->{$url})
         if not exists $self->pulled->{$url};
     $self->pulled->{$url}
 }
@@ -88,7 +101,7 @@ sub extract_repo_info
 
     my %info = (
         repo_path => $self->deps_path . "/$user/$repo_name",
-        repo_url  => "https://github.com/$user/$repo_name",
+        repo_url  => "https://git::\@github.com/$user/$repo_name",
     );
     $info{dep_path} = $suffix ? "$info{repo_path}/$suffix" : $info{repo_path};
 
@@ -229,7 +242,10 @@ The local path where the repo should be cloned or pulled to.
 
 =item repo_url
 
-The remote URL of the repo.
+The remote URL of the repo. This URL will start with
+C<https://git::@github.com>, the C<git::@> thing meaning that no username and
+password should be used, which is necessary because a password prompt locks up
+everything.
 
 =item dep_path
 

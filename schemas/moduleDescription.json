@@ -1,5 +1,6 @@
 {
     "title": "Module description schema",
+    "description" : "This module description is DEPRECATED, see module.schema.json instead",
     "type" : "object",
     "required": ["targets"],
     "properties": {

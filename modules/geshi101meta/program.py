@@ -1,51 +1,32 @@
-#! /usr/bin/env python
-
-import sys
-import simplejson as json
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
-
-# Per-file functinonality
-def derive(geshicode, rFilename, sFilename, tFilename):
-
-   # Housekeeping for geshicode
-   geshicodes.add(geshicode)
-
-   print "Process " + rFilename + " for GeSHi code " + geshicode + "."
-   command = "php " + geshi + " \"" + sFilename + "\" \"" + tFilename + "\" " + geshicode
-   (status, output) = tools101.run(command)
-
-   # Result aggregation
-   result = dict()
-   result["geshicode"] = geshicode
-   result["command"] = command
-   result["status"] = status
-   result["output"] = output
-
-   return result
+#!/usr/bin/env python
+import os
+import subprocess
+import meta101
 
 
-print "Generating GeSHi-based HTML for 101repo."
+geshi = os.environ["gatheredGeshi101dir"] + "/run.php"
 
-if (len(sys.argv) != 2): sys.exit(-1)
-geshi = sys.argv[1] # GeSHi in the workspace
 
-# Initialize housekeeping
-geshicodes = set()
-dump = tools101.beforeMapMatches(const101.geshiDump)
-if "geshicodes" in dump:
-   geshicodes = set(dump["geshicodes"])
+def initdump(deriver):
+    if "geshicodes" in deriver.dump:
+        deriver.dump["geshicodes"] = set(deriver.dump["geshicodes"])
+    else:
+        deriver.dump["geshicodes"] = set()
 
-# Loop over matches
-dump = tools101.deriveByKey("geshi", ".geshi.html", derive)
 
-# Convert set to list before dumping JSON
-geshicodes = list(geshicodes)
+def derive(deriver, geshicode, filename, **kwargs):
+    deriver.dump["geshicodes"].add(geshicode)
+    command = ["php", geshi, filename, "php://stdout", geshicode]
+    return subprocess.check_output(command)
 
-# Assemble dump, save it, and exit
-dump = dict()
-dump["geshicodes"] = geshicodes
-dump["numbers"] = dict()
-dump["numbers"]["numberOfGeshicodes"] = len(geshicodes)
-tools101.afterMapMatches(dump, const101.geshiDump)
+
+def preparedump(deriver):
+    deriver.dump["geshicodes"] = sorted(list(deriver.dump["geshicodes"]))
+
+
+meta101.derive(suffix  =".geshi.html",
+               dump    =os.environ["geshi101dump"],
+               oninit  =initdump,
+               key     ="geshi",
+               callback=derive,
+               ondump  =preparedump)

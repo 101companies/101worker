@@ -1,4 +1,8 @@
 {
-    "targets"      : [],
-    "dependencies" : []
+    "command" : "python program.py",
+    "dependencies" : [],
+    "environment" : [
+        "results101dir"
+    ],
+    "wantdiff" : false
 }

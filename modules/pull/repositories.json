@@ -1,10 +1,10 @@
 [
     {
         "repo" : "https://github.com/101companies/101dev",
-        "targetdir" : "../../../101results/101dev"
+        "targetdir" : "$results101dir/101dev"
     },
     {
         "repo": "https://github.com/101companies/101integrate.git",
-        "targetdir" : "../../../101results/repos/101integrate"
+        "targetdir" : "$results101dir/repos/101integrate"
     }
 ]

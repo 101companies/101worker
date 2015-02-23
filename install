@@ -1,0 +1,92 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Cwd;
+use File::Find;
+use Getopt::Long;
+use Pod::Usage;
+
+
+my ($help, $yes);
+my $getopt = GetOptions('help|h' => \$help, 'assume-yes|y' => \$yes);
+my %args;
+$args{'-message'} = "unknown options: @ARGV" if @ARGV;
+$args{'-verbose'} = 99                       if $help;
+pod2usage(%args)                             if %args || !$getopt;
+
+
+if ($yes)
+{
+    $ENV{PERL_MM_USE_DEFAULT      } = 1;
+    $ENV{PERL_EXTUTILS_AUTOINSTALL} = '--defaultdeps';
+    $ENV{WORKER101_ASSUME_YES     } = '--assume-yes';
+}
+
+
+my @make;
+
+find sub {
+    return if not $_ eq 'Makefile';
+    my $code = system "make -nsf '$File::Find::name' install >/dev/null 2>&1";
+    push @make, $File::Find::dir if $code == 0;
+}, glob getcwd . '/*';
+
+
+sub want
+{
+    return 1 if $yes;
+    my ($path) = @_;
+    while (1)
+    {
+        print "run sudo make install in $path? [Y/n] ";
+        my $read = <STDIN>;
+        return 1 if $read =~ /^\s*y?\s*$/i;
+        return 0 if $read =~ /^\s*n\s*$/i;
+    }
+}
+
+
+for my $path (sort @make)
+{
+    next unless want($path);
+    chdir $path;
+    system qw(sudo make install);
+}
+
+
+__END__
+
+=head1 NAME
+
+install - run all C<sudo make install> in this repository
+
+=head1 SYNOPSIS
+
+install [OPTIONS]
+
+    Options:
+        --help, -h          Show detailed help.
+        --assume-yes, -y    As unsupervised as possible.
+
+=head1 OPTIONS
+
+=over
+
+=item --assume-yes, -y
+
+Ideally, this doesn't ask the user any questions and just runs through
+installing everything.
+
+First off, it doesn't ask if the user wants to run C<sudo make install> for
+every path.
+
+Also sets a few environment variables so that cpan just uses the default answer
+every time.
+
+Then it also sets the environment variable C<WORKER101_ASSUME_YES> to
+C<--assume-yes>. This should be used in the install targets of Makefiles, see
+for example the Makefile in the 101worker root directory.
+
+=back
+
+=cut

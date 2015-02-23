@@ -1,51 +1,47 @@
-#! /usr/bin/env python
-
+#!/usr/bin/env python
 import os
-import sys
-import json
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
+import subprocess
+import meta101
+import kludge101
 
 
-# Per-file functinonality
-def check(validator, rFilename, sFilename):
-
-   # Housekeeping for validator
-   validators.add(validator)
-
-   # Command execution
-   print "Validate " + rFilename + " with " + validator + "."
-   command = os.path.join(const101.sRoot, validator) + " \"" + sFilename + "\""
-   (status, output) = tools101.run(command)
-
-   # Result aggregation
-   result = dict()
-   result["validator"] = validator
-   result["command"] = command
-   result["status"] = status
-   result["output"] = output
-
-   return result
+def initdump(deriver):
+    if "validators" in deriver.dump:
+        deriver.dump["validators"] = set(deriver.dump["validators"])
+    else:
+        deriver.dump["validators"] = set()
 
 
-print "Validating 101repo."
+def derive(deriver, validator, filename, **kwargs):
+    deriver.dump["validators"].add(validator)
 
-# Initialize housekeeping
-validators = set()
-dump = tools101.beforeMapMatches(const101.validatorDump)
-if "validators" in dump:
-   validators = set(dump["validators"])
+    # FIXME move validators into worker so this isn't necessary
+    path = kludge101.checkpath(validator)
+    if not path:
+        raise RuntimeError("foiled code injection: {}".format(validator))
+    command = [path, filename]
 
-# Loop over matches
-tools101.checkByKey("validator", ".validator.json", check)
+    # subprocess has no safe getstatusoutput, so this'll have to do
+    try:
+        output, status = (subprocess.check_output(command), 0)
+    except subprocess.CalledProcessError as e:
+        output, status = (e.output, e.returncode)
 
-# Convert set to list before dumping JSON
-validators = list(validators)
+    return {
+        "validator" : validator,
+        "command"   : command,
+        "status"    : status,
+        "output"    : output,
+    }
 
-# Assemble dump, save it, and exit
-dump = dict()
-dump["validators"] = validators
-dump["numbers"] = dict()
-dump["numbers"]["numberOfValidators"] = len(validators)
-tools101.afterMapMatches(dump, const101.validatorDump)
+
+def preparedump(deriver):
+    deriver.dump["validators"] = sorted(list(deriver.dump["validators"]))
+
+
+meta101.derive(suffix  =".validator.json",
+               dump    =os.environ["validator101dump"],
+               oninit  =initdump,
+               key     ="validator",
+               callback=derive,
+               ondump  =preparedump)
