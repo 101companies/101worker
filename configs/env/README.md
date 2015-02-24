@@ -19,6 +19,8 @@ There are a handful of paths that are always defined from the get-go. You can ov
 
 * `$diffs101dir` - Diff- and changes-related output directory of the runner. You shouldn't mess with this.
 
+* `$last101run` - Contains a timestamp of the last 101worker run, or 0 if it hasn't been run before.
+
 URLs are only special if they start with the `file://` scheme. In that case, their path will be turned into an absolute `file://` URL as described above. The same rule for trailing slashes apply. Other URLs like `http://` or `https://` won't be touched.
 
 For examples, see the definition files in the folder of this README.
