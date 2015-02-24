@@ -105,9 +105,6 @@ my %expected = (
 is_deeply \%given, \%expected, 'load variables into environment';
 
 
-chdir $olddir;
-
-
 %Runner101::Env::loaded = ();
 throws_ok {
     local $SIG{__WARN__} = sub { die @_ };
@@ -125,3 +122,6 @@ write_file($store => "A test\n");
 load_vars(\%hash);
 cmp_ok $ENV{last101run}, '==', (stat $store)[9],
        "with a result diff, last101run is that file's mtime";
+
+
+chdir $olddir;
