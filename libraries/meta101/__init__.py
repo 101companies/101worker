@@ -20,15 +20,15 @@ def getphase(key):
     return phases[key]
 
 
-def havechanged(*files, **kwargs):
-    since = kwargs["since"] if "since" in kwargs else os.environ["last101run"]
-    return any(os.path.exists(f) and since > os.path.getmtime(f) for f in files)
+def havechanged(*files):
+    since = float(os.environ.get("last101run", 0))
+    return any(os.path.exists(f) and since < os.path.getmtime(f) for f in files)
 
 
 def matchall(phasekey, entirerepo=False):
     dumpfile  = os.environ[phasekey + "101dump"]
     rulesfile = os.environ["rules101dump"]
-    changed   = havechanged(dumpfile, since=os.path.getmtime(rulesfile))
+    changed   = havechanged(rulesfile)
     args      = []
 
     if os.path.exists(dumpfile):

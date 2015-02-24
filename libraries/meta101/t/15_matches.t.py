@@ -1,5 +1,6 @@
 import os
 from   StringIO   import StringIO
+import time
 from   TAP.Simple import *
 import meta101
 import incremental101 as inc
@@ -10,6 +11,7 @@ plan(14)
 os.environ[   "repo101dir" ] = "/repo"
 os.environ["targets101dir" ] = "/targets"
 os.environ["matches101dump"] = "nonexistent"
+os.environ[    "last101run"] = str(time.time())
 
 # monkey-patch functions in incremental101
 written = []
