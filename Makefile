@@ -12,7 +12,7 @@ install:
 	mkdir -p ../101logs
 	rm -f ../101logs/*
 	-cd modules; make $*.run
-	make $*.archive
+	make archive
 	@git pull -q # upgrade past every run
 
 
@@ -35,9 +35,11 @@ install:
 
 
 # Archives the log files from the last execution
-%.archive:
+archive:
 	tools/archiver
 
+# Saves a report to 101logs/(latest log)/report.html
+# and sends it per e-mail to 101gatekeepers.
 report:
 	tools/reporter
 
