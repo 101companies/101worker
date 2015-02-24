@@ -16,7 +16,7 @@ def initdump(deriver):
 def derive(deriver, extractor, filename, **kwargs):
     deriver.dump["extractors"].add(extractor)
 
-    # FIXME move validators into worker so this isn't necessary
+    # FIXME move extractors into worker so this isn't necessary
     path = kludge101.checkpath(extractor)
     if not path:
         raise RuntimeError("foiled code injection: {}".format(extractor))
@@ -30,10 +30,13 @@ def preparedump(deriver):
     deriver.dump["extractors"] = sorted(list(deriver.dump["extractors"]))
 
 
+# FIXME also check extractors when they are moved into 101worker
+changed = meta101.havechanged(__file__)
+
 meta101.derive(suffix    =".extractor.json",
                dump      =os.environ["extractor101dump"],
                oninit    =initdump,
                key       ="extractor",
                callback  =derive,
                ondump    =preparedump,
-               entirerepo=meta101.havechanged(__file__))
+               entirerepo=changed)
