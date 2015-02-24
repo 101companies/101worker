@@ -38,7 +38,7 @@ __END__
 
 =head1 Runner101::Changes
 
-Gather changes between module runs using the file system's atime (acces time)
+Gather changes between module runs using the file system's atime (access time)
 and mtime (modification time) stamps for each file.
 
 =head2 Note
