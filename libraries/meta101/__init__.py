@@ -20,15 +20,16 @@ def getphase(key):
     return phases[key]
 
 
-def newerthan(time, *files):
-    return any(os.path.exists(f) and time > os.path.getmtime(f) for f in files)
+def havechanged(*files, **kwargs):
+    since = kwargs["since"] if "since" in kwargs else os.environ["last101run"]
+    return any(os.path.exists(f) and since > os.path.getmtime(f) for f in files)
 
 
 def matchall(phasekey, entirerepo=False):
-    dumpfile   = os.environ[phasekey + "101dump"]
-    rulesfile  = os.environ["rules101dump"]
-    entirerepo = entirerepo or newerthan(os.path.getmtime(rulesfile), dumpfile)
-    args       = []
+    dumpfile  = os.environ[phasekey + "101dump"]
+    rulesfile = os.environ["rules101dump"]
+    changed   = havechanged(dumpfile, since=os.path.getmtime(rulesfile))
+    args      = []
 
     if os.path.exists(dumpfile):
         with open(dumpfile) as f:
@@ -39,7 +40,7 @@ def matchall(phasekey, entirerepo=False):
     with open(rulesfile) as f:
         args.insert(0, json.load(f)["results"]["rules"])
 
-    dump = getphase(phasekey)(*args).run(entirerepo)
+    dump = getphase(phasekey)(*args).run(changed or entirerepo)
     incremental101.writejson(dumpfile, dump)
 
 
