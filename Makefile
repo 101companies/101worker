@@ -1,3 +1,9 @@
+setup:
+	@echo Setting up 101worker - installation of dependencies requires sudo
+	./install -y
+	./test
+
+
 install:
 	cpan CPAN
 	apt-get install $$WORKER101_ASSUME_YES python-pip
