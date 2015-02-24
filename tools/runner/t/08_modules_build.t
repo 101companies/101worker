@@ -7,6 +7,8 @@ use JSON;
 use Runner101::Module;
 use Runner101::Modules;
 
+$ENV{diffs101dir} = '.'; # to silence some warnings
+
 my $tempdir = tempdir;
 my $config  = "$tempdir/config.json";
 {

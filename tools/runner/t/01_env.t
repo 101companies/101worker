@@ -1,7 +1,9 @@
-use Test::Most      tests => 23;
+use Test::Most      tests => 25;
 
 use Cwd             qw(abs_path);
+use File::Slurp     qw(write_file);
 use File::Temp;
+use Runner101::Diff qw(store_path);
 use Runner101::Env  qw(load_vars load_url load_path);
 
 
@@ -24,6 +26,7 @@ my %hash = (
     gitdeps101url => 'file://101results/gitdepsrc/',
     dir101        => '$output101dir/somedir/',
     ref101        => '$dir101/somefile',
+    diffs101dir   => "$tmpdir/diffs/",
 );
 
 
@@ -95,7 +98,8 @@ my %expected = (
     data101url    => 'http://data.101companies.org/',
     gitdeps101url => "file://$pwd/101results/gitdepsrc",
     dir101        => "$tmpdir/output/somedir",
-    ref101        => "$tmpdir/output/somedir/somefile"
+    ref101        => "$tmpdir/output/somedir/somefile",
+    diffs101dir   => "$tmpdir/diffs",
 );
 
 is_deeply \%given, \%expected, 'load variables into environment';
@@ -112,3 +116,12 @@ throws_ok {
         reference => '$circular',
     });
 } qr/Deep recursion/, 'circular references lead to infinite loops';
+
+
+cmp_ok $ENV{last101run}, '==', 0, 'with no result.diff, last101run is 0';
+
+my $store = store_path('result');
+write_file($store => "A test\n");
+load_vars(\%hash);
+cmp_ok $ENV{last101run}, '==', (stat $store)[9],
+       "with a result diff, last101run is that file's mtime";

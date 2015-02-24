@@ -8,6 +8,7 @@ use POSIX               qw(strftime);
 use Proc::ChildError    qw(explain_child_error);
 use Try::Tiny;
 use Runner101::Changes;
+use Runner101::Diff     qw(store_diff);
 use Runner101::Env;
 use Runner101::Helpers  qw(slurp_json validate_json write_log);
 use Runner101::Module;
@@ -54,8 +55,8 @@ sub run
         }
     }
 
+    store_diff(result => $self->diff);
     print "report-ok\n";
-    $self->diff
 }
 
 
@@ -185,7 +186,7 @@ schema.
 If all that suceeded, it validates the C<module.json>s against their schema and
 ensures that all dependencies and necessary environment variables are in order.
 
-Finally, it runs each of the modules and gathers their diffs in-between.
+Then it runs each of the modules and gathers their diffs in-between and saves
 
 Returns the resulting diff or dies with an error message if any of the
 validation above failed.

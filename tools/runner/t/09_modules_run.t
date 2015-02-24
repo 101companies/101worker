@@ -25,6 +25,8 @@ my @modules = map { bless {name => "module$_"} => 'Runner101::Module' } 1 .. 3;
 
     *Runner101::Module::run = sub { 0 };
 
+    *Runner101::Modules::store_diff = sub {};
+
     *Runner101::Modules::new = sub
     {   bless {modules => \@modules} => 'Runner101::Modules' };
 }

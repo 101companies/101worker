@@ -1,7 +1,7 @@
 package Runner101::Diff;
 use Exporter qw(import);
-@EXPORT_OK = qw(merge_diffs parse store_diff load_stored
-                remove_stored build_diff run_diff);
+@EXPORT_OK = qw(merge_diffs store_path store_diff load_stored
+                remove_stored build_diff run_diff parse);
 
 use strict;
 use warnings;
@@ -68,11 +68,15 @@ sub parse
 }
 
 
+sub store_path
+{   "$ENV{diffs101dir}/$_[0].diff" }
+
+
 sub store_diff
 {
     my ($name, $diff) = @_;
 
-    my $path = "$ENV{diffs101dir}/$name.diff";
+    my $path = store_path($name);
     open my $out, '>', $path or die "Can't write to $path: $!";
 
     while (my ($file, $op) = each %$diff)
@@ -82,9 +86,8 @@ sub store_diff
 
 sub load_stored
 {
-    my ($name) = @_;
-    my  $path  = "$ENV{diffs101dir}/$name.diff";
-    my  $diff  = {};
+    my $path = store_path(@_);
+    my $diff = {};
 
     if (-e $path)
     {
@@ -103,8 +106,7 @@ sub load_stored
 
 sub remove_stored
 {
-    my ($name) = @_;
-    my  $path  = "$ENV{diffs101dir}/$name.diff";
+    my $path = store_path(@_);
     if (-e $path)
     {   unlink $path or die "Can't unlink $path: $!" }
 }
@@ -266,16 +268,23 @@ Attempts to parse C<$line> as a diff. If there's anything interesting in it,
 it will be pushed to the C<$diffs> arrayref. Returns the I<lines read so far>
 if it could parse the line and C<undef> otherwise.
 
+=head2 store_path
+
+    store_path($name)
+
+Returns the store path for the given C<$name>, which is
+C<$ENV{diffs101dir}/$name.diff>.
+
 =head2 store_diff
 
     store_diff($name, $diff)
 
-Stores the given C<$diff> in a file called C<$ENV{diffs101dir}/$name.diff>.
-Any existing file of that name will be clobbered.
+Stores the given C<$diff> in a file with the C<store_path($name)>. Any existing
+file of that name will be clobbered.
 
 Returns nothing useful and dies if the file can't be written to.
 
-See also L</load_stored> and L</remove_stored>.
+See also L</store_path>, L</load_stored> and L</remove_stored>.
 
 =head2 load_stored
 
@@ -287,7 +296,7 @@ L</store_diff>.
 Returns the loaded diff or an empty diff if there was no file to load anything
 from. Dies if the file exists, but can't be read.
 
-See also L</store_diff> and L</remove_stored>.
+See also L</store_path>, L</store_diff> and L</remove_stored>.
 
 =head2 remove_stored
 
@@ -299,7 +308,7 @@ C<$name> via L</store_diff>.
 Returns true if there was a file and it was deleted, or false if there was no
 file to be deleted. Dies if the file exists, but can't be deleted.
 
-See also L</store_diff> and L</load_stored>.
+See also L</store_path>, L</store_diff> and L</load_stored>.
 
 =head2 build_diff
 

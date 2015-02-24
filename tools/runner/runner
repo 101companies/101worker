@@ -28,5 +28,4 @@ my %dirs         = (
 $config->{$_} //= "$dirs{$_}/" for keys %dirs;
 
 
-my $diff = Runner101::Modules::run($config);
-Runner101::Diff::store_diff(result => $diff);
+Runner101::Modules::run($config);
