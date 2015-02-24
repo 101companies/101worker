@@ -7,7 +7,7 @@ All tools except the runner will assume that they are being called from the 101w
 
 This means that they won't work for test cases, but that's because they're not meant for that. It's pointless to archive or report on or build a dependency graph over a test case.
 
-What follows is a short documentation about each of the tools, how they are to be executed and by which targets in the [101 worker Makefile](../Makefile) they are called.
+What follows is a short documentation about each of the tools, how they are to be executed and by which targets in the [101worker Makefile](../Makefile) they are called.
 
 
 runner
