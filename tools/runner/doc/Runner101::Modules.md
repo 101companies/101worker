@@ -36,7 +36,7 @@ schema.
 If all that suceeded, it validates the `module.json`s against their schema and
 ensures that all dependencies and necessary environment variables are in order.
 
-Finally, it runs each of the modules and gathers their diffs in-between.
+Then it runs each of the modules and gathers their diffs in-between and saves
 
 Returns the resulting diff or dies with an error message if any of the
 validation above failed.

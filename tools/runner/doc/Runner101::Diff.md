@@ -87,16 +87,23 @@ Attempts to parse `$line` as a diff. If there's anything interesting in it,
 it will be pushed to the `$diffs` arrayref. Returns the _lines read so far_
 if it could parse the line and `undef` otherwise.
 
+## store\_path
+
+    store_path($name)
+
+Returns the store path for the given `$name`, which is
+`$ENV{diffs101dir}/$name.diff`.
+
 ## store\_diff
 
     store_diff($name, $diff)
 
-Stores the given `$diff` in a file called `$ENV{diffs101dir}/$name.diff`.
-Any existing file of that name will be clobbered.
+Stores the given `$diff` in a file with the `store_path($name)`. Any existing
+file of that name will be clobbered.
 
 Returns nothing useful and dies if the file can't be written to.
 
-See also ["load\_stored"](#load_stored) and ["remove\_stored"](#remove_stored).
+See also ["store\_path"](#store_path), ["load\_stored"](#load_stored) and ["remove\_stored"](#remove_stored).
 
 ## load\_stored
 
@@ -108,7 +115,7 @@ Attempts to load a diff that was previously stored with the same `$name` via
 Returns the loaded diff or an empty diff if there was no file to load anything
 from. Dies if the file exists, but can't be read.
 
-See also ["store\_diff"](#store_diff) and ["remove\_stored"](#remove_stored).
+See also ["store\_path"](#store_path), ["store\_diff"](#store_diff) and ["remove\_stored"](#remove_stored).
 
 ## remove\_stored
 
@@ -120,7 +127,7 @@ Attempts to removes a diff file that was previously stored with the same
 Returns true if there was a file and it was deleted, or false if there was no
 file to be deleted. Dies if the file exists, but can't be deleted.
 
-See also ["store\_diff"](#store_diff) and ["load\_stored"](#load_stored).
+See also ["store\_path"](#store_path), ["store\_diff"](#store_diff) and ["load\_stored"](#load_stored).
 
 ## build\_diff
 
