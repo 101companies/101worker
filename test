@@ -15,13 +15,33 @@ find sub {
     push @make, $File::Find::dir if $code == 0;
 }, $cwd;
 
-for my $path (@make)
+
+my %results;
+my $length = 0;
+
+for my $path (sort @make)
 {
     chdir $path or die "Couldn't cd into $path";
     $path =~ s{^\Q$dir\E/?}{};
+
     print '-' x 70, "\n\nRunning make test for $path\n\n";
-    system qw(make -s test);
+    my $exit_code = system qw(make -s test);
     print "\n";
+
+    $results{$path} = $exit_code == 0 ? 'ok' : 'not ok';
+    $length         = length $path if length $path > $length;
 }
 
-print '-' x 70, "\n";
+
+print '=' x 70, "\n\n";
+
+
+for my $path (sort keys %results)
+{
+    my $dots = '.' x (2 + $length - length $path);
+    print "$path $dots $results{$path}\n";
+}
+
+my $result = grep { /not ok/ } values %results;
+print 'Result: ', ($result ? 'FAIL' : 'PASS'), "\n\n";
+exit $result;
