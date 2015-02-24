@@ -48,10 +48,13 @@ def preparedump(deriver):
         deriver.dump[key] = sorted(list(deriver.dump[key]))
 
 
-meta101.derive(suffix   =[".fragments.metrics.json", ".fragments.tokens.json"],
-               resources=["json:.matches.json", "path:.extractor.json"],
-               dump     =os.environ["fragmentMetrics101dump"],
-               oninit   =initdump,
-               getvalue =getextractor,
-               callback =derive,
-               ondump   =preparedump)
+changed = meta101.havechanged(__file__, "helper.php", "megalib_leftover.php")
+
+meta101.derive(suffix    =[".fragments.metrics.json", ".fragments.tokens.json"],
+               resources =["json:.matches.json", "path:.extractor.json"],
+               dump      =os.environ["fragmentMetrics101dump"],
+               oninit    =initdump,
+               getvalue  =getextractor,
+               callback  =derive,
+               ondump    =preparedump,
+               entirerepo=changed)

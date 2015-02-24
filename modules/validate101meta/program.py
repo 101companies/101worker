@@ -39,9 +39,13 @@ def preparedump(deriver):
     deriver.dump["validators"] = sorted(list(deriver.dump["validators"]))
 
 
-meta101.derive(suffix  =".validator.json",
-               dump    =os.environ["validator101dump"],
-               oninit  =initdump,
-               key     ="validator",
-               callback=derive,
-               ondump  =preparedump)
+# FIXME also check validators when they are moved into 101worker
+changed = meta101.havechanged(__file__)
+
+meta101.derive(suffix    =".validator.json",
+               dump      =os.environ["validator101dump"],
+               oninit    =initdump,
+               key       ="validator",
+               callback  =derive,
+               ondump    =preparedump,
+               entirerepo=changed)

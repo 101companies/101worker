@@ -30,9 +30,10 @@ def preparedump(deriver):
     deriver.dump["extractors"] = sorted(list(deriver.dump["extractors"]))
 
 
-meta101.derive(suffix  =".extractor.json",
-               dump    =os.environ["extractor101dump"],
-               oninit  =initdump,
-               key     ="extractor",
-               callback=derive,
-               ondump  =preparedump)
+meta101.derive(suffix    =".extractor.json",
+               dump      =os.environ["extractor101dump"],
+               oninit    =initdump,
+               key       ="extractor",
+               callback  =derive,
+               ondump    =preparedump,
+               entirerepo=meta101.havechanged(__file__))

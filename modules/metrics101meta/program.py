@@ -44,9 +44,12 @@ def preparedump(deriver):
     deriver.dump["geshicodes"] = sorted(list(deriver.dump["geshicodes"]))
 
 
-meta101.derive(suffix  =[".metrics.json", ".tokens.json"],
-               dump    =os.environ["metrics101dump"],
-               oninit  =initdump,
-               getvalue=getgeshi,
-               callback=derive,
-               ondump  =preparedump)
+changed = meta101.havechanged(__file__, "helper.php", "megalib_leftover.php")
+
+meta101.derive(suffix    =[".metrics.json", ".tokens.json"],
+               dump      =os.environ["metrics101dump"],
+               oninit    =initdump,
+               getvalue  =getgeshi,
+               callback  =derive,
+               ondump    =preparedump,
+               entirerepo=changed)
