@@ -1,21 +1,10 @@
 import os
-import shutil
-import tempfile
-from   TAP.Simple   import *
+from   TAP.Simple import *
 import meta101
 execfile("t/dies_ok.py")
-
+execfile("t/tempdir.py")
 
 plan(3)
-
-# Python can't do this on its own apparently
-class tempdir:
-    def __enter__(self):
-        self.tempdir = tempfile.mkdtemp()
-        return self.tempdir
-
-    def __exit__(self, *args):
-        shutil.rmtree(self.tempdir, True)
 
 # we don't test handlepath here
 called = []
