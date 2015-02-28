@@ -6,7 +6,8 @@ import const101
 
 
 from warnings import warn
-warn("tools101.py is DEPRECATED, see 101worker/libraries/meta101 instead")
+warn("tools101.py is DEPRECATED, see 101worker/libraries/meta101 instead",
+     stacklevel=2)
 
 
 # Look up all metadata values, if any, for a certain metadata key

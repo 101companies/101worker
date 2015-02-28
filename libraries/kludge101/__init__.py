@@ -7,7 +7,7 @@ import warnings
 
 
 warnings.warn("kludge101 is a kludge. Fix extractors, validators "
-              "and friends to avoid code injection properly.")
+              "and friends to avoid code injection properly.", stacklevel=2)
 
 
 def checkpath(relpath):

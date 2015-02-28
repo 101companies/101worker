@@ -7,7 +7,8 @@ import imp
 
 
 from warnings import warn
-warn("matches101.py is DEPRECATED, see 101worker/libraries/meta101 instead")
+warn("matches101.py is DEPRECATED, see 101worker/libraries/meta101 instead",
+     stacklevel=2)
 
 
 sys.path.append('../../libraries/101meta')
