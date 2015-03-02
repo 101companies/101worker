@@ -15,19 +15,31 @@ def tolist(thing):
 def repodir():
     return os.environ["repo101dir"]
 
+def targetsdir():
+    return os.environ["targets101dir"]
+
 
 def sourcetotarget(path):
-    targetdir = os.environ["targets101dir"]
-
     if path.startswith(repodir()):
-        return targetdir + path[len(repodir()):]
-
+        return targetsdir() + path[len(repodir()):]
     raise ValueError()
 
 
-def handlepath(suffix, callback, path):
+def torelative(path, resources):
+    if path.startswith(repodir()):
+        return path[len(repodir()) + 1:]
+
+    if path.startswith(targetsdir()):
+        for r in resources:
+            if path.endswith(r.suffix):
+                return path[len(targetsdir()) + 1:-len(r.suffix)]
+
+
+
+def handlepath(suffix, callback, relative):
     try:
-        targetbase = sourcetotarget(path)
+        filename   = os.path.join(   repodir(), relative)
+        targetbase = os.path.join(targetsdir(), relative)
 
         if type(suffix) is not str:
             target = [targetbase + s for s in suffix]
@@ -36,18 +48,21 @@ def handlepath(suffix, callback, path):
 
         callback(target    =target,
                  targetbase=targetbase,
-                 filename  =path,
-                 relative  =path[len(repodir()) + 1:],
-                 dirname   =os.path.dirname(path)[len(repodir()) + 1:],
-                 basename  =os.path.basename(path))
+                 filename  =filename,
+                 relative  =relative,
+                 dirname   =os.path.dirname(filename)[len(repodir()) + 1:],
+                 basename  =os.path.basename(filename))
     except ValueError:
         pass
 
 
-def diff(suffix, **switch):
+def diff(suffix, resources, **switch):
+    handled = set()
     for op, path in incremental101.eachdiff():
-        if op in switch:
+        relative = torelative(path, resources)
+        if relative and relative not in handled and op in switch:
             handlepath(suffix, switch[op], path)
+            handled.add(relative)
 
 
 def walk(suffix, callback):
@@ -61,7 +76,8 @@ def walk(suffix, callback):
             pass
 
         for f in files:
-            handlepath(suffix, callback, os.path.join(root, f))
+            relative = os.path.join(root, f)[len(repodir()) + 1:]
+            handlepath(suffix, callback, relative)
 
 
 def valuebykey(deriver, matches, **kwargs):

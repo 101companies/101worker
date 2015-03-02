@@ -2,8 +2,9 @@ import json
 import os
 import sys
 import incremental101
-from   .Matches       import Matches
-from   .util          import diff, tolist, sourcetotarget, valuebykey, walk
+from .        import resource
+from .Matches import Matches
+from .util    import diff, tolist, sourcetotarget, valuebykey, walk
 
 
 class Deriver(object):
@@ -19,7 +20,7 @@ class Deriver(object):
         self.callback    = callback
         self.getvalue    = getvalue
         self.ondump      = ondump
-        self.resources   = resources or "json:" + Matches.suffix
+        self.resources   = resources or resource.Json(Matches.suffix)
         if oninit:
             oninit(self)
 
@@ -27,9 +28,10 @@ class Deriver(object):
     def run(self, entirerepo=False):
         if entirerepo:
             walk(self.suffix, self.onfile)
-            diff(self.suffix, D=self.ondelete)
+            diff(self.suffix, tolist(self.resources), D=self.ondelete)
         else:
-            diff(self.suffix, A=self.onfile, M=self.onfile, D=self.ondelete)
+            diff(self.suffix, tolist(self.resources), A=self.onfile,
+                 M=self.onfile, D=self.ondelete)
 
         if self.ondump:
             self.ondump(self)
@@ -50,25 +52,9 @@ class Deriver(object):
             del self.dump["problems"][key]
 
 
-    def loadresources(self, filename):
-        target = sourcetotarget(filename)
-        loaded = []
-
-        for resource in tolist(self.resources):
-            what, suffix = resource.split(":", 2)
-            path         = target + suffix
-            if not os.path.exists(path):
-                raise ValueError()
-
-            if   what == "path":
-                loaded.append(path)
-            elif what == "json":
-                with open(path) as f:
-                    loaded.append(json.load(f))
-            else:
-                sys.exit("invalid resource {} in {}".format(what, resource))
-
-        return loaded[0] if type(self.resources) is str else loaded
+    def loadresources(self, path):
+        load = [r.load(sourcetotarget(path)) for r in tolist(self.resources)]
+        return load[0] if isinstance(self.resources, resource.Pass) else load
 
 
     def onfile(self, **kwargs):

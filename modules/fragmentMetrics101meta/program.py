@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 import meta101
+from meta101.resource import File, Json
 
 
 def initdump(deriver):
@@ -51,7 +52,7 @@ def preparedump(deriver):
 changed = meta101.havechanged(__file__, "helper.php", "megalib_leftover.php")
 
 meta101.derive(suffix    =[".fragments.metrics.json", ".fragments.tokens.json"],
-               resources =["json:.matches.json", "path:.extractor.json"],
+               resources =[Json(".matches.json"), File(".extractor.json")],
                dump      =os.environ["fragmentMetrics101dump"],
                oninit    =initdump,
                getvalue  =getextractor,
