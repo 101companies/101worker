@@ -74,7 +74,6 @@ build                       | n/a
 gatherGeshi                 | n/a
 rules101meta                | ok
 matches101meta              | ok
-geshi101meta                | ok
 metrics101meta              | ok
 validate101meta             | ok
 extract101meta              | ok
@@ -82,25 +81,19 @@ fragmentMetrics101meta      | ok
 refineTokens                | **not ok**
 predicates101meta           | ok
 fragments101meta            | ok
-summary101meta              | **not ok**
-imports101meta              | **not ok**
+summary101meta              | ok
 wiki2json                   | **not ok**
 themesExtractor             | **not ok**
 languageExtractor           | **not ok**
 vocabulary                  | **not ok**
 wiki2tagclouds              | **not ok**
 moretagclouds               | **not ok**
-members                     | **not ok**
 summarizeModuleDescriptions | **not ok**
+members                     | **not ok**
 resolve101meta              | **not ok**
 index101meta                | **not ok**
 repo2charts                 | **not ok**
-wiki101JsonToWiki101RDF     | **not ok**
-loadWiki101RDF              | **not ok**
 parseMegaL                  | **not ok**
 webDeployMegaModels         | **not ok**
-rebuildXmlCatTree           | **not ok**
 validateModuleDescriptions  | **not ok**
-zip                         | **not ok**
-extractClaferFeatureModel   | **not ok**
 integrate                   | **not ok**

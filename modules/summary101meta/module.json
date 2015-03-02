@@ -1,12 +1,15 @@
 {
-    "command" : "make run",
+    "command" : "python program.py",
     "dependencies" : [
-        "refineTokens",
-        "metrics101meta",
+        "rules101meta",
+        "extract101meta",
         "matches101meta",
-        "predicates101meta"
+        "fragments101meta",
+        "predicates101meta",
+        "refineTokens"
     ],
     "environment" : [
+        "summary101dump",
         "targets101dir"
     ],
     "targets" : [
@@ -18,5 +21,5 @@
             "suffix" : ".summary.json"
         }
     ],
-    "wantdiff" : false
+    "wantdiff" : true
 }

@@ -1,53 +1,47 @@
-#! /usr/bin/env python
-
-import os
-import sys
+#!/usr/bin/env python
+from collections import OrderedDict
 import json
-import warnings
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
-
-def noMetrics():
-   default = const101.noMetrics()
-   default["relevance"] = "system"
-   return default
-
-def readOrDefault(filename, default):
-   try:
-      return json.load(open(filename, 'r'))
-   except (IOError, ValueError):
-      return default
-
-def fun(dirname, dirs, files):
-   for basename in files:
-      filename = os.path.join(dirname, basename)
-      f1 = os.path.join(const101.tRoot, filename + ".matches.json")
-      matches = readOrDefault(f1, [])
-      f2 = os.path.join(const101.tRoot, filename + ".predicates.json")
-      matches += readOrDefault(f2, [])
-      f3 = os.path.join(const101.tRoot, filename + ".fragments.json")
-      matches += readOrDefault(f3, [])
-      f4 = os.path.join(const101.tRoot, filename + ".metrics.json")
-      metrics = readOrDefault(f4, noMetrics())
-      f5 = os.path.join(const101.tRoot, filename + ".refinedTokens.json")
-      tokens = readOrDefault(f5, [])
-
-      try:
-         tDirname  = os.path.join(const101.tRoot, dirname)
-         if not os.path.exists(tDirname):
-            os.makedirs(tDirname)
-
-         tFilename = os.path.join(const101.tRoot, filename + ".summary.json")
-         with open(tFilename, 'w') as tFile:
-             json.dump({
-                "units"         : matches,
-                "metrics"       : metrics,
-                "refinedTokens" : tokens,
-             }, tFile)
-
-      except Exception as e:
-         warnings.warn(e)
+import os
+import meta101
 
 
-tools101.loopOverFiles(fun, True)
+defaults = OrderedDict([
+    ("matches",       []),
+    ("predicates",    []),
+    ("fragments",     []),
+    ("metrics",       {
+        "size"      : 0,
+        "loc"       : 0,
+        "sloc"      : 0,
+        "relevance" : "system",
+    }),
+    ("refinedTokens", []),
+])
+
+
+def readif(filename, default):
+    try:
+        with open(filename) as f:
+            return json.load(f)
+    except (IOError, ValueError):
+        return default
+
+
+def derive(deriver, value, resources, **kwargs):
+    zipped = zip(resources, defaults.keys(), defaults.values())
+    got    = {key : readif(path, default) for path, key, default in zipped}
+    return {
+        "units"         : got["matches"] + got["predicates"] + got["fragments"],
+        "metrics"       : got["metrics"],
+        "refinedTokens" : got["refinedTokens"],
+    }
+
+
+resrc = [meta101.resource.Pass(".{}.json".format(k)) for k in defaults.keys()]
+
+meta101.derive(suffix    =".summary.json",
+               dump      =os.environ["summary101dump"],
+               getvalue  =lambda *args, **kwargs: True,
+               callback  =derive,
+               resources =resrc,
+               entirerepo=meta101.havechanged(__file__))
