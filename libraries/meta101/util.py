@@ -35,7 +35,6 @@ def torelative(path, resources):
                 return path[len(targetsdir()) + 1:-len(r.suffix)]
 
 
-
 def handlepath(suffix, callback, relative):
     try:
         filename   = os.path.join(   repodir(), relative)
@@ -61,7 +60,7 @@ def diff(suffix, resources, **switch):
     for op, path in incremental101.eachdiff():
         relative = torelative(path, resources)
         if relative and relative not in handled and op in switch:
-            handlepath(suffix, switch[op], path)
+            handlepath(suffix, switch[op], relative)
             handled.add(relative)
 
 

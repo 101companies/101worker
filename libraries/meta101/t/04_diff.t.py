@@ -17,12 +17,13 @@ switch = {
 
 
 inc.instream  = StringIO()
-diff(".suffix", **switch)
+diff(".suffix", [], **switch)
 eq_ok(called, [], "diff with no input doesn't call anything")
 
 
 inc.instream = StringIO("A /path/repo/file\n")
-dies_ok(lambda: diff(".suffix", **switch), "missing environment variables dies")
+dies_ok(lambda: diff(".suffix", [], **switch),
+        "missing environment variables dies")
 
 
 os.environ[   "repo101dir"] = "/path/repo"
@@ -63,7 +64,7 @@ want   = [
         "basename"   : "deleted",
     }],
 ]
-diff(".suffix", **switch)
+diff(".suffix", [], **switch)
 eq_ok(called, want, "repo paths are called correctly, other paths are ignored")
 
 
@@ -74,12 +75,12 @@ for entry in want:
 
 called = []
 inc.instream.seek(0)
-diff([".suffix1", ".suffix2"], **switch)
+diff([".suffix1", ".suffix2"], [], **switch)
 eq_ok(called, want, "multiple suffixes using a list")
 
 called = []
 inc.instream.seek(0)
-diff((".suffix1", ".suffix2"), **switch)
+diff((".suffix1", ".suffix2"), [], **switch)
 eq_ok(called, want, "multiple suffixes using a tuple")
 
 
@@ -87,5 +88,5 @@ want.pop()
 del switch["D"]
 called = []
 inc.instream.seek(0)
-diff((".suffix1", ".suffix2"), **switch)
+diff((".suffix1", ".suffix2"), [], **switch)
 eq_ok(called, want, "missing entry in switch runs fine")

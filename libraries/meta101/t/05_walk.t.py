@@ -51,7 +51,7 @@ with tempdir() as tmp:
         open(os.path.join(tmp, f), "w").close()
     os.environ["repo101dir"] = tmp
 
-    want = [(".json", dummy, os.path.join(tmp, f)) for f in files[:-2]]
+    want = [(".json", dummy, f) for f in files[:-2]]
     meta101.util.walk(".json", dummy)
 
     keyfunc = lambda x: x[2]
