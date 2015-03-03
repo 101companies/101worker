@@ -10,17 +10,20 @@ from .util    import diff, tolist, sourcetotarget, valuebykey, walk
 class Deriver(object):
 
 
-    def __init__(self, suffix, dump, callback, oninit=None, ondump=None,
-                 getvalue=valuebykey, key=None, resources=None):
-        self.key         = key
+    def __init__(self, suffix, dump, callback, getvalue, oninit=None,
+                 ondump=None, resources=None):
         self.suffix      = suffix
         self.dumppath    = dump
         self.dump        = self.loaddump(dump)
         self.suffixcount = 1 if type(suffix) is str else len(suffix)
         self.callback    = callback
-        self.getvalue    = getvalue
         self.ondump      = ondump
         self.resources   = resources or resource.Json(Matches.suffix)
+        if callable(getvalue):
+            self.getvalue = getvalue
+        else:
+            self.getvalue = lambda deriver, matches, **kwargs: \
+                                valuebykey(getvalue, matches)
         if oninit:
             oninit(self)
 

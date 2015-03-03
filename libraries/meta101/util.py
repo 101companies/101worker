@@ -25,17 +25,19 @@ def sourcetotarget(path):
     raise ValueError()
 
 
-def torelative(path, resources):
+def torelative(path, resources, op):
     if path.startswith(repodir()):
-        return path[len(repodir()) + 1:]
+        return (path[len(repodir()) + 1:], op)
 
     if path.startswith(targetsdir()):
         for r in resources:
             if path.endswith(r.suffix):
-                return path[len(targetsdir()) + 1:-len(r.suffix)]
+                return (path[len(targetsdir()) + 1:-len(r.suffix)],
+                        "M" if op =="D" else op)
+    return (None, None)
 
 
-def handlepath(suffix, callback, relative):
+def handlepath(suffix, callback, relative, deleted=False):
     try:
         filename   = os.path.join(   repodir(), relative)
         targetbase = os.path.join(targetsdir(), relative)
@@ -58,9 +60,9 @@ def handlepath(suffix, callback, relative):
 def diff(suffix, resources, **switch):
     handled = set()
     for op, path in incremental101.eachdiff():
-        relative = torelative(path, resources)
-        if relative and relative not in handled and op in switch:
-            handlepath(suffix, switch[op], relative)
+        relative, relop = torelative(path, resources, op)
+        if relative and relative not in handled and relop in switch:
+            handlepath(suffix, switch[relop], relative)
             handled.add(relative)
 
 
@@ -79,6 +81,6 @@ def walk(suffix, callback):
             handlepath(suffix, callback, relative)
 
 
-def valuebykey(deriver, matches, **kwargs):
+def valuebykey(key, matches):
     metadata = map(lambda match: match["metadata"], matches)
-    return [m[deriver.key] for m in metadata if deriver.key in m][0]
+    return [m[key] for m in metadata if key in m][0]

@@ -27,7 +27,7 @@ def preparedump(deriver):
 meta101.derive(suffix    =".geshi.html",
                dump      =os.environ["geshi101dump"],
                oninit    =initdump,
-               key       ="geshi",
+               getvalue  ="geshi",
                callback  =derive,
                ondump    =preparedump,
                entirerepo=meta101.havechanged(__file__))

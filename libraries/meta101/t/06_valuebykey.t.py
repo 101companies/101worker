@@ -6,13 +6,7 @@ execfile("t/dies_ok.py")
 plan(4)
 
 matches = []
-deriver = meta101.Deriver(key     ="key",
-                          suffix  =".suffix",
-                          dump    ="nonexistent",
-                          callback=lambda *args, **kwargs: None)
-
-
-dies_ok(lambda: valuebykey(deriver, matches), "empty matches given dies")
+dies_ok(lambda: valuebykey("key", matches), "empty matches given dies")
 
 
 matches = [
@@ -29,7 +23,7 @@ matches = [
     },
 ]
 
-dies_ok(lambda: valuebykey(deriver, matches), "no values found dies")
+dies_ok(lambda: valuebykey("key", matches), "no values found dies")
 
 
 findme = {
@@ -40,7 +34,7 @@ findme = {
 }
 matches.append(findme)
 
-eq_ok(valuebykey(deriver, matches), "this is found", "single value is found")
+eq_ok(valuebykey("key", matches), "this is found", "single value is found")
 
 
 matches.append({
@@ -49,5 +43,5 @@ matches.append({
     },
 })
 
-eq_ok(valuebykey(deriver, matches), "this is found",
+eq_ok(valuebykey("key", matches), "this is found",
       "only first value of multiple is ever found")
