@@ -6,12 +6,15 @@ use LWP::Simple   qw(get);
 use JSON          qw(encode_json decode_json);
 use Repo101::Pull qw(pull101repo);
 
+
 my %paths = map { ($_ => $ENV{$_} || die "Missing environment variable: $_") }
                 qw(repo101dir gitdeps101dir repo101url gitdeps101url);
 
+# used in 101test - https://github.com/101companies/101test
 my $branches = exists $ENV{repo101branch}
              ? {$paths{repo101url} => $ENV{repo101branch}}
              : {};
+
 
 my $repos = do
 {
@@ -21,6 +24,7 @@ my $repos = do
     decode_json($content)   or die "Couldn't decode JSON: $content"
 };
 
+
 my $changes = pull101repo(
     root_path => $paths{repo101dir   },
     deps_path => $paths{gitdeps101dir},
@@ -29,6 +33,7 @@ my $changes = pull101repo(
     branches  => $branches,
 );
 
+# generate diff
 my @keys = sort keys %$changes;
 for my $i (0 .. $#keys)
 {

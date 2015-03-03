@@ -34,7 +34,7 @@ sub clone
 
 sub pull
 {
-    my ($dir, undef, $branch) = @_;
+    my ($dir) = @_;
     my $repo     = Git::Repository->new(work_tree => $dir);
     my $revision = git($repo, 'rev-parse', 'HEAD');
     git($repo, 'pull', '-q');
@@ -58,46 +58,69 @@ sub gather_changes
 }
 
 
-1 # The Magic One to make require happy.
+1
 __END__
 
 =head1 Repo101::Git
 
 Contains a few git functions for pull101repo based on Git::Repository.
 
-=head2 git($repo, @args) or git(@gather_changes)
+=head2 git
+
+    git(@args)
+    git(Git::Repository $repo, @args)
 
 Dispatches to C<< $repo->run(@args) >> if a L<Git::Repository> C<$repo> is
 given as the first argument and to C<< Git::Repository->run(@args) >>
 otherwise. Dies if any exit code but C<0> is returned by the git command and
 propagates the return from the C<run> function.
 
-=head2 $null_tree
+=head2 null_tree
+
+    $null_tree
 
 Hash for an empty git tree, used to get an initial diff. This hash should
 always turn out to be C<4b825dc642cb6eb9a060e54bf8d69288fbee4904>. It is used
 for getting a sensible C<git diff> for a newly cloned repo.
 
-=head2 clone_or_pull($dir, $url)
+=head2 clone_or_pull
+
+    clone_or_pull($dir, $url)
+    clone_or_pull($dir, $url, $branch)
 
 Dispatches to L</clone> if the folder C<$dir> doesn't exist yet, otherwise
-runs L</pull>. Propagates what the functions return.
+runs L</pull>. If a C<$branch> is given, it will also run C<git checkout> on
+it. This is used in L<101test|https://github.com/101companies/101test>.
 
-=head2 clone($dir, $url)
+Returns a diff of changes between the previous and the current state - see
+L</gather_changes>.
 
-C<git clone>s the repository from C<$url> into C<$dir>. Returns the changes
-between the L</$null_tree> and the C<HEAD> - see L</gather_changes>.
+=head2 clone
 
-=head2 pull($dir)
+    clone($dir, $url)
 
-C<git pull>s the repository in C<$dir> and returns the changes between the
-revision before the C<pull> and the C<HEAD> - see L</gather_changes>.
+C<git clone>s the repository from C<$url> into C<$dir>. Returns a two-element
+list containing the resulting C<Git::Repository> and C<undef> (because there
+was no previous revision).
 
-=head2 gather_changes($repo, $from, $to)
+See also L</pull> and L</clone_or_pull>.
+
+=head2 pull
+
+    pull($dir)
+
+C<git pull>s the repository in C<$dir>. Returns a two-element list containing
+the C<Git::Repository> and the revision before the pull.
+
+See also L</clone> and L</clone_or_pull>.
+
+=head2 gather_changes
+
+    gather_changes($repo, $from=$null_tree, $to=$null_tree)
 
 Runs a C<git diff --name-status> between the two revisions C<$from> and C<$to>
-on the given C<$repo>. If one of those revisions is C<undef>, the
-L</$null_tree> is used in its place.
+on the given C<$repo>. If any one of those revisions is not given or C<undef>,
+the L</$null_tree> is used in its place.
 
 Returns a hashref that maps from file path to what happened with the file:
 'A' for added, 'M' for modified and 'D' for deleted. Here's an example what

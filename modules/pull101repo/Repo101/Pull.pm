@@ -14,49 +14,53 @@ use Class::Tiny {
     root_url  => undef,
     deps_path => undef,
     repos     => undef,
+    branches  => sub { {} },
     changes   => sub { {} },
     pulled    => sub { {} },
-    branches  => sub { {} },
 };
 
 
 sub pull101repo
 {
     my $self = __PACKAGE__->new(@_);
-
     $self->merge_diffs($self->pull_repo($self->root_path, $self->root_url));
-
-    for my $namespace (keys %{$self->repos})
-    {
-        my $namespace_dir = join '/', $self->root_path, $namespace;
-
-        if (!-d $namespace_dir)
-        {   mkdir $namespace_dir or die "Couldn't create $namespace_dir: $!" }
-
-        my $repos = $self->repos->{$namespace};
-        for my $member (keys %$repos)
-        {
-            try
-            {   $self->member($member, $repos, $namespace, $namespace_dir) }
-            catch
-            {   warn "Error in member $member: $_" };
-        }
-
-        $self->clean_link($repos, $_) for glob "$namespace_dir/*";
-    }
-
+    $self->pull_namespace($_) for keys %{$self->repos};
     $self->changes
 }
 
 
-sub member
+sub pull_namespace
 {
-    my ($self, $member, $repos, $namespace, $namespace_dir) = @_;
-    my  $info = $self->extract_repo_info($repos->{$member}) or return;
+    my ($self, $namespace) = @_;
+    my  $namespace_dir     = join '/', $self->root_path, $namespace;
 
+    if (!-d $namespace_dir)
+    {   mkdir $namespace_dir or die "Couldn't create $namespace_dir: $!" }
+
+    my $repos = $self->repos->{$namespace};
+    for my $member (keys %$repos)
+    {
+        my $diff_path = "$namespace/$member";
+        my $link_path = "$namespace_dir/$member";
+        try
+        {   $self->pull_member($repos->{$member}, $diff_path, $link_path) }
+        catch
+        {   warn "Error in member $member: $_" };
+    }
+
+    $self->clean_link($repos, $_) for glob "$namespace_dir/*";
+}
+
+
+sub pull_member
+{
+    my ($self, $repo, $diff_path, $link_path) = @_;
+
+    my $info = $self->extract_repo_info($repo) or return;
     my $diff = $self->pull_repo($info->{repo_path}, $info->{repo_url});
-    $self->merge_diffs($diff, $info->{dep_path}, "$namespace/$member");
-    $self->symlink($info->{dep_path}, "$namespace_dir/$member");
+
+    $self->merge_diffs($diff, $info->{dep_path}, $diff_path);
+    $self->symlink($info->{dep_path}, $link_path);
 }
 
 
@@ -138,7 +142,7 @@ sub clean_link
 }
 
 
-1 # The Magic One, don't remove it because that might make require fail.
+1
 __END__
 
 =head1 Repo101::Pull
@@ -146,10 +150,11 @@ __END__
 Class for managing 101repo with its dependencies and gathering changes between
 revisions.
 
-=head2 Class
+=head2 Attributes
 
 An object of this class has the following attributes, some of which are
-required to be given in the constructor and when calling L</pull101repo>:
+required to be given in the constructor (C<< Repo101::Pull->new(%args) >>) and
+when calling L</pull101repo>:
 
 =over
 
@@ -189,34 +194,76 @@ empty hash and gets filled when repos are pulled.
 A hash mapping from a repo URL to raw changes obtained via C<git diff>. Used
 internally to see which repos are already pulled and to merge into C<changes>.
 
+=item branches
+
+A mapping from URL to branch name. If an entry like this exists for a given
+repo URL, the given branch is checked out. This is used in
+L<101test|https://github.com/101companies/101test> to simulate changes in
+101repo without having to actually change anything.
+
+=item changes
+
+Buffer for gathered diffs over all pulled repos. Defaults to an empty hashref,
+which is probably the Right Thing to start out with.
+
+=item pulled
+
+Which repos have already been pulled during this run, avoids calling git
+repeatedly for contributions from the same repo. Defaults to an empty hashref,
+which is also the Right Thing to start with.
+
 =back
 
-=head2 pull101repo(:root_path, :root_url, :deps_path, :repos)
+=head2 pull101repo
+
+    my $changes = pull101repo(
+        root_path => $root_path,
+        deps_path => $deps_path,
+        root_url  => $root_url,
+        repos     => \%repos,
+        # optional, used for 101test
+        branches  => \%branches,
+    );
 
 This is probably what you want to call. It pulls the root repo, pulls all
 dependent repos and symlinks them into the root repo and cleans up removed
 symlinks and dependent repos. Returns a hashref of changes with paths relative
 to the given C<root_path>.
 
-This sub takes a hash of named arguments and forwards them to the constructor,
-so you call it like this:
+The arguments map to the attributes described in L</Attributes> above.
 
-    my $changes = pull101repo(
-        root_path => $root_path,
-        deps_path => $deps_path,
-        root_url  => $root_url,
-        repos     => $repos,
-    );
+=head2 pull_namespace
 
-The arguments map to the attributes described in the L</Class> section above.
+    $self->pull_namespace($namespace)
 
-=head2 $self->pull_repo($path, $url)
+Pulls all members of the given namespace - see L</pull_member>. Warns if
+something goes wrong in any of those pulls. Also L</clean_link>s the symlinks
+that aren't members anymore.
+
+Returns nothing of use.
+
+=head2 pull_member
+
+    $self->pull_member($repo, $diff_path, $link_path)
+
+L</pull_repo>s the given repo, then L</merge_diff>s the resulting diff using
+the given C<$diff_path> as the new path and finally L</symlink>s the member
+into the 101repo folder.
+
+Returns nothing useful, but virtually every step of the above can die. Catch
+these exceptions like L</pull_namespace> does.
+
+=head2 pull_repo
+
+    $self->pull_repo($path, $url)
 
 Clones or pulls the repo from the given C<$url> into the given C<$dir>ectory.
 The raw diff is stored in C<< $self->pulled->{$url} >>, if that value
 already exists the repo isn't pulled again. Returns that raw diff.
 
-=head2 $self->merge_diffs($diff, $oldpath = $self->root_path, $newpath = undef)
+=head2 merge_diffs
+
+    $self->merge_diffs($diff, $oldpath=$self->root_path, $newpath=undef)
 
 Merges the changes from the given C<$oldpath> in C<$diff> into
 C<< $self->changes >> under the given C<$newpath> if it's defined.
@@ -227,7 +274,9 @@ C<"$oldpath/"> stripped and, if it is defined, have C<"$newpath/"> prefixed.
 
 Returns C<< $self->changes >>.
 
-=head2 $self->extract_repo_info($url)
+=head2 extract_repo_info
+
+     $self->extract_repo_info($url)
 
 Extracts user name, repo name and suffix path (if given) from a GitHub repo URL.
 Returns C<undef> if the user is C<101companies> and the repo is C<101repo>,
@@ -256,12 +305,16 @@ identical to the C<repo_path> if no suffix path is given in the URL.
 
 See also the tests in C<t/02_extract_repo_info>.
 
-=head2 $self->symlink($src, $dst)
+=head2 symlink
+
+    $self->symlink($src, $dst)
 
 Creates a symlink at C<$dst> pointing to the directory C<$src>. If C<$dst>
 already exists, it is removed first. Returns nothing useful.
 
-=head2 $self->clean_link($repos, $link)
+=head2 clean_link
+
+    $self->clean_link($repos, $link)
 
 If the given C<$link> really is a symlink and it is not a member in the
 C<$repos> hashref, the C<$link> and whatever it points to is deleted and the
