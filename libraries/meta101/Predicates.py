@@ -29,7 +29,7 @@ class Predicates(Phase):
         return super(Predicates, self).keys() + ["predicate"]
 
 
-    def checkpredicate(self, predicate, key, rule, filename, **kwargs):
+    def checkpredicate(self, predicate, rule, filename, **kwargs):
         if not self.regex.match(predicate):
             raise ValueError("weird predicate name: " + predicate)
 

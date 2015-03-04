@@ -37,7 +37,7 @@ def torelative(path, resources, op):
     return (None, None)
 
 
-def handlepath(suffix, callback, relative, deleted=False):
+def handlepath(suffix, callback, relative):
     try:
         filename   = os.path.join(   repodir(), relative)
         targetbase = os.path.join(targetsdir(), relative)

@@ -1,5 +1,4 @@
 import json
-import os
 import sys
 import incremental101
 from .        import resource

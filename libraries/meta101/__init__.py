@@ -66,7 +66,10 @@ def matchall(phasekey, entirerepo=False):
     """
     Run 101meta rule matching for a given phase.
 
-    TODO
+    This will derive all files incrementally automatically. You need to run
+    rules101meta to have the rules dump available and have an environment
+    variable called "phase101dump", where phase is the name of your matching
+    phase. That's where the dump will be written to.
 
 
     Parameters
@@ -85,6 +88,7 @@ def matchall(phasekey, entirerepo=False):
     --------
     getphase : where the phasekey gets passed to
     havechanged : for checking if you should set entirerepo to True
+    Phase : the base class for all the matching phases
     """
     dumpfile  = os.environ[phasekey + "101dump"]
     rulesfile = os.environ["rules101dump"]
@@ -108,13 +112,17 @@ def matchall(phasekey, entirerepo=False):
 def derive(entirerepo=False, **kwargs):
     """
     Derive resources from other resources, which in turn might have been
-    derived before.
+    derived before. Please only use keyword arguments (name=value) when you
+    call this function.
+
+    This library will take care of incrementality for you, and will only bother
+    you with files or derived resources that have changed. If a file gets
+    deleted and you derived a resource from it earlier, the resource will get
+    deleted for you.
 
     This thing is a bit complicated, but just have a look at the modules that
     use it to see what's going on and maybe cargo-cult a bit. The parameters
     will tell you where to look for examples for each of them.
-
-    Please only use keyword arguments (name=value) when you call this function.
 
 
     Parameters
@@ -139,10 +147,10 @@ def derive(entirerepo=False, **kwargs):
         Examples: summary101meta, validate101meta.
 
     getvalue : optional, string or function(deriver, **kwargs)
-        ...
+        TODO
 
     callback : function(deriver, value, **kwargs)
-        ...
+        TODO
 
     oninit : optional, function(deriver)
         Callback that is called after the Deriver is constructed and the dump
@@ -161,7 +169,12 @@ def derive(entirerepo=False, **kwargs):
                   the sets in their dumps to lists.
 
     resources : optional, resource or list of resource
-        ...
+        Which resources you want to derive from. See meta101.resources for more
+        info about which kinds of resources exist. Defaults to a decoded JSON
+        of the 101meta matches.
+
+        Examples: fragmentMetrics (derives from two resources), summary101meta
+                  (derives from a bunch of resources).
 
     entirerepo : optional, bool
         Force that incrementality be ignored and walk over the entire 101repo
@@ -170,5 +183,10 @@ def derive(entirerepo=False, **kwargs):
 
         Examples: validate101meta, summary101meta - both of them just use
                   the havechanged function.
+
+    See Also
+    --------
+    Deriver : class that handles all the actual deriving
+    resource : types of resources to derive from
     """
     return Deriver(**kwargs).run(entirerepo)
