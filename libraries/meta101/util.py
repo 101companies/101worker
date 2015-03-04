@@ -32,8 +32,8 @@ def torelative(path, resources, op):
     if path.startswith(targetsdir()):
         for r in resources:
             if path.endswith(r.suffix):
-                return (path[len(targetsdir()) + 1:-len(r.suffix)],
-                        "M" if op =="D" else op)
+                return (path[len(targetsdir()) + 1:-len(r.suffix)], "M")
+
     return (None, None)
 
 
