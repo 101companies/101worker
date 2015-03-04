@@ -66,12 +66,16 @@ class Deriver(object):
             resources = self.loadresources(kwargs["filename"])
             value     = self.getvalue(self, resources, **kwargs)
         except Exception:
+            for t in tolist(kwargs["target"]):
+                incremental101.deletefile(t)
             return
 
         try:
             result = self.callback(self, value, resources=resources, **kwargs)
         except Exception as e:
             self.dump["problems"][kwargs["relative"]] = str(e)
+            for t in tolist(kwargs["target"]):
+                incremental101.deletefile(t)
             return
 
         if type(result) is not tuple:
