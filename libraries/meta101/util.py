@@ -25,14 +25,17 @@ def sourcetotarget(path):
     raise ValueError()
 
 
-def torelative(path, resources, op):
+PRIMARY = 1
+DERIVED = 2
+
+def torelative(path, resources):
     if path.startswith(repodir()):
-        return (path[len(repodir()) + 1:], op)
+        return (path[len(repodir()) + 1:], PRIMARY)
 
     if path.startswith(targetsdir()):
         for r in resources:
             if path.endswith(r.suffix):
-                return (path[len(targetsdir()) + 1:-len(r.suffix)], "M")
+                return (path[len(targetsdir()) + 1:-len(r.suffix)], DERIVED)
 
     return (None, None)
 
@@ -58,12 +61,28 @@ def handlepath(suffix, callback, relative):
 
 
 def diff(suffix, resources, **switch):
-    handled = set()
+    primary = set()
+    derived = set()
+
     for op, path in incremental101.eachdiff():
-        relative, relop = torelative(path, resources, op)
-        if relative and relative not in handled and relop in switch:
-            handlepath(suffix, switch[relop], relative)
-            handled.add(relative)
+        relative, kind = torelative(path, resources)
+        if not relative:
+            continue
+
+        todo_primary = relative not in primary
+        todo_derived = relative not in derived
+
+        if kind == PRIMARY:
+            if todo_primary and (op == "D" or todo_derived):
+                if op in switch:
+                    handlepath(suffix, switch[op], relative)
+                primary.add(relative)
+
+        elif kind == DERIVED:
+            if todo_primary and todo_derived:
+                if "M" in switch:
+                    handlepath(suffix, switch["M"], relative)
+                derived.add(relative)
 
 
 def walk(suffix, callback):
