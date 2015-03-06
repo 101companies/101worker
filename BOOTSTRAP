@@ -11,7 +11,7 @@ git clone https://github.com/101companies/101worker.git
 
 bootstrapmsg 'Installing 101worker dependencies'
 cd 101worker
-./install
+./install -y
 
 bootstrapmsg 'Running 101worker unit tests'
 ./test
