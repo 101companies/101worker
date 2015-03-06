@@ -38,7 +38,7 @@ cd 101test
 sudo make install
 
 bootstrapmsg 'Running 101worker functional tests'
-make all
+make parallel
 cd ..
 
 bootstrapmsg 'All done, 101worker is ready.'
