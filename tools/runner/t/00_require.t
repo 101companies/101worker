@@ -13,6 +13,7 @@ my @modules = qw(
     Test::Most
     Try::Tiny
     URI::URL
+    YAML
 );
 
 plan tests => 1 + scalar @modules;
