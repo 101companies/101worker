@@ -3,8 +3,8 @@ set -e
 
 bootstrapmsg () { echo "BOOTSTRAP: $1"; }
 
-bootstrapmsg 'Installing git'
-sudo apt-get install -y git
+bootstrapmsg 'Installing git and make'
+sudo apt-get install -y git make
 
 bootstrapmsg 'Cloning 101worker'
 git clone https://github.com/101companies/101worker.git
