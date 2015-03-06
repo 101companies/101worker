@@ -6,6 +6,18 @@ bootstrapmsg () { echo "BOOTSTRAP: $1"; }
 bootstrapmsg 'Installing git and make'
 sudo apt-get install -y git make
 
+git config --global user.name || {
+    bootstrapmsg 'Setting your git user.name to "developer"'
+    bootstrapmsg 'You might want to change this later'
+    git config --global user.name developer
+}
+
+git config --global user.name || {
+    bootstrapmsg 'Setting your git user.email to "101worker@example.com"'
+    bootstrapmsg 'You might want to change this later'
+    git config --global user.name developer
+}
+
 bootstrapmsg 'Cloning 101worker'
 git clone https://github.com/101companies/101worker.git
 
