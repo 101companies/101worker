@@ -27,6 +27,7 @@ cd 101worker
 
 bootstrapmsg 'Running 101worker unit tests'
 ./test
+export worker101dir=`pwd`
 cd ..
 
 bootstrapmsg 'Cloning 101test'
