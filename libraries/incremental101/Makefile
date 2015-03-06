@@ -17,6 +17,6 @@ clean:
 	rm -rf TEST .coverage htmlcov
 
 install:
-	pip install --upgrade git+https://github.com/rjbs/PyTAP.git coverage
+	pip install git+https://github.com/rjbs/PyTAP.git coverage
 
 .PHONY: run test clean install cover
