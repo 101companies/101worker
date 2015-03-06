@@ -12,10 +12,10 @@ git config --global user.name || {
     git config --global user.name developer
 }
 
-git config --global user.name || {
+git config --global user.email || {
     bootstrapmsg 'Setting your git user.email to "101worker@example.com"'
     bootstrapmsg 'You might want to change this later'
-    git config --global user.name developer
+    git config --global user.email developer
 }
 
 bootstrapmsg 'Cloning 101worker'
