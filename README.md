@@ -1,3 +1,6 @@
+This is usage documentation, high level documentation is at [101docs](https://github.com/101companies/101docs/tree/master/worker).
+
+
 # Structure
 
 These are the top-level folder in the 101worker repository.
@@ -6,7 +9,7 @@ These are the top-level folder in the 101worker repository.
 
 Modules that can be executed as part of a 101worker cycle. One level of folders and one module per folder. Don't go nesting them.
 
-See also the [section about Module Contracts](#Module Contracts).
+See also the [section about Module Contracts](#Module-Contracts).
 
 ## libraries
 
@@ -41,7 +44,7 @@ Modules go into the [modules folder](modules). A module consists of the followin
 
 * **The module itself**, which may be written in any language. Most of them are in Python though, so unless a different language is plain better at what you're trying to do, you should use Python.
 
-* **Unit tests**. These are not optional. Other tests use the [Test Anything Protocol]() for their tests and `prove` to run it.
+* **Unit tests**. These are not optional. Other tests use the [Test Anything Protocol](http://testanything.org/producers.html) for their tests and `prove` to run it.
 
 * **Functional tests** with [101test](https://github.com/101companies/101test). These are a bit more *optional* than unit tests, but you should still have them.
 
@@ -53,11 +56,11 @@ Modules go into the [modules folder](modules). A module consists of the followin
 
 * **Makefile** with the following targets:
 
-    * **test**, so that your tests can automatically be discovered when you run [./test](test). This command **must** exit with a non-zero exit code if your tests fail.
+    * **test**, so that your tests can automatically be discovered when you run [./test](test). This command *must* exit with a non-zero exit code if your tests fail.
 
     * **install** (*optional*), if you need anything that doesn't come with a normal Ubuntu Server installation. These will automatically be discovered by [./install](install) and ***THEY WILL BE RUN WITH SUDO***. Don't go doing anything other than installs in this target. If you need to build your module, put separate target in your Makefile and call it from your `module.json`.
 
-See [pull101repo](modules/pull101repo) as an example. Pretty much all other modules are legacy and don't properly fulfill those requirements though. Don't take them as examples.
+See [pull101repo](modules/pull101repo) as an example. Pretty muchttp://testanything.org/producers.htmlh all other modules are legacy and don't properly fulfill those requirements though. Don't take them as examples.
 
 
 ## 101diff
