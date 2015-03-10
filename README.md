@@ -44,7 +44,7 @@ Modules go into the [modules folder](modules). A module consists of the followin
 
 * **The module itself**, which may be written in any language. Most of them are in Python though, so unless a different language is plain better at what you're trying to do, you should use Python.
 
-* **Unit tests**. These are not optional. Other tests use the [Test Anything Protocol](http://testanything.org/producers.html) for their tests and `prove` to run it.
+* **Unit tests**. These are not optional. Currently, all tests use the [Test Anything Protocol](http://testanything.org/producers.html) and are run using `prove`.
 
 * **Functional tests** with [101test](https://github.com/101companies/101test). These are a bit more *optional* than unit tests, but you should still have them.
 
