@@ -45,3 +45,20 @@ for my $path (sort keys %results)
 my $result = grep { /not ok/ } values %results;
 print 'Result: ', ($result ? 'FAIL' : 'PASS'), "\n\n";
 exit $result;
+
+
+__END__
+
+=head1 NAME
+
+test - run all C<make test> in this repository
+
+=head1 SYNOPSIS
+
+You just do ./test and this script will run all make test targets it can find.
+Then it'll report the overall okness of the tests.
+
+The exit code is equal to the amount of make test targets that failed. Ideally,
+this will be 0.
+
+=cut
