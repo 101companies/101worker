@@ -1,69 +1,80 @@
 # Structure
 
+These are the top-level folder in the 101worker repository.
+
 ## modules
+
+Modules that can be executed as part of a 101worker cycle. One level of folders and one module per folder. Don't go nesting them.
+
+See also the [section about Module Contracts](#Module Contracts).
 
 ## libraries
 
+Internal-use libraries. This folder will be added to the `$PYTHONPATH`, so you can just `import` them in modules written in Python. The same could be done for other languages, but right now we ain't needing it.
+
 ## configs
+
+Contains configuration files for different 101worker cycle. The `production.json` is what's used normally.
+
+The [test folder](configs/test) contains test configurations for [101test](https://github.com/101companies/101test).
+
+The [env folder](configs/env) contains environment variable definitions. Those have their own [README](configs/env/README.md).
 
 ## schemas
 
+JSON schema central.
+
 ## services
+
+Web services relating to 101worker.
 
 ## attic
 
+Stuff that nobody needs anymore, but you don't quite want to throw it away.
+
+Somebody should probably clear out the attic sometime, since Git has a history of all files anyway. Unless Martin breaks it again, that is.
+
+
 # Module Contracts
 
-TODO
+Modules go into the [modules folder](modules). A module consists of the following (optional things are marked as such, everything else is **required**).
 
-All the mentioned directories are automatically created, if needed.
+* **The module itself**, which may be written in any language. Most of them are in Python though, so unless a different language is plain better at what you're trying to do, you should use Python.
 
+* **Unit tests**. These are not optional. Other tests use the [Test Anything Protocol]() for their tests and `prove` to run it.
 
-# Production cycle by 101worker
+* **Functional tests** with [101test](https://github.com/101companies/101test). These are a bit more *optional* than unit tests, but you should still have them.
 
-101worker repeatedly executes a certain list of modules.
+* **module.json** specifying which command is to be run, if you want to use 101diff, which environment variables you need and which other modules depend on it. See also [the schema](schemas/module.schema.json) and [this module.json](modules/predicates101meta/module.json) as an example.
 
-See the file `101worker/configs/production.json` for the list.
+* **README.md**, with a short explanation of what it does and how to use it.
 
-Module names are stored in a json list.
+* **Documentation** with a detailed explanation of the module's purpose on [101docs](https://github.com/101companies/101docs).
 
-The production cycle can be manually invoked as follows:
+* **Makefile** with the following targets:
 
-* Change directory to `101worker`.
-* Enter `make`.
+    * **test**, so that your tests can automatically be discovered when you run [./test](test). This command **must** exit with a non-zero exit code if your tests fail.
 
-The idea is that a cron job performs these commands regularly.
+    * **install** (*optional*), if you need anything that doesn't come with a normal Ubuntu Server installation. These will automatically be discovered by [./install](install) and ***THEY WILL BE RUN WITH SUDO***. Don't go doing anything other than installs in this target. If you need to build your module, put separate target in your Makefile and call it from your `module.json`.
 
-101worker updates itself with "git pull" after each run.
-
-In this manner, production modules can also be added remotely.
-
-TODO talk about logging.
+See [pull101repo](modules/pull101repo) as an example. Pretty much all other modules are legacy and don't properly fulfill those requirements though. Don't take them as examples.
 
 
-# Adding a module
+## 101diff
 
 TODO
 
 
-# Alternative module lists
+# Cycles
 
-The default list is `101worker/configs/production.json`.
+In each 101worker cycle, it validates and then executes a list of modules. See the [module list used in production](configs/production.json).
 
-TODO talk about env, testing in 101test
+The idea is that a cronjob performs these commands regularly. Just don't make it run 60 times at once, experience has shown that it don't work too well.
+
+101worker updates itself with `git pull` after each run, so any changes in this repository will be applied in due time.
 
 
-# TODO
-
-* this documentation
-
-* unit tests of meta101, runner, pull101repo
-
-* documentation of meta101
-
-* handling of module failure, saving its diff
-
-* incrementalization of modules:
+# Incrementalization Status
 
 Module                      | Status
 ----------------------------|:--------:
