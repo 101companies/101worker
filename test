@@ -4,6 +4,11 @@ use warnings;
 use Cwd;
 use File::Basename qw(dirname);
 use File::Find;
+use Pod::Usage;
+
+
+pod2usage(-verbose => 99) if @ARGV;
+
 
 my $cwd  = getcwd;
 my $dir  = dirname $cwd;
