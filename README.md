@@ -40,11 +40,11 @@ Somebody should probably clear out the attic sometime, since Git has a history o
 
 # Module Contracts
 
-Modules go into the [modules folder](modules). A module consists of the following (optional things are marked as such, everything else is **required**).
+Modules go into the [modules folder](modules). A module consists of the following (optional things are marked as such, everything else is *required*).
 
 * **The module itself**, which may be written in any language. Most of them are in Python though, so unless a different language is plain better at what you're trying to do, you should use Python.
 
-* **Unit tests**. These are not optional. Currently, all tests use the [Test Anything Protocol](http://testanything.org/producers.html) and are run using `prove`.
+* **Unit tests**. These are not optional. Currently, all tests use the [Test Anything Protocol](http://testanything.org/producers.html) and are run using `prove`. For tests in Python, see for example the [meta101 library](libraries/meta101), specifically its [Makefile](libraries/meta101/Makefile) and its [t folder](libraries/meta101/t) that contains the tests.
 
 * **Functional tests** with [101test](https://github.com/101companies/101test). These are a bit more *optional* than unit tests, but you should still have them.
 
@@ -54,13 +54,15 @@ Modules go into the [modules folder](modules). A module consists of the followin
 
 * **Documentation** with a detailed explanation of the module's purpose on [101docs](https://github.com/101companies/101docs).
 
+* **Technical documentation**, but this is *optional* if your module is trivial. Once you have multiple files though, you should probably document your modules, functions, classes etc.
+
 * **Makefile** with the following targets:
 
     * **test**, so that your tests can automatically be discovered when you run [./test](test). This command *must* exit with a non-zero exit code if your tests fail.
 
     * **install** (*optional*), if you need anything that doesn't come with a normal Ubuntu Server installation. These will automatically be discovered by [./install](install) and ***THEY WILL BE RUN WITH SUDO***. Don't go doing anything other than installs in this target. If you need to build your module, put separate target in your Makefile and call it from your `module.json`.
 
-See [pull101repo](modules/pull101repo) as an example. Pretty muchttp://testanything.org/producers.htmlh all other modules are legacy and don't properly fulfill those requirements though. Don't take them as examples.
+See [pull101repo](modules/pull101repo) as an example. Pretty much all other modules are legacy and don't properly fulfill those requirements though. Don't take them as examples.
 
 
 ## 101diff
@@ -78,6 +80,8 @@ The idea is that a cronjob performs these commands regularly. Just don't make it
 
 
 # Incrementalization Status
+
+An overview of modules that have been made incremental and use [101diff](#101diff). The ones that are **not ok** either still need to be incrementalized or don't work in the first place.
 
 Module                      | Status
 ----------------------------|:--------:
