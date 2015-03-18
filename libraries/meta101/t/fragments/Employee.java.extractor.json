@@ -1,0 +1,90 @@
+{
+   "fragments" : [
+      {
+         "annotations" : [],
+         "classifier"  : "class",
+         "name"        : "Employee",
+         "startLine"   : 7,
+         "endLine"     : 78,
+         "fragments"   : [
+            {
+               "annotations" : [],
+               "classifier"  : "method",
+               "name"        : "getName",
+               "startLine"   : 22,
+               "endLine"     : 24
+            },
+            {
+               "annotations" : [],
+               "name"        : "setName",
+               "classifier"  : "method",
+               "startLine"   : 26,
+               "endLine"     : 28
+            },
+            {
+               "annotations" : [],
+               "classifier"  : "method",
+               "name"        : "getAddress",
+               "startLine"   : 30,
+               "endLine"     : 32
+            },
+            {
+               "annotations" : [],
+               "classifier"  : "method",
+               "name"        : "setAddress",
+               "startLine"   : 34,
+               "endLine"     : 36
+            },
+            {
+               "annotations" : [],
+               "classifier"  : "method",
+               "name"        : "getSalary",
+               "startLine"   : 38,
+               "endLine"     : 40
+            },
+            {
+               "annotations" : [],
+               "classifier"  : "method",
+               "name"        : "setSalary",
+               "startLine"   : 42,
+               "endLine"     : 44
+            },
+            {
+               "annotations" : [],
+               "classifier"  : "method",
+               "name"        : "setManager",
+               "startLine"   : 46,
+               "endLine"     : 48
+            },
+            {
+               "annotations" : ["Override"],
+               "classifier"  : "method",
+               "name"        : "toString",
+               "startLine"   : 50,
+               "endLine"     : 60
+            },
+            {
+               "annotations" : [],
+               "classifier"  : "method",
+               "name"        : "setTreeNode",
+               "startLine"   : 62,
+               "endLine"     : 64
+            },
+            {
+               "annotations" : [],
+               "classifier"  : "method",
+               "name"        : "getTreeNode",
+               "startLine"   : 66,
+               "endLine"     : 68
+            },
+            {
+               "annotations" : ["Override"],
+               "classifier"  : "method",
+               "name"        : "isEmployee",
+               "startLine"   : 70,
+               "endLine"     : 77
+            }
+         ]
+      }
+   ]
+}

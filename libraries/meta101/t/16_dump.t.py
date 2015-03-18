@@ -21,5 +21,4 @@ eq_ok(meta101.Fragments().dump(), {
           "rules"      : {},
           "matches"    : [],
           "failures"   : {},
-          "locators"   : [],
       }, "fragments dump");

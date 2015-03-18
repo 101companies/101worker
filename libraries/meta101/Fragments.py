@@ -1,11 +1,6 @@
-import os
+import re
 import json
-import subprocess
-import warnings
-import kludge101
-from   .Phase     import Phase
-from   .Matches   import Matches
-from   .util      import tolist
+from   .Phase import Phase
 
 
 class Fragments(Phase):
@@ -14,13 +9,6 @@ class Fragments(Phase):
 
     def __init__(self, *args):
         super(Fragments, self).__init__(*args)
-        self.locators = set()
-
-
-    def dump(self):
-        dump = super(Fragments, self).dump()
-        dump["locators"] = list(self.locators)
-        return dump
 
 
     def applicable(self, rule):
@@ -31,58 +19,55 @@ class Fragments(Phase):
         return super(Fragments, self).keys() + ["fragment"]
 
 
-    def findlocator(self, matchespath):
-        with open(matchespath) as f:
-            matches = json.load(f)
+    @staticmethod
+    def resolve(uri):
+        split  = uri.split("/")
+        pieces = []
+        i      = 0
 
-        for match in matches:
-            if "locator" in match["metadata"]:
-                return match["metadata"]["locator"]
+        while i < len(split):
+            piece = {
+                "classifier" : split[  i  ],
+                "name"       : split[i + 1],
+            }
 
-        raise ValueError("locator not found")
-
-
-    def runlocator(self, locator, fragment, rule, filename, tempin, tempout):
-        args     = tolist(rule["args"]) if "args" in rule else []
-        command  = [locator] + args + [filename, tempin, tempout]
-
-        with open(tempin, 'w') as f:
-            if type(fragment) is str:
-                f.write(str)
+            if i + 2 < len(split) and re.match(r"\d+", split[i + 2]):
+                piece["index"] = int(split[i + 2])
+                i += 3
             else:
-                json.dump(fragment, f)
+                piece["index"] = 0
+                i += 2
 
-        subprocess.check_call(command)
+            pieces.append(piece)
 
-        with open(tempout) as f:
-            return json.load(f)
+        return pieces
 
 
-    def checkfragment(self, fragment, rule, relative,
-                      filename, result, targetbase, **kwargs):
-        # XXX: temporary files are dumb, it'd be much better if locators just
-        #      took their input via stdin and output their results via stdout
-        temppath = os.path.join(os.environ["temps101dir"],
-                                relative.replace("/", "-"))
-        tempin   = temppath + ".in"
-        tempout  = temppath + ".out"
+    @staticmethod
+    def gather(fragments, classifier, name, index):
+        return [f for f in fragments if f["classifier"] == classifier
+                                    and f[   "name"   ] == name][index]
+
+
+    def find(self, resource, pieces, i=0):
+        if i >= len(pieces):
+            return resource
+        gathered = self.gather(resource["fragments"], **pieces[i])
+        return self.find(gathered, pieces, i + 1)
+
+
+    def checkfragment(self, fragment, result, targetbase, **kwargs):
+        with open(targetbase + ".extractor.json") as f:
+            extractor = json.load(f)
+        pieces = self.resolve(fragment)
 
         try:
-            found   = self.findlocator(targetbase + Matches.suffix)
-            # FIXME: move locators into 101worker
-            locator = kludge101.checkpath(found)
-            if not locator:
-                raise RuntimeError("foiled code injection: {}".format(found))
-            self.locators.add(locator)
+            found = self.find(extractor, pieces)
+        except LookupError:
+            return None
 
-            result["lines"] = self.runlocator(locator, fragment, rule,
-                                              filename, tempin, tempout)
-        finally:
-            for f in [tempin, tempout]:
-                if os.path.exists(f):
-                    try:
-                        os.unlink(f)
-                    except Exception as e:
-                        warnings.warn("Can't unlink {}: {}".format(f, e))
-
-        return "lines" in result
+        result["lines"] = {
+            "from" : found["startLine"],
+            "to"   : found[  "endLine"],
+        }
+        return result
