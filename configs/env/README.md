@@ -98,37 +98,3 @@ wget "$repo101url"
 run: ${repo101dir}
 	python program.py
 ```
-
-Constant Documentation
-----------------------
-
-These are the constants that are currently in use. This is a big TODO.
-
-Name                   | Type      | Description
----------------------- | --------- | -----------------------------------------------------
-config101              | File      | Module configuration file, used by runner
-repo101dir             | Directory | Where 101repo gets pulled to
-gitdeps101dir          | Directory | Where 101repo dependencies get pulled to
-targets101dir          | Directory | 
-dumps101dir            | Directory | Where dump results go
-views101dir            | Directory | Where view results go
-rules101dump           | File      | Location of 101meta rules dump
-matches101dump         | File      | 
-predicates101dump      | File      | 
-fragments101dump       | File      | 
-geshi101dump           | File      | 
-validator101dump       | File      | 
-extractor101dump       | File      | 
-metrics101dump         | File      | 
-fragmentMetrics101dump | File      | 
-summary101dump         | File      | 
-suffixes101dump        | File      | 
-imports101dump         | File      | 
-resolution101dump      | File      | 
-wiki101dump            | File      | 
-repo101url             | URL       | Remote URL for 101repo
-gitdeps101url          | URL       | URL with the JSON definition for 101repo dependencies
-wiki101url             | URL       | 
-explorer101url         | URL       | 
-endpoint101url         | URL       | 
-data101url             | URL       | 
