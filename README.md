@@ -64,10 +64,7 @@ Modules go into the [modules folder](modules). A module consists of the followin
 
 See [pull101repo](modules/pull101repo) as an example. Pretty much all other modules are legacy and don't properly fulfill those requirements though. Don't take them as examples.
 
-
-## 101diff
-
-TODO
+If your module derives resources, also have a look at the [meta101 library](libraries/meta101), which provides the interface for doing that. The API is documented and has examples for you.
 
 
 # Cycles

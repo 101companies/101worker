@@ -1,7 +1,7 @@
 pull101Repo
 ===========
 
-101worker module for getting the latest 101repo and all its dependent repos from GitHub. It also gathers a diff off all the files changed since it was last run.
+This is usage documentation. Refer to [101docs](https://github.com/101companies/101docs/blob/master/worker/modules/pull101repo.md) for high-level documentation.
 
 
 Architecture
