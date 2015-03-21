@@ -66,6 +66,8 @@ See [pull101repo](modules/pull101repo) as an example. Pretty much all other modu
 
 If your module derives resources, also have a look at the [meta101 library](libraries/meta101), which provides the interface for doing that. The API is documented and has examples for you.
 
+Also, please use [environment variables](configs/env) instead of hard-coding paths or URLs.
+
 
 # Cycles
 
