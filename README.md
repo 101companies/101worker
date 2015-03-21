@@ -48,7 +48,7 @@ Modules go into the [modules folder](modules). A module consists of the followin
 
 * **Functional tests** with [101test](https://github.com/101companies/101test). These are a bit more *optional* than unit tests, but you should still have them.
 
-* **module.json** specifying which command is to be run, if you want to use 101diff, which environment variables you need and which other modules depend on it. See also [the schema](schemas/module.schema.json) and [this module.json](modules/predicates101meta/module.json) as an example.
+* **module.json** specifying which command is to be run, if you want your module to be incremental, which environment variables you need and which other modules depend on it. See also [the schema](schemas/module.schema.json) and [this module.json](modules/predicates101meta/module.json) as an example.
 
 * **README.md**, with a short explanation of what it does and how to use it.
 
@@ -78,7 +78,7 @@ The idea is that a cronjob performs these commands regularly. Just don't make it
 
 # Incrementalization Status
 
-An overview of modules that have been made incremental and use [101diff](#101diff). The ones that are **not ok** either still need to be incrementalized or don't work in the first place.
+An overview of modules that have been made incremental and use the new [meta101 library](libraries/meta101). The ones that are **not ok** either still need to be incrementalized or don't work in the first place.
 
 Module                      | Status
 ----------------------------|:--------:
