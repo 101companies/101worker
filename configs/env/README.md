@@ -34,7 +34,7 @@ This is primarily intended to replace `libraries/101meta/const101.py`, which is 
 
 The environment variable approach fulfills the “Single Point of Truth” or “Once and Only Once” rule: they are defined in one place and can be accessed from virtually any programming environment. It is also much more flexible and allows creation of a test environment.
 
-The const101 Python module and Makefile.vars are therefore *deprecated* and will hopefully be removed soon.
+The [const101 Python module](../../libraries/101meta/const101.py) and [Makefile.vars](../../modules/Makefile.vars) are therefore *deprecated* and will hopefully be removed soon.
 
 Accessing Environment Variables
 -------------------------------
