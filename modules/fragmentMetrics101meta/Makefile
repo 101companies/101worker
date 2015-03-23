@@ -1,2 +1,2 @@
 install:
-	apt-get install $$WORKER101_ASSUME_YES php5-cli
+	apt-get install -y php5-cli

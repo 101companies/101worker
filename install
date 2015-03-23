@@ -7,21 +7,12 @@ use Getopt::Long;
 use Pod::Usage;
 
 
-my ($help, $yes);
-my $getopt = GetOptions('help|h' => \$help, 'assume-yes|y' => \$yes);
+my ($help);
+my $getopt = GetOptions('help|h' => \$help);
 my %args;
 $args{'-message'} = "unknown options: @ARGV" if @ARGV;
 $args{'-verbose'} = 99                       if $help;
 pod2usage(%args)                             if %args || !$getopt;
-
-
-if ($yes)
-{
-    $ENV{PERL_MM_USE_DEFAULT      } = 1;
-    $ENV{PERL_EXTUTILS_AUTOINSTALL} = '--defaultdeps';
-    $ENV{WORKER101_ASSUME_YES     } = '-y';
-}
-
 
 my @make;
 
@@ -34,15 +25,15 @@ find sub {
 
 sub want
 {
-    return 1 if $yes;
-    my ($path) = @_;
-    while (1)
-    {
-        print "run sudo make install in $path? [Y/n] ";
-        my $read = <STDIN>;
-        return 1 if $read =~ /^\s*y?\s*$/i;
-        return 0 if $read =~ /^\s*n\s*$/i;
-    }
+    return 1;
+    # my ($path) = @_;
+    # while (1)
+    # {
+    #     print "run sudo make install in $path? [Y/n] ";
+    #     my $read = <STDIN>;
+    #     return 1 if $read =~ /^\s*y?\s*$/i;
+    #     return 0 if $read =~ /^\s*n\s*$/i;
+    # }
 }
 
 

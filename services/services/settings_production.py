@@ -16,7 +16,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -87,8 +87,8 @@ STATICFILES_DIRS = (
     os.path.abspath(os.path.join(os.path.basename(__file__), '..' ,'static')),
 )
 
-# BASE_URL = 'http://101companies.org/resources/'
-BASE_URL = 'http://localhost:8000/discovery/'
+BASE_URL = 'http://101companies.org/resources/'
+# BASE_URL = 'http://localhost:8000/discovery/'
 
 # List of finder classes that know how to find static files in
 # various locations.
