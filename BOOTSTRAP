@@ -21,9 +21,9 @@ git config --global user.email || {
 bootstrapmsg 'Cloning 101worker'
 git clone https://github.com/101companies/101worker.git
 
-bootstrapmsg 'Installing 101worker dependencies'
+bootstrapmsg 'Installing 101worker dependencies (needs sudo)'
 cd 101worker
-./install -y
+sudo ./install
 
 bootstrapmsg 'Running 101worker unit tests'
 ./test
