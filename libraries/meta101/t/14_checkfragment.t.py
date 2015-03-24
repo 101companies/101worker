@@ -1,7 +1,6 @@
-#from TAP.Simple        import *
-from TestMore import *
+from TAP.Simple        import *
 from meta101.Fragments import Fragments
-#execfile("t/dies_ok.py")
+execfile("t/dies_ok.py")
 
 plan(14)
 fragments = Fragments()
