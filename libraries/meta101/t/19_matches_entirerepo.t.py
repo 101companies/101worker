@@ -62,46 +62,45 @@ def unlink(*files):
         os.unlink(os.path.join(os.environ["repo101dir"], f))
 
 
-with tempdir() as tmp:
+tmp = tempdir()
+os.environ[   "repo101dir" ] = os.path.join(tmp,         "repo")
+os.environ["targets101dir" ] = os.path.join(tmp,      "targets")
+os.environ[  "rules101dump"] = os.path.join(tmp,   "rules.json")
+os.environ["matches101dump"] = os.path.join(tmp, "matches.json")
 
-    os.environ[   "repo101dir" ] = os.path.join(tmp,         "repo")
-    os.environ["targets101dir" ] = os.path.join(tmp,      "targets")
-    os.environ[  "rules101dump"] = os.path.join(tmp,   "rules.json")
-    os.environ["matches101dump"] = os.path.join(tmp, "matches.json")
+os.mkdir(os.environ[   "repo101dir"])
+os.mkdir(os.environ["targets101dir"])
 
-    os.mkdir(os.environ[   "repo101dir"])
-    os.mkdir(os.environ["targets101dir"])
-
-    with open(os.environ["rules101dump"], "w") as f:
-        json.dump({"results" : {"rules" : [{"rule" : rule}]}}, f)
-
-
-    setdiff("A a.py", "M m.py")
-    testmatches([], [], {}, "match over entire empty repo, diff is ignored")
+with open(os.environ["rules101dump"], "w") as f:
+    json.dump({"results" : {"rules" : [{"rule" : rule}]}}, f)
 
 
-    touch("file1.py", "file2.py", "file3.py")
-    setdiff("A a.py", "M m.py")
-    testmatches(["file1.py", "file2.py", "file3.py"], [], {},
-                "match over entire filled repo derives all files")
+setdiff("A a.py", "M m.py")
+testmatches([], [], {}, "match over entire empty repo, diff is ignored")
 
 
-    unlink("file1.py")
-    setdiff("A a.py", "M m.py", "D file1.py")
-    testmatches(["file2.py", "file3.py"], ["file1.py"], {},
-                "matches with deletions, that part of the diff isn't ignored")
+touch("file1.py", "file2.py", "file3.py")
+setdiff("A a.py", "M m.py")
+testmatches(["file1.py", "file2.py", "file3.py"], [], {},
+            "match over entire filled repo derives all files")
 
 
-    with open(os.environ["matches101dump"], "r+") as f:
-        dump = json.load(f)
-        dump["failures"]["file1.py"] = "whagarbl"
-        f.seek(0)
-        json.dump(dump, f)
+unlink("file1.py")
+setdiff("A a.py", "M m.py", "D file1.py")
+testmatches(["file2.py", "file3.py"], ["file1.py"], {},
+            "matches with deletions, that part of the diff isn't ignored")
 
-    setdiff("A a.py", "M m.py")
-    testmatches(["file2.py", "file3.py"], [], {"file1.py" : "whagarbl"},
-                "failures are retained if files aren't explicitly deleted")
 
-    setdiff("D file1.py")
-    testmatches(["file2.py", "file3.py"], [], {},
-                "failures are removed if the diff says the file was deleted")
+with open(os.environ["matches101dump"], "r+") as f:
+    dump = json.load(f)
+    dump["failures"]["file1.py"] = "whagarbl"
+    f.seek(0)
+    json.dump(dump, f)
+
+setdiff("A a.py", "M m.py")
+testmatches(["file2.py", "file3.py"], [], {"file1.py" : "whagarbl"},
+            "failures are retained if files aren't explicitly deleted")
+
+setdiff("D file1.py")
+testmatches(["file2.py", "file3.py"], [], {},
+            "failures are removed if the diff says the file was deleted")

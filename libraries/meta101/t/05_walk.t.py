@@ -44,18 +44,19 @@ files = [
     ".git/branches/nor_should_this",
 ]
 
-with tempdir() as tmp:
-    for d in dirs:  # build a directory tree
-        os.makedirs(os.path.join(tmp, d))
-    for f in files: # touch files
-        open(os.path.join(tmp, f), "w").close()
-    os.environ["repo101dir"] = tmp
+tmp = tempdir()
 
-    want = [(".json", dummy, f) for f in files[:-2]]
-    meta101.util.walk(".json", dummy)
+for d in dirs:  # build a directory tree
+    os.makedirs(os.path.join(tmp, d))
+for f in files: # touch files
+    open(os.path.join(tmp, f), "w").close()
+os.environ["repo101dir"] = tmp
 
-    keyfunc = lambda x: x[2]
-    want  .sort(key=keyfunc)
-    called.sort(key=keyfunc)
+want = [(".json", dummy, f) for f in files[:-2]]
+meta101.util.walk(".json", dummy)
 
-    eq_ok(called, want, "folder is walked with all files but the ones in .git")
+keyfunc = lambda x: x[2]
+want  .sort(key=keyfunc)
+called.sort(key=keyfunc)
+
+eq_ok(called, want, "folder is walked with all files but the ones in .git")
