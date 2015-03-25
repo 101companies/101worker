@@ -94,7 +94,6 @@ class Deriver(object):
             else:
                 incremental101.writefile(t, r)
 
-
     def ondelete(self, target, relative, **kwargs):
         self.rmdump(relative)
         for t in tolist(target):
