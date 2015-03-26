@@ -147,10 +147,50 @@ def derive(entirerepo=False, **kwargs):
         Examples: summary101meta, validate101meta.
 
     getvalue : optional, string or function(deriver, **kwargs)
-        TODO
+        Preprocess a value before your callback is called.
+
+        If this is a string, it will get the first metadata unit from the
+        .matches.json file with that key. If there's no such unit, the file
+        is skipped.
+
+        Alternatively, you can supply a callback function that does more
+        complicated things. The function can return any value, which will then
+        be passed to your callback. If you want to skip the file, you must
+        raise any Exception. If you want to bail out totally with a fatal error,
+        raise an Error that isn't an instance of Exception, such as a
+        SystemExit.
+
+        For the **kwargs parameters, see below.
+
+        Examples: validate101meta (uses "validator" string key),
+                  fragmentMetrics101meta (uses a callback function),
+                  summary101meta (just always returns True)
 
     callback : function(deriver, value, **kwargs)
-        TODO
+        The function that produces the derived value. The value parameter will
+        be whatever is returned by the getvalue function.
+
+        If you gave multiple suffixes, this function must return a tuple of
+        values, one for each suffix. If you only have one suffix, you don't
+        need to wrap the return in a tuple.
+
+        You can return different types from this functions:
+
+        * If you return a string, it will just be written to the derived
+          resource file.
+
+        * If you return a dict or a list, it will be JSON encoded and then
+          written to the derived resource file.
+
+        * If you return None, nothing will be derived. If an earlier derived
+          resource exists, it'll be deleted.
+
+        * If you return anything else, your module will blow up. Don't do that.
+
+        For the **kwargs parameters, see below.
+
+        Examples: validate101meta (returns a single value),
+                  fragmentMetrics101meta (returns two values)
 
     oninit : optional, function(deriver)
         Callback that is called after the Deriver is constructed and the dump
@@ -183,6 +223,47 @@ def derive(entirerepo=False, **kwargs):
 
         Examples: validate101meta, summary101meta - both of them just use
                   the havechanged function.
+
+
+    **kwargs
+    --------
+
+    The getvalue and callback functions receive a bunch of keyword arguments
+    when they're called. You definitely won't need all of them, so you'll want
+    to put **kwargs at the end of your function signature to slurp up those
+    unneeded arguments and only provide names for the ones you want to use.
+
+    The following arguments are passed that way:
+
+    filename
+        The absolute path to the primary resource.
+
+    relative
+        The path to the primary resource, relative to repo101dir.
+
+    basename
+        The primary resource's file name without any directories.
+
+    dirname
+        The primary resource's directory name, without the basename,
+        relative to repo101dir.
+
+    resources
+        Either a single loaded resource or a list of loaded resources,
+        depending on what you passed as the resources parameter to derive.
+
+    target
+        Either a single absolute path to the resource to be derived or a
+        list of them, depending on what you passed as the suffix parameter
+        to derive.
+
+    targetbase
+        The name of the resource to be derived, without any additional
+        suffix.
+
+    Examples: validate101meta (derive uses filename),
+              summary101meta (getvalue slurps everything, derive uses resources)
+
 
     See Also
     --------
