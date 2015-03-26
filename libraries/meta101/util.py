@@ -204,5 +204,5 @@ def valuebykey(key, matches):
     metadata unit from the given matches that is equal to the given key. Raises
     a KeyError if there's no such unit.
     """
-    metadata = map(lambda match: match["metadata"], matches)
+    metadata = [match["metadata"] for match in matches]
     return [m[key] for m in metadata if key in m][0]
