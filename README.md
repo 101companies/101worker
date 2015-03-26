@@ -1,4 +1,4 @@
-This is usage documentation, high level documentation is at [101docs](https://github.com/101companies/101docs/tree/master/worker).
+This is usage documentation, high-level documentation is at [101docs](https://github.com/101companies/101docs/tree/master/worker). It also has the [installation instructions](https://github.com/101companies/101docs/blob/master/worker/Setup.md) to start using or developing on 101worker.
 
 
 # Structure
