@@ -1,5 +1,5 @@
 """
-Match 101rules base class.
+Match 101rules base class. See the main module's matchall function.
 """
 import abc
 import re
