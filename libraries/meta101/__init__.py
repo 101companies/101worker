@@ -227,7 +227,6 @@ def derive(entirerepo=False, **kwargs):
 
     **kwargs
     --------
-
     The getvalue and callback functions receive a bunch of keyword arguments
     when they're called. You definitely won't need all of them, so you'll want
     to put **kwargs at the end of your function signature to slurp up those
