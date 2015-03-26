@@ -14,6 +14,9 @@ class Phase(object):
 
     Note that method and attribute names starting with ``check'' are reserved
     for rule handlers.
+
+    Any subclass must also have a suffix attribute representing its derived
+    resource suffix.
     """
     __metaclass__ = abc.ABCMeta
 
