@@ -1,11 +1,11 @@
-build: cabal
+build: install
 	ghc -x hs extractor -o extractorExec
 .PHONY: test
 test: build
 	mkdir -p test/output
 	make Test.test
 
-cabal:
+install:
 	cabal install json
 
 %.test:
