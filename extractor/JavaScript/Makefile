@@ -6,7 +6,8 @@
 # However the Javascipt file seems to be somewhat incomplete because not all cases produce an output
 .PHONY: test
 test:
-	mkdir -p test/output
+	mkdir -p test/output/
+
 	./extractor < test/ForLoopTest.js > test/output/ForLoop.json
 	./extractor < test/FunctionVariableDeclarationTest.js > test/output/FunctionVariableDeclaration.json
 	./extractor < test/VariableDeclarationTest.js > test/output/VariableDeclaration.json
