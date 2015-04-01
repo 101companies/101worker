@@ -1,6 +1,7 @@
 # Comments are not supported.
 .PHONY: test
 test:
+	mkdir -p test/output
 	./extractor < test/IndexedObject.json > test/output/IndexedObject.json
 	./extractor < test/List.json > test/output/List.json
 	./extractor < test/Object.json > test/output/Object.json

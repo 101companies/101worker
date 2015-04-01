@@ -3,6 +3,7 @@
 # BugWrongAttributeLinenumberBecauseMultilineStarttag solved (only workaround), attributes get the same endline value as the parent elements
 .PHONY: test
 test:
+	mkdir -p test/output
 	./extractor < test/Attribute.xml > test/output/Attribute.json
 	./extractor < test/Element.xml > test/output/Element.json
 	./extractor < test/ExcludedComment.xml > test/output/ExcludedComment.json

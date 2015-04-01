@@ -1,6 +1,7 @@
 # Comments not supported
 .PHONY: test
 test:
+	mkdir -p test/output
 	./extractor < test/AlterStatement.sql > test/output/AlterStatement.json
 	./extractor < test/Column.sql > test/output/Column.json
 	./extractor < test/CreateStatement.sql > test/output/CreateStatement.json

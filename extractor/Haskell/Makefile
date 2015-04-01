@@ -2,6 +2,7 @@ build: cabal
 	ghc -x hs extractor -o extractorExec
 .PHONY: test
 test: build
+	mkdir -p test/output
 	make Test.test
 
 cabal:

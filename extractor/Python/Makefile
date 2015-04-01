@@ -7,6 +7,7 @@
 
 .PHONY: test
 test:
+	mkdir -p test/output
 	./extractor < test/simpleClassTest.py > test/output/SimpleClass.json
 	#Apparently the code doesn't list the variables in the except part
 	./extractor < test/simpleExceptionTest.py > test/output/SimpleException.json
