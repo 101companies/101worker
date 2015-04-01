@@ -17,6 +17,7 @@ views101dir            : $web101dir/data/views/
 gatheredGeshi101dir    : $results101dir/geshi/
 themes101dir           : $targets101dir/themes/
 
+modules101dir          : $worker101dir/modules/
 predicates101dir       : $worker101dir/predicates/
 
 # Files
@@ -41,6 +42,7 @@ wiki101dump            : $dumps101dir/wiki.json
 pullRepo101dump        : $dumps101dir/PullRepo.json
 moduleSummary101dump   : $dumps101dir/ModuleSummaryDump.json
 moduleSummary101temp   : $dumps101dir/tempModuleSummaryDump.json
+predicates101deps      : $modules101dir/predicates101meta/module.json
 
 # URLs
 # These must start with a protocol. URLs with the file:// are treated as files

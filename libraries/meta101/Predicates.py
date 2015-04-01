@@ -109,7 +109,7 @@ class Predicates(Phase):
             with open(descriptionfile) as f:
                 matches = json.load(f)
                 predicatedependencies    = matches["dependencies"]
-            moduldescription = os.path.join(os.environ["worker101dir"], "modules/predicates101meta/module.json")
+            moduldescription = os.environ["predicates101deps"]
             with open(moduldescription) as f:
                 modul = json.load(f)
                 modulDependencies  = modul["dependencies"]
