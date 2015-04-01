@@ -11,7 +11,7 @@ nonexistent = "t/predicates/nonexistent-file"
 
 os.environ["repo101dir"] = os.getcwd()
 os.environ["predicates101dir"] = os.path.abspath("t/predicates")
-os.environ["worker101dir"] =  os.path.abspath("t/worker")
+os.environ["predicates101deps"] =  os.path.abspath("t/worker/predicates101meta/module.json")
 
 phase = meta101.Predicates()
 
