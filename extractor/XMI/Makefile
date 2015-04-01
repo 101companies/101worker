@@ -32,5 +32,4 @@ clean:
 	make reset-test
 
 install:
-    pip install sax
-
+	pip install sax
