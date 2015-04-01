@@ -1,7 +1,7 @@
 # Parser is not supporting depracated single-tags line <br>
 # The problem is, it is searching for a closing tag
 
-run-test:
+test:
 	./extractor < test/Attribute.html > test/output/Attribute.json
 	./extractor < test/ExcludedComment.html > test/output/ExcludedComment.json
 	./extractor < test/IndexedTag.html > test/output/IndexedTag.json

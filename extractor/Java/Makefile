@@ -7,7 +7,7 @@ jfactextractor/JFactExtractor.class: jfactextractor/*.java Makefile
 		-classpath .:lib/gson-1.7.1.jar:lib/javaparser-1.0.8.jar \
 		jfactextractor/*.java
 
-run-test:
+test:
 	./extractor < test/Basic.java > test/output/Basic.json
 	diff --ignore-all-space test/baseline/Basic.baseline test/output/Basic.json
 	./extractor < test/Indexing.java > test/output/Indexing.json
