@@ -267,7 +267,7 @@ list by C<< push @dependencies ,@{$module->metadependencies}; >>.
 Furthermore for every metadata key of C<< $module->metaobtained >> it is
 ensured that it is not already in C<< $self->meta >>. If it is in the list, a 
 module that needed this metadata will run before the metadata is 
-obtained, thus a L</push_error>' is called with an appropriate
+obtained, thus a L</push_error> is called with an appropriate
 error message. 
 
 =head2 ensure_dependencies
