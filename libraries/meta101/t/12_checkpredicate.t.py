@@ -1,4 +1,4 @@
-from TestMore import *
+from TAP.Simple import *
 import os
 import meta101
 

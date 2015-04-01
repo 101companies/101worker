@@ -12,7 +12,7 @@ CSharp/CSharpFactExtractor.exe: extractors/*.cs Makefile
 	cp lib/*.so bin
 
 test:
-    build
+	build
 	@./extractor < Company.cs > Company.cs.facts.json
 	@diff --ignore-all-space simple.baseline Company.cs.facts.json
 	@echo Tests passed

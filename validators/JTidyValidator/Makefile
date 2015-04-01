@@ -8,3 +8,6 @@ test-positive:
 
 test-negative:
 	./validator.py department.html -verbose -negative
+
+install:
+    pip install simplejson
