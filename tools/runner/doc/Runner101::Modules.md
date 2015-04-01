@@ -23,10 +23,10 @@ probably just let them use their default value.
 - diff
 
     Aggregates the diff. The modules will fill this on their own when they are ran.
- 
+
 - meta
 
-	A list of all obtained metadata to ensure metadata dependenciy.
+    A list 
 
 ## run
 
@@ -87,17 +87,7 @@ See ["@ERROR\_MESSAGES"](#error_messages), ["ensure\_envs\_exist"](#ensure_envs_
 
 Ensures that all environment variables given in `@envs` or
 `$module->environment` respectively actually exist in the environment. If
-any are missing, appropriate errors are ["push\_error"](#push_error).
-
- 
-## ensure\_dependencies
-
-	$self->ensure_dependencies(Runner101::Module $module)
-
-Ensures that all dependencies on other modules in `$module->dependencies`
-are fulfilled. If any of the dependencies is missing or comes after `$module`,
-appropriate errors are ["push\_error"](#push_error).
-
+any are missing, appropriate errors are ["push\_error"](#push_error)'d.
 
 ## ensure\_metadependencies
 
@@ -113,6 +103,13 @@ module that needed this metadata will run before the metadata is
 obtained, thus a ["push\_error"](#push_error) is called with an appropriate
 error message. 
 
+## ensure\_dependencies
+
+    $self->ensure_dependencies(Runner101::Module $module)
+
+Ensures that all dependencies on other modules in `$module->dependencies`
+are fulfilled. If any of the dependencies is missing or comes after `$module`,
+appropriate errors are ["push\_error"](#push_error)'d.
 
 ## @ERROR\_MESSAGES
 
