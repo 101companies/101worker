@@ -5,7 +5,7 @@
 # However apparently the code doesn't list the variables in the except part
 
 
-
+.PHONY: test
 test:
 	./extractor < test/simpleClassTest.py > test/output/SimpleClass.json
 	#Apparently the code doesn't list the variables in the except part

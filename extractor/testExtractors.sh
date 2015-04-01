@@ -7,7 +7,7 @@ red='\033[0;31m'
 NC='\033[0m' # No Color
 
 function checkTestSuccess {
-    if make run-test > /dev/null 2>&1 ; then
+    if make test > /dev/null 2>&1 ; then
         echo $1 "extractor seems to work"
     else
         echo "${red} Error in the extractor for" $1 " ${NC}"

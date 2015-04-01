@@ -1,3 +1,5 @@
+.PHONY: test
+
 build:
 	make jfactextractor/JFactExtractor.class
 

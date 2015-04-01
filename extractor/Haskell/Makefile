@@ -1,10 +1,10 @@
 build: cabal
 	ghc -x hs extractor -o extractorExec
-
+.PHONY: test
 test: build
 	make Test.test
 
-install:
+cabal:
 	cabal install json
 
 %.test:
@@ -19,5 +19,4 @@ copy:
 
 clean:
 	rm -f log HsFactExtractor *.o *.hi
-
 

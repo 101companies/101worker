@@ -4,6 +4,7 @@
 
 # Node: These were created as White-Box tests with the aim of executing every if statement at least once.
 # However the Javascipt file seems to be somewhat incomplete because not all cases produce an output
+.PHONY: test
 test:
 	./extractor < test/ForLoopTest.js > test/output/ForLoop.json
 	./extractor < test/FunctionVariableDeclarationTest.js > test/output/FunctionVariableDeclaration.json

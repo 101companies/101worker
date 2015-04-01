@@ -1,6 +1,7 @@
 # Parser is not supporting depracated single-tags line <br>
 # The problem is, it is searching for a closing tag
 
+.PHONY: test
 test:
 	./extractor < test/Attribute.html > test/output/Attribute.json
 	./extractor < test/ExcludedComment.html > test/output/ExcludedComment.json
@@ -33,5 +34,4 @@ clean:
 	make reset-test
 
 install:
-    pip install HTMLParser
-
+	pip install HTMLParser

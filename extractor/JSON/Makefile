@@ -1,5 +1,5 @@
 # Comments are not supported.
-
+.PHONY: test
 test:
 	./extractor < test/IndexedObject.json > test/output/IndexedObject.json
 	./extractor < test/List.json > test/output/List.json
@@ -18,4 +18,4 @@ clean:
 	make reset-test
 
 install:
-    pip install json
+	pip install json

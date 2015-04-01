@@ -1,5 +1,5 @@
 # Comments not supported
-
+.PHONY: test
 test:
 	./extractor < test/AlterStatement.sql > test/output/AlterStatement.json
 	./extractor < test/Column.sql > test/output/Column.json
@@ -23,4 +23,4 @@ clean:
 	make reset-test
 
 install:
-    pip install sqlparse
+	pip install sqlparse

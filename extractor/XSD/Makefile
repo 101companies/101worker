@@ -1,7 +1,7 @@
 # Comments not supported by current parser. Possible with Python3.
 #
 # BugWrongAttributeLinenumberBecauseMultilineStarttag solved (only workaround), attributes get the same endline value as the parent elements
-
+.PHONY: test
 test:
 	./extractor < test/Attribute.xml > test/output/Attribute.json
 	./extractor < test/Element.xml > test/output/Element.json
