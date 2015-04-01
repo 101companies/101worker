@@ -2,10 +2,10 @@ import imp
 import os
 import re
 import json
-import sys
-from   .Phase import Phase
-from   .util  import tolist
-from   .Matches   import Matches
+from   warnings import warn
+from   .Phase   import Phase
+from   .util    import tolist
+from   .Matches import Matches
 
 """
 Predicates 101rules matches phase.
@@ -53,8 +53,9 @@ class Predicates(Phase):
 
     def checkpredicate(self, predicate, rule, filename, **kwargs):
         """
-        Checks if a specific predicate is safe to execute (module and predicate description are valid)
-        and finnaly execute the predicate with the specific arguments. The result of the execution will be returned
+        Checks if a specific predicate is safe to execute (module and predicate
+        description are valid) and finnaly execute the predicate with the
+        specific arguments. The result of the execution will be returned.
         """
         if not self.regex.match(predicate):
             raise ValueError("weird predicate name: " + predicate)
@@ -71,20 +72,25 @@ class Predicates(Phase):
         self.predicates.add(predicate)
 
         module = imp.load_source("PREDICATE_" + predicate, path)
-        #The '+1' here is because there is also the filename a part of the argument
+        # The '+1' here is because the filename is also part of the arguments
         if (numargs is not None):
             if (numargs[0] is not None and numargs[0] > len(args) + 1):
-                 print >> sys.stderr, "We expected more arguments"
-                 return False
+                warn("Expected at least {} arguments, but got {}"
+                                    .format(numargs[0], len(args) + 1))
+                return False
+
             if (numargs[1] is not None and numargs[1] < len(args)):
-                print >> sys.stderr, "We expected less arguments"
+                warn("Expected at most {} arguments, but got {}"
+                                    .format(numargs[1], len(args) + 1))
                 return False
 
         return module.run(filename, *args)
 
+
     def findlanguage(self, matchespath):
         """
-        Returns the language of the file that is analysed right now. It does that by reading the matched files
+        Returns the language of the file that is analysed right now. It does
+        that by reading the matched files.
         """
         if os.path.isfile(matchespath):
             with open(matchespath) as f:
@@ -95,7 +101,9 @@ class Predicates(Phase):
                     return match["metadata"]["language"]
         return ""
 
-    def checklanguage(self, language, rule, filename, result, targetbase, **kwargs):
+
+    def checklanguage(self, language, rule, filename,
+                      result, targetbase, **kwargs):
         """
         Checks if the language in the rule matches the language of the file
         """
@@ -104,22 +112,23 @@ class Predicates(Phase):
 
     def resolvedpredicatedependencies(self, descriptionfile):
             """
-            Returns True if all module dependencies of the predicate description are as well part of the module description
+            Returns True if all module dependencies of the predicate
+            description are as well part of the module description.
             """
             with open(descriptionfile) as f:
-                matches = json.load(f)
-                predicatedependencies    = matches["dependencies"]
-            moduldescription = os.path.join(os.environ["worker101dir"], "modules/predicates101meta/module.json")
-            with open(moduldescription) as f:
-                modul = json.load(f)
-                modulDependencies  = modul["dependencies"]
+                predicatedependencies = json.load(f)["dependencies"]
+
+            moduledescription = os.environ["predicates101deps"]
+            with open(moduledescription) as f:
+                moduledependencies = json.load(f)["dependencies"]
 
             for dependency in predicatedependencies:
-                if dependency not in modulDependencies:
-                    print >> sys.stderr, "Error! The Module " + dependency + " should be part of the modul dependencies in predicate101. " \
-                           "We will continue the execution though "
+                if dependency not in moduledependencies:
+                    warn("Missing dependency on ``{}'' in {}".format(
+                             dependency, moduledescription))
                     return False
             return True
+
 
     def getnumargs(self, descriptionfile):
          """
@@ -127,5 +136,5 @@ class Predicates(Phase):
          """
          with open(descriptionfile) as f:
                 matches = json.load(f)
-                numargs            = matches["args"]
+                numargs = matches["args"]
          return numargs
