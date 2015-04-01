@@ -1,3 +1,6 @@
+"""
+Predicates 101rules matches phase.
+"""
 import imp
 import os
 import re
@@ -7,9 +10,6 @@ from   .Phase   import Phase
 from   .util    import tolist
 from   .Matches import Matches
 
-"""
-Predicates 101rules matches phase.
-"""
 
 class Predicates(Phase):
     """
@@ -111,30 +111,30 @@ class Predicates(Phase):
 
 
     def resolvedpredicatedependencies(self, descriptionfile):
-            """
-            Returns True if all module dependencies of the predicate
-            description are as well part of the module description.
-            """
-            with open(descriptionfile) as f:
-                predicatedependencies = json.load(f)["dependencies"]
+        """
+        Returns True if all module dependencies of the predicate
+        description are as well part of the module description.
+        """
+        with open(descriptionfile) as f:
+            predicatedependencies = json.load(f)["dependencies"]
 
-            moduledescription = os.environ["predicates101deps"]
-            with open(moduledescription) as f:
-                moduledependencies = json.load(f)["dependencies"]
+        moduledescription = os.environ["predicates101deps"]
+        with open(moduledescription) as f:
+            moduledependencies = json.load(f)["dependencies"]
 
-            for dependency in predicatedependencies:
-                if dependency not in moduledependencies:
-                    warn("Missing dependency on ``{}'' in {}".format(
-                             dependency, moduledescription))
-                    return False
-            return True
+        for dependency in predicatedependencies:
+            if dependency not in moduledependencies:
+                warn("Missing dependency on ``{}'' in {}".format(
+                         dependency, moduledescription))
+                return False
+        return True
 
 
     def getnumargs(self, descriptionfile):
-         """
-         Returns the number of arguments that the predicate expects according to the predicate description
-         """
-         with open(descriptionfile) as f:
-                matches = json.load(f)
-                numargs = matches["args"]
-         return numargs
+        """
+        Returns the number of arguments that the predicate expects according to the predicate description
+        """
+        with open(descriptionfile) as f:
+            matches = json.load(f)
+            numargs = matches["args"]
+        return numargs
