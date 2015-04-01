@@ -12,6 +12,7 @@ Further have the follow modules to be installed:
 
 Python Modules:
 	- sqlparse
+	- HTMLParser
 
 Haskell Module:
 	- JSON-Combinator

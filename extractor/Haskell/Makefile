@@ -1,10 +1,10 @@
 build: cabal
 	ghc -x hs extractor -o extractorExec
 
-run-test: build
+test: build
 	make Test.test
 
-cabal:
+install:
 	cabal install json
 
 %.test:

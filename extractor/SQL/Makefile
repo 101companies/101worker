@@ -1,6 +1,6 @@
 # Comments not supported
 
-run-test:
+test:
 	./extractor < test/AlterStatement.sql > test/output/AlterStatement.json
 	./extractor < test/Column.sql > test/output/Column.json
 	./extractor < test/CreateStatement.sql > test/output/CreateStatement.json
