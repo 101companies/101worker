@@ -25,5 +25,9 @@
             "suffix" : ".fragments.tokens.json"
         }
     ],
-    "wantdiff" : true
+    "wantdiff" : true,
+    "metadata" : {
+            "dependencies" : ["language", "geshi"],
+            "obtained" :     []
+    }
 }

@@ -10,5 +10,9 @@
         "targets101dir",
         "fragments101dump"
     ],
-    "wantdiff" : true
+    "wantdiff" : true,
+      "metadata" : {
+            "dependencies" : ["locator"],
+            "obtained" :     ["phrase"]
+      }
 }

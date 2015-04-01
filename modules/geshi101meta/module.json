@@ -9,5 +9,9 @@
         "gatheredGeshi101dir",
         "geshi101dump"
     ],
-    "wantdiff" : true
+    "wantdiff" : true,
+    "metadata" : {
+            "dependencies" : ["language", "geshi"],
+            "obtained" :     []
+    }
 }

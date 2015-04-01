@@ -17,5 +17,9 @@
             "suffix" : ".validator.json"
         }
     ],
-    "wantdiff" : true
+    "wantdiff" : true,
+    "metadata" : {
+            "dependencies" : ["validators"],
+            "obtained" :     []
+    }
 }

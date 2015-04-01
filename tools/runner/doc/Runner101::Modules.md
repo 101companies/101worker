@@ -23,6 +23,10 @@ probably just let them use their default value.
 - diff
 
     Aggregates the diff. The modules will fill this on their own when they are ran.
+ 
+- meta
+
+	A list of all obtained metadata to ensure metadata dependenciy.
 
 ## run
 
@@ -83,15 +87,32 @@ See ["@ERROR\_MESSAGES"](#error_messages), ["ensure\_envs\_exist"](#ensure_envs_
 
 Ensures that all environment variables given in `@envs` or
 `$module->environment` respectively actually exist in the environment. If
-any are missing, appropriate errors are ["push\_error"](#push_error)'d.
+any are missing, appropriate errors are ["push\_error"](#push_error).
 
+ 
 ## ensure\_dependencies
 
-    $self->ensure_dependencies(Runner101::Module $module)
+	$self->ensure_dependencies(Runner101::Module $module)
 
 Ensures that all dependencies on other modules in `$module->dependencies`
 are fulfilled. If any of the dependencies is missing or comes after `$module`,
-appropriate errors are ["push\_error"](#push_error)'d.
+appropriate errors are ["push\_error"](#push_error).
+
+
+## ensure\_metadependencies
+
+    $self->ensure_metadependencies(Runner101::Module $module)
+
+Ensures that the metadependencies given by each module due to 
+`$module->metadependencies` and `$module->metaobtained` are valid.
+The `$module->metadependencies` of every module is stored in the `$self->meta` 
+list by `push @dependencies ,@{$module->metadependencies};`. 
+Furthermore for every metadata key of `$module->metaobtained` it is
+ensured that it is not already in `$self->meta`. If it is in the list, a 
+module that needed this metadata will run before the metadata is 
+obtained, thus a ["push\_error"](#push_error) is called with an appropriate
+error message. 
+
 
 ## @ERROR\_MESSAGES
 

@@ -15,8 +15,7 @@ def initdump(deriver):
 def derive(deriver, validator, filename, **kwargs):
     deriver.dump["validators"].add(validator)
 
-    # FIXME move validators into worker so this isn't necessary
-    path = kludge101.checkpath(validator)
+    path = os.path.join(os.environ["validator101dir"],validator, "validator")
     if not path:
         raise RuntimeError("foiled code injection: {}".format(validator))
     command = [path, filename]
