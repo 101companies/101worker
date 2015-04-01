@@ -3,7 +3,7 @@
 
 .PHONY: test
 test:
-	
+	mkdir -p test/output/
 	./extractor < test/Attribute.html > test/output/Attribute.json
 	./extractor < test/ExcludedComment.html > test/output/ExcludedComment.json
 	./extractor < test/IndexedTag.html > test/output/IndexedTag.json
@@ -35,6 +35,5 @@ clean:
 	make reset-test
 
 install:
-	mkdir test/output/
 	pip install HTMLParser
 	
