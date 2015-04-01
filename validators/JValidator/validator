@@ -2,7 +2,6 @@
 
 import commands
 import os.path
-import simplejson
 import sys
 
 if len(sys.argv) != 2:

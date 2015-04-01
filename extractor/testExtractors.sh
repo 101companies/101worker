@@ -50,3 +50,7 @@ cd ..
 cd XSD/
 checkTestSuccess XSD
 cd ..
+
+cd CSHarp/
+checkTestSuccess Csharp
+cd ..

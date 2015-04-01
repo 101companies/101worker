@@ -5,7 +5,7 @@ import os
 import sys
 import json
 import commands
-import time
+
 
 def validateHTML(fileName):
 	cmd = ('curl -m 10 -sF "uploaded_file=@' + fileName + ';type=text/html" -F output=json http://validator.w3.org/check')
