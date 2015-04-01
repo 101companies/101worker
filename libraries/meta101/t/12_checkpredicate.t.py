@@ -1,4 +1,4 @@
-from TAP.Simple import *
+from TestMore import *
 import os
 import meta101
 
@@ -9,9 +9,9 @@ using1      = "t/predicates/using1"
 using2      = "t/predicates/using2"
 nonexistent = "t/predicates/nonexistent-file"
 
-os.environ["repo101dir"] = os.getcwd()
-os.environ["predicates101dir"] = os.path.abspath("t/predicates")
-os.environ["predicates101deps"] =  os.path.abspath("t/worker/modules/predicates101meta/module.json")
+os.environ[      "repo101dir" ] = os.getcwd()
+os.environ["predicates101dir" ] = os.path.abspath("t/predicates")
+os.environ["predicates101deps"] = os.path.abspath("t/module.json")
 
 phase = meta101.Predicates()
 
