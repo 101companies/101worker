@@ -10,6 +10,8 @@ jfactextractor/JFactExtractor.class: jfactextractor/*.java Makefile
 		jfactextractor/*.java
 
 test:
+	mkdir -p test/output/
+
 	./extractor < test/Basic.java > test/output/Basic.json
 	diff --ignore-all-space test/baseline/Basic.baseline test/output/Basic.json
 	./extractor < test/Indexing.java > test/output/Indexing.json
