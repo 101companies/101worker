@@ -49,11 +49,11 @@ constructed:
 
 - metadependencies
 
-    A list of metadata-keys the module needs to execute correctly.
+    TODO: document
 
 - metaobtained
 
-    A list of metadata-keys the module obtaines to metadata.
+    TODO: document
 
 ## BUILD
 

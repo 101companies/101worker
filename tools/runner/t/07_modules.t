@@ -16,11 +16,11 @@ sub new
     for (0 .. 5)
     {
         my $module = {
-            index        => $_,
-            name         => "module$_",
-            dependencies => [],
-			metadependencies	=> [],
-			metaobtained		=> [], 
+            index            => $_,
+            name             => "module$_",
+            dependencies     => [],
+            metadependencies => [],
+            metaobtained     => [],
         };
         push @{$self->names  }, $module->{name};
         push @{$self->modules}, bless $module => MODULE;
