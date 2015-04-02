@@ -34,4 +34,5 @@ meta101.derive(suffix   =".extractor.json",
                oninit   =initdump,
                getvalue ="language",
                callback =derive,
-               ondump   =preparedump)
+               ondump   =preparedump,
+               entirerepo=changed)
