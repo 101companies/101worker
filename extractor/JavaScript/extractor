@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+#!/usr/bin/nodejs
 var esprima = require('esprima');
 
 process.stdin.resume();
