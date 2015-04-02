@@ -12,3 +12,6 @@ test:
 
 clean: 
 	rm -f jvalidator/*.class
+
+install:
+    apt-get install openjdk-7-jdk
