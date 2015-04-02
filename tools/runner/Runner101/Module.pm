@@ -5,8 +5,8 @@ use Try::Tiny;
 use Runner101::Diff    qw(run_diff);
 use Runner101::Helpers qw(slurp_json validate_json write_log);
 
-use Class::Tiny qw(index name dir log environment
-                   command dependencies wantdiff);
+use Class::Tiny qw(index name dir log environment dependencies
+                   command wantdiff metadependencies metaobtained);
 
 
 our @PREFIX = qw(timeout -s KILL 1h);
@@ -32,8 +32,12 @@ sub BUILD
     $self->dependencies($json->{dependencies} // []);
     $self->wantdiff($json->{wantdiff});
 
-    $parent->ensure_envs_exist  ($self);
-    $parent->ensure_dependencies($self);
+    $self->metadependencies($json->{metadata}->{dependencies} // []);
+    $self->metaobtained($json->{metadata}->{obtained} // []);
+
+    $parent->ensure_envs_exist      ($self);
+    $parent->ensure_metadependencies($self);
+    $parent->ensure_dependencies    ($self);
 }
 
 
@@ -106,6 +110,14 @@ A list of environment variables required by the module.
 
 A list of other modules this module depends on.
 
+=item metadependencies
+
+TODO: document
+
+=item metaobtained
+
+TODO: document
+
 =back
 
 =head2 BUILD
@@ -123,9 +135,11 @@ Construct a module object. This will attempt to load this module's
 F<module.json> that should be in the given C<dir>. Its contents are validated
 against the given C<schema> and saved as this module's L</Attributes>.
 
-Then the required environment variables and dependencies are validated by the
-given C<parent>, using C<< $parent->ensure_envs_exist >> and
-C<< $parent->ensure_dependencies >>.
+Then the required environment variables and dependencies of the Modules 
+and the Metadata are validated by the given C<parent>,
+using C<< $parent->ensure_envs_exist >> for the enviorment,
+C<< $parent-ensure_metadependencies >> for the Meta-Dependencies and
+C<< $parent->ensure_dependencies >> for the Module-Dependencies.
 
 If anything goes wrong during all this, the parent will die with the
 appropriate error messages.

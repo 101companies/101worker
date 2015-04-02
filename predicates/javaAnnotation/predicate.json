@@ -3,6 +3,6 @@
 	"name" : "JavaAnnotation",
 	"args" : null,
 	"dependencies" : ["extract101meta"],
-	"metadata" : [],
+	"metadata" : []
 	
 }

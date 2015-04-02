@@ -1,4 +1,4 @@
-use Test::Most         tests => 7;
+use Test::Most         tests => 11;
 
 use Class::Tiny;
 use List::Util         qw(pairmap);
@@ -16,9 +16,11 @@ sub new
     for (0 .. 5)
     {
         my $module = {
-            index        => $_,
-            name         => "module$_",
-            dependencies => [],
+            index            => $_,
+            name             => "module$_",
+            dependencies     => [],
+            metadependencies => [],
+            metaobtained     => [],
         };
         push @{$self->names  }, $module->{name};
         push @{$self->modules}, bless $module => MODULE;
@@ -44,6 +46,7 @@ is_deeply $self->errors, {env => {
                               env6 => [         'test3'],
                          }}, 'ensure missing envs causes errors';
 
+
 # ensure_dependencies
 $self = new;
 $self->ensure_dependencies($self->modules->[0]);
@@ -60,6 +63,29 @@ is_deeply $self->errors, {
               missing => {nonexistent => ['module1']},
           }, 'invalid dependencies lead to correct errors';
 
+
+# ensure_metadependencies
+$self = new;
+$self->ensure_metadependencies($self->modules->[0]);
+is_deeply $self->errors, {}, 'no metadependencies';
+
+$self->modules->[1]->metadependencies([qw(meta0 meta1 meta2)]);
+$self->ensure_metadependencies($self->modules->[1]);
+is_deeply $self->errors, {}, 'no obtained metadata';
+
+$self->modules->[0]->metaobtained([qw(meta0 meta1)]);
+$self->modules->[1]->metadependencies([qw(meta1 meta2)]);
+$self->ensure_metadependencies($self->modules->[1]);
+is_deeply $self->errors, {}, 'valid metadependencies';
+
+$self->modules->[2]->metadependencies([qw(meta3 meta4)]);
+$self->modules->[3]->metaobtained([qw(meta1 meta2)]);
+$self->ensure_metadependencies($self->modules->[3]);
+is_deeply $self->errors, {
+              meta => {
+              meta1 =>['module3'], 
+              meta2 =>['module3'] }
+          }, 'invalid metadependencies lead to correct errors';
 
 # die_if_invalid
 $self = new;

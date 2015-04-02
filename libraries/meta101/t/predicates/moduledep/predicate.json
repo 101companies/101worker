@@ -1,0 +1,8 @@
+{
+
+	"name" : "moduledep",
+	"args" : [0,0],
+	"dependencies" : ["test"],
+	"metadata" : []
+	
+}

@@ -18,6 +18,7 @@ eq_ok(meta101.Predicates().keys(), [
           "basename",
           "dirname",
           "content",
+          "language",
           "predicate",
       ], "predicates keys")
 

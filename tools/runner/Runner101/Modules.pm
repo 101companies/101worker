@@ -2,8 +2,8 @@ package Runner101::Modules;
 use strict;
 use warnings;
 use File::Slurp         qw(slurp);
-use List::MoreUtils     qw(first_index);
-use List::Util          qw(pairmap);
+use List::MoreUtils     qw(first_index first_value);
+use List::Util          qw(any pairmap);
 use POSIX               qw(strftime);
 use Proc::ChildError    qw(explain_child_error);
 use Try::Tiny;
@@ -18,6 +18,7 @@ use Class::Tiny {
     names   => sub { [] },
     modules => sub { [] },
     diff    => sub { {} },
+    meta    => sub { [] },
 };
 
 use constant RUNNER_ENVS => qw(config101     config101schema module101schema
@@ -121,11 +122,27 @@ sub ensure_dependencies
 }
 
 
+sub ensure_metadependencies
+{
+    my ($self, $module) = @_;
+    push @{$self->meta}, @{$module->metadependencies};
+
+    for my $mdep (@{$module->metaobtained})
+    {
+        if (any {$_ eq $mdep} @{$self->meta})
+        {    $self->push_error(meta => $mdep, $module->name) }
+    }
+}
+
+
 our @ERROR_MESSAGES = (
     env     => 'Missing environment variable %s required by %s',
     missing => 'Module %s required before %s, but is missing',
     late    => 'Module %s required before %s, but appears after instead',
+    meta    => 'Metadependency %s error in %s',
 );
+
+
 
 sub die_if_invalid
 {
@@ -171,6 +188,10 @@ The list of C<Runner101::Module> objects of all modules to be ran.
 =item diff
 
 Aggregates the diff. The modules will fill this on their own when they are ran.
+
+=item meta
+
+A list 
 
 =back
 
@@ -234,6 +255,20 @@ See L</@ERROR_MESSAGES>, L</ensure_envs_exist> and L</ensure_dependencies>.
 Ensures that all environment variables given in C<@envs> or
 C<< $module->environment >> respectively actually exist in the environment. If
 any are missing, appropriate errors are L</push_error>'d.
+
+=head2 ensure_metadependencies
+
+    $self->ensure_metadependencies(Runner101::Module $module)
+
+Ensures that the metadependencies given by each module due to 
+C<< $module->metadependencies >> and C<< $module->metaobtained >> are valid.
+The C<< $module->metadependencies >> of every module is stored in the C<< $self->meta >> 
+list by C<< push @dependencies ,@{$module->metadependencies}; >>. 
+Furthermore for every metadata key of C<< $module->metaobtained >> it is
+ensured that it is not already in C<< $self->meta >>. If it is in the list, a 
+module that needed this metadata will run before the metadata is 
+obtained, thus a L</push_error> is called with an appropriate
+error message. 
 
 =head2 ensure_dependencies
 

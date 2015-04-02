@@ -51,7 +51,7 @@ used = set()
 matched = set()
 predicates = json.load(open(const101.rulesDump, 'r'))["results"]["predicates"]
 for p in predicates:
-    if p in ['technologies/Java_platform/javaImport.sh']:
+    if p in ['javaImport']:
         for x in predicates[p]:
             matched.add(x)
 filesByDef = dict()

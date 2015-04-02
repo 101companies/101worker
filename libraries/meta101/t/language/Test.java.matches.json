@@ -1,0 +1,27 @@
+[
+  {
+    "metadata": {
+      "geshi": "java"
+    }
+  },
+  {
+    "metadata": {
+      "language": "Java"
+    }
+  },
+  {
+    "metadata": {
+      "validator": "technologies/JValidator/validator.py"
+   }
+  },
+  {
+    "metadata": {
+      "extractor": "technologies/JFactExtractor/extractor.py"
+    }
+  },
+  {
+  "metadata": {
+    "locator": "technologies/JFragmentLocator/locator.py"
+  }
+  }
+]

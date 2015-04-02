@@ -5,7 +5,6 @@ import subprocess
 import meta101
 from meta101.resource import File, Json
 
-
 def initdump(deriver):
     for key in ["geshicodes", "extractors"]:
         if key in deriver.dump:
@@ -20,8 +19,10 @@ def getextractor(deriver, resources, **kwargs):
     meta    = {}
 
     for m in matches:
-        if "extractor" in m["metadata"]:
-            meta["extractor"] = m["metadata"]["extractor"]
+        if "language" in m["metadata"]:
+            extractorPath = os.path.join(os.environ["extractor101dir"],m["metadata"]["language"], "extractor")
+            if os.path.isfile(extractorPath):
+                 meta["extractor"] = extractorPath
         if "geshi" in m["metadata"]:
             meta["geshi"] = m["metadata"]["geshi"]
 

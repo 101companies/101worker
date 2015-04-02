@@ -2,5 +2,9 @@
     "command" : "make run",
     "dependencies" : [],
     "environment" : [],
-    "wantdiff" : false
+    "wantdiff" : false,
+    "metadata" : {
+            "dependencies" : ["languages", "partOf", "features", "concepts", "terms", "phrase", "inputOf", "outputOf", "dependsOn"],
+            "obtained" :     []
+    }
 }

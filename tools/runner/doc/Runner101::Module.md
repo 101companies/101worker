@@ -47,6 +47,14 @@ constructed:
 
     A list of other modules this module depends on.
 
+- metadependencies
+
+    TODO: document
+
+- metaobtained
+
+    TODO: document
+
 ## BUILD
 
     Runner101::Module->new(
@@ -62,9 +70,11 @@ Construct a module object. This will attempt to load this module's
 `module.json` that should be in the given `dir`. Its contents are validated
 against the given `schema` and saved as this module's ["Attributes"](#attributes).
 
-Then the required environment variables and dependencies are validated by the
-given `parent`, using `$parent->ensure_envs_exist` and
-`$parent->ensure_dependencies`.
+Then the required environment variables and dependencies of the Modules 
+and the Metadata are validated by the given `parent`,
+using `$parent->ensure_envs_exist` for the enviorment,
+`$parent-ensure_metadependencies` for the Meta-Dependencies and
+`$parent->ensure_dependencies` for the Module-Dependencies.
 
 If anything goes wrong during all this, the parent will die with the
 appropriate error messages.

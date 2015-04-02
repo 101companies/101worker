@@ -1,24 +1,26 @@
 {
-    "command" : "python program.py",
-    "dependencies" : [
-        "pull101repo",
-        "matches101meta",
-        "build"
-    ],
-    "environment" : [
+    "command"      : "python program.py",
+    "wantdiff"     : true,
+    "environment"  : [
         "repo101dir",
         "extractor101dump"
     ],
+    "dependencies" : [
+        "matches101meta"
+    ],
     "targets" : [
         {
-            "className" : "Extractor",
-            "classifier" : "resource",
-            "headline" : "Extracted Facts",
-            "language" : "JSON",
+            "headline"     : "Extracted Facts",
+            "classifier"   : "resource",
+            "scope"        : "file",
+            "suffix"       : ".extractor.json",
+            "language"     : "JSON",
             "propertyName" : "extractor",
-            "scope" : "file",
-            "suffix" : ".extractor.json"
+            "className"    : "Extractor"
         }
     ],
-    "wantdiff" : true
+    "metadata" : {
+            "dependencies" : ["language"],
+            "obtained" :     []
+    }
 }

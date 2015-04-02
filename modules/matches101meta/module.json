@@ -20,5 +20,10 @@
             "suffix" : ".matches.json"
         }
     ],
-    "wantdiff" : true
+    "wantdiff" : true,
+    "metadata" : {
+            "dependencies" : [],
+            "obtained" :     ["language","partOf","inputOf","outputOf","dependsOn","feature","term","phrase","concept", "nature","geshi", "locator", "validator", "dominator", "relevance"]
+    }
+
 }

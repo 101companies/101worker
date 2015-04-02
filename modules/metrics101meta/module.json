@@ -26,5 +26,9 @@
             "suffix" : ".tokens.json"
         }
     ],
-    "wantdiff" : true
+    "wantdiff" : true,
+      "metadata" : {
+            "dependencies" : ["rrelevance", "geshi"],
+            "obtained" :     []
+    }
 }
