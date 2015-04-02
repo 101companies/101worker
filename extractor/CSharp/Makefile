@@ -10,7 +10,7 @@ CSharp/CSharpFactExtractor.exe: extractors/*.cs Makefile
 			extractors/*.cs
 	cp lib/*.dll bin
 	cp lib/*.so bin
-	
+
 .PHONY: test
 test:
 	make build

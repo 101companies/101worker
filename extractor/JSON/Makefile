@@ -17,6 +17,3 @@ reset-test:
 
 clean: 
 	make reset-test
-
-install:
-	pip install json

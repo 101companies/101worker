@@ -7,6 +7,7 @@ test: build
 
 install:
 	apt-get install haskell-platform
+	cabal update
 	cabal install json
 
 %.test:
