@@ -10,7 +10,8 @@ CSharp/CSharpFactExtractor.exe: extractors/*.cs Makefile
 			extractors/*.cs
 	cp lib/*.dll bin
 	cp lib/*.so bin
-
+	
+.PHONY: test
 test:
 	make build
 	mkdir -p test/output
@@ -25,5 +26,5 @@ clean:
 	rm -f Company.cs.facts.json
 
 install:
-    apt-get install mono-complete
-    apt-get install mono-dmcs
+	apt-get install mono-complete
+	apt-get install mono-dmcs

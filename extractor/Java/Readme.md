@@ -8,7 +8,7 @@ See http://101companies.org/wiki/Technology:JFactExtractor
 
 # Usage
 
-The executable is "extractor.py".
+The executable is "extractor".
 
 The source code for fact extraction is read from stdin.
 

@@ -1,4 +1,4 @@
-build: install
+build:
 	ghc -x hs extractor -o extractorExec
 .PHONY: test
 test: build
@@ -6,6 +6,7 @@ test: build
 	make Test.test
 
 install:
+	apt-get install haskell-platform
 	cabal install json
 
 %.test:
@@ -20,4 +21,5 @@ copy:
 
 clean:
 	rm -f log HsFactExtractor *.o *.hi
+
 

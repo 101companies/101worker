@@ -30,6 +30,8 @@ reset-test:
 clean: 
 	make reset-test
 install:
+	apt-get install nodejs
+	apt-get install npm
 	npm install esprima
 
 
