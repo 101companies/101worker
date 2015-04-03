@@ -2,20 +2,20 @@ The predicates will be executed by the predicate101 module of the worker. They w
 in the 101language. The rule bellow would execute the dotNetImport/predicate.py with the argument: "System.Xml" :
 
  {
+    predicate: "dotNETImport",
     args: ["System.Xml"],
     language: "CSharp",
     metadata: [
         {
             dependsOn: ".NET"
         }
-    ],
-    predicate: "dotNETImport"
+    ]
 }
 
 
 If you want to add another predicate make sure that the file that shall be executed has the name predicate.py.
-Further there should be a predicate description (predicate.json) that sums up the most important informations.
-A predicate descriptions contains follow keywords:
+Further there should be a predicate description (predicate.json) that sums up the most important informations about the predicate.
+It contains follow keywords:
 
     - name : The name of the predicate. That is a simple string
     - args : The number of arguments the predicate takes. The definition of that one is a bit more complex than the other.
