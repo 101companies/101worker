@@ -1,8 +1,8 @@
 {
 
-	"name" : "dotNETImport.sh",
-	"args" : 2,
+	"name" : "dotNETImport.py",
+	"args" : [2,2],
 	"dependencies" : [],
-	"metadata" : [],
+	"metadata" : []
 	
 }

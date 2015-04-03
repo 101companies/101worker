@@ -1,7 +1,7 @@
 {
 
 	"name" : "ClassifierChecker",
-	"args" : 2,
+	"args" : [3,3],
 	"dependencies" : ["extract101meta"],
 	"metadata" : []
 	
