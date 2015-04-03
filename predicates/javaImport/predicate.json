@@ -1,8 +1,8 @@
 {
 
 	"name" : "JavaFragmentImport",
-	"args" : null,
-	"dependencies" : [extract101meta],
-	"metadata" : [],
+	"args" : [1,null],
+	"dependencies" : ["extract101meta"],
+	"metadata" : []
 	
 }

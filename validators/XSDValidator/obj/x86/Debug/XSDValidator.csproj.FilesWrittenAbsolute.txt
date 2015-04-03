@@ -13,3 +13,8 @@
 /Users/freddy/Documents/Projektpraktikum/101worker/validators/XSDValidator/bin/Debug/XSDValidator.exe
 /Users/freddy/Documents/Projektpraktikum/101worker/validators/XSDValidator/obj/x86/Debug/XSDValidator.exe
 /Users/freddy/Documents/Projektpraktikum/101worker/validators/XSDValidator/obj/x86/Debug/XSDValidator.exe.mdb
+/Users/freddy/Documents/Projektpraktikum/master/101worker/validators/XSDValidator/obj/x86/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
+/Users/freddy/Documents/Projektpraktikum/master/101worker/validators/XSDValidator/bin/Debug/XSDValidator.exe.mdb
+/Users/freddy/Documents/Projektpraktikum/master/101worker/validators/XSDValidator/bin/Debug/XSDValidator.exe
+/Users/freddy/Documents/Projektpraktikum/master/101worker/validators/XSDValidator/obj/x86/Debug/XSDValidator.exe
+/Users/freddy/Documents/Projektpraktikum/master/101worker/validators/XSDValidator/obj/x86/Debug/XSDValidator.exe.mdb
