@@ -20,7 +20,7 @@ themes101dir           : $targets101dir/themes/
 modules101dir          : $worker101dir/modules/
 predicates101dir       : $worker101dir/predicates/
 extractor101dir		   : $worker101dir/extractor/
-validator101dir		   : $worker101dir/validators/
+validator101dir        : $worker101dir/validators/
 
 # Files
 # These MUST NOT end with a slash, otherwise they are mistaken for directories.
