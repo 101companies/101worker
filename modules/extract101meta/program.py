@@ -26,7 +26,7 @@ def preparedump(deriver):
     deriver.dump["extractors"] = sorted(list(deriver.dump["extractors"]))
 
 
-edir       = os.environ["extract101dir"]
+edir       = os.environ["extractor101dir"]
 extractor = [os.path.join(edir, d, "extractor") for d in os.listdir(edir)]
 changed    = meta101.havechanged(__file__, "module.json", *extractor )
 
