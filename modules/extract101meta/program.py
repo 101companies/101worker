@@ -17,7 +17,7 @@ def derive(deriver, language, filename, **kwargs):
     extractorPath = os.path.join(os.environ["extractor101dir"],language, "extractor")
     if os.path.isfile(extractorPath):
         deriver.dump["extractors"].add(extractorPath)
-        # extractors take their input via stdin, so we gotta open the file
+        # extractors take their input via stdin, so we gotta open the file 
         with open(filename) as f:
             return json.loads(subprocess.check_output([extractorPath], stdin=f))
 
