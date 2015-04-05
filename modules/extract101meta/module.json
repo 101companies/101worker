@@ -3,7 +3,8 @@
     "wantdiff"     : true,
     "environment"  : [
         "repo101dir",
-        "extractor101dump"
+        "extractor101dump",
+        "extractor101dir"
     ],
     "dependencies" : [
         "matches101meta"

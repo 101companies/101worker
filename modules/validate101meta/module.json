@@ -6,7 +6,8 @@
     ],
     "environment" : [
         "repo101dir",
-        "validator101dump"
+        "validator101dump",
+        "validator101dir"
     ],
     "targets" : [
         {

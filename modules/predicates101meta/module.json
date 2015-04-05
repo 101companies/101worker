@@ -9,7 +9,8 @@
         "rules101dump",
         "targets101dir",
         "predicates101dir",
-        "predicates101dump"
+        "predicates101dump",
+        "predicates101deps"
     ],
     "targets" : [
         {

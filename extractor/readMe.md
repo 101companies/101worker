@@ -3,6 +3,7 @@ executed for which file by reading the language meta-value. If you want to add a
 like the language meta-key e.g. Java
 Further create an executable  file with the name "extractor". Besides that you should provide a readme file and a Makefile.
 The Makefile shall at least have follow labels:
+
     - test: Runs a/the test case(s)
     - install: Install all dependencies.
 
@@ -15,6 +16,7 @@ If you add a new extractor make sure that the needed packadges will be installed
 
 
 Runtime Environemnts:
+
 	- Python (plus pip)
 	- Haskell (plus Cabal)
 	- NodeJS (NPM would be recommand in case it wasn't' part of the NodeJS installation')
