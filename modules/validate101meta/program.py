@@ -38,8 +38,11 @@ def preparedump(deriver):
     deriver.dump["validators"] = sorted(list(deriver.dump["validators"]))
 
 
-# FIXME also check validators when they are moved into 101worker
-changed = meta101.havechanged(__file__)
+
+vdir       = os.environ["validator101dir"]
+validator = [os.path.join(vdir, d, "validator") for d in os.listdir(vdir)]
+changed    = meta101.havechanged(__file__, "module.json", *validator )
+
 
 meta101.derive(suffix    =".validator.json",
                dump      =os.environ["validator101dump"],
