@@ -20,7 +20,7 @@ def derive(deriver, validator, filename, **kwargs):
         raise RuntimeError("foiled code injection: {}".format(validator))
     command = [path, filename]
 
-    # subprocess has no safe getstatusoutput, so this'll have to do
+    # subprocess has no safe getstatusoutput, so this will have to do
     try:
         output, status = (subprocess.check_output(command), 0)
     except subprocess.CalledProcessError as e:
