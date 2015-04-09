@@ -44,6 +44,6 @@ setup:						#ls for debugging
 	cd ${resultsdir}/repos/101integrate ; make download-deps
 	
 install:
-	$(MAKE) bootstrap
 	apt-get install r-base
-	cd ${integrateDir}; make download-deps
+	$(MAKE) setup
+	rm -r ${resultsdir}/repos/101integrate
