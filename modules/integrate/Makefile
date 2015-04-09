@@ -3,11 +3,11 @@ integrateDir = ${resultsdir}/repos/101integrate
 termResourcesDir = ../../services/termResources
 
 run:
-	make clean
-	make bootstrap
-	cd ${integrateDir} ; make download-books; make bootstrap; make mine; make from-cache; make analyze; make backlink
-	make integrate
-	make deploy
+	$(MAKE) clean
+	$(MAKE) bootstrap
+	cd ${integrateDir} ; $(MAKE) download-books; $(MAKE) bootstrap; $(MAKE) mine; $(MAKE) from-cache; $(MAKE) analyze; $(MAKE) backlink
+	$(MAKE) integrate
+	$(MAKE) deploy
 
 bootstrap:
 	mkdir -p ${integrateDir};
@@ -44,5 +44,6 @@ setup:						#ls for debugging
 	cd ${resultsdir}/repos/101integrate ; make download-deps
 	
 install:
+	$(MAKE) bootstrap
 	apt-get install r-base
 	cd ${integrateDir}; make download-deps
