@@ -42,3 +42,6 @@ setup:						#ls for debugging
 	cd ${resultsdir}/repos; git clone https://github.com/101companies/101integrate; ls
 	cd ${resultsdir}/repos/101integrate; ls; cd src; ls; touch Makefile.vars ; ls # integrateDir undefined if not existens on starting time of this Makefile
 	cd ${resultsdir}/repos/101integrate ; make download-deps
+	
+install:
+	cd ${integrateDir}; make download-deps
