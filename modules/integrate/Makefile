@@ -46,4 +46,4 @@ setup:						#ls for debugging
 install:
 	apt-get install r-base
 	$(MAKE) setup
-	rm -r ${resultsdir}/repos/101integrate
+	rm -rf ${resultsdir}/repos/101integrate
