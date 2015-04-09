@@ -44,4 +44,5 @@ setup:						#ls for debugging
 	cd ${resultsdir}/repos/101integrate ; make download-deps
 	
 install:
+	apt-get install r-base
 	cd ${integrateDir}; make download-deps
