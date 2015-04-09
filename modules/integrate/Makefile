@@ -26,7 +26,7 @@ deploy:
 	cp ${integrateDir}/data/allbooks/mapping.json ${termResourcesDir}
 
 # Remove local temporary files, if any
-clean:  
+clean:
 	rm -rf ${modulesDir}/integrate
 	mkdir -p ${modulesDir}/integrate
 
@@ -42,8 +42,9 @@ setup:						#ls for debugging
 	cd ${resultsdir}/repos; git clone https://github.com/101companies/101integrate; ls
 	cd ${resultsdir}/repos/101integrate; ls; cd src; ls; touch Makefile.vars ; ls # integrateDir undefined if not existens on starting time of this Makefile
 	cd ${resultsdir}/repos/101integrate ; make download-deps
-	
+
 install:
-	$(MAKE) bootstrap
 	apt-get install r-base
-	cd ${integrateDir}; make download-deps
+	git clone https://github.com/101companies/101integrate.git
+	cd 101integrate; make download-deps
+	rm -rf 101integrate
