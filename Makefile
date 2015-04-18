@@ -6,7 +6,7 @@ setup:
 
 install:
 	cpan CPAN
-	apt-get install $$WORKER101_ASSUME_YES python-pip build-essential
+	apt-get install $$WORKER101_ASSUME_YES python-pip build-essential python-dev
 	pip install simplejson
 
 
