@@ -12,3 +12,6 @@ generate:
 
 clean:
 	@rm -rf ${pulled101RepoDir}/vocabularies/*
+
+install:
+	pip install jinja2

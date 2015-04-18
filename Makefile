@@ -7,6 +7,7 @@ setup:
 install:
 	cpan CPAN
 	apt-get install $$WORKER101_ASSUME_YES python-pip build-essential
+	pip install simplejson
 
 
 # Run something given in configs/env/$*.yml

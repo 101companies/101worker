@@ -12,3 +12,6 @@ deploy:
 
 clean:
 	@rm -f *.html *.json
+
+install:
+	pip install jinja2

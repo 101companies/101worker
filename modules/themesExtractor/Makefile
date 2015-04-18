@@ -12,3 +12,6 @@ generate:
 
 clean:
 	@rm -rf ${pulled101RepoDir}/themes/*
+
+install:
+	pip install jinja2
