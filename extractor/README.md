@@ -1,3 +1,6 @@
+
+# Extractors
+
 The extractors will be executes by the the extract101 module of the 101worker. It determines which extractor should be
 executed for which file by reading the language meta-value. If you want to add a new extractor make sure the folder is called like the language meta-key e.g. Java.
 Further create an executable  file with the name "extractor". Besides that you should provide a readme file and a Makefile.
