@@ -1,5 +1,5 @@
 {
-    "@id": "resource",
+    "@id": "Resource",
     "@instance": "rdfs:Class",
     "comment": "Base type of the ontology"
 }
