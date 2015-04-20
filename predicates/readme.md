@@ -1,6 +1,6 @@
 The predicates will be executed by the predicate101 module of the worker. They will be referenced over the predicate constraint
 in the 101language. The rule bellow would execute the dotNetImport/predicate.py with the argument: "System.Xml" :
-
+```
  {
     "predicate": "dotNETImport",
     "args"     : ["System.Xml"],
@@ -11,7 +11,7 @@ in the 101language. The rule bellow would execute the dotNetImport/predicate.py 
         }
     ]
 }
-
+```
 
 If you want to add another predicate make sure that the file that shall be executed has the name predicate.py.
 Further there should be a predicate description (predicate.json) that sums up the most important informations about the predicate.
@@ -32,6 +32,7 @@ It contains follow keywords:
 
 
 Example:
+```
 {
 
 	"name" : "ClassifierChecker",
@@ -40,3 +41,4 @@ Example:
 	"metadata" : []
 
 }
+```
