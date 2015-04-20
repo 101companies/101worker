@@ -15,24 +15,24 @@ The follow file should give a short overview about those. They will however be a
 If you add a new extractor make sure that the needed packadges will be installed. The OS shall be Ubuntu
 
 
-Runtime Environemnts:
+**Runtime Environemnts**:
 
-	- Python (plus pip)
-	- Haskell (plus Cabal)
-	- NodeJS (NPM would be recommand in case it wasn't' part of the NodeJS installation')
-	- Mono (if you are on Windows you would need the .NET framework)
-	- Java
+* Python (plus pip)
+* Haskell (plus Cabal)
+* NodeJS (NPM would be recommand in case it wasn't' part of the NodeJS installation')
+* Mono (if you are on Windows you would need the .NET framework)
+* Java
 
 Further have the follow modules to be installed:
 
-Python Modules:
-	- sqlparse
-	- HTMLParser
+**Python Modules**:
+* sqlparse
+* HTMLParser
 
-Haskell Module:
-	- JSON
-Javascript:
-    - Esprima
+**Haskell Module**:
+* JSON
+**Javascript**:
+* Esprima
 
 
 
