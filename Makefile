@@ -13,6 +13,7 @@ deploy:
 	apt-get install subversion -y
 	svn checkout https://svn.uni-koblenz.de/softlang/101backup/
 	cat 101backup/keys >> ~/.bashrc
+	runuser -l worker  -c 'uwsgi services/services.ini'
 
 # Run something given in configs/env/$*.yml
 # There's a chicken-and-egg problem with 101logs: the runner's output is

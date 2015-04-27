@@ -13,7 +13,7 @@ from mediawiki import wikifyNamespace
 from mediawiki import dewikifyNamespace
 from data101 import DumpdataProvider
 from data101 import WikidataProvider
-from data101 import TripledataProvider
+# from data101 import TripledataProvider
 
 from django.conf import settings
 from django.core.cache import cache
@@ -179,7 +179,7 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     setCommitInfos(response, filePath)
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    # response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
 
@@ -232,7 +232,7 @@ def discoverMemberFile(namespace, member, path, file):
     setCommitInfos(response,filePath)
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    # response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     response['derived'] = DumpdataProvider.getDerivedFiles(filePath)
 
@@ -277,7 +277,7 @@ def discoverMemberPath(namespace, member, path):
         })
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    # response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
 
@@ -319,7 +319,7 @@ def discoverNamespaceMember(namespace, member):
             })
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    # response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     if namespace == 'modules':
         response['module'] = DumpdataProvider.getModuleDescription(member)
@@ -394,4 +394,3 @@ def createRedirectUrl(wikititle):
             member = dewikifyNamespace(parts[1])
 
     return os.path.join(base_uri, ns, member)
-
