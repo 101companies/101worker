@@ -66,7 +66,11 @@ See [pull101repo](modules/pull101repo) as an example. Pretty much all other modu
 
 If your module derives resources, also have a look at the [meta101 library](libraries/meta101), which provides the interface for doing that. The API is documented and has examples for you.
 
-Also, please use [environment variables](configs/env) instead of hard-coding paths or URLs.
+There are also a few guidelines you must adhere to when writing your module. Any and all offences *will* lead to hard to debug issues when your module suddenly starts doing funky things and everyone will get mad at you when they found out what you did.
+
+* Use [environment variables](configs/env) instead of hard-coding paths or URLs.
+
+* Check if your module's files [have changed](libraries/meta101/__init__.py#L42) if you're using [meta101](libraries/meta101), so that if your module changes, the old data gets re-derived. See [predicates101meta](modules/predicates101meta/program.py) for an example.
 
 
 # Cycles
