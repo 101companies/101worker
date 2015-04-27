@@ -6,9 +6,13 @@ setup:
 
 install:
 	cpan CPAN
-	apt-get install $$WORKER101_ASSUME_YES python-pip build-essential python-dev
+	apt-get install -y python-pip build-essential python-dev
 	pip install simplejson
 
+deploy:
+	apt-get install subversion -y
+	svn checkout https://svn.uni-koblenz.de/softlang/101backup/
+	cat 101backup/keys >> ~/.bashrc
 
 # Run something given in configs/env/$*.yml
 # There's a chicken-and-egg problem with 101logs: the runner's output is
