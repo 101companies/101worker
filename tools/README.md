@@ -20,6 +20,16 @@ Loads the environment variables from the YAML file given on its stdin, validates
 This is run by `make %.run`, `make %.debug`, `make %.depend` and the tests in the [101test repo](https://github.com/101companies/101test).
 
 
+loadenv
+-------
+
+    tools/loadenv configs/env/production.yml
+
+Loads the environment variables form the given YAML file and dumps it as JSON.
+
+See also [the runner README](runner/README.md).
+
+
 archiver
 --------
 

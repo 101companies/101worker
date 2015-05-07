@@ -8,6 +8,18 @@ Validates and runs modules. Also handles everything related to diff incrementali
 See the `%.run`, `%.debug` and `%.depend` targets in the [101worker Makefile](../../Makefile) and the [101test repo](https://github.com/101companies/101test) for places where the runner is called. You can also find detailed module documentation about the runner in the [doc folder](doc).
 
 
+Parsing Environment Configuration
+---------------------------------
+
+    ./runner --env-to-json < config.yml
+
+Using the `--env-to-json` switch, the runner will only parse the environment configuration given on its stdin, dump the finished product as JSON on stdout and exit. No modules will be run.
+
+To call this more easily, you should just use the [loadenv tool](../loadenv) and it will take care of handling stdin redirection for you.
+
+This is to avoid re-writing the parsing code in services.
+
+
 Installation
 ------------
 

@@ -1,12 +1,10 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Cwd                qw(abs_path);
-use File::Basename     qw(dirname);
-use File::Slurp        qw(write_file);
-use YAML               qw();
-use lib                dirname $0;
-use Runner101::Diff;
+use Cwd            qw(abs_path);
+use File::Basename qw(dirname);
+use YAML           qw();
+use lib            dirname $0;
 use Runner101::Modules;
 
 
@@ -28,4 +26,15 @@ my %dirs         = (
 $config->{$_} //= "$dirs{$_}/" for keys %dirs;
 
 
-Runner101::Modules::run($config);
+if (@ARGV && $ARGV[0] eq '--env-to-json')
+{
+    require JSON;
+    require Runner101::Env;
+    local %ENV;
+    Runner101::Env::load_vars($config);
+    print JSON->new->utf8->canonical->pretty->encode(\%ENV);
+}
+else
+{
+    Runner101::Modules::run($config);
+}
