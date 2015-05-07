@@ -7,13 +7,26 @@ import json
 
 os.chdir(os.path.dirname(__file__))
 
+# load env vars
+this_file = os.path.dirname(os.path.realpath(__file__))
+from subprocess import Popen, PIPE
+
+process = Popen([
+    os.path.join(this_file, "../../tools/loadenv"),
+    os.path.join(this_file, "../../configs/env/production.yml")], stdout=PIPE)
+(output, err) = process.communicate()
+exit_code = process.wait()
+
+output = json.loads(output)
+for (key, value) in output.items():
+    os.environ[key] = value
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../libraries')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../libraries/101meta')))
-from mediawiki import wikifyNamespace
-from mediawiki import dewikifyNamespace
+from mediawiki101 import wikifyNamespace
+from mediawiki101 import dewikifyNamespace
 from data101 import DumpdataProvider
 from data101 import WikidataProvider
-# from data101 import TripledataProvider
 
 from django.conf import settings
 from django.core.cache import cache

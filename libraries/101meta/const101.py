@@ -4,7 +4,6 @@ from warnings import warn
 warn("const101.py is DEPRECATED, see 101worker/configs/env instead",
      stacklevel=2)
 
-
 url101wiki          = os.environ["wiki101url"]
 url101explorer      = os.environ["explorer101url"]
 url101repo          = os.environ["repo101url"]
