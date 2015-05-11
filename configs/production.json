@@ -27,5 +27,6 @@
     "repo2charts",
     "parseMegaL",
     "webDeployMegaModels",
-    "validateModuleDescriptions"
+    "validateModuleDescriptions",
+    "integrate"
 ]
