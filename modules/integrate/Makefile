@@ -4,14 +4,8 @@ termResourcesDir = ../../services/termResources
 
 run:
 	$(MAKE) clean
-	$(MAKE) bootstrap
-	cd ${integrateDir} ; $(MAKE) download-books; $(MAKE) bootstrap; $(MAKE) mine; $(MAKE) from-cache; $(MAKE) analyze; $(MAKE) backlink
-	$(MAKE) integrate
+	cd ${integrateDir} ; $(MAKE) run
 	$(MAKE) deploy
-
-bootstrap:
-	mkdir -p ${integrateDir};
-	cd ${integrateDir}/src; python bootstrap.py 	
 
 integrate:
 	cd ${integrateDir}/src/integrate ; make integrate
@@ -45,6 +39,7 @@ setup:						#ls for debugging
 
 install:
 	apt-get install r-base
+	apt-get install python-antlr
 	git clone https://github.com/101companies/101integrate.git
 	cd 101integrate; make download-deps
 	rm -rf 101integrate
