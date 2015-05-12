@@ -39,7 +39,7 @@ setup:						#ls for debugging
 	cd ${resultsdir}/repos/101integrate ; make download-deps
 
 install:
-	apt-get install r-base
+	apt-get install r-base r-cran-reshape r-cran-xtable r-cran-foreach 
 	apt-get install python-antlr
 	git clone https://github.com/101companies/101integrate.git
 	cd 101integrate; make download-deps
