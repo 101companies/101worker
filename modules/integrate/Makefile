@@ -15,7 +15,7 @@ deploy:
 	mkdir -p ${modulesDir}/integrate ;\
 	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate ;\
 	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate ;\
-	python deployResources.py ;\
+	#python deployResources.py ; #The respective folders are never generated
 	cp -r ${integrateDir}/data/summary ${modulesDir}/integrate
 	cp ${integrateDir}/data/allbooks/backlinks.json ${termResourcesDir}
 	cp ${integrateDir}/data/allbooks/mapping.json ${termResourcesDir}
