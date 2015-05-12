@@ -4,7 +4,7 @@ termResourcesDir = ../../services/termResources
 
 run:
 	$(MAKE) clean
-	cd ${integrateDir} ; $(MAKE) bootsrap; $(MAKE) clean
+	cd ${integrateDir} ; $(MAKE) bootstrap; $(MAKE) clean
 	cd ${integrateDir} ; $(MAKE) run
 	$(MAKE) deploy
 
