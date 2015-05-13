@@ -4,7 +4,8 @@ termResourcesDir = ../../services/termResources
 
 run:
 	$(MAKE) clean
-	cd ${integrateDir} ; $(MAKE) run
+	cd ${integrateDir} ; $(MAKE) bootstrap; $(MAKE) clean
+	cd ${integrateDir} ; $(MAKE) run BOOKS=Haskell
 	$(MAKE) deploy
 
 integrate:
@@ -14,7 +15,7 @@ deploy:
 	mkdir -p ${modulesDir}/integrate ;\
 	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate ;\
 	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate ;\
-	python deployResources.py ;\
+	#python deployResources.py ; #The respective folders are never generated
 	cp -r ${integrateDir}/data/summary ${modulesDir}/integrate
 	cp ${integrateDir}/data/allbooks/backlinks.json ${termResourcesDir}
 	cp ${integrateDir}/data/allbooks/mapping.json ${termResourcesDir}
@@ -38,7 +39,7 @@ setup:						#ls for debugging
 	cd ${resultsdir}/repos/101integrate ; make download-deps
 
 install:
-	apt-get install r-base
+	apt-get install r-base r-cran-reshape r-cran-xtable r-cran-foreach 
 	apt-get install python-antlr
 	git clone https://github.com/101companies/101integrate.git
 	cd 101integrate; make download-deps
