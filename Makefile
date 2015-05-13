@@ -21,11 +21,11 @@ deploy:
 # creates the folders in the first place. To solve it, the 101logs folder
 # is created here if it doesn't exist.
 %.run:
+	@git pull -q # upgrade before every run
 	mkdir -p ../101logs
 	rm -f ../101logs/*
 	-cd modules; make $*.run
 	make archive
-	@git pull -q # upgrade past every run
 
 
 # Like %.run but without logging, with stdout
