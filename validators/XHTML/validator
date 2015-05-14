@@ -7,7 +7,6 @@ import commands
 if len(sys.argv) < 2:
 	sys.exit('Usage: validator.py filename [-verbose] [-negative]')
 
-	
 verbose = False
 negative = False
 filename = sys.argv[1]
@@ -21,17 +20,10 @@ for arg in sys.argv:
 		verbose = True
 	elif arg == '-negative':
 		negative = True
-		
-		
-
-
 
 exitCodeHTML =  os.system(htmlValidator + ' ' + filename)
 exitCodeXML =  os.system(xmlValidator + ' ' + filename)	
 
-
-
-	
 if exitCodeXML == 0 and exitCodeHTML == 0:
 	if negative:
 		print "The validator succeeded but it shouldn't"
@@ -42,7 +34,4 @@ if exitCodeXML == 0 and exitCodeHTML == 0:
 if negative:
 	print "The validator failed as expected"
 	sys.exit(0)
-sys.exit(1)	
-
-		
-
+sys.exit(1)
