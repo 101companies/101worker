@@ -2,7 +2,6 @@
 import os
 import subprocess
 import meta101
-import kludge101
 
 
 def initdump(deriver):
@@ -12,26 +11,26 @@ def initdump(deriver):
         deriver.dump["validators"] = set()
 
 
-def derive(deriver, validator, filename, **kwargs):
-    deriver.dump["validators"].add(validator)
+def derive(deriver, language, filename, **kwargs):
 
-    path = os.path.join(os.environ["validator101dir"],validator, "validator")
-    if not path:
-        raise RuntimeError("foiled code injection: {}".format(validator))
-    command = [path, filename]
+    path = os.path.join(os.environ["validator101dir"],language, "validator")
 
-    # subprocess has no safe getstatusoutput, so this will have to do
-    try:
-        output, status = (subprocess.check_output(command), 0)
-    except subprocess.CalledProcessError as e:
-        output, status = (e.output, e.returncode)
+    if os.path.isfile(path):
+        deriver.dump["validators"].add(path)
+        command = [path, filename]
 
-    return {
-        "validator" : validator,
-        "command"   : command,
-        "status"    : status,
-        "output"    : output,
-    }
+         # subprocess has no safe getstatusoutput, so this will have to do
+        try:
+            output, status = (subprocess.check_output(command), 0)
+        except subprocess.CalledProcessError as e:
+            output, status = (e.output, e.returncode)
+
+        return {
+            "validator" : path,
+            "command"   : command,
+            "status"    : status,
+            "output"    : output,
+         }
 
 
 def preparedump(deriver):
@@ -47,7 +46,7 @@ changed    = meta101.havechanged(__file__, "module.json", *validator )
 meta101.derive(suffix    =".validator.json",
                dump      =os.environ["validator101dump"],
                oninit    =initdump,
-               getvalue  ="validator",
+               getvalue  ="language",
                callback  =derive,
                ondump    =preparedump,
                entirerepo=changed)

@@ -1,0 +1,48 @@
+#! /usr/bin/env python
+
+import os
+import sys
+import commands
+
+if len(sys.argv) < 2:
+	sys.exit('Usage: validator.py filename [-verbose] [-negative]')
+
+	
+verbose = False
+negative = False
+filename = sys.argv[1]
+curPath = os.path.dirname(sys.argv[0])
+htmlValidator = os.path.join(curPath, '../HTML', 'validator')
+xmlValidator = os.path.join(curPath, '../XML', 'validator')
+
+#checking command line arguments
+for arg in sys.argv:
+	if arg == '-verbose':
+		verbose = True
+	elif arg == '-negative':
+		negative = True
+		
+		
+
+
+
+exitCodeHTML =  os.system(htmlValidator + ' ' + filename)
+exitCodeXML =  os.system(xmlValidator + ' ' + filename)	
+
+
+
+	
+if exitCodeXML == 0 and exitCodeHTML == 0:
+	if negative:
+		print "The validator succeeded but it shouldn't"
+		sys.exit(1)
+	else:
+		sys.exit(0)
+		
+if negative:
+	print "The validator failed as expected"
+	sys.exit(0)
+sys.exit(1)	
+
+		
+

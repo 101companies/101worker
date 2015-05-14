@@ -20,7 +20,7 @@
     ],
     "wantdiff" : true,
     "metadata" : {
-            "dependencies" : ["validators"],
+            "dependencies" : ["language"],
             "obtained" :     []
     }
 }
