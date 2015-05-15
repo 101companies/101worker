@@ -22,8 +22,8 @@ It contains follow keywords:
 * name : The name of the predicate (as String).
 * args : The number of arguments the predicate takes. The definition of that value is a bit more complex than the others.
              Follow types of values are valid
-* null : That means that it doesn't matter how many arguments you give to the predicate. It can be in the range from 0 to infinity
-* [x, y] : The minimal and maximal number of arguments the predicate expects. If we just have a minimal number the y value can be "null"
+	* null : That means that it doesn't matter how many arguments you give to the predicate. It can be in the range from 0 to infinity
+	* [x, y] : The minimal and maximal number of arguments the predicate expects. If we just have a minimal number the y value can be "null"
                       The value of x, however, should be a positive integer smaller than y.
                       Examples: [1, 1] : exact one argument
                                 [1, 3] : Between 1 and three arguments
