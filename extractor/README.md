@@ -13,7 +13,7 @@ The Makefile shall at least have follow labels:
 
 
 To run the extractors some modules/libraries and runtime environments have to be installed on the  machine.
-The follow file should give a short overview about those. They will however be automatic installed by the execution ./install in the 101worker tree.
+The follow file should give a short overview about those. They will however be automatic installed by the execution of ./install in the 101worker tree.
 If you add a new extractor make sure that the needed packadges will be installed. The OS shall be Ubuntu
 
 
