@@ -92,3 +92,12 @@ In each 101worker cycle, it validates and then executes a list of modules. See t
 The idea is that a cronjob performs these commands regularly. Just don't make it run 60 times at once, experience has shown that it don't work too well.
 
 101worker updates itself with `git pull` after each run, so any changes in this repository will be applied in due time.
+
+To start a cycle of 101worker, you use the [top-level Makefile](Makefile) and its `%.run` rule. For example, to run the production configuration, you'd use `make production.run`.
+
+
+## Run Only Select Module
+
+If you only want to run a single module out of a configuration, you can use the `RUNONLY` environment variable and set it to the name of the module you want to run.
+
+For example, to run only the [integrate module](modules/integrate) of the production configuration, you'd use `RUNONLY=integrate make production.run`.
