@@ -1,9 +1,21 @@
-This is usage documentation, high-level documentation is at [101docs](https://github.com/101companies/101docs/tree/master/worker). It also has the [installation instructions](https://github.com/101companies/101docs/blob/master/worker/Setup.md) to start using or developing on 101worker.
-
+This is usage documentation, high-level documentation is at [101docs](https://github.com/101companies/101docs/tree/master/worker). It also has the [installation instructions](https://github.com/101companies/101docs/blob/master/worker/Setup.md) to start using or developing on 101worker. You further should read about the  [101meta] (https://github.com/101companies/101docs/blob/master/101meta/README.md) language.
+If you dig further into the directory tree of the worker you will also find more specific readMe files for a subset.
 
 # Structure
 
 These are the top-level folder in the 101worker repository.
+
+## extrator
+
+Cotains extractors for the fact extraction in sources from different language.
+
+## validators
+
+Cotains validators for the validation if a file is really of the suggested language. 
+
+## predicates
+
+Cotains predicates that can be executed by the predicate constraint of a metaL rule.
 
 ## modules
 
