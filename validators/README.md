@@ -26,6 +26,8 @@ To run the validator some modules/libraries and runtime environments have to be 
 The follow file should give a short overview about those. They will, however, be automatic installed by the execution of ./install in the 101worker tree.
 If you add a new validator make sure that the needed packadges will be installed. The OS shall be Ubuntu
 
+**Testing**:
+
 To run all the validator  test cases enter the following command in your terminal while being in that folder:
 * perl test
 
