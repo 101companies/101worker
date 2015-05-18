@@ -22,12 +22,12 @@ sub load_vars
 
     if (exists $ENV{RUNONLY})
     {
-        my $stat = stat store_path('result');
-        $ENV{last101run} = $stat ? $stat->mtime : 0;
+        $ENV{last101run} = 0;
     }
     else
     {
-        $ENV{last101run} = 0;
+        my $stat = stat store_path('result');
+        $ENV{last101run} = $stat ? $stat->mtime : 0;
     }
 }
 
