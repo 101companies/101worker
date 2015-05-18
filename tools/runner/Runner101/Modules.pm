@@ -99,7 +99,7 @@ sub BUILD
 sub push_error
 {
     my ($self, $type, $key, $value) = @_;
-    push $self->errors->{$type}{$key} //= [], $value;
+    push @{$self->errors->{$type}{$key} //= []}, $value;
 }
 
 
