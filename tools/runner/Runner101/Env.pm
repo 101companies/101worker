@@ -20,8 +20,15 @@ sub load_vars
     my ($config) = @_;
     $ENV{$_} = load_var($config, $_) for keys %$config;
 
-    my $stat = stat store_path('result');
-    $ENV{last101run} = $stat ? $stat->mtime : 0;
+    if (exists $ENV{RUNONLY})
+    {
+        my $stat = stat store_path('result');
+        $ENV{last101run} = $stat ? $stat->mtime : 0;
+    }
+    else
+    {
+        $ENV{last101run} = 0;
+    }
 }
 
 
