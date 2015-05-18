@@ -17,6 +17,9 @@ The follow file should give a short overview about those. They will however be a
 If you add a new extractor make sure that the needed packadges will be installed. The OS shall be Ubuntu
 
 
+**Testing*
+To test all the extractors simply run the test script in that location: perl test
+
 **Runtime Environemnts**:
 
 * Python (plus pip)
