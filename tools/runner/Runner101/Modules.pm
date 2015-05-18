@@ -32,7 +32,13 @@ sub run
 
     for (@{$self->modules})
     {
+
         my $prog = $_->name;
+        if (exists $ENV{RUNONLY} && $ENV{RUNONLY} ne $prog)
+        {
+            write_log("skipping $prog because RUNONLY=$ENV{RUNONLY} is set.");
+            next;
+        }
         write_log("running $prog");
 
         my $start     = time;
