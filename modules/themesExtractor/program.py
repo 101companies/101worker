@@ -24,10 +24,6 @@ wiki = json.load(open(json_path, 'r'))['wiki']
 pages = wiki['pages']
 themes = filter(lambda p: "Theme" == p.get('p', ''), pages)
 
-for d in os.listdir(output):
-    if os.path.isdir(os.path.join(output, d)):
-        shutil.rmtree(os.path.join(output, d))
-
 def render(d):
     if isinstance(d, list):
         return ', '.join(d)
@@ -106,7 +102,7 @@ def getUniqueLanguages(page, pages):
     l = getLangs(page)
     unique = filter(lambda p: langs.count(p) == 1, l)
     return unique
-    
+
 def getTechs(pages):
     techs = query(pages).where(lambda p: any(filter(lambda i: i.startswith('uses::Technology'), p.get('internal_links', [])))) \
         .select(lambda p: filter(lambda i: i.startswith('uses::Technology'), p['internal_links'])).to_list()
@@ -154,40 +150,40 @@ def getThemeInstances(theme, pages):
 
 def createMembers(theme, pages):
     instances = getThemeInstances(theme, pages)
-        
+
     for instance in instances:
         name = instance.get('n', '')
 
         unique_f = getUniqueFeatures([instance], instances)
         num_f = getFeatures([instance])
-        
+
         unique_l = getUniqueLanguages([instance], instances)
         num_l = list(set(getLangs([instance])))
-        
+
         unique_t = getUniqueTechs([instance], instances)
         num_t = list(set(getTechs([instance])))
 
         unique_c = getUniqueConcepts([instance], instances)
         num_c = list(set(getConcepts([instance])))
-        
+
         headline = remove_headline_markup(instance.get('headline', ''))
-        
+
         yield {
-        
+
             'name': name,
             'headline': headline,
             'features': num_f,
             'ufeatures': unique_f,
-            
+
             'languages': num_l,
             'ulanguages': unique_l,
-            
+
             'technologies': num_t,
             'utechnologies': unique_t,
 
             'concepts': num_c,
             'uconcepts': unique_c
-        
+
         }
 
 def getContributionsWithFeature(feature, pages):
@@ -221,58 +217,58 @@ def getContributionsWithTechnology(name, pages):
 
     f = filter(filter_func, pages)
     return f
-        
+
 def createFeatures(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
-    
+
     features = list(set(getFeatures(theme_pages)))
     feature_names = features
-    
+
     for feature in feature_names:
         rf = getRealFeature(feature, pages)
         contributions = getContributionsWithFeature(feature, theme_pages)
         headline = remove_headline_markup(rf['page'].get('headline', ''))
         contributions = getContributionNames(contributions)
         resolved = bool(rf.get('resolved', ''))
-        
+
         yield {
             'name': feature,
             'headline': headline,
             'contributions': contributions,
             'resolved': resolved
-        
+
         }
 
 def createConcepts(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
     concepts = list(set(getConcepts(theme_pages)))
-    
+
     for concept in concepts:
         rf = getRealConcept(concept, pages)
         contributions = getContributionsWithConcept(concept, theme_pages)
         headline = remove_headline_markup(rf.get('headline', ''))
         contributions = getContributionNames(contributions)
         resolved = bool(rf['page'].get('resolved', ''))
-        
+
         yield {
             'name': concept,
             'headline': headline,
             'contributions': contributions,
             'resolved': resolved
-        
+
         }
 
 def createTechnologies(theme, pages):
     theme_pages = getThemeInstances(theme, pages)
     technologies = list(set(getTechs(theme_pages)))
-    
+
     for tech in technologies:
         rf = getRealTechnology(tech, pages)
         contributions = getContributionsWithTechnology(tech, theme_pages)
         headline = remove_headline_markup(rf.get('headline', ''))
         contributions = getContributionNames(contributions)
         resolved = bool(rf.get('resolved', ''))
-        
+
         yield {
             'name': tech,
             'headline': headline,
@@ -296,7 +292,7 @@ def toTex(list, file):
         f.write(',\n'.join(map(lambda x: "\wikipage{" + x['name'] + "}",  list)))
 
 for t in getThemeNames(themes):
-    
+
     members = sorted(list(createMembers(t, pages)), key=lambda s: s['name'])
 
     if not members:
@@ -307,7 +303,7 @@ for t in getThemeNames(themes):
     if not os.path.exists(os.path.join(output, t)):
         os.mkdir(os.path.join(output, t))
     path = os.path.join(output, t, 'members.json')
-    
+
     f = open(path, 'w')
     f.write(json.dumps(members, indent=4, sort_keys=True))
     f.close()
@@ -329,9 +325,9 @@ for t in getThemeNames(themes):
     f.close()
 
     toTex(deleteEmptyCells(members), os.path.join(output, t, 'members_list.tex'))
-    
+
     # to here
-    
+
     path = os.path.join(output, t, 'features.json')
     f = open(path, 'w')
     features = sorted(list(createFeatures(t, pages)), key=lambda s: len(s['contributions']))[::-1]
@@ -356,7 +352,7 @@ for t in getThemeNames(themes):
     f = open(path, 'w')
     concepts = sorted(list(createConcepts(t, pages)), key=lambda s: s['name'])
     f.write(json.dumps(concepts, indent=4, sort_keys=True))
-    f.close()  
+    f.close()
 
     template = env.get_template('features.html')
 
@@ -376,7 +372,7 @@ for t in getThemeNames(themes):
     f = open(path, 'w')
     technologies = sorted(list(createTechnologies(t, pages)), key=lambda s: s['name'])
     f.write(json.dumps(features, indent=4, sort_keys=True))
-    f.close()  
+    f.close()
 
     template = env.get_template('features.html')
 
@@ -391,4 +387,3 @@ for t in getThemeNames(themes):
     f.close()
 
     toTex(deleteEmptyCells(technologies), os.path.join(output, t, 'technologies_list.tex'))
-        
