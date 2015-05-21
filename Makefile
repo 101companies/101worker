@@ -30,7 +30,7 @@ deploy:
 
 # Like %.run but without logging, with stdout
 %.debug:
-	cd modules; make $*.debug
+	cd modules; DEBUG101=1 make $*.debug
 
 
 # Debug, gather changes and build dependency graph in Graphviz format.

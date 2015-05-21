@@ -45,8 +45,13 @@ sub run
 {
     my ($self, $parent) = @_;
 
-    chdir $self->dir              or die "Couldn't cd into "  . $self->dir;
-    open my $log, '>', $self->log or die "Couldn't write to " . $self->log;
+    chdir $self->dir or die "Couldn't cd into "  . $self->dir;
+
+    my $log;
+    if ($ENV{DEBUG101})
+    {   $log = \*STDERR }
+    else
+    {   open $log, '>', $self->log or die "Couldn't write to " . $self->log }
 
     run_diff($self, $parent->diff, $log)
 }
