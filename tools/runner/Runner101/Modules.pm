@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use File::Slurp         qw(slurp);
 use List::MoreUtils     qw(first_index first_value);
-use List::Util          qw(any pairmap);
+use List::Util          qw(any none pairmap);
 use POSIX               qw(strftime);
 use Proc::ChildError    qw(explain_child_error);
 use Try::Tiny;
@@ -34,11 +34,8 @@ sub run
     {
 
         my $prog = $_->name;
-        if (exists $ENV{RUNONLY} && $ENV{RUNONLY} ne $prog)
-        {
-            write_log("skipping $prog because RUNONLY=$ENV{RUNONLY} is set.");
-            next;
-        }
+        # skip on runonly
+        next if exists $ENV{RUNONLY} && $ENV{RUNONLY} ne $prog;
         write_log("running $prog");
 
         my $start     = time;
@@ -90,6 +87,13 @@ sub BUILD
             parent => $self,
             schema => $module_schema,
         );
+    }
+
+    if (exists $ENV{RUNONLY} && none { $_ eq $ENV{RUNONLY} } @{$self->names})
+    {
+       push @{$self->errors->{other} ||= []},
+                "You want to RUNONLY=$ENV{RUNONLY}, but there's "
+              . "no such module in this configuration";
     }
 
     $self->die_if_invalid;
@@ -145,7 +149,6 @@ our @ERROR_MESSAGES = (
     env     => 'Missing environment variable %s required by %s',
     missing => 'Module %s required before %s, but is missing',
     late    => 'Module %s required before %s, but appears after instead',
-    meta    => 'Metadependency %s error in %s',
 );
 
 
