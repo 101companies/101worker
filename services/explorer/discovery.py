@@ -94,7 +94,7 @@ def mapFragment(filePath, fragmentPath, fragment):
 
 
 def setWikidata(response, namespace, member):
-    key = "wikidata-{}-{}".format(namespace, member)
+    key = "wikidata-{}-{}".format(namespace.replace(' ', '_'), member.replace(' ', '_'))
     cached = cache.get(key)
     if not cached:
         wikiUrl, headline = WikidataProvider.getWikiData(namespace,member)
