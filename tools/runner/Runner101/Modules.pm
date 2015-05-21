@@ -149,6 +149,7 @@ our @ERROR_MESSAGES = (
     env     => 'Missing environment variable %s required by %s',
     missing => 'Module %s required before %s, but is missing',
     late    => 'Module %s required before %s, but appears after instead',
+    meta    => 'Metadependency %s error in %s',
 );
 
 
