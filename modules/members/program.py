@@ -10,13 +10,12 @@ sys.path.append('../../libraries')
 sys.path.append('../../libraries/101meta')
 
 import const101
-from metamodel import Dumps
 
 mappings = json.load(open('../../libraries/mediawiki/Mappings.json'))['dewikify']
 problems = []
 namespaceMembers = dict([(ns, []) for ns in mappings.values()])
 
-for page in Dumps.WikiDump():
+for page in json.load(open(const101.wikiDump, 'r'))['wiki']['pages']:
     p, n = page.get('p', None), page.get('n', 'None')
     if n.startswith('@'): p = '101'
     elif not p: p = 'Concept'
