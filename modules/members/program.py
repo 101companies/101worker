@@ -11,7 +11,7 @@ sys.path.append('../../libraries/101meta')
 
 import const101
 
-mappings = json.load(open('../../libraries/mediawiki/Mappings.json'))['dewikify']
+mappings = json.load(open('../../libraries/mediawiki101/Mappings.json'))['dewikify']
 problems = []
 namespaceMembers = dict([(ns, []) for ns in mappings.values()])
 
