@@ -63,8 +63,8 @@ def getFacts(file, extractor):
     #if os.path.exists(extractorFile):
     #    return json.load(open(extractorFile, 'r'))
 
-    fullFile = os.path.join(const101.sRoot, file)
-    fullExtractor = os.path.join(const101.sRoot, extractor)
+    fullFile = os.path.join(const101.tRoot, file+'.extractor.json')
+    #fullExtractor = os.path.join(const101.sRoot, extractor)
     # print fullExtractor
     # command = '{0} < {1}'.format(fullExtractor, fullFile)
     # #escape some shell symbols
@@ -72,10 +72,10 @@ def getFacts(file, extractor):
     # status, output = commands.getstatusoutput(command)
     # if not status == 0: raise Exception('Fact extraction failed: {0}'.format(output))
 
-    with open(fullFile) as f:
-        output = subprocess.check_output([fullExtractor, fullFile], stdin=f)
+    #with open(fullFile) as f:
+    #    output = subprocess.check_output([fullExtractor, fullFile], stdin=f)
 
-    return json.loads(output)
+    return json.load(open(fullFile, 'r'))
 
 def isDir(dir):
     path = os.path.join(const101.sRoot, dir)
