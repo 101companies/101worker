@@ -227,13 +227,13 @@ def discoverMemberFile(namespace, member, path, file):
     response['namespace'] = wikiNS
 
     #gather member data - if there is a fact extractor, then we also want give back selectable fragments
-    if extractor:
-        try:
-            extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
-            for fragment in extractedFacts.get('fragments', []):
-                fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
-                response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
-        except OSError:
+    #if extractor:
+    try:
+        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+        for fragment in extractedFacts.get('fragments', []):
+            fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
+            response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
+    except OSError:
             pass
 
 
