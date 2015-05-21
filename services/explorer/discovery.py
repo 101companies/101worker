@@ -160,23 +160,23 @@ def discoverFileFragment(namespace, member, path, file, fragment):
     #gather member data
     lineNumbers = None
     print extractor
-    if extractor:
-        try:
-            extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
-            print extractedFacts
-            #TODO There has to be a better way to do this
-            for f1 in extractedFacts['fragments']:
-                selected, fragmentPath = find(f1, fragment)
-                if selected:
-                    response['classifier'] = selected['classifier']
-                    response['name'] = selected['name']
-                    if 'startLine' in selected:
-                        lineNumbers = {'from':selected['startLine'], 'to': selected['endLine']}
-                    for f2 in selected.get('fragments',[]):
-                        response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
-                    break
-        except:
-            pass
+    #if extractor:
+    try:
+        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+        print extractedFacts
+        #TODO There has to be a better way to do this
+        for f1 in extractedFacts['fragments']:
+            selected, fragmentPath = find(f1, fragment)
+            if selected:
+                response['classifier'] = selected['classifier']
+                response['name'] = selected['name']
+                if 'startLine' in selected:
+                    lineNumbers = {'from':selected['startLine'], 'to': selected['endLine']}
+                for f2 in selected.get('fragments',[]):
+                    response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
+                break
+    except:
+        pass
 
     #gather content
     if lineNumbers or locator:
