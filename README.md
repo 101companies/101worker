@@ -5,7 +5,7 @@ If you dig further into the directory tree of the worker you will also find more
 
 These are the top-level folder in the 101worker repository.
 
-## extrator
+## extrators
 
 Cotains extractors for the fact extraction in sources from different language.
 
