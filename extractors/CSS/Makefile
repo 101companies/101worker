@@ -1,6 +1,7 @@
 # Comments are not supported.
 
 test: 
+	mkdir -p test/output
 	./extractor.py < test/Declaration.css > test/output/Declaration.json
 	./extractor.py < test/Rule.css > test/output/Rule.json
 
