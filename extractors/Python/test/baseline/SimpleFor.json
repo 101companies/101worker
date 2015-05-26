@@ -1,0 +1,23 @@
+{
+    "fragments": [
+        {
+            "classifier": "var", 
+            "name": "nums"
+        }, 
+        {
+            "classifier": "var", 
+            "name": "result"
+        }, 
+        {
+            "classifier": "var", 
+            "name": "inLoop"
+        }, 
+        {
+            "classifier": "var", 
+            "name": "result"
+        }
+    ], 
+    "imports": [
+        "sys"
+    ]
+}
