@@ -1,5 +1,5 @@
 # Comments are not supported.
-
+.PHONY: test
 test: 
 	mkdir -p test/output
 	./extractor.py < test/Declaration.css > test/output/Declaration.json
