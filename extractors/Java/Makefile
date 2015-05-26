@@ -11,6 +11,7 @@ jfactextractor/JFactExtractor.class: jfactextractor/*.java Makefile
 
 test:
 	mkdir -p test/output
+	make build
 	./extractor < test/Basic.java > test/output/Basic.json
 	diff --ignore-all-space test/baseline/Basic.baseline test/output/Basic.json
 	./extractor < test/Indexing.java > test/output/Indexing.json
@@ -37,3 +38,4 @@ clean:
 
 install:
 	apt-get install openjdk-7-jre
+	make build
