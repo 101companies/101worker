@@ -28,3 +28,4 @@ clean:
 install:
 	apt-get install mono-complete
 	apt-get install mono-dmcs
+	make build
