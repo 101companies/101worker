@@ -1,0 +1,51 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Cwd;
+use File::Find;
+use Getopt::Long;
+use Pod::Usage;
+
+
+my ($help, $yes);
+my $getopt = GetOptions('help|h' => \$help, 'assume-yes|y' => \$yes);
+my %args;
+$args{'-message'} = "unknown options: @ARGV" if @ARGV;
+$args{'-verbose'} = 99                       if $help;
+pod2usage(%args)                             if %args || !$getopt;
+
+
+die "Please be more root.\n" if $>;
+$ENV{PERL_MM_USE_DEFAULT      } = 1;
+$ENV{PERL_EXTUTILS_AUTOINSTALL} = '--defaultdeps';
+$ENV{WORKER101_ASSUME_YES     } = '-y';
+
+
+my @make;
+
+find sub {
+    return if not $_ eq 'Makefile';
+    my $code = system "make -nsf '$File::Find::name' install >/dev/null 2>&1";
+    push @make, $File::Find::dir if $code == 0;
+}, glob getcwd . '/*';
+
+
+for my $path (sort @make)
+{
+    chdir $path;
+    system qw(make install);
+}
+
+
+__END__
+
+=head1 NAME
+
+install - run all C<make install> in this repository
+
+=head1 SYNOPSIS
+
+Run this as root and all install targets in 101worker will be run. Blows up if
+you're not root.
+
+=cut
