@@ -19,7 +19,7 @@ themes101dir           : $targets101dir/themes/
 
 modules101dir          : $worker101dir/modules/
 predicates101dir       : $worker101dir/predicates/
-extractor101dir        : $worker101dir/extractor/
+extractor101dir        : $worker101dir/extractors/
 validator101dir        : $worker101dir/validators/
 
 # Files
