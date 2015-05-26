@@ -1,5 +1,5 @@
 build:
-	ghc -x hs extractor -o extractorExec
+	ghc -x hs extractor.hs -o extractorExec
 .PHONY: test
 test: build
 	mkdir -p test/output
@@ -21,6 +21,6 @@ copy:
 	cp ../../../101results/101repo/contributions/haskellData/*.hs tests/haskellData
 
 clean:
-	rm -f log HsFactExtractor *.o *.hi
+	rm -f log extractorExec *.o *.hi
 
 
