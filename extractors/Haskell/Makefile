@@ -1,5 +1,5 @@
 build:
-	ghc -x hs extractor.hs -o extractorExec
+	ghc -x hs extractor -o extractorExec
 .PHONY: test
 test: build
 	mkdir -p test/output
