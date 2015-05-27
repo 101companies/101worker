@@ -6,10 +6,6 @@
         {
             "property": "instanceOf",
             "mapsTo": "rdf:type"
-        },
-        {
-            "property": "isA",
-            "mapsTo": "rdfs:subClassOf"
         }
     ],
     "properties": [
