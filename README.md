@@ -70,9 +70,11 @@ Modules go into the [modules folder](modules). A module consists of the followin
 
 * **Makefile** with the following targets:
 
-    * **test**, so that your tests can automatically be discovered when you run [./test](test). This command *must* exit with a non-zero exit code if your tests fail.
+    * **install** (*optional*), if you need anything that doesn't come with a normal Ubuntu Server installation. These will automatically be discovered by [./install](install) and ***THEY WILL BE RUN WITH SUDO*** when 101worker is deployed. Don't go doing anything other than installs in this target. If you need to build your module, use the **build** target.
 
-    * **install** (*optional*), if you need anything that doesn't come with a normal Ubuntu Server installation. These will automatically be discovered by [./install](install) and ***THEY WILL BE RUN WITH SUDO***. Don't go doing anything other than installs in this target. If you need to build your module, put separate target in your Makefile and call it from your `module.json`.
+    * **build** (*optional*), if you need to compile something in your module. These targets will automatically be discovered by [./install --build](install). Everything you installed in your **install** target will be available here. This will be executed before every 101worker run, so use `make` properly and don't unecessarily re-build your stuff every time.
+
+    * **test**, so that your tests can automatically be discovered when you run [./test](test). Everything from **install** and **build** is available here. This command *must* exit with a non-zero exit code if your tests fail.
 
 See [pull101repo](modules/pull101repo) as an example. Pretty much all other modules are legacy and don't properly fulfill those requirements though. Don't take them as examples.
 
