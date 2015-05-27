@@ -47,8 +47,7 @@ find sub {
 for my $path (sort @make)
 {
     chdir $path;
-    print "make $target $path\n";
-    #system make => $target;
+    system make => $target;
 }
 
 
