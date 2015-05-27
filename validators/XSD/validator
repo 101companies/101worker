@@ -6,7 +6,10 @@ import sys
 
 if len(sys.argv) != 2:
     sys.exit("Usage: validator.py inputFile")
-    
+
+locatorPy = sys.argv[0]
+x = os.path.dirname(locatorPy)
+
 command = "mono " + x + "/bin/Debug/XSDValidator.exe " + sys.argv[1]
 status, output = commands.getstatusoutput(command)
 print output
