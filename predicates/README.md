@@ -1,7 +1,7 @@
 # Predicates
 
 The predicates will be executed by the predicate101 module of the worker. They will be referenced over the predicate constraint
-in the 101language. The rule bellow would execute the dotNetImport/predicate.py with the argument: "System.Xml" :
+in the 101language. The rule bellow would execute the dotNetImport/predicate.py with the argument: "System.Xml". We are usinge the language constraint here rather than the suffix one. We would like to encourage you to do the same in predicate rules if applieable:
 ```
  {
     "predicate": "dotNETImport",
@@ -41,3 +41,4 @@ Example:
 	"metadata" : []
 }
 ```
+
