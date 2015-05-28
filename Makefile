@@ -22,6 +22,7 @@ deploy:
 # is created here if it doesn't exist.
 %.run:
 	@git pull -q # upgrade before every run
+	./install --build # build everything after upgrade
 	mkdir -p ../101logs
 	rm -f ../101logs/*
 	-cd modules; make $*.run

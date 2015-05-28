@@ -6,26 +6,40 @@ use File::Find;
 use Getopt::Long;
 use Pod::Usage;
 
-
-my ($help, $yes);
-my $getopt = GetOptions('help|h' => \$help, 'assume-yes|y' => \$yes);
-my %args;
-$args{'-message'} = "unknown options: @ARGV" if @ARGV;
-$args{'-verbose'} = 99                       if $help;
-pod2usage(%args)                             if %args || !$getopt;
+close STDIN;
 
 
-die "Please be more root.\n" if $>;
-$ENV{PERL_MM_USE_DEFAULT      } = 1;
-$ENV{PERL_EXTUTILS_AUTOINSTALL} = '--defaultdeps';
-$ENV{WORKER101_ASSUME_YES     } = '-y';
+my %opts;
+my $getopt = GetOptions \%opts, qw(help|h build|b);
+
+my %usage;
+$usage{'-message'} = "unknown options: @ARGV" if @ARGV;
+$usage{'-verbose'} = 99                       if $opts{help};
+pod2usage(%usage)                             if %usage || !$getopt;
+
+
+my $target;
+
+if ($opts{build}) # build mode
+{
+    die "Please be less root.\n" if $> == 0;
+    $target = 'build';
+}
+else # install mode
+{
+    die "Please be more root.\n" if $> != 0;
+    $ENV{PERL_MM_USE_DEFAULT      } = 1;
+    $ENV{PERL_EXTUTILS_AUTOINSTALL} = '--defaultdeps';
+    $ENV{WORKER101_ASSUME_YES     } = '-y';
+    $target = 'install';
+}
 
 
 my @make;
 
 find sub {
     return if not $_ eq 'Makefile';
-    my $code = system "make -nsf '$File::Find::name' install >/dev/null 2>&1";
+    my $code = system "make -nsf '$File::Find::name' $target >/dev/null 2>&1";
     push @make, $File::Find::dir if $code == 0;
 }, glob getcwd . '/*';
 
@@ -33,7 +47,7 @@ find sub {
 for my $path (sort @make)
 {
     chdir $path;
-    system qw(make install);
+    system make => $target;
 }
 
 
@@ -41,11 +55,29 @@ __END__
 
 =head1 NAME
 
-install - run all C<make install> in this repository
+install - run all C<make install> or C<make build> in this repository.
 
 =head1 SYNOPSIS
 
-Run this as root and all install targets in 101worker will be run. Blows up if
-you're not root.
+To run all C<make install> targets in 101worker, just run C<install> as root.
+It will blow up if you're not root.
+
+To run all C<make build> targets in 101worker, run C<install -b>. Do B<not> run
+this as root, but instead as the user that will be executing 101worker. Will
+blow up if you're root.
+
+=head1 OPTIONS
+
+=over
+
+=item --build, -b
+
+Run all C<make build> targets instead of C<make install>.
+
+=item --help, -h
+
+Show this help.
+
+=back
 
 =cut

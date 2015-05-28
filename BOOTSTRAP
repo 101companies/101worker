@@ -25,6 +25,9 @@ bootstrapmsg 'Installing 101worker dependencies (needs sudo)'
 cd 101worker
 sudo ./install
 
+bootstrapmsg 'Building 101worker pieces where necessary'
+./install --build
+
 bootstrapmsg 'Running 101worker unit tests'
 ./test
 export worker101dir=`pwd`

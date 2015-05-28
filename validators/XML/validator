@@ -6,13 +6,9 @@ import sys
 
 if len(sys.argv) > 3:
     sys.exit("Usage: validator.py inputFile")
+    
 locatorPy = sys.argv[0]
 x = os.path.dirname(locatorPy)
-command = "cd " + x + "; make"
-status, output = commands.getstatusoutput(command)
-if (status):
-    print output
-    sys.exit(status)
 command = "mono " + x + "/bin/Debug/XMLValidator.exe " + sys.argv[1]
 status, output = commands.getstatusoutput(command)
 
