@@ -72,7 +72,6 @@ def main():
     open(serialized_version, 'w').write(graph.serialize())
     serializeLog('errors.json')
 
-    #uri = 'http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox'
     uri = 'http://triples.101companies.org:8080/openrdf-sesame/repositories/sandbox'
     response, content = sesame.clear_graph(uri)
     assert response['status'] == '204'
@@ -83,35 +82,3 @@ if __name__ == '__main__':
     print 'Starting process'
     main()
     print 'Finished... '
-
-
-
-
-
-
-
-
-
-
-    #print "{}".format({}==None)
-
-#    uri = 'http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox'
-#    serialized_version = 'graph.rdf'
-
-
-#    print 'Initializing graph'
-#    graph = rdflib.Graph()
-#    graph.bind('onto', 'http://101companies.org/ontology#')
-#    graph.bind('res', 'http://101companies.org/resources#')
-
-
-#    print 'Serializing graph...'
-#    open(serialized_version, 'w').write(graph.serialize())
-
-
-#    print 'Clearing Sesame...'
-#    response, content = sesame.clear_graph(uri)
-#    assert response['status'] == '204'
-
-#    print 'Uploading serialized file...'
-#    response, content = sesame.upload(uri, serialized_version)

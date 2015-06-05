@@ -142,6 +142,7 @@ class ConceptModel:
 class WikiResource:
     def __init__(self, description):
         self.ns = description['p']
+        if not self.ns: self.ns = 'Concept'
         #assert not self.ns is None
         self.name = description['n']
         self.jsonDescription = description
@@ -154,19 +155,21 @@ class WikiResource:
         for property in self.jsonDescription:
             if property in allowedProperties:
                 for object in self.jsonDescription[property]:
-                    if isinstance(object, dict):
-                        if not object['p']:
-                            # Its a special case if the relation is a instance relation
-                            if property == 'instanceOf': object['p'] = 'Ontology'
-                            else: object['p'] = 'Concept'
-                        triples.append( (entity, Property.Properties[property].toPredicate(self.ns, object['p']),
-                                         nameSpaceByName(object['p'])[object['n']]) )
+                    try:
+                        if isinstance(object, dict):
+                            if not object['p']:
+                                # Its a special case if the relation is a instance relation
+                                if property == 'instanceOf': object['p'] = 'Ontology'
+                                else: object['p'] = 'Concept'
+                            triples.append( (entity, Property.Properties[property].toPredicate(self.ns, object['p']),
+                                             nameSpaceByName(object['p'])[object['n']]) )
 
-                    elif isinstance(object, basestring):
-                        object = URIRef(object)
-                        triples.append( (entity, Property.Properties[property].toPredicate(None,None), object) )
+                        elif isinstance(object, basestring):
+                            object = URIRef(object)
+                            triples.append( (entity, Property.Properties[property].toPredicate(None, None), object) )
+                    except: pass
             else:
-                if property not in ['headline', 'p', 'n', 'internal_links', 'subresources']:
+                if property not in ['headline', 'p', 'n', 'internal_links', 'subresources', 'isA']:
                     reportError(self.jsonDescription, 'Undefined property: {}'.format(property))
 
         return triples
