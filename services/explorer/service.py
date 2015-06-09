@@ -138,7 +138,7 @@ def format_render(request, context, template):
 
 
 #possible entry points
-def serveFileFragment(request, namespace, member, path, file, fragment):    
+def serveFileFragment(request, namespace, member, path, file, fragment):
     if path is None:
         path = ''
 
@@ -154,7 +154,7 @@ def serveFileFragment(request, namespace, member, path, file, fragment):
 
 
 def serveMemberFile(request, namespace, member, path, file):
-    
+
     if path is None:
         path = ''
 
@@ -186,9 +186,6 @@ def serveMemberPath(request, namespace, member, path):
 
 
 def serveNamespaceMember(request, namespace, member):
-    if '_' in member:
-        member = member.replace('_', ' ')
-
     response = discovery.discoverNamespaceMember(namespace, member)
 
     return format_render(request, response, 'folder')
