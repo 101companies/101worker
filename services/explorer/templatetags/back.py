@@ -6,5 +6,5 @@ register = template.Library()
 @register.filter
 @stringfilter
 def back(value):
-	return value.split('/')[:-1]
+	return value[:value.rindex('/')]
 
