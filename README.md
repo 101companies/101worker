@@ -102,4 +102,15 @@ To start a cycle of 101worker, you use the [top-level Makefile](Makefile) and it
 
 If you only want to run a single module out of a configuration, you can use the `RUNONLY` environment variable and set it to the name of the module you want to run.
 
-For example, to run only the [integrate module](modules/integrate) of the production configuration, you'd use `RUNONLY=integrate make production.run`.
+For example, to run only the [integrate module](modules/integrate) of the production configuration, you'd use `RUNONLY=integrate make production.debug`.
+
+
+## Run Environment With Different Module Confiugration
+
+If you want to use an existing environment file , but run it with a different, you can use the `RUNCONFIG` environment variable and set it to the name of the module configuration you wish to use.
+
+For example, if you want to use the [production.yml environment](configs/env/production.yml), but instead of the [production.json](configs/production.json) you want to use [onto.json](configs/onto.json), you simply run `RUNCONFIG=onto make production.debug`.
+
+Note that you cannot run [pull101repo](modules/pull101repo) using `RUNCONFIG`, as this would break bookkeeping: the incrementality diff would get lost and modules wouldn't get a chance to derive new data and delete resources depending on removed primary resources.
+
+Using both `RUNONLY` and `RUNCONFIG` behaves as you'd expect: the new configuration given by `RUNCONFIG` is used and only the module specified by `RUNONLY` is run from that configuration.
