@@ -117,7 +117,7 @@ from data101 import DumpdataProvider
 def getTemplateLink(name, request):
   return name + '.' + request.GET.get('format', 'json')
 
-def format_render(request, context, template):
+def format_render(request, response, template):
   format = request.GET.get('format', 'json')
 
   content_types = {
@@ -126,19 +126,28 @@ def format_render(request, context, template):
     'rdf': 'application/rdf+xml'
   }
 
+  path_uri = request.path_info
+  if path_uri == '/discovery':
+      path_uri += '/'
+  path_uri = path_uri.replace('/discovery/', '', 1)
+
+  response['uri'] = (discovery.base_uri + path_uri).decode('utf_8')
+  if response['uri'].endswith('/'):
+    response['uri'] = response['uri'][:-1]
+
   if format == 'json':
-    return HttpResponse(json.dumps(context), content_type='application/json')
+    return HttpResponse(json.dumps(response), content_type='application/json')
 
   elif format == 'jsonp':
     callback = request.GET.get('callback', 'callback')
-    return HttpResponse(callback + '(' + json.dumps(context) + ')')
+    return HttpResponse(callback + '(' + json.dumps(response) + ')')
 
   else:
-    return render(request, "{0}.{1}".format(template, format), context, content_type=content_types[format])
+    return render(request, "{0}.{1}".format(template, format), response, content_type=content_types[format])
 
 
 #possible entry points
-def serveFileFragment(request, namespace, member, path, file, fragment):    
+def serveFileFragment(request, namespace, member, path, file, fragment):
     if path is None:
         path = ''
 
@@ -154,7 +163,7 @@ def serveFileFragment(request, namespace, member, path, file, fragment):
 
 
 def serveMemberFile(request, namespace, member, path, file):
-    
+
     if path is None:
         path = ''
 
@@ -186,9 +195,6 @@ def serveMemberPath(request, namespace, member, path):
 
 
 def serveNamespaceMember(request, namespace, member):
-    if '_' in member:
-        member = member.replace('_', ' ')
-
     response = discovery.discoverNamespaceMember(namespace, member)
 
     return format_render(request, response, 'folder')

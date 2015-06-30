@@ -13,7 +13,6 @@ CSharp/CSharpFactExtractor.exe: extractors/*.cs Makefile
 
 .PHONY: test
 test:
-	make build
 	mkdir -p test/output
 	@./extractor < Company.cs > Company.cs.facts.json
 	@diff --ignore-all-space simple.baseline Company.cs.facts.json
