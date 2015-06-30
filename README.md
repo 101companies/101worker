@@ -97,7 +97,7 @@ The idea is that a cronjob performs these commands regularly. Just don't make it
 
 To start a cycle of 101worker, you use the [top-level Makefile](Makefile) and its `%.run` rule. For example, to run the production configuration, you'd use `make production.run`. The logs will go into the `101logs` folder, it will not output anything interesting on your terminal.
 
-To get all output to your terminal (which you probably don't, because some modules are very noisy), you can use the `%.debug` rule instead. To run the production configuration that way, you'd you `make production.debug`.
+To get all output to your terminal (which you probably don't, because some modules are very noisy), you can use the `%.debug` rule instead. To run the production configuration that way, you'd use `make production.debug`.
 
 
 ## Run Only Select Module
