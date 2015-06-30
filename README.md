@@ -105,7 +105,7 @@ If you only want to run a single module out of a configuration, you can use the 
 For example, to run only the [integrate module](modules/integrate) of the production configuration, you'd use `RUNONLY=integrate make production.debug`.
 
 
-## Run Environment With Different Module Confiugration
+## Run Environment With Different Module Configuration
 
 If you want to use an existing environment file , but run it with a different, you can use the `RUNCONFIG` environment variable and set it to the name of the module configuration you wish to use.
 
