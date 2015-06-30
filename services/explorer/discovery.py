@@ -7,13 +7,29 @@ import json
 
 os.chdir(os.path.dirname(__file__))
 
+# load env vars
+this_file = os.path.dirname(os.path.realpath(__file__))
+from subprocess import Popen, PIPE
+
+process = Popen([
+    os.path.join(this_file, "../../tools/loadenv"),
+    os.path.join(this_file, "../../configs/env/production.yml")], stdout=PIPE)
+(output, err) = process.communicate()
+exit_code = process.wait()
+
+output = json.loads(output)
+for (key, value) in output.items():
+    os.environ[key] = value
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../libraries')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../libraries/101meta')))
-from mediawiki import wikifyNamespace
-from mediawiki import dewikifyNamespace
+from mediawiki101 import wikifyNamespace
+from mediawiki101 import dewikifyNamespace
 from data101 import DumpdataProvider
 from data101 import WikidataProvider
-from data101 import TripledataProvider
+
+from django.conf import settings
+from django.core.cache import cache
 
 
 class DiscoveryException(Exception):
@@ -37,7 +53,7 @@ class ResourceNotFoundException(DiscoveryException):
     def __init__(self):
         DiscoveryException.__init__(self, '404 Not found', 'Requested resource not found')
 
-base_uri = ''
+base_uri = settings.BASE_URL
 
 
 def find(fragment, query, basePath=None):
@@ -78,7 +94,17 @@ def mapFragment(filePath, fragmentPath, fragment):
 
 
 def setWikidata(response, namespace, member):
-    wikiUrl, headline = WikidataProvider.getWikiData(namespace,member)
+    key = "wikidata-{}-{}".format(namespace.replace(' ', '_'), member.replace(' ', '_'))
+    cached = cache.get(key)
+    if not cached:
+        wikiUrl, headline = WikidataProvider.getWikiData(namespace,member)
+        cached = json.dumps({ 'wikiUrl': wikiUrl, 'headline': headline })
+        cache.set(key, cached)
+    else:
+        parsed_cache = json.loads(cached)
+        wikiUrl = parsed_cache['wikiUrl']
+        headline = parsed_cache['headline']
+
     response['headline'] = headline
     response['wiki'] = wikiUrl
 
@@ -133,22 +159,24 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
     #gather member data
     lineNumbers = None
-    if extractor:
-        try:
-            extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
-            #TODO There has to be a better way to do this
-            for f1 in extractedFacts['fragments']:
-                selected, fragmentPath = find(f1, fragment)
-                if selected:
-                    response['classifier'] = selected['classifier']
-                    response['name'] = selected['name']
-                    if 'startLine' in selected:
-                        lineNumbers = {'from':selected['startLine'], 'to': selected['endLine']}
-                    for f2 in selected.get('fragments',[]):
-                        response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
-                    break
-        except:
-            pass
+    print extractor
+    #if extractor:
+    try:
+        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+        print extractedFacts
+        #TODO There has to be a better way to do this
+        for f1 in extractedFacts['fragments']:
+            selected, fragmentPath = find(f1, fragment)
+            if selected:
+                response['classifier'] = selected['classifier']
+                response['name'] = selected['name']
+                if 'startLine' in selected:
+                    lineNumbers = {'from':selected['startLine'], 'to': selected['endLine']}
+                for f2 in selected.get('fragments',[]):
+                    response['fragments'].append(mapFragment(filePath, fragmentPath, f2))
+                break
+    except:
+        pass
 
     #gather content
     if lineNumbers or locator:
@@ -157,14 +185,15 @@ def discoverFileFragment(namespace, member, path, file, fragment):
 
         fragmentText = DumpdataProvider.read(filePath, range(lineNumbers['from'] - 1, lineNumbers['to']))
         response['content'] = fragmentText
-        response['github'] += '#L{0}-{1}'.format(lineNumbers['from'], lineNumbers['to'])
+        if response['github']:
+            response['github'] += '#L{0}-{1}'.format(lineNumbers['from'], lineNumbers['to'])
     #except Exception as e:
         #    raise DiscoveryException('500 Internal Server Error', 'Fragment location failed:\n' + str(e))
 
     setCommitInfos(response, filePath)
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    # response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
 
@@ -199,14 +228,14 @@ def discoverMemberFile(namespace, member, path, file):
     response['namespace'] = wikiNS
 
     #gather member data - if there is a fact extractor, then we also want give back selectable fragments
-    if extractor:
-        try:
-            extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
-            for fragment in extractedFacts.get('fragments', []):
-                fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
-                response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
-        except:
-            pass
+
+    try:
+        extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+        for fragment in extractedFacts.get('fragments', []):
+            fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
+            response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
+    except OSError:
+        pass
 
 
     #gather content - if there is a geshi code, we should be able to get content
@@ -217,7 +246,7 @@ def discoverMemberFile(namespace, member, path, file):
     setCommitInfos(response,filePath)
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    # response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     response['derived'] = DumpdataProvider.getDerivedFiles(filePath)
 
@@ -262,7 +291,7 @@ def discoverMemberPath(namespace, member, path):
         })
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    # response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     return response
 
@@ -304,7 +333,7 @@ def discoverNamespaceMember(namespace, member):
             })
 
     #response['endpoint'] = TripledataProvider.getEndpointLink(wikiNS, member)
-    response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
+    # response['sesame']   = TripledataProvider.getSesameLink(wikiNS, member)
 
     if namespace == 'modules':
         response['module'] = DumpdataProvider.getModuleDescription(member)
@@ -379,4 +408,3 @@ def createRedirectUrl(wikititle):
             member = dewikifyNamespace(parts[1])
 
     return os.path.join(base_uri, ns, member)
-

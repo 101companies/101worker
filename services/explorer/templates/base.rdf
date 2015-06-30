@@ -1,10 +1,7 @@
+{% load rdf_description %}
 <?xml version="1.0"?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:co="http://101companies.org/property/">
-	{% if about.endswith('/') %}
-    <rdf:Description rdf:about="{{ about[:-1].replace(' ', '_') }}?format=rdf">
-    {% else %}
-    <rdf:Description rdf:about="{{ about.replace(' ', '_') }}?format=rdf">
-    {% endif %}
+	<rdf:Description rdf:about="{{ about|rdf_description }}">
 
         {% block content %}
 		{% endblock %}

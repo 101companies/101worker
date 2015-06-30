@@ -1,98 +1,105 @@
-# The notion of module
+This is usage documentation, high-level documentation is at [101docs](https://github.com/101companies/101docs/tree/master/worker). It also has the [installation instructions](https://github.com/101companies/101docs/blob/master/worker/Setup.md) to start using or developing on 101worker. You further should read about the  [101meta] (https://github.com/101companies/101docs/blob/master/101meta/README.md) language.
+If you dig further into the directory tree of the worker you will also find more specific readMe files for a subset.
 
-101worker components of execution are called modules.
+# Structure
 
-All modules are located in "101worker/modules".
+These are the top-level folder in the 101worker repository.
 
-See "101worker/modules/test*" for illustrative modules.
+## extrators
 
-A module x can be executed as follows:
+Cotains extractors for the fact extraction in sources from different language.
 
-* Change directory to "101worker".
-* Enter "make x.run".
+## validators
 
-This mode of execution is good for testing.
+Cotains validators for the validation if a file is really of the suggested language. 
 
-See the "test" target of "101worker/Makefile" for illustration.
+## predicates
 
-Modules would be added to the production list at some point; see below.
+Cotains predicates that can be executed by the predicate constraint of a metaL rule.
+
+## modules
+
+Modules that can be executed as part of a 101worker cycle. One level of folders and one module per folder. Don't go nesting them.
+
+See also the [section about Module Contracts](#Module-Contracts).
+
+## libraries
+
+Internal-use libraries. This folder will be added to the `$PYTHONPATH`, so you can just `import` them in modules written in Python. The same could be done for other languages, but right now we ain't needing it.
+
+## configs
+
+Contains configuration files for different 101worker cycle. The `production.json` is what's used normally.
+
+The [test folder](configs/test) contains test configurations for [101test](https://github.com/101companies/101test).
+
+The [env folder](configs/env) contains environment variable definitions. Those have their own [README](configs/env/README.md).
+
+## schemas
+
+JSON schema central.
+
+## services
+
+Web services relating to 101worker.
+
+## attic
+
+Stuff that nobody needs anymore, but you don't quite want to throw it away.
+
+Somebody should probably clear out the attic sometime, since Git has a history of all files anyway. Unless Martin breaks it again, that is.
+
 
 # Module Contracts
 
-Module could be written in any languages  but must follow the following
-constraints.
+Modules go into the [modules folder](modules). A module consists of the following (optional things are marked as such, everything else is *required*).
 
-Modules should access the file system as follows:
+* **The module itself**, which may be written in any language. Most of them are in Python though, so unless a different language is plain better at what you're trying to do, you should use Python.
 
-* Module results are temporarily to be stored in "../101temps".
-* Module results are eventually to be stored in "../101results".
-* Module results for the web are eventually to be stored in "../101web".
-* Module arguments are to be fetched from "../101results".
+* **Unit tests**. These are not optional. Currently, all tests use the [Test Anything Protocol](http://testanything.org/producers.html) and are run using `prove`. For tests in Python, see for example the [meta101 library](libraries/meta101), specifically its [Makefile](libraries/meta101/Makefile) and its [t folder](libraries/meta101/t) that contains the tests.
 
-All the mentioned directories are automatically created, if needed.
+* **Functional tests** with [101test](https://github.com/101companies/101test). These are a bit more *optional* than unit tests, but you should still have them.
 
+* **module.json** specifying which command is to be run, if you want your module to be incremental, which environment variables you need and which other modules depend on it. See also [the schema](schemas/module.schema.json) and [this module.json](modules/predicates101meta/module.json) as an example.
 
-# Production cycle by 101worker
+* **README.md**, with a short explanation of what it does and how to use it.
 
-101worker repeatedly executes a certain list of modules.
+* **Documentation** with a detailed explanation of the module's purpose on [101docs](https://github.com/101companies/101docs).
 
-See the file "101worker/configs/production.json" for the list.
+* **Technical documentation**, but this is *optional* if your module is trivial. Once you have multiple files though, you should probably document your modules, functions, classes etc.
 
-Module names are stored in  a json list.
+* **Makefile** with the following targets:
 
-The production cycle can be manually invoked as follows:
+    * **install** (*optional*), if you need anything that doesn't come with a normal Ubuntu Server installation. These will automatically be discovered by [./install](install) and ***THEY WILL BE RUN WITH SUDO*** when 101worker is deployed. Don't go doing anything other than installs in this target. If you need to build your module, use the **build** target.
 
-* Change directory to "101worker".
-* Enter "make".
+    * **build** (*optional*), if you need to compile something in your module. These targets will automatically be discovered by [./install --build](install). Everything you installed in your **install** target will be available here. This will be executed before every 101worker run, so use `make` properly and don't unecessarily re-build your stuff every time.
 
-The idea is that a cron job performs these commands regularly.
+    * **test**, so that your tests can automatically be discovered when you run [./test](test). Everything from **install** and **build** is available here. This command *must* exit with a non-zero exit code if your tests fail.
 
-101worker updates itself with "git pull" after each run.
+See [pull101repo](modules/pull101repo) as an example. Pretty much all other modules are legacy and don't properly fulfill those requirements though. Don't take them as examples.
 
-In this manner, production modules can also be added remotely.
+If your module derives resources, also have a look at the [meta101 library](libraries/meta101), which provides the interface for doing that. The API is documented and has examples for you.
 
-A log of the latest cycle is stored in "../101logs/runner.log".
+There are also a few guidelines you must adhere to when writing your module. Any and all offences *will* lead to hard to debug issues when your module suddenly starts doing funky things and everyone will get mad at you when they found out what you did.
 
-The log is sent via email to the 101gatekeepers, if any module failed.
+* Use [environment variables](configs/env) instead of hard-coding paths or URLs.
+
+* Check if your module's files [have changed](libraries/meta101/__init__.py#L42) if you're using [meta101](libraries/meta101), so that if your module changes, the old data gets re-derived. See [predicates101meta](modules/predicates101meta/program.py) for an example.
 
 
-# Adding a module
+# Cycles
 
-Follow these steps:
+In each 101worker cycle, it validates and then executes a list of modules. See the [module list used in production](configs/production.json).
 
-* Change directory to "101worker/modules".
-* Create a subdirectory for the new module, be it <x>.
-* Change to <x>.
-* Create a Makefile with a "run" target.
-* (You may want to create a "clean" target for any temporary stuff.)
-* Create a README.md file with some minimal documentation.
+The idea is that a cronjob performs these commands regularly. Just don't make it run 60 times at once, experience has shown that it don't work too well.
 
-Finally, also register the module:
+101worker updates itself with `git pull` after each run, so any changes in this repository will be applied in due time.
 
-* Change directory to "101worker/config".
-* Add the module name to "production.json".
+To start a cycle of 101worker, you use the [top-level Makefile](Makefile) and its `%.run` rule. For example, to run the production configuration, you'd use `make production.run`.
 
 
-# Alternative module lists
+## Run Only Select Module
 
-The default list is "101worker/configs/production.json".
+If you only want to run a single module out of a configuration, you can use the `RUNONLY` environment variable and set it to the name of the module you want to run.
 
-Alternative module lists may be good for testing 101worker.
-
-However, testing is also reasonably supported by the make target "%.run".
-
-A list <x> can be selected as follows:
-
-* Change directory to "101worker".
-* Enter "make <x>.reconfigure".
-
-At the time of writing, these module lists <x> exist:
-
-* "testOk": positive tests.
-* "testFail": negative tests.
-* "production": production.
-
-
-# TODO
-
-NONE
+For example, to run only the [integrate module](modules/integrate) of the production configuration, you'd use `RUNONLY=integrate make production.run`.

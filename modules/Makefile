@@ -1,10 +1,9 @@
-# Invoke runner and cleaner per module
+# For adding 101worker/libraries to PYTHONPATH
+pp = PYTHONPATH="$$PYTHONPATH:$$(dirname $$(pwd))/libraries"
 
 %.run:
-	python ../tools/runner.py $*.json; 
+	${pp} ../tools/runner/runner <../configs/env/$*.yml \
+	                             >../../101logs/runner.log 2>&1
 
 %.debug:
-	python ../tools/runner.py $*.json verbose; 
-
-%.archive:
-	python ../tools/archiver.py $*.json	
+	${pp} ../tools/runner/runner <../configs/env/$*.yml

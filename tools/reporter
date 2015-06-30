@@ -1,0 +1,126 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Email::Simple;
+use Email::Sender::Simple           qw(sendmail);
+use Email::Sender::Transport::SMTPS;
+use File::Slurp                     qw(slurp write_file);
+use POSIX                           qw(strftime);
+
+
+my $template   = slurp \*DATA; # see __DATA__ at the end
+my $date       = slurp "../101web/logs/lastArchive";
+my $logs_url   = 'http://worker.101companies.org/logs';
+my $report_url = "$logs_url/$date/report.html";
+my $logfile    = "../101web/logs/$date/runner.log";
+
+
+my ($failures, $message, $table) = parse_log($logfile);
+
+my ($sanity, $subject) = $failures < 0
+                       ? (failure => 'FATAL RUNNER ERROR Report')
+                       : (success => "Status Report ($failures Failures)");
+
+my $html = sprintf $template, $subject, $report_url, $sanity, $message, $table;
+write_file "../101web/logs/$date/report.html" => $html;
+
+
+my $mail = Email::Simple->create(
+    header => [
+        'From'         => 'softlang@uni-koblenz.de',
+        'To'           => '101companies@gmail.com',
+        'Subject'      => "[101worker] $subject",
+        'Content-Type' => 'text/html',
+    ],
+    body   => $html,
+);
+
+sendmail($mail, {transport => Email::Sender::Transport::SMTPS->new(
+    host => 'deliver.uni-koblenz.de',
+    ssl  => 1,
+)});
+
+
+sub parse_log
+{
+    my ($file) = @_;
+
+    open my $log, '<', $file or return (-1, "can't open $file: $!");
+    my ($failures, $table, $last_line) = (0, '', '');
+
+    while (<$log>)
+    {
+        $last_line = $_;
+        next unless /^report:/;
+        my (undef, $module, $exit_code, $status, $start, $end) = split /\t/;
+
+        my $class;
+        if ($exit_code == 0)
+        {   $class = 'success' }
+        else
+        {
+            ++$failures;
+            $class = 'failure';
+        }
+
+        my $start_hms = strftime('%H:%M:%S', localtime $start    );
+        my   $end_hms = strftime('%H:%M:%S', localtime $end      );
+        my $taken_hms = strftime('%H:%M:%S', gmtime $end - $start);
+
+        $table .= <<HTML;
+                <tr class="$class">
+                    <td><a href="$logs_url/$date/$module.log">$module</a></td>
+                    <td>$status</td>
+                    <td>$start_hms</td>
+                    <td>$end_hms</td>
+                    <td>$taken_hms</td>
+                </tr>
+HTML
+    }
+
+    if ($last_line =~ /report-ok/)
+    {   ($failures, 'runner says ok', $table) }
+    else
+    {
+        (-2, "runner didn't say ok, please check if it's "
+           . "fallen over or caught fire or something", $table)
+    }
+}
+
+
+__DATA__
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            .success { background-color : #cfc; }
+            .failure { background-color : #fcc; }
+            td, th
+            {
+                padding-left  : 0.5em;
+                padding-right : 0.5em;
+                text-align    : center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>101worker %s</h1>
+        <p><a href="%s">View this on 101companies.org</a></p>
+        <p class="%s"><strong>Sanity:</strong> %s</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Module</th>
+                    <th>Status</th>
+                    <th>Started</th>
+                    <th>Ended</th>
+                    <th>Time Taken</th>
+                </tr>
+            </thead>
+            <tbody>
+%s
+            </tbody>
+        </table>
+    </body>
+</html>

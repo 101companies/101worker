@@ -1,0 +1,40 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Cwd            qw(abs_path);
+use File::Basename qw(dirname);
+use YAML           qw();
+use lib            dirname $0;
+use Runner101::Modules;
+
+
+my $config = do { local $/; YAML::Load(<STDIN>) } or die $!;
+
+
+# default values for necessary directories
+my $worker101dir = $ENV{worker101dir} // dirname dirname dirname abs_path $0;
+my $output101dir = $ENV{output101dir} // dirname $worker101dir;
+my %dirs         = (
+    worker101dir  => $worker101dir,
+    output101dir  => $output101dir,
+    modules101dir => ($ENV{modules101dir} // "$worker101dir/modules" ),
+    logs101dir    => ($ENV{   logs101dir} // "$output101dir/101logs" ),
+    diffs101dir   => ($ENV{  diffs101dir} // "$output101dir/101diffs"),
+);
+
+# load them into the configuration if they're not already there
+$config->{$_} //= "$dirs{$_}/" for keys %dirs;
+
+
+if (@ARGV && $ARGV[0] eq '--env-to-json')
+{
+    require JSON;
+    require Runner101::Env;
+    local %ENV;
+    Runner101::Env::load_vars($config);
+    print JSON->new->utf8->canonical->pretty->encode(\%ENV);
+}
+else
+{
+    Runner101::Modules::run($config);
+}

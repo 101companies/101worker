@@ -1,0 +1,55 @@
+{
+    "results" : {
+        "rules" : [
+            {
+                "rule" : {
+                    "metadata" : [
+                        {
+                            "geshi" : "java"
+                        },
+                        {
+                            "language" : "Java"
+                        }
+                    ],
+                    "suffix" : ".java"
+                }
+            },
+            {
+                "rule" : {
+                    "basename" : "#^Makefile$#",
+                    "metadata" : [
+                        {
+                            "geshi" : "text"
+                        },
+                        {
+                            "dependsOn" : "make"
+                        }
+                    ]
+                }
+            },
+            {
+                "rule" : {
+                    "metadata" : [
+                        {
+                            "geshi" : "python"
+                        },
+                        {
+                            "language" : "Python"
+                        }
+                    ],
+                    "suffix" : ".py"
+                }
+            },
+            {
+                "rule" : {
+                    "metadata" : [
+                        {
+                            "dependsOn" : "PyTAP"
+                        }
+                    ],
+                    "suffix" : ".t.py"
+                }
+            }
+        ]
+    }
+}

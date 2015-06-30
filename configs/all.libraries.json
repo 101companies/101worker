@@ -8,16 +8,16 @@
       "updates":"automatic"
     },
   "php-github-api" : {
-      "summary":"github API in php", 
+      "summary":"github API in php",
       "github":"ornicar/php-github-api",
-      "language":"php",      
+      "language":"php",
       "workertime":"yes",
       "updates":"automatic"
     },
   "geshi" : {
       "summary":"source code highlighting based on simple lexical language definitions",
       "dir" : "101results/101repo/technologies/geshi/src",
-      "comment" : "copied from the technologies directory because there is no way to easily get the last version", 
+      "comment" : "copied from the technologies directory because there is no way to easily get the last version",
       "language":"php",
       "workertime":"yes",
       "updates":"automatic"
@@ -30,14 +30,14 @@
       "language":"zip",
       "workertime":"yes",
       "updates":"onlyOnce"
-    },    
-  "megalib" : { 
+    },
+  "megalib" : {
       "summary":"php library containing various helper class to deal with rdf, graphs, files, html, etc",
       "github":"megaplanet/megalib",
-      "language":"php",      
+      "language":"php",
       "workertime":"yes",
       "webtime":"yes",
-      "updates":"automatic"      
+      "updates":"automatic"
     },
   "humanNameParser" : {
       "summary":"php library to parse human names",
@@ -51,12 +51,12 @@
       "github":"kurtjx/SNORQL",
       "language":"javascript",
       "webtime":"yes",
-      "updates":"automatic"      
+      "updates":"automatic"
     },
   "sigmajs" : {
       "summary":"JavaScript library to draw graphs",
       "urls":{
-        "http://sigmajs.org/js/sigma.min.js" : "sigma.min.js" 
+        "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.0.3/sigma.min.js" : "sigma.min.js"
       },
       "language":"javascript",
       "webtime":"yes",

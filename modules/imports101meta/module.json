@@ -1,0 +1,14 @@
+{
+    "command" : "make run",
+    "dependencies" : [
+        "rules101meta",
+        "extract101meta",
+        "matches101meta"
+    ],
+    "environment" : [],
+    "wantdiff" : false,
+    "metadata" : {
+            "dependencies" : ["language"],
+            "obtained" :     []
+    }
+}

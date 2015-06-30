@@ -1,0 +1,62 @@
+{
+    "title"      : "Module Description Schema",
+    "type"       : "object",
+    "required"   : ["command", "wantdiff", "dependencies", "environment"],
+    "properties" : {
+        "command"      : {
+            "type"        : "string",
+            "required"    : true
+        },
+        "wantdiff"     : {
+            "type"        : "boolean",
+            "required"    : true
+        },
+        "dependencies" : {
+            "type"        : "array",
+            "items"       : {"type" : "string"},
+            "uniqueItems" : true,
+            "required"    : true
+        },
+        "environment"  : {
+            "type"        : "array",
+            "items"       : {"type" : "string"},
+            "uniqueItems" : true,
+            "required"    : true
+        },
+        "targets"      : {
+            "type"        : "array",
+            "items"       : {
+                "type"       : "object",
+                "required"   : ["headline", "classifier", "scope", "language"],
+                "properties" : {
+                    "headline"   : {
+                        "type"        : "string",
+                        "description" : "Headline for this type of files",
+                        "required"    : true
+                    },
+                    "classifier" : {
+                        "type"        : "string",
+                        "enum"        : ["resource"],
+                        "required"    : true
+                    },
+                    "scope"      : {
+                        "type"        : "string",
+                        "enum"        : ["file", "folder", "dump"],
+                        "required"    : true
+                    },
+                    "language"   : {
+                        "type"        : "string",
+                        "enum"        : ["JSON", "RDF"],
+                        "required"    : true
+                    },
+                    "suffix"     : {
+                        "type"        : "string"
+                    },
+                    "filename"   : {
+                        "type"        : "string"
+                    }
+                }
+            }
+        }
+    }
+}

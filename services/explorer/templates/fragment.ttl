@@ -1,11 +1,11 @@
 {% extends "base.ttl" %}
 {% block content %}
 	rdf:type co:Fragment
-    {%- include "snippets/general.ttl" -%} ;
-    {%- include "snippets/content.ttl" -%} ;
-    {%- include "snippets/links.ttl" -%}
-    {%- if fragments and not fragments == [] -%} ; {% else %} . {% endif %}
-    {%- include "snippets/people.ttl" -%}
-    {%- include "snippets/parts.ttl" -%}
-    {%- include "snippets/partsExtra.ttl" -%}
+    {% include "snippets/general.ttl" %} ;
+    {% include "snippets/content.ttl" %} ;
+    {% include "snippets/links.ttl" %}
+    {% if fragments and not fragments|length == 0 %} ; {% else %} . {% endif %}
+    {% include "snippets/people.ttl" %}
+    {% include "snippets/parts.ttl" %}
+    {% include "snippets/partsExtra.ttl" %}
 {% endblock %}

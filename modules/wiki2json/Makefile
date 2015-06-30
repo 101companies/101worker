@@ -11,3 +11,5 @@ run:
 clean:
 	rm -f ${output}
 
+install:
+	pip install pymongo

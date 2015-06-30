@@ -5,11 +5,7 @@
     "mapping": [
         {
             "property": "instanceOf",
-            "mapsTo": "rdfs:type"
-        },
-        {
-            "property": "isA",
-            "range": "rdfs:subclassOf"
+            "mapsTo": "rdf:type"
         }
     ],
     "properties": [

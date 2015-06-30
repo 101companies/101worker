@@ -1,12 +1,25 @@
 {
-  "targets" : [
-    {
-      "headline" : "Aggregate scattered metadata, metrics, et al. per file",
-      "classifier" : "resource",
-      "scope" : "file",
-      "suffix" : ".summary.json",
-      "language" : "JSON"
-    }
-  ]
+    "command" : "python program.py",
+    "dependencies" : [
+        "rules101meta",
+        "extract101meta",
+        "matches101meta",
+        "fragments101meta",
+        "predicates101meta",
+        "refineTokens"
+    ],
+    "environment" : [
+        "summary101dump",
+        "targets101dir"
+    ],
+    "targets" : [
+        {
+            "classifier" : "resource",
+            "headline" : "Aggregate scattered metadata, metrics, et al. per file",
+            "language" : "JSON",
+            "scope" : "file",
+            "suffix" : ".summary.json"
+        }
+    ],
+    "wantdiff" : true
 }
-

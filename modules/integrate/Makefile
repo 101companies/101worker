@@ -3,14 +3,10 @@ integrateDir = ${resultsdir}/repos/101integrate
 termResourcesDir = ../../services/termResources
 
 run:
-	make clean
-	make bootstrap
-	cd ${integrateDir} ; make download-books; make bootstrap; make mine; make from-cache; make analyze; make backlink
-	make integrate
-	make deploy
-
-bootstrap:
-	cd ${integrateDir}/src; python bootstrap.py 	
+	$(MAKE) clean
+	cd ${integrateDir} ; $(MAKE) bootstrap; $(MAKE) clean
+	cd ${integrateDir} ; $(MAKE) run BOOKS=Haskell
+	$(MAKE) deploy
 
 integrate:
 	cd ${integrateDir}/src/integrate ; make integrate
@@ -19,14 +15,14 @@ deploy:
 	mkdir -p ${modulesDir}/integrate ;\
 	cp -r ${integrateDir}/data/allbooks ${modulesDir}/integrate ;\
 	cp -r ${integrateDir}/data/perbook ${modulesDir}/integrate ;\
-	python deployResources.py ;\
+	#python deployResources.py ; #The respective folders are never generated
 	cp -r ${integrateDir}/data/summary ${modulesDir}/integrate
 	cp ${integrateDir}/data/allbooks/backlinks.json ${termResourcesDir}
 	cp ${integrateDir}/data/allbooks/mapping.json ${termResourcesDir}
 
 # Remove local temporary files, if any
-clean:  
-	rm -r ${modulesDir}/integrate
+clean:
+	rm -rf ${modulesDir}/integrate
 	mkdir -p ${modulesDir}/integrate
 
 # Remove files created by this module
@@ -41,3 +37,10 @@ setup:						#ls for debugging
 	cd ${resultsdir}/repos; git clone https://github.com/101companies/101integrate; ls
 	cd ${resultsdir}/repos/101integrate; ls; cd src; ls; touch Makefile.vars ; ls # integrateDir undefined if not existens on starting time of this Makefile
 	cd ${resultsdir}/repos/101integrate ; make download-deps
+
+install:
+	apt-get install r-base r-cran-reshape r-cran-xtable r-cran-foreach 
+	apt-get install python-antlr
+	git clone https://github.com/101companies/101integrate.git
+	cd 101integrate; make download-deps
+	rm -rf 101integrate

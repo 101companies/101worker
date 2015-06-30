@@ -1,6 +1,6 @@
 
-{%- if fragments %}
-{% for fragment in fragments -%}
+{% if fragments %}
+{% for fragment in fragments %}
 <{{ fragment.resource }}?format=ttl>
 	co:name "{{fragment.name}}" ;
 	co:classifier "{{fragment.classifier}}" .
@@ -8,8 +8,8 @@
 {% endfor %}
 {% endif %}
 
-{%- if folders %}
-{% for folder in folders -%}
+{% if folders %}
+{% for folder in folders %}
 <{{ folder.resource }}?format=ttl>
 	co:name "{{folder.name}}" ;
 	co:classifier "{{folder.classifier}}" .
@@ -17,8 +17,8 @@
 {% endfor %}
 {% endif %}
 
-{%- if files %}
-{% for file in files -%}
+{% if files %}
+{% for file in files %}
 <{{ file.resource }}?format=ttl>
 	co:name "{{file.name}}" ;
 	co:classifier "{{file.classifier}}" .
@@ -26,8 +26,8 @@
 {% endfor %}
 {% endif %}
 
-{%- if members %}
-{% for member in members -%}
+{% if members %}
+{% for member in members %}
 <{{ member.resource }}?format=ttl>
 	co:name "{{member.name}}" ;
 	co:classifier "{{member.classifier}}" .

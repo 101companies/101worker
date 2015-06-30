@@ -2,6 +2,20 @@
 
 import os
 
+import sys
+import logging
+
+logger = logging.getLogger('')
+logger.setLevel(logging.DEBUG)
+
+handler = logging.StreamHandler(sys.stderr)
+handler.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d] %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -13,8 +27,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'db.sql',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -66,12 +80,15 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/services/static/'
+STATIC_URL = '/resources/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
     os.path.abspath(os.path.join(os.path.basename(__file__), '..' ,'static')),
 )
+
+BASE_URL = 'http://101companies.org/resources/'
+# BASE_URL = 'http://localhost:8000/discovery/'
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -122,8 +139,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-
-    'explorer'
+    'explorer',
+    'analyzeSubmission',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -152,5 +169,14 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX': 'worker_services',
+        'TIMEOUT': 6*60*60
     }
 }

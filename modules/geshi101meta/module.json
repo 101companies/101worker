@@ -1,0 +1,17 @@
+{
+    "command" : "python program.py",
+    "dependencies" : [
+        "gatherGeshi",
+        "matches101meta",
+        "pull101repo"
+    ],
+    "environment" : [
+        "gatheredGeshi101dir",
+        "geshi101dump"
+    ],
+    "wantdiff" : true,
+    "metadata" : {
+            "dependencies" : ["language", "geshi"],
+            "obtained" :     []
+    }
+}

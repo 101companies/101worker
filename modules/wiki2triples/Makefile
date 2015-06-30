@@ -3,7 +3,7 @@ output = ${dumpsDir}/erroneous_pages.json
 
 run:
 	./program.py
-	cp erroneous_pages.json ${output}
+	cp errors.json ${output}
 
 clean:
 	rm -f ${output}

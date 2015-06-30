@@ -1,5 +1,5 @@
 
-	co:wiki "{{ wiki.decode('utf_8') }}" ;
-	co:github "{{ github.decode('utf_8') }}" ;
-	co:sesame "{{ sesame.decode('utf_8') }}" ;
-	co:endpoint "{{ endpoint.decode('utf_8') }}"
+	co:wiki "{{ wiki }}" ;
+	co:github "{{ github }}" ;
+	co:sesame "{{ sesame }}" ;
+	co:endpoint "{{ endpoint }}"

@@ -1,0 +1,8 @@
+{
+    "command" : "make run",
+    "dependencies" : [
+        "pull"
+    ],
+    "environment" : [],
+    "wantdiff" : false
+}

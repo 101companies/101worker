@@ -1,0 +1,10 @@
+{
+    "command" : "make run",
+    "dependencies" : [],
+    "environment" : [],
+    "wantdiff" : false,
+    "metadata" : {
+            "dependencies" : ["languages", "partOf", "features", "concepts", "terms", "phrase", "inputOf", "outputOf", "dependsOn"],
+            "obtained" :     []
+    }
+}

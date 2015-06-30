@@ -1,13 +1,29 @@
 {
-  "targets" : [
-    {
-      "headline" : "Matches",
-      "classifier" : "resource",
-      "scope" : "file",
-      "suffix" : ".matches.json",
-      "language" : "JSON",
-      "propertyName": "matches",
-      "className" : "Matches"
+    "command" : "python program.py",
+    "dependencies" : [
+        "pull101repo",
+        "rules101meta"
+    ],
+    "environment" : [
+        "rules101dump",
+        "targets101dir",
+        "matches101dump"
+    ],
+    "targets" : [
+        {
+            "className" : "Matches",
+            "classifier" : "resource",
+            "headline" : "Matches",
+            "language" : "JSON",
+            "propertyName" : "matches",
+            "scope" : "file",
+            "suffix" : ".matches.json"
+        }
+    ],
+    "wantdiff" : true,
+    "metadata" : {
+            "dependencies" : [],
+            "obtained" :     ["language","partOf","inputOf","outputOf","dependsOn","feature","term","phrase","concept", "nature","geshi", "locator", "validator", "dominator", "relevance"]
     }
-  ]
+
 }

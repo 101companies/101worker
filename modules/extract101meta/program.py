@@ -1,50 +1,39 @@
-#! /usr/bin/env python
-
+#!/usr/bin/env python
 import os
-import sys
-import simplejson as json
-sys.path.append('../../libraries/101meta')
-import const101
-import tools101
+import json
+import subprocess
+import meta101
 
 
-# Per-file functinonality
-def derive(extractor, rFilename, sFilename, tFilename):
-
-   # Housekeeping for extractor
-   extractors.add(extractor)
-   
-   print "Extract facts from " + rFilename + " with " + extractor + "."
-   command = "{0} < \"{1}\" > \"{2}\"".format(os.path.join(const101.sRoot, extractor),sFilename,tFilename)
-   (status, output) = tools101.run(command)
-
-   # Result aggregation
-   result = dict()
-   result["extractor"] = extractor
-   result["command"] = command
-   result["status"] = status
-   result["output"] = output
-
-   return result
+def initdump(deriver):
+    if "extractors" in deriver.dump:
+        deriver.dump["extractors"] = set(deriver.dump["extractors"])
+    else:
+        deriver.dump["extractors"] = set()
 
 
-print "Extracting facts from 101repo."
+def derive(deriver, language, filename, **kwargs):
 
-# Initialize housekeeping
-extractors = set()
-dump = tools101.beforeMapMatches(const101.extractorDump)
-if "extractors" in dump:
-   extractors = set(dump["extractors"])
+    extractorPath = os.path.join(os.environ["extractor101dir"],language, "extractor")
+    if os.path.isfile(extractorPath):
+        deriver.dump["extractors"].add(extractorPath)
+        # extractors take their input via stdin, so we gotta open the file
+        with open(filename) as f:
+            return json.loads(subprocess.check_output([extractorPath], stdin=f))
 
-# Loop over matches
-dump = tools101.deriveByKey("extractor", ".extractor.json", derive)
 
-# Convert set to list before dumping JSON
-extractors = list(extractors)
+def preparedump(deriver):
+    deriver.dump["extractors"] = sorted(list(deriver.dump["extractors"]))
 
-# Assemble dump, save it, and exit
-dump = dict()
-dump["extractors"] = extractors
-dump["numbers"] = dict()
-dump["numbers"]["numberOfExtractors"] = len(extractors)
-tools101.afterMapMatches(dump, const101.extractorDump)
+
+edir       = os.environ["extractor101dir"]
+extractor = [os.path.join(edir, d, "extractor") for d in os.listdir(edir)]
+changed    = meta101.havechanged(__file__, "module.json", *extractor )
+
+meta101.derive(suffix   =".extractor.json",
+               dump     =os.environ["extractor101dump"],
+               oninit   =initdump,
+               getvalue ="language",
+               callback =derive,
+               ondump   =preparedump,
+               entirerepo=changed)

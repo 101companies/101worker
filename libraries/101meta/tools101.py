@@ -5,6 +5,11 @@ import json
 import const101
 
 
+from warnings import warn
+warn("tools101.py is DEPRECATED, see 101worker/libraries/meta101 instead",
+     stacklevel=2)
+
+
 # Look up all metadata values, if any, for a certain metadata key
 def valuesByKey(units, key):
     return [ x[key] for x in map(lambda u: u["metadata"], units) if key in x ]

@@ -1,33 +1,38 @@
 import os
 
-url101wiki = "http://101companies.org/wiki/"
-url101explorer = "http://101companies.org/resources/"
-url101repo = "https://github.com/101companies/101repo/tree/master/"
-url101data = "http://data.101companies.org/"
-url101endpoint = "http://101companies.org/endpoint/"
+from warnings import warn
+warn("const101.py is DEPRECATED, see 101worker/configs/env instead",
+     stacklevel=2)
 
-results101 = "../../../101results"
-sRoot = "../../../101results/101repo" # the root for source files
-tRoot = "../../../101web/data/resources" # the root for target files
-dumps = "../../../101web/data/dumps" # the root for dumps
-views = "../../../101web/data/views" # the root for views
-rulesDump = os.path.join(dumps, "rules.json")
-matchesDump = os.path.join(dumps, "matches.json")
-predicatesDump = os.path.join(dumps, "predicates.json")
-fragmentsDump = os.path.join(dumps, "fragments.json")
-geshiDump = os.path.join(dumps, "geshi.json")
-validatorDump = os.path.join(dumps, "validator.json")
-extractorDump = os.path.join(dumps, "extractor.json")
-metricsDump = os.path.join(dumps, "metrics.json")
-fragmentMetricsDump = os.path.join(dumps, "fragments.metrics.json")
-summaryDump = os.path.join(dumps, "summary.json")
-suffixesDump = os.path.join(dumps, "suffixes.json")
-importsDump = os.path.join(dumps, "imports.json")
-resolutionDump = os.path.join(dumps, "resolution.json")
-wikiDump = os.path.join(dumps, "wiki.json")
-pullRepoDump = os.path.join(dumps, "PullRepo.json")
-moduleSummaryDump = os.path.join(dumps, 'ModuleSummaryDump.json')
-tModuleSummaryDump = os.path.join(dumps, 'tempModuleSummaryDump.json')
+url101wiki          = os.environ["wiki101url"]
+url101explorer      = os.environ["explorer101url"]
+url101repo          = os.environ["repo101url"]
+url101data          = os.environ["data101url"]
+url101endpoint      = os.environ["endpoint101url"]
+
+results101          = os.environ["results101dir"]
+sRoot               = os.environ["repo101dir"]
+tRoot               = os.environ["targets101dir"]
+dumps               = os.environ["dumps101dir"]
+views               = os.environ["views101dir"]
+
+rulesDump           = os.environ["rules101dump"]
+matchesDump         = os.environ["matches101dump"]
+predicatesDump      = os.environ["predicates101dump"]
+fragmentsDump       = os.environ["fragments101dump"]
+geshiDump           = os.environ["geshi101dump"]
+validatorDump       = os.environ["validator101dump"]
+extractorDump       = os.environ["extractor101dump"]
+metricsDump         = os.environ["metrics101dump"]
+fragmentMetricsDump = os.environ["fragmentMetrics101dump"]
+summaryDump         = os.environ["summary101dump"]
+suffixesDump        = os.environ["suffixes101dump"]
+importsDump         = os.environ["imports101dump"]
+resolutionDump      = os.environ["resolution101dump"]
+wikiDump            = os.environ["wiki101dump"]
+pullRepoDump        = os.environ["pullRepo101dump"]
+moduleSummaryDump   = os.environ["moduleSummary101dump"]
+tModuleSummaryDump  = os.environ["moduleSummary101temp"]
 
 
 def noMetrics():

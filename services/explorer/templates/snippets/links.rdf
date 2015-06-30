@@ -1,12 +1,12 @@
 {% if wiki %}
-    <co:wiki>{{ wiki.decode('utf_8') }}</co:wiki>
+    <co:wiki>{{ wiki }}</co:wiki>
 {% endif %}
 {% if github %}
-    <co:github>{{ github.decode('utf_8') }}</co:github>
+    <co:github>{{ github }}</co:github>
 {% endif %}
 {% if sesame %}
-    <co:sesame>{{ sesame.decode('utf_8') }}</co:sesame>
+    <co:sesame>{{ sesame }}</co:sesame>
 {% endif %}
 {% if endpoint %}
-    <co:endpoint>{{ endpoint.decode('utf_8') }}</co:endpoint>
+    <co:endpoint>{{ endpoint }}</co:endpoint>
 {% endif %}

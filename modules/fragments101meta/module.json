@@ -1,0 +1,18 @@
+{
+    "command" : "python program.py",
+    "dependencies" : [
+        "matches101meta",
+        "pull101repo",
+        "rules101meta"
+    ],
+    "environment" : [
+        "rules101dump",
+        "targets101dir",
+        "fragments101dump"
+    ],
+    "wantdiff" : true,
+      "metadata" : {
+            "dependencies" : ["locator"],
+            "obtained" :     ["phrase"]
+      }
+}

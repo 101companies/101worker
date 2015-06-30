@@ -1,0 +1,3 @@
+#!/bin/sh
+runnerdir=`dirname $0`
+"$runnerdir/runner/runner" --env-to-json < $1

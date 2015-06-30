@@ -1,13 +1,27 @@
 {
-  "targets" : [
-    {
-      "headline" : "Extracted Facts",
-      "classifier" : "resource",
-      "scope" : "file",
-      "suffix" : ".extractor.json",
-      "language" : "JSON",
-      "propertyName" : "extractor",
-      "className" : "Extractor"
+    "command"      : "python program.py",
+    "wantdiff"     : true,
+    "environment"  : [
+        "repo101dir",
+        "extractor101dump",
+        "extractor101dir"
+    ],
+    "dependencies" : [
+        "matches101meta"
+    ],
+    "targets" : [
+        {
+            "headline"     : "Extracted Facts",
+            "classifier"   : "resource",
+            "scope"        : "file",
+            "suffix"       : ".extractor.json",
+            "language"     : "JSON",
+            "propertyName" : "extractor",
+            "className"    : "Extractor"
+        }
+    ],
+    "metadata" : {
+            "dependencies" : ["language"],
+            "obtained" :     []
     }
-  ]
 }

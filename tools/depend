@@ -1,0 +1,74 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Basename qw(basename);
+use Graph;
+
+
+die <<'END' if not @ARGV;
+Usage: depend CHANGESFILE...
+
+CHANGESFILEs should be of the form TIMESTAMP.MODULE.EXTENSION.
+Example: 1424122533.matches101meta.changes
+
+Each line of a CHANGESFILE should be one of ``a FILEPATH'' for a file that
+was accessed or ``m FILEPATH'' for a file that was modified.
+
+The CHANGESFILEs given are ordered by their TIMESTAMP, a missing one is
+treated as zero. Then a dependency graph is built from the accessed and
+modified files, which is printed in DOT format on stdout.
+END
+
+
+my $graph = Graph->new;
+my %files;
+
+
+my @sorted = do
+{
+    no warnings 'numeric';
+    sort { basename($a) <=> basename($b) } @ARGV
+};
+
+for my $arg (@sorted)
+{
+    my %deps;
+    my $module = do
+    {
+        my $base = basename($arg);
+        if ($base =~ /^\d+\.(.+)\.[^.]+$/)
+        {   $1 }
+        else
+        {
+            warn "File names should be of the form TIMESTAMP.MODULE.EXTENSION, "
+               . "but got ``$base''. Gonna use the entire name then.\n";
+            $base
+        }
+    };
+
+    open my $file, '<', $arg or die "Can't open $arg: $!\n";
+
+    while (<$file>)
+    {
+        unless (/^\s*([ma])\s+(.+?)\s*$/)
+        {
+            warn "Malformed change entry in $arg: $_";
+            next;
+        }
+        # depend on whoever last modified the file
+        $deps{$files{$2}} = 1 if exists $files{$2};
+        # if the file was modified, following modules must depend on this one
+        $files{$2} = $module if $1 eq 'm';
+    }
+
+    delete $deps{$module}; # don't depend on yourself
+    $graph->add_vertex($module);
+    $graph->add_edge($_, $module) for keys %deps;
+}
+
+
+print qq(digraph G {\n);
+print qq(    node [shape=plaintext];\n);
+print qq(    "$_";\n)                   for sort $graph->vertices;
+print qq(    "$_->[0]" -> "$_->[1]";\n) for sort $graph->edges;
+print qq(}\n);

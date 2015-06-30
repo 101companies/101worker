@@ -5,7 +5,7 @@ import json
 import sys
 sys.path.append('../../libraries/101meta')
 sys.path.append('../../libraries')
-from mediawiki import remove_headline_markup
+from mediawiki101 import remove_headline_markup
 import const101
 
 

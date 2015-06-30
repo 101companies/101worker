@@ -14,8 +14,23 @@ framework.
 
 """
 import os
+import sys
+import json
+
+this_file = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.abspath(os.path.join(this_file, '../../services')))
+sys.path.insert(0, os.path.abspath(os.path.join(this_file, '../../libraries')))
+
+
+import json
+
+this_file = os.path.dirname(os.path.realpath(__file__))
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "services.settings")
+
+import logging
+logging.warn('WSGI sends to the Apache2 error_log.')
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
