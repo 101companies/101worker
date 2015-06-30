@@ -27,5 +27,6 @@
     "parseMegaL",
     "webDeployMegaModels",
     "validateModuleDescriptions",
-    "integrate"
+    "integrate",
+    "onto2ttl"
 ]
