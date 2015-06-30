@@ -236,8 +236,6 @@ def map_instance(page, graph):
             predicate = overloading_table.get(predicate.lower(), {}).get((clss, target_clss), predicate)
             triple = uri, encode_predicate(predicate), obj
             graph.add(triple)
-            
-
 
 def map_class(page, graph):
     # I dislike this - I should really make this call map_instance for the instance part
@@ -316,7 +314,6 @@ def map_page(page, graph):
     else:
         map_class(page, graph)
 
-
 def main():
     uri = 'http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox'
     serialized_version = 'graph.rdf'
@@ -363,8 +360,7 @@ def main():
 
     print 'Serializing graph...'
     open(serialized_version, 'w').write(graph.serialize())
-    
-     
+
     print 'Clearing Sesame...'
     response, content = sesame.clear_graph(uri)
     assert response['status'] == '204'
