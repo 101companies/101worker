@@ -107,7 +107,7 @@ For example, to run only the [integrate module](modules/integrate) of the produc
 
 ## Run Environment With Different Module Configuration
 
-If you want to use an existing environment file , but run it with a different, you can use the `RUNCONFIG` environment variable and set it to the name of the module configuration you wish to use.
+If you want to use an existing environment file , but run it with a different set of modules, you can use the `RUNCONFIG` environment variable and set it to the name of the module configuration you wish to use.
 
 For example, if you want to use the [production.yml environment](configs/env/production.yml), but instead of the [production.json](configs/production.json) you want to use [onto.json](configs/onto.json), you simply run `RUNCONFIG=onto make production.debug`.
 
