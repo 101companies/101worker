@@ -7,6 +7,9 @@ use JSON          qw(encode_json decode_json);
 use Repo101::Pull qw(pull101repo);
 
 
+die "You can't run this with RUNCONFIG, it'll break incrementality.\n"
+    if $ENV{RUNCONFIG};
+
 my %paths = map { ($_ => $ENV{$_} || die "Missing environment variable: $_") }
                 qw(repo101dir gitdeps101dir repo101url gitdeps101url);
 

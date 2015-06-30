@@ -72,6 +72,9 @@ sub BUILD
     $self->ensure_envs_exist(runner => RUNNER_ENVS);
     $self->die_if_invalid;
 
+    $ENV{config101} = "$ENV{worker101dir}/configs/$ENV{RUNCONFIG}.json"
+        if $ENV{RUNCONFIG};
+
     my $names         = validate_json(@ENV{qw(config101 config101schema)});
     my $module_schema = slurp_json   ($ENV{module101schema});
     $self->names($names);
