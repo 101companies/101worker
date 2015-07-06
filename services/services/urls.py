@@ -24,20 +24,13 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
 
-    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/(?P<fragment>.+)$', service.serveFileFragment),
-    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)$', service.serveMemberFile),
-    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)$', service.serveMemberPath),
-    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)$', service.serveNamespaceMember),
-    (r'^discovery/(?P<namespace>[^/]+)$', service.serveNamespace),
-    (r'^discovery$', service.serveAllNamespaces ),
+    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/(?P<fragment>.+)/?$', service.serveFileFragment),
+    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/?$', service.serveMemberFile),
+    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/?$', service.serveMemberPath),
+    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/?$', service.serveNamespaceMember),
+    (r'^discovery/(?P<namespace>[^/]+)/?$', service.serveNamespace),
+    (r'^discovery/?$', service.serveAllNamespaces ),
 
-
-    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/(?P<fragment>.+)/$', service.serveFileFragment),
-    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)(/(?P<path>.*))?/(?P<file>.*\.[^/]+)/$', service.serveMemberFile),
-    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/(?P<path>.+)/$', service.serveMemberPath),
-    (r'^discovery/(?P<namespace>[^/]+)/(?P<member>[^/]+)/$', service.serveNamespaceMember),
-    (r'^discovery/(?P<namespace>[^/]+)/$', service.serveNamespace),
-    (r'^discovery/$', service.serveAllNamespaces ),
 
     (r'^hello$', helloWorld.hello),
     (r'^triggerCloneCreation$', triggerCloneCreation.trigger),
