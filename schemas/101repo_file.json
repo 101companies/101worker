@@ -1,7 +1,7 @@
 {
     "title": "File schema",
     "type": "object",
-    "required": ["wiki", "github", "name", "headline", "namespace", "sesame", "endpoint", "classifier", "geshi", "derived", "fragments"],
+    "required": ["wiki", "github", "name", "headline", "namespace", "classifier", "geshi", "derived", "fragments"],
     "properties": {
         "wiki": {
             "type": "string",
