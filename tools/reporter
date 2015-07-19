@@ -69,7 +69,7 @@ sub parse_log
 
         $table .= <<HTML;
                 <tr class="$class">
-                    <td><a href="$logs_url/$date/$module.log">$module</a></td>
+                    <td><a href="$module.log">$module</a></td>
                     <td>$status</td>
                     <td>$start_hms</td>
                     <td>$end_hms</td>
