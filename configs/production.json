@@ -28,5 +28,6 @@
     "webDeployMegaModels",
     "validateModuleDescriptions",
     "integrate",
-    "onto2ttl"
+    "onto2ttl",
+    "testAllExplorerEntities"
 ]
