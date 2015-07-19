@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>101explorer resourceLogs</title>
+  </head>
+  <body>
+    <h4><a name="overview">Overview</a></h4>
+    <b>Total Errors:</b> {{ total_count }} <br>
+    <ul>
+      <li><b>Total <a href="#root">Root
+        Errors:</a></b> {{ root_errors_total_count }} <br>
+        <ul>
+          {% for error, count in root_errors_counts.iteritems() %}
+            <li>{{ error }}: {{ count }}</li>
+          {% endfor %}
+        </ul>
+        <br>
+      <li><b>Total <a href="#namespace">Namespace
+        Errors:</a></b> {{ namespace_errors_total_count }} <br>
+        <ul>
+          {% for error, count in namespace_errors_counts.iteritems() %}
+            <li>{{ error }}: {{ count }}</li>
+          {% endfor %}
+        </ul>
+        <br>
+      <li><b>Total <a href="#member">Member
+        Errors:</a></b> {{ member_errors_total_count }} <br>
+        <ul>
+          {% for error, count in member_errors_counts.iteritems() %}
+            <li>{{ error }}: {{ count }}</li>
+          {% endfor %}
+        </ul>
+        <br>
+      <li><b>Total <a href="#folder">Folder
+        Errors:</a></b> {{ folder_errors_total_count }} <br>
+        <ul>
+          {% for error, count in folder_errors_counts.iteritems() %}
+            <li>{{ error }}: {{ count }}</li>
+          {% endfor %}
+        </ul>
+        <br>
+      <li><b>Total <a href="#file">File
+        Errors:</a></b> {{ file_errors_total_count }} <br>
+        <ul>
+          {% for error, count in file_errors_counts.iteritems() %}
+            <li>{{ error }}: {{ count }}</li>
+          {% endfor %}
+        </ul>
+        <br>
+      <li><b>Total <a href="#fragment">Fragment
+        Errors:</a></b> {{ fragment_errors_total_count }} <br>
+        <ul>
+          {% for error, count in fragment_errors_counts.iteritems() %}
+            <li>{{ error }}: {{ count }}</li>
+          {% endfor %}
+        </ul>
+        <br>
+    </ul>
+    {% block content %}
+    {% endblock %}
+
+    <br><br>
+    <h4><a name="root">Root Errors</a> <a href="#overview">top</a></h4>
+    {% for error, list in root_errors.iteritems() %}
+      <h4>Error Type: {{ error }}</a> </h4>
+      <ul>
+        {% for item in list %}
+          <li> <b> {{ item.0.name }} </b>
+          {{ item.0.resource }}
+          {{ item.1 }}
+        {% endfor %} </li>
+      </ul>
+    {% endfor %}
+
+    <br><br>
+    <h4><a name="namespace">Namespace Errors</a> <a href="#overview">top</a></h4>
+    {% for error, list in namespace_errors.iteritems() %}
+      <h4>Error Type: {{ error }}</a> </h4>
+      <ul>
+        {% for item in list %}
+          <b> {{ item.0.name }} </b>
+          {{ item.0.resource }} <br>
+          {{ item.1 }} <br> <br>
+        {% endfor %} </li>
+      </ul>
+    {% endfor %}
+
+    <br><br>
+    <h4><a name="member">Member Errors</a> <a href="#overview">top</a></h4>
+    {% for error, list in member_errors.iteritems() %}
+      <h4>Error Type: {{ error }}</a> </h4>
+      <ul>
+        {% for item in list %}
+          <li> <b> {{ item.0.name }} </b>
+          {{ item.0.resource }} <br>
+          {{ item.1 }} <br> <br>
+        {% endfor %} </li>
+      </ul>
+    {% endfor %}
+
+    <h4><a name="folder">Folder Errors</a> <a href="#overview">top</a></h4>
+    {% for error, list in folder_errors.iteritems() %}
+      <h4>Error Type: {{ error }}</a> </h4>
+      <ul>
+        {% for item in list %}
+          <li> <b> {{ item.0.name }} </b>
+          {{ item.0.resource }} <br>
+          {{ item.1 }} <br> <br>
+        {% endfor %} </li>
+      </ul>
+    {% endfor %}
+
+    <br><br>
+    <h4><a name="file">File Errors</a> <a href="#overview">top</a></h4>
+    {% for error, list in file_errors.iteritems() %}
+      <h4>Error Type: {{ error }}</a> </h4>
+      <ul>
+        {% for item in list %}
+          <li> <b> {{ item.0.name }} </b>
+          {{ item.0.resource }} <br>
+          {{ item.1 }} <br> <br>
+        {% endfor %} </li>
+      </ul>
+    {% endfor %}
+
+    <br><br>
+    <h4><a name="fragment">Fragment Errors</a> <a href="#overview">top</a></h4>
+    {% for error, list in fragment_errors.iteritems() %}
+      <h4>Error Type: {{ error }}</a> </h4>
+      <ul>
+        {% for item in list %}
+          <li> <b> {{ item.0.name }} </b>
+          {{ item.0.resource }} <br>
+          {{ item.1 }} <br> <br>
+        {% endfor %} </li>
+      </ul>
+    {% endfor %}
+  </body>
+</html>

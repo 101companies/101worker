@@ -1,5 +1,8 @@
 all: run
 
+install:
+	pip install Jinja2
+
 run:
 	@python program.py
 
