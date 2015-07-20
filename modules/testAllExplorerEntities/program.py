@@ -10,7 +10,7 @@ import os
 os.environ['TEST_ALL_EXPLORER_ENTITIES'] = '1'
 
 manage_py = os.path.join(os.environ["worker101dir"], 'services', 'manage.py')
-#os.system('python ' + manage_py + ' test explorer.testAllExplorerEntities')
+os.system('python ' + manage_py + ' test explorer.testAllExplorerEntities')
 
 with open('results.json') as infile:
     data = json.loads(infile.read())
@@ -18,5 +18,6 @@ with open('results.json') as infile:
 environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
 template = environment.get_template('main.html')
 
-with open('results.html', 'w') as outfile:
+outpath = os.path.join(os.environ['views101dir'], 'testAllExplorerEntities.html')
+with open(outpath, 'w') as outfile:
     outfile.write(template.render(data))

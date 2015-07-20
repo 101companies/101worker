@@ -2,254 +2,326 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
     <meta charset="UTF-8"/>
-    <title>testAllEntities Results</title>
-
+    <title>testAllExplorerEntities</title>
     <style type="text/css">
-        body {
-            font-size: 80%;
-            font-family: Verdana, Sans-Serif;
-        }
+      /* <![CDATA[ */
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
 
-        .entity h3 {
-            margin: 0;
-            font-size: 14px;
-            padding: 10px;
-            color: #ffffff;
-            background-color: #5c9ebd;
-            border-bottom: 1px solid #336880;
-        }
+      h1 {
+        margin: 0;
+        padding: 20px;
+        font: 30pt monospace;
+        font-weight: bold;
+        color: white;
+        background: black;
+      }
 
-        .entity h3:hover {
-            cursor: pointer;
-        }
+      /* === Overview ======================================================= */
 
-        .entity div {
-            margin: 0;
-            padding: 3px 5px;
-            background-color: #b7d4e2;
-            border-bottom: 0px solid #336880;
-        }
+      #overview {
+        margin: 10px;
+        padding: 0;
+        background: white;
+        border: 1px solid black;
+        position: fixed;
+        top: 0;
+        right: 0;
+        font-family: sans-serif;
+        min-width: 320px;
+      }
 
-        .entity.hide h3 {
-            color: #336880;
-            background-color: #4285a4;
-        }
+      #overview h2 {
+        margin: 0;
+        padding: 10px;
+        font: 20pt monospace;
+        font-weight: bold;
+        color: white;
+        background: black;
+      }
 
-        .entity.hide div {
-            display: none;
-        }
+      #overview h2 a {
+        margin: 0;
+        padding: 0;
+        color: white;
+      }
 
-        .entity_item h4 {
-            margin: 0;
-            font-size: 12px;
-            padding: 3px;
-            color: #ffffff;
-            background-color: #92bed3;
-            border-bottom: 1px solid #4285a4;
-        }
+      #overview #total_errors {
+        position: absolute;
+        top: 17px;
+        right: 10px;
+        color: white;
+        font: 10pt monospace;
+      }
 
-        .entity_item h4:hover {
-            cursor: pointer;
-        }
+      #overview ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
 
-        .entity_item div {
-            margin: 0;
-            padding: 10px 10px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #4285a4;
-        }
+      #overview li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
 
-        .entity_item.hide h4 {
-            color: #336880;
-            background-color: #5c9ebd;
-        }
+      #overview a {
+        margin: 5px;
+        padding: 5px;
+        text-decoration: none;
+        display: block;
+      }
 
-        .entity_item.hide div {
-            display: none;
-        }
+      #overview .passed > a {
+        color: #050;
+        background: #5A5;
+        border: 2px solid #585;
+      }
+
+      #overview .failed > a {
+        color: #800;
+        background: #F55;
+        border: 2px solid #A55;
+      }
+
+      #overview li li a {
+        padding-left: 25px;
+        border: none;
+        color: black;
+        background: white;
+        font-family: monospace;
+        text-decoration: underline;
+      }
+
+      #overview .count {
+        position: absolute;
+        right: 12px;
+      }
+
+      /* === Errors ========================================================= */
+
+      #errors {
+        padding: 10px;
+      }
+
+      #errors h2 {
+        margin: 30px -10px 10px -10px;
+        padding: 20px;
+        font: 20pt sans-serif;
+      }
+
+      #errors h2.passed {
+        color: #050;
+        background: #5A5;
+      }
+
+      #errors h2.failed {
+        color: #800;
+        background: #F55;
+      }
+
+      #errors h2 a:nth-child(2) {
+        /* link to top */
+        margin-left: 5px;
+        color: inherit;
+        font: 10pt monospace;
+      }
+
+      #errors .none {
+        font-family: monospace;
+      }
+
+      #errors h3 {
+        margin: 0;
+        padding: 10px;
+        font: 12pt monospace;
+        color: white;
+        background: black;
+      }
+
+      #errors ul {
+        margin: 0;
+        margin-bottom: 10px;
+        padding: 0;
+        list-style: none;
+        border: 1px solid black;
+        border-bottom: none;
+      }
+
+      #errors li {
+        margin: 0;
+        padding: 10px;
+        list-style: none;
+        border-bottom: 1px solid black;
+      }
+
+      #errors li.control {
+        cursor: pointer;
+        color: #08C;
+        font: 12pt sans-serif;
+      }
+
+      #errors .entity_name {
+        margin-left: 10px;
+        font: 12pt serif;
+        font-weight: bold;
+      }
+
+      #errors .entity_resource {
+        margin-left: 10px;
+        font-family: monospace;
+      }
+
+      #errors pre {
+        clear: both;
+        margin: 0;
+        margin-top: 5px;
+        padding: 10px;
+        background: #EEE;
+      }
+      /* ]]> */
     </style>
-
     <script type="text/javascript">
-    var entities = new Array();
-    var entity_items = new Array();
+      // <![CDATA[
+      function delete_potential_control_buttons(ul) {
+        controls = ul.getElementsByClassName("control");
+        while (controls.length) {
+          ul.removeChild(controls[0]);
+          controls = ul.getElementsByClassName("control");
+        }
+      }
 
-    function init() {
-        var divs = document.getElementsByTagName('div');
-        for(var i = 0; i < divs.length; ++i) {
-            if(divs[i].className == 'entity')
-                entities.push(divs[i]);
-            else if(divs[i].className == 'entity_item')
-                entity_items.push(divs[i]);
+      function hide_similiar_entities(ul) {
+        delete_potential_control_buttons(ul);
+
+        // hide all but the first entities
+        lis = ul.getElementsByTagName("li");
+        for (var i = 1; i < lis.length; ++i) {
+          lis[i].style.display = "none";
         }
 
-        for(var i = 0; i < entities.length; ++i) {
-            get_first_tag(entities[i], 'H3').onclick = toggle_entity;
-            entities[i].className = 'entity hide';
+        // append show button
+        show = document.createElement("li");
+        show.className = "control";
+        show.textContent = "show " + (lis.length - 1) + " similar errors";
+        show.onclick = function() {
+          show_similiar_entities(ul);
+        };
+        ul.appendChild(show);
+      }
+
+      function show_similiar_entities(ul) {
+        delete_potential_control_buttons(ul);
+
+        lis = ul.getElementsByTagName("li");
+        for (var i = 1; i < lis.length; ++i) {
+          lis[i].style.display = 'block';
         }
-        entities[0].className = 'entity';
 
-        for(var i = 0; i < entity_items.length; ++i) {
-            get_first_tag(entity_items[i], 'H4').onclick = toggle_entity_item;
-            entity_items[i].className = 'entity_item hide';
+        // append hide buttons
+        hide1 = document.createElement("li");
+        hide1.className = "control";
+        hide1.textContent = "hide " + (lis.length - 1) + " similar errors";
+        hide1.onclick = function() {
+          hide_similiar_entities(ul);
+        };
+
+        hide2 = hide1.cloneNode(true);
+        hide2.onclick = function() {
+          hide_similiar_entities(ul);
         }
-    }
 
-    function toggle_entity() {
-        var entity_class = this.parentNode.className;
-        if(entity_class == 'entity hide')
-            this.parentNode.className = 'entity';
-        else
-            this.parentNode.className = 'entity hide';
-    }
+        ul.insertBefore(hide1, lis[1]);
+        ul.appendChild(hide2);
+      }
 
-    function toggle_entity_item() {
-        var entity_item_class = this.parentNode.className;
-        if(entity_item_class == 'entity_item hide')
-            this.parentNode.className = 'entity_item';
-        else
-            this.parentNode.className = 'entity_item hide';
-    }
+      errors = null
 
-    function hide_all() {
-        for(var i = 0; i < entities.length; ++i)
-            entities[i].className = 'entity hide';
-        for(var i = 0; i < entity_items.length; ++i)
-            entity_items[i].className = 'entity_item hide';
-    }
-
-    function show_all() {
-        for(var i = 0; i < entities.length; ++i)
-            entities[i].className = 'entity';
-        for(var i = 0; i < entity_items.length; ++i)
-            entity_items[i].className = 'entity_item';
-    }
-
-    function get_first_tag(element, tag) {
-        for(var i = 0; i < element.childNodes.length; ++i)
-            if(element.childNodes[i].nodeName == tag)
-                return element.childNodes[i];
-    }
+      window.onload = function() {
+        errors = document.getElementById("errors");
+        uls = errors.getElementsByTagName("ul");
+        for (var i = 0; i != uls.length; ++i) {
+          lis = uls[i].getElementsByTagName("li");
+          if (lis.length > 1) {
+            hide_similiar_entities(uls[i]);
+          }
+        }
+      };
+      // ]]>
     </script>
   </head>
+  <body>
+    <h1>testAllExplorerEntities</h1>
 
-  <body onload="init()">
-    <div class="entity">
-      <h3>Overview
-        [<i onclick="show_all()">show all</i>]
-        [<i onclick="hide_all()">hide all</i>]</h3>
-          <div>
-            <b>Total Errors:</b> {{ total_count }}
-          </div>
+    <div id="overview">
+      <h2><a name="overview" href="#top">Overview</a></h2>
+
+      <div id="total_errors">
+        Total Errors: {{ total_count }}
+      </div>
+
+      <ul>
+        {% macro error_counts(title, anchor, errors) %}
+          <li class="{% if errors.total_count == 0 %}passed{% else %}failed{% endif %}">
+            <a href="#{{ anchor }}">
+              {{ title }} Errors
+              <span class="count">{{  errors.total_count }}</span>
+            </a>
+            <ul>
+              {% for error, count in errors.error_counts.iteritems() %}
+                <li>
+                  <a href="#{{ anchor }}_{{ error }}">
+                    {{ error }}
+                    <span class="count">{{ count }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endmacro %}
+
+        {{ error_counts("Root", "root", root_errors) }}
+        {{ error_counts("Namespace", "namespace", namespace_errors) }}
+        {{ error_counts("Member", "member", member_errors) }}
+        {{ error_counts("Folder", "folder", folder_errors) }}
+        {{ error_counts("File", "root", file_errors) }}
+        {{ error_counts("Fragment", "fragment", fragment_errors) }}
+      </ul>
     </div>
 
-    <div class="entity">
-      <h3>Root Errors [{{ root_errors_total_count }}] </h3>
-          <div>
-            {% for error, list in root_errors.iteritems() %}
-            <div class="entity_item">
-              <h4>{{ error }} [{{ root_errors_counts[error] }}] </h4>
-              <div>
-                {% for item in list %}
-                <li> <b> {{ item.0.name }} </b>
-                  {{ item.0.resource }} <br>
-                  {{ item.1 }} <br> <br>
-                  {% endfor %} </li>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
+    <div id="errors">
+      {% macro error_listing(title, anchor, errors) %}
+        <h2 class="{% if not errors.error_list %}passed{% else %}failed{% endif %}">
+          <a name="{{ anchor }}">{{ title }} Errors</a> <a href="#top">top</a>
+        </h2>
+        {% if not errors.error_list %}
+          <div class="none">no errors</div>
+        {% else %}
+          {% for error, list in errors.error_list.iteritems() %}
+            <h3><a name="{{ anchor }}_{{ error }}">{{ error }}</a></h3>
+            <ul>
+              {% for item in list %}
+                <li>
+                  <span class="entity_name">{{ item.entity.name }}</span>
+                  <span class="entity_resource">{{ item.entity.resource }}</span>
+                  <pre>{{ item.error }}</pre>
+                </li>
+              {% endfor %}
+              <!--<li class="control">hide similiar errors</li>-->
+            </ul>
+          {% endfor %}
+        {% endif %}
+      {% endmacro %}
+
+      {{ error_listing('Root', 'root', root_errors) }}
+      {{ error_listing('Namespace', 'namespace', namespace_errors) }}
+      {{ error_listing('Member', 'member', member_errors) }}
+      {{ error_listing('Folder', 'folder', folder_errors) }}
+      {{ error_listing('File', 'file', file_errors) }}
+      {{ error_listing('Fragment', 'fragment', fragment_errors) }}
     </div>
-
-
-    <div class="entity">
-      <h3>Namespace Errors [{{ namespace_errors_total_count }}] </h3>
-          <div>
-            {% for error, list in namespace_errors.iteritems() %}
-            <div class="entity_item">
-              <h4>{{ error }} [{{ namespace_errors_counts[error] }}] </h4>
-              <div>
-                {% for item in list %}
-                <li> <b> {{ item.0.name }} </b>
-                  {{ item.0.resource }} <br>
-                  {{ item.1 }} <br> <br>
-                  {% endfor %} </li>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-    </div>
-
-
-    <div class="entity">
-      <h3>Member Errors [{{ member_errors_total_count }}] </h3>
-          <div>
-            {% for error, list in member_errors.iteritems() %}
-            <div class="entity_item">
-              <h4>{{ error }} [{{ member_errors_counts[error] }}] </h4>
-              <div>
-                {% for item in list %}
-                <li> <b> {{ item.0.name }} </b>
-                  {{ item.0.resource }} <br>
-                  {{ item.1 }} <br> <br>
-                  {% endfor %} </li>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-    </div>
-
-    <div class="entity">
-      <h3>Folder Errors [{{ folder_errors_total_count }}] </h3>
-          <div>
-            {% for error, list in folder_errors.iteritems() %}
-            <div class="entity_item">
-              <h4>{{ error }} [{{ folder_errors_counts[error] }}] </h4>
-              <div>
-                {% for item in list %}
-                <li> <b> {{ item.0.name }} </b>
-                  {{ item.0.resource }} <br>
-                  {{ item.1 }} <br> <br>
-                  {% endfor %} </li>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-    </div>
-
-    <div class="entity">
-      <h3>File Errors [{{ file_errors_total_count }}] </h3>
-          <div>
-            {% for error, list in file_errors.iteritems() %}
-            <div class="entity_item">
-              <h4>{{ error }} [{{ file_errors_counts[error] }}] </h4>
-              <div>
-                {% for item in list %}
-                <li> <b> {{ item.0.name }} </b>
-                  {{ item.0.resource }} <br>
-                  {{ item.1 }} <br> <br>
-                  {% endfor %} </li>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-    </div>
-
-    <div class="entity">
-      <h3>Fragment Errors [{{ fragment_errors_total_count }}] </h3>
-          <div>
-            {% for error, list in fragment_errors.iteritems() %}
-            <div class="entity_item">
-              <h4>{{ error }} [{{ fragment_errors_counts[error] }}] </h4>
-              <div>
-                {% for item in list %}
-                <li> <b> {{ item.0.name }} </b>
-                  {{ item.0.resource }} <br>
-                  {{ item.1 }} <br> <br>
-                  {% endfor %} </li>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-    </div>
-</body>
+  </body>
 </html>

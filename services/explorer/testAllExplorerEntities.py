@@ -28,16 +28,6 @@ class ResourceNotFoundError(Exception):
     pass
 
 
-error_map = {
-    ResourceAlreadyAssignedError: 'resource_already_assigned',
-    ResponseStatusNotOkError: 'response_status_not_ok',
-    WrongClassifierError: 'wrong_classifier',
-    WrongNameError: 'wrong_name',
-    ResourceNotFoundError: 'resource_not_found',
-    Exception: 'other'
-}
-
-
 class Entity:
     def __init__(self, resource, classifier, name):
         self.resource = self.get_resource_url(resource)
@@ -59,10 +49,8 @@ class Entity:
 class Result:
     def __init__(self):
         self.error_dict = {}
-        self.total_count = 0
         self.number_dict = {}
-        for key in error_map:
-            self.error_dict[error_map[key]] = []
+        self.total_count = 0
 
     # Result convert to True if it contains atleast one error
     # Requires crunch_numbers to be run already
@@ -71,15 +59,14 @@ class Result:
     __nonzero__=__bool__
 
     def add_result(self, msg):
-        for error in error_map:
-            # All custom Errors are subclasses of Exception, so skip here...
-            if error == Exception:
-                continue
-            if isinstance(msg[1], error):
-                self.error_dict[error_map[error]].append(msg)
-                return
-            # ... and default to Exception here.
-        self.error_dict[error_map[Exception]].append(msg)
+        entity, error = msg
+        error_type = type(error).__name__
+        if error_type not in self.error_dict:
+            self.error_dict[error_type] = []
+        self.error_dict[error_type].append({
+            'entity': entity,
+            'error': error,
+        })
 
     def crunch_numbers(self):
         for error_type in self.error_dict:
@@ -145,9 +132,8 @@ class Checker:
                 self.namespace_results.add_result((namespace_entity, error))
                 continue
             for member in response['members']:
-                pass
-                #self.member_entities.append(Entity(
-                #    member['resource'], member['classifier'], member['name']))
+                self.member_entities.append(Entity(
+                    member['resource'], member['classifier'], member['name']))
 
     def check_member_entities(self):
         for member_entity in self.member_entities:
@@ -196,7 +182,7 @@ class Checker:
                     fragment['resource'], fragment['classifier'], fragment['name']))
 
     def check_entity(self, entity):
-        print 'checking', entity.resource
+        # print 'checking', entity.resource
 
         if entity.resource in self.assigned_resources:
             return None, ResourceAlreadyAssignedError(
@@ -253,24 +239,26 @@ class AllEntitiesTest(TestCase):
         checker = Checker()
         cls.results = checker.check_all_entities()
 
-        log = {}
-        total_count = 0
+        log = {
+            'total_count': 0
+        }
 
         def add_result(result_name):
             result = cls.results[result_name]
             result.crunch_numbers()
-            log[result_name] = result.error_dict
-            log[result_name + '_counts'] = result.number_dict
-            log[result_name + '_total_count'] = result.total_count
-            return result.total_count
+            log[result_name] = {
+                'total_count': result.total_count,
+                'error_counts': result.number_dict,
+                'error_list': result.error_dict,
+            }
+            log['total_count'] += result.total_count
 
-        total_count += add_result('root_errors')
-        total_count += add_result('namespace_errors')
-        total_count += add_result('member_errors')
-        total_count += add_result('folder_errors')
-        total_count += add_result('file_errors')
-        total_count += add_result('fragment_errors')
-        log['total_count'] = total_count
+        add_result('root_errors')
+        add_result('namespace_errors')
+        add_result('member_errors')
+        add_result('folder_errors')
+        add_result('file_errors')
+        add_result('fragment_errors')
 
         # print json.dumps(log, cls=LogEncoder, sort_keys=True, indent=4, separators=(',', ': '))
         outpath = os.path.join(os.environ['worker101dir'],
@@ -283,6 +271,9 @@ class AllEntitiesTest(TestCase):
     @classmethod
     def tearDownClass(cls):
         pass
+
+    # the following methods just signal to a human test executor were
+    # errors happened
 
     def test_root(self):
         if AllEntitiesTest.results['root_errors']:
