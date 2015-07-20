@@ -15,6 +15,14 @@ os.system('python ' + manage_py + ' test explorer.testAllExplorerEntities')
 with open('results.json') as infile:
     data = json.loads(infile.read())
 
+# For debugging, limit high error listings to 100
+# data['file_errors']['error_list']['ResourceNotFoundError'] = \
+#     data['file_errors']['error_list']['ResourceNotFoundError'][:100]
+# data['fragment_errors']['error_list']['ResourceNotFoundException'] = \
+#     data['fragment_errors']['error_list']['ResourceNotFoundException'][:100]
+# data['fragment_errors']['error_list']['ResourceAlreadyAssignedError'] = \
+#     data['fragment_errors']['error_list']['ResourceAlreadyAssignedError'][:100]
+
 environment = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
 template = environment.get_template('main.html')
 
