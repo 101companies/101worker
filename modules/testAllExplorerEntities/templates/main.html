@@ -30,7 +30,7 @@
         top: 0;
         right: 0;
         font-family: sans-serif;
-        min-width: 320px;
+        width: 320px;
       }
 
       #overview h2 {
@@ -116,6 +116,7 @@
 
       #errors {
         padding: 10px;
+        padding-right: 340px; /* make space for overview */
       }
 
       #errors h2 {
@@ -152,6 +153,13 @@
         font: 12pt monospace;
         color: white;
         background: black;
+      }
+
+      #errors .desc {
+        border: 1px solid black;
+        border-top: none;
+        padding: 10px;
+        font-family: sans-serif;
       }
 
       #errors ul {
@@ -330,6 +338,11 @@
         {% else %}
           {% for error, list in errors.error_list.iteritems() %}
             <h3><a name="{{ anchor }}_{{ error }}">{{ error }}</a></h3>
+            {% if error in error_descriptions %}
+              <div class="desc">
+                {{ error_descriptions[error]|replace("\n", "\n<br/>") }}
+              </div>
+            {% endif %}
             {% macro error_entry(item) %}
               <li>
                 <span class="entity_name">{{ item.entity.name }}</span>

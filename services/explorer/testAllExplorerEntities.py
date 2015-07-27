@@ -12,6 +12,9 @@ import discovery
 from mediawiki101 import wikifyNamespace
 
 
+# Custom error classes, incase we can provide a more specific exception than the
+# one thrown by the explorer.
+
 class ResourceAlreadyAssignedError(Exception):
     pass
 
@@ -24,9 +27,36 @@ class WrongClassifierError(Exception):
 class WrongNameError(Exception):
     pass
 
-class ResourceNotFoundError(Exception):
-    pass
-
+# Descriptions to all possible error types
+# These are output as is after each exception listing, so they may contain html
+# code. Newline are repalce with <br>-Tags automatically
+error_descriptions = {
+    'ResourceAlreadyAssignedError':
+        "This errors occurs if a link to an entity is found, and the link was "
+        "already found for an entity higher up in the hierarchy.\n\n"
+        "For Example: The top-level Root-Entity has the URL <code>/</code>, if "
+        "further down a link to another entity is found, with exactly that"
+        " url, it is assumed that the link generation is faulty, instead of "
+        "that one url points to two different entities.",
+    'ResponseStatusNotOkError':
+        "This error occurs if a http response is not served with message "
+        "<code>200 Ok</code>.",
+    'WrongClassifierError':
+        "This error occurs if the link to an entity specifies another expected "
+        "classifier than the entity itself reports.",
+    'WrongNameError':
+        "This error occurs if the link to an entity specifies another expected "
+        "name than the entity itself reports.",
+    'ResourceNotFoundException':
+        "This error occurs if the explorer script somehow deems an url "
+        "invalid, and throws this exception by hand to trigger a "
+        "<code>404 not found</code>.\n\n"
+        "This is fine behaviour for nonsensical URLs. But no page in the "
+        "explorer should produce a link to page that contains this exception.",
+    'ValidationError':
+        "This error is thrown by the explorer intern page validation code, "
+        "that validates each entities output against a schema."
+}
 
 class Entity:
     def __init__(self, resource, classifier, name):
@@ -195,13 +225,6 @@ class Checker:
             response = self.client.get(entity.resource,
                                        {'format': 'json', 'validate': 'true'})
 
-        # Catch some more common exceptions and throw custom exception instead for
-        # sorting. All other exceptions will be caught in the generic category.
-        except IOError as exception:
-            if exception.errno == 2:
-                return None, ResourceNotFoundError(str(exception))
-            return None, exception
-
         except Exception as exception:
             return None, exception
 
@@ -240,7 +263,8 @@ class AllEntitiesTest(TestCase):
         cls.results = checker.check_all_entities()
 
         log = {
-            'total_count': 0
+            'total_count': 0,
+            'error_descriptions': error_descriptions
         }
 
         def add_result(result_name):
