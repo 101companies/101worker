@@ -22,6 +22,7 @@ modules/wiki2json/.idea
 modules/wiki2json/target
 jsonExtractor.iml
 dump.json
+/services/db.sql
 /services/.idea/codeStyleSettings.xml
 /services/.idea/encodings.xml
 /services/.idea/inspectionProfiles/profiles_settings.xml
