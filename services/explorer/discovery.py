@@ -231,7 +231,9 @@ def discoverMemberFile(namespace, member, path, file):
 
     try:
         extractedFacts = DumpdataProvider.getFacts(filePath, extractor)
+        print extractedFacts.get('fragments')
         for fragment in extractedFacts.get('fragments', []):
+            print fragment
             fragmentPath = os.path.join(fragment['classifier'], fragment['name'])
             response['fragments'].append( mapFragment(filePath, fragmentPath, fragment) )
     except OSError:
@@ -362,9 +364,6 @@ def discoverNamespace(namespace):
             'name'    : member
         })
 
-    #response['endpoint'] = TripledataProvider.getEndpointLink('Namespace', wikiNS)
-    #response['sesame']   = TripledataProvider.getSesameLink('namespaces', wikiNS)
-
     return response
 
 
@@ -384,9 +383,6 @@ def discoverAllNamespaces():
             'classifier': 'Namespace',
             'name'      : member
         })
-
-    #response['endpoint'] = TripledataProvider.getEndpointLink('Namespace', 'Namespace')
-    #response['sesame']   = TripledataProvider.getSesameLink('namespaces', 'Namespace')
 
     return response
 

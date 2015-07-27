@@ -57,25 +57,12 @@ def getFragment(file, fragment, locator):
     return json.loads(output)
 
 def getFacts(file, extractor):
-    #since the extractor module isn't ready to deal with the new form of communicating, I commented the file lookup out
-    #for now
-    #extractorFile = os.path.join(const101.tRoot, file + '.extractor.json')
-    #if os.path.exists(extractorFile):
-    #    return json.load(open(extractorFile, 'r'))
+    fullFile = os.path.join(const101.tRoot, file + '.extractor.json')
 
-    fullFile = os.path.join(const101.tRoot, file+'.extractor.json')
-    #fullExtractor = os.path.join(const101.sRoot, extractor)
-    # print fullExtractor
-    # command = '{0} < {1}'.format(fullExtractor, fullFile)
-    # #escape some shell symbols
-    # command = command.replace(';', '\;').replace('|', '\|').replace('&', '\&').replace("'", "\\'")
-    # status, output = commands.getstatusoutput(command)
-    # if not status == 0: raise Exception('Fact extraction failed: {0}'.format(output))
-
-    #with open(fullFile) as f:
-    #    output = subprocess.check_output([fullExtractor, fullFile], stdin=f)
-
-    return json.load(open(fullFile, 'r'))
+    if os.path.exists(fullFile):
+        return json.load(open(fullFile, 'r'))
+    else:
+        return {}
 
 def isDir(dir):
     path = os.path.join(const101.sRoot, dir)

@@ -12,7 +12,10 @@ class JSONFactExtractor:
 		self.ln_char_index_no_doubling = 0
 
 	def extract_facts(self):
-		fragments = {'fragments': self.visit(json.loads(self.json_file))}
+		data = self.visit(json.loads(self.json_file))
+		if isinstance(data, dict):
+			data = [data]
+		fragments = {'fragments': data }
 		return fragments
 
 	def visit(self, to_visit):
