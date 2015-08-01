@@ -1,0 +1,13 @@
+{
+    "wiki2json": {
+      "input": [
+        "kafka"
+      ],
+      "output": [
+        "content",
+        "namespace",
+        "name",
+        "metadata"
+      ]
+    }
+}

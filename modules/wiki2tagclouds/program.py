@@ -4,10 +4,12 @@ import json
 import sys
 from collections import Counter
 from jinja2 import *
+import re
+import os
 
 # Load 101wiki into memory
 
-wiki = json.load(open(sys.argv[1], 'r'))['wiki']
+# wiki = json.load(open(sys.argv[1], 'r'))['wiki']
 
 # Write .json and .html file -- the latter as a tag cloud
 def writeFiles(counts, label, prefix):
@@ -18,11 +20,11 @@ def writeFiles(counts, label, prefix):
 
     # Prepare for buckets of scaling
     # Inspired by http://stackoverflow.com/questions/3180779/html-tag-cloud-in-python
-    step = max(counts.values()) / 6
+    step = (max(counts.values()) / 6) or 1
 
     counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
-    
-    loader = FileSystemLoader('.')
+
+    loader = FileSystemLoader(os.path.abspath(os.path.join(os.path.dirname(__file__))))
     env = Environment(loader=loader)
     template = env.get_template('tagcloud.html')
     open(label + '.html', 'w').write(template.render({
@@ -31,7 +33,7 @@ def writeFiles(counts, label, prefix):
         'step': step,
         'root': 'http://101companies.org/wiki/' + prefix
     }))
-    
+
     ## Apply scaling and write HTML
     #htmlFile = open(label + '.html', 'w')
     #htmlFile.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">\n')
@@ -44,37 +46,71 @@ def writeFiles(counts, label, prefix):
 
     #print counts
 
-    
+
     #for tag, count in counts:
-    #    css = count / step        
+    #    css = count / step
     #    htmlFile.write('<a href="%s:%s" class="size-%s">%s</a>\n' % (root, tag, css, tag),)
 
     #htmlFile.write('</body>\n')
     #htmlFile.write('</html>\n')
     #htmlFile.close()
 
-pages = wiki['pages']
+# pages = wiki['pages']
+#
+# contributions = filter(lambda p: "Contribution" == p.get('p', ''), pages)
+# #contributions = [p for p in contributions ]
+#
+# uses = [p.get('uses', []) for p in contributions]
+# uses = [p for use in uses for p in use]
+#
+# uses = filter(lambda u: u['p'] == 'Language', uses)
+#
+# uses = [use['n'] for use in uses]
+#
+# lcounts = Counter(uses)
+#
+# uses = [p.get('uses', []) for p in contributions]
+# uses = [p for use in uses for p in use]
+#
+# uses = filter(lambda u: u['p'] == 'Technology', uses)
+#
+# uses = [use['n'] for use in uses]
+#
+# tcounts = dict(Counter(uses))
+#
+# writeFiles(lcounts, 'frequencyOfLanguages', 'Language')
+# writeFiles(tcounts, 'frequencyOfTechnologies', 'Technology')
 
-contributions = filter(lambda p: "Contribution" == p.get('p', ''), pages)
-#contributions = [p for p in contributions ]
+import atomos.atom as atom
 
-uses = [p.get('uses', []) for p in contributions]
-uses = [p for use in uses for p in use]
+state = atom.Atom({ 'languages': {}, 'technologies': {} })
 
-uses = filter(lambda u: u['p'] == 'Language', uses)
+def write_html(k, ref, old, new):
+    writeFiles(new['languages'], 'frequencyOfLanguages', 'Language')
+    writeFiles(new['technologies'], 'frequencyOfTechnologies', 'Technology')
 
-uses = [use['n'] for use in uses]
+state.add_watch('write_html', write_html)
 
-lcounts = Counter(uses)
+def add_counts(cur_state, langs, technologies):
+    for lang in langs:
+        if cur_state['languages'].has_key(lang):
+            cur_state['languages'][lang] += 1
+        else:
+            cur_state['languages'][lang] = 1
 
-uses = [p.get('uses', []) for p in contributions]
-uses = [p for use in uses for p in use]
+    for technology in technologies:
+        if cur_state['technologies'].has_key(technology):
+            cur_state['technologies'][technology] += 1
+        else:
+            cur_state['technologies'][technology] = 1
 
-uses = filter(lambda u: u['p'] == 'Technology', uses)
+    return cur_state
 
-uses = [use['n'] for use in uses]
+def main(page):
+    page = page['data']
 
-tcounts = dict(Counter(uses))
+    if page['namespace'] == 'Contribution':
+        langs = re.findall(r'uses\:\:language\:([a-zA-Z_ ]+)', page['raw_content'].lower())
+        technologies = re.findall(r'uses\:\:technology\:([a-zA-Z_ ]+)', page['raw_content'].lower())
 
-writeFiles(lcounts, 'frequencyOfLanguages', 'Language')
-writeFiles(tcounts, 'frequencyOfTechnologies', 'Technology')
+        state.swap(add_counts, langs, technologies)
