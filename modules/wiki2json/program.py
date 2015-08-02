@@ -43,13 +43,13 @@ def handle_page_name(name, props):
     return props
 
 def handlePage(p):
-    res['id'] = p['_id']
-
     if p.has_key('headline'):
         res = {'headline': p['headline']}
     else:
         res = {'headline': 'n/a'}
     handle_page_name(p['page_title_namespace'], res)
+
+    res['_id'] = p['_id']['$oid']
 
     if 'used_links' in p:
         res['internal_links'] = p['used_links']
@@ -69,57 +69,49 @@ def handlePage(p):
 
     return res
 
-client = MongoClient()
-db = client['wiki2json']
-pages = db['pages']
-
-def add_page(page):
-    return pages.insert_one(page)
-
-def update_page(page):
-    return pages.update({ '_id': page['_id'] }, { '$set': page }, upsert=False)
-
-def remove_page(page):
-    return pages.remove(page['_id'])
-
 import storm
 
-class SplitSentenceBolt(storm.BasicBolt):
+class Wiki2JSONBolt(storm.BasicBolt):
+
+    def __init__(self):
+        storm.BasicBolt.__init__(self)
+        self.client = MongoClient()
+        self.db = self.client['wiki2json']
+        self.pages = self.db['pages']
+        self.pages.drop()
+
+    def add_page(self, page):
+        return self.pages.insert_one(page)
+
+    def update_page(self, page):
+        return self.pages.update({ '_id': page['_id'] }, { '$set': page }, upsert=False)
+
+    def remove_page(self, page):
+        return self.pages.remove(page['_id'])
+
+    def emit_output(self, action, page, result):
+        storm.emit([action, page['raw_content'], result['n'],
+            result['p'], result])
+
     def process(self, tup):
         event = json.loads(tup.values[0])
         page = event['page']
+        result = handlePage(page)
 
         if event['action'] == 'created':
-            pages.append(handlePage(page))
+            self.add_page(result)
+
         elif event['action'] == 'updated':
-            pages.update_page(handlePage(page))
+            self.update_page(result)
+
         else:
-            pages.remove_page(handlePage(page))
+            self.remove_page(result)
 
-        with open('dump.json', 'w') as f:
-            f.write(json.dumps({'wiki': {'pageCount': pages.count(), 'pages': list(pages.find())}}, sort_keys=False))
+        self.emit_output(event['action'], page, result)
 
+        # with open('dump.json', 'w') as f:
+            # f.write(json.dumps({'wiki': {'pageCount': pages.count(), 'pages': list(pages.find())}}, sort_keys=False))
 
+        # storm.ack(tup)
 
-SplitSentenceBolt().run()
-
-# client = MongoClient('db.101companies.org', 27017)
-# db = client['wiki_production']
-#
-# MONGODB_USER = os.environ['MONGODB_USER']
-# MONGODB_PWD = os.environ['MONGODB_PWD']
-#
-# db.authenticate(MONGODB_USER, MONGODB_PWD)
-#
-# allPages = []
-#
-# with open('dump.json', 'w') as f:
-#     f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': allPages}}, sort_keys=False))
-
-#def url = 'http://101companies.org/endpoint/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/summary'
-#                        def json = getJSON(url)
-#                        if (json != null){
-#                            def sections = json.sections
-#                            if ((sections != null) && (sections.size() > 0) && (sections[0].title == "Headline")){
-#                                props['headline'] = sections[0].content.replaceAll("== Headline ==", "").replaceAll("==Headline==","")
-#                            }
+Wiki2JSONBolt().run()

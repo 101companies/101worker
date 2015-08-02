@@ -4,10 +4,16 @@
         "kafka"
       ],
       "output": [
+        "action",
         "content",
         "namespace",
         "name",
         "metadata"
+      ]
+    },
+    "wikiPredicates": {
+      "input": ["wiki2json"],
+      "output": [
       ]
     }
 }
