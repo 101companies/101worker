@@ -5,7 +5,7 @@ termResourcesDir = ../../services/termResources
 run:
 	$(MAKE) clean
 	cd ${integrateDir} ; $(MAKE) bootstrap; $(MAKE) clean
-	cd ${integrateDir} ; $(MAKE) run BOOKS=Haskell
+	cd ${integrateDir} ; $(MAKE) run BOOKS=Production
 	$(MAKE) deploy
 
 integrate:
