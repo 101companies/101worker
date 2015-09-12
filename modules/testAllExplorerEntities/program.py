@@ -12,7 +12,7 @@ os.environ['TEST_ALL_EXPLORER_ENTITIES'] = '1'
 manage_py = os.path.join(os.environ["worker101dir"], 'services', 'manage.py')
 os.system('python ' + manage_py + ' test explorer.testAllExplorerEntities')
 
-with open('results.json') as infile:
+with open('report.json') as infile:
     data = json.loads(infile.read())
 
 # For debugging, limit high error listings to 100

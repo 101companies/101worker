@@ -1,10 +1,14 @@
 from django.test import Client, TestCase
-from json import loads
 from unittest import skipIf
 from urlparse import urlparse
 
+import collections
 import multiprocessing
 import json
+import Queue
+import sys
+import time
+import uuid
 import os
 
 # discovery provides some module path settings that are needed to import other
@@ -12,38 +16,6 @@ import os
 import discovery
 
 from mediawiki101 import wikifyNamespace
-
-
-# Descriptions to all possible error types
-# These are output as is after each exception listing, so they may contain html
-# code. Newline are repalce with <br>-Tags automatically
-error_descriptions = {
-    'ResourceAlreadyAssignedError':
-        "This errors occurs if a link to an entity is found, and the link was "
-        "already found for an entity higher up in the hierarchy.\n\n"
-        "For Example: The top-level Root-Entity has the URL <code>/</code>, if "
-        "further down a link to another entity is found, with exactly that"
-        " url, it is assumed that the link generation is faulty, instead of "
-        "that one url points to two different entities.",
-    'ResponseStatusNotOkError':
-        "This error occurs if a http response is not served with message "
-        "<code>200 Ok</code>.",
-    'WrongClassifierError':
-        "This error occurs if the link to an entity specifies another expected "
-        "classifier than the entity itself reports.",
-    'WrongNameError':
-        "This error occurs if the link to an entity specifies another expected "
-        "name than the entity itself reports.",
-    'ResourceNotFoundException':
-        "This error occurs if the explorer script somehow deems an url "
-        "invalid, and throws this exception by hand to trigger a "
-        "<code>404 not found</code>.\n\n"
-        "This is fine behaviour for nonsensical URLs. But no page in the "
-        "explorer should produce a link to page that contains this exception.",
-    'ValidationError':
-        "This error is thrown by the explorer intern page validation code, "
-        "that validates each entities output against a schema."
-}
 
 
 class Entity:
@@ -65,220 +37,406 @@ class Entity:
         return resource
 
 
-class Result:
-    def __init__(self):
-        self.error_dict = {}
-        self.number_dict = {}
-        self.total_count = 0
-
-    # Result convert to True if it contains atleast one error
-    # Requires crunch_numbers to be run already
-    def __bool__(self):
-        return self.total_count
-    __nonzero__ = __bool__
-
-    def add_result(self, msg):
-        entity, error_msg, error_type = msg
-        if error_type not in self.error_dict:
-            self.error_dict[error_type] = []
-        self.error_dict[error_type].append({
-            'entity': entity,
-            'error': error_msg,
-        })
-
-    def crunch_numbers(self):
-        for error_type in self.error_dict:
-            count = len(self.error_dict[error_type])
-            self.number_dict[error_type] = count
-            self.total_count += count
+class EntityJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Entity):
+            return obj.__dict__
+        return json.JSONEncoder.default(self, obj)
 
 
-class Checker:
-    def __init__(self):
-        self.root_entities = [Entity("/discovery", "Namespace", "Namespace")]
-        self.namespace_entities = []
-        self.member_entities = []
-        self.folder_entities = []
-        self.file_entities = []
-        self.fragment_entities = []
-
-        self.root_results = Result()
-        self.namespace_results = Result()
-        self.member_results = Result()
-        self.folder_results = Result()
-        self.file_results = Result()
-        self.fragment_results = Result()
-
-        self.number_of_processes_default = 1
-        try:
-            self.number_of_processes = multiprocessing.cpu_count()
-        except NotImplementedError:
-            self.number_of_processes = self.number_of_processes_default
-        self.pool = multiprocessing.Pool(processes=self.number_of_processes)
-
-    def check_all_entities(self):
-        self.check_root_entities()
-        self.check_namespace_entities()
-        self.check_member_entities()
-        self.check_folder_entities()
-        self.check_file_entities()
-        self.check_fragment_entities()
-
-        results = {
-            'root_errors': self.root_results,
-            'namespace_errors': self.namespace_results,
-            'member_errors': self.member_results,
-            'folder_errors': self.folder_results,
-            'file_errors': self.file_results,
-            'fragment_errors': self.fragment_results
+class EntityAnalyzer:
+    default_number_of_processes = 1
+    main_process_sleep_time = 1
+    worker_process_sleep_time = 1
+    unchecked_entities_file = os.path.join(os.environ['worker101dir'],
+                                           'modules', 'testAllExplorerEntities',
+                                           'unchecked_entities.json')
+    entity_errors_file = os.path.join(os.environ['worker101dir'],
+                                      'modules', 'testAllExplorerEntities',
+                                      'entity_errors.json')
+    assigned_resources_file = os.path.join(os.environ['worker101dir'],
+                                           'modules', 'testAllExplorerEntities',
+                                           'assigned_resources.json')
+    classifier_child_fields = collections.defaultdict(
+        lambda: ["fragments"],  # unknown classifiers are treated as fragments
+        {
+            "Namespace": ["members"],
+            "Namespace member": ["folders", "files"],
+            "Folder": ["folders", "files"],
+            "File": ["fragments"],
+            "Fragment": ["fragments"],
         }
-        return results
+    )
 
-    def check_root_entities(self):
-        rep_errs = self.check_entity_parallel(self.root_entities)
-        self.process_result(rep_errs, self.root_results,
-                            self.namespace_entities, 'members')
+    def __init__(self, time_to_run=0):
+        """
+        :param time_to_run: A float giving the time in seconds that should be
+                            spent to incrementally search for errors.
+                            If zero or not present, will perform a full search
+                            for errors regardless of time taken.
+        """
+        self.time_to_run = time_to_run
 
-    def check_namespace_entities(self):
-        rep_errs = self.check_entity_parallel(self.namespace_entities)
-        self.process_result(rep_errs, self.namespace_results,
-                            self.member_entities, 'members')
+        self.assigned_resources = multiprocessing.Manager().list()
+        self.assigned_resources_mutex = multiprocessing.Lock()
 
-    def check_member_entities(self):
-        rep_errs = self.check_entity_parallel(self.member_entities)
-        self.process_result_two(rep_errs, self.member_results,
-                                self.folder_entities, 'folders',
-                                self.file_entities, 'files')
+        self.unchecked_entities = []
+        self.checked_entities = []
 
-    def check_folder_entities(self):
-        while True:
-            rep_errs = self.check_entity_parallel(self.folder_entities)
-            self.folder_entities = []
-            self.process_result_two(rep_errs, self.folder_results,
-                                    self.file_entities, 'files',
-                                    self.folder_entities, 'folders')
-            # Loops until no new "level" of folders is found.
-            # Since backreferences are caught as ResourceAlreadyAssignedErrors
-            # and thus not added to folder_entitites, this will always
-            # terminate.
-            if not self.folder_entities:
-                break
-
-    def check_file_entities(self):
-        rep_errs = self.check_entity_parallel(self.file_entities)
-        self.process_result(rep_errs, self.file_results,
-                            self.fragment_entities, 'fragments')
-
-    def check_fragment_entities(self):
-        while True:
-            rep_errs = self.check_entity_parallel(self.fragment_entities)
-            self.fragment_entities = []
-            self.process_result(rep_errs, self.fragment_results,
-                                self.fragment_entities, 'fragments')
-            if not self.fragment_entities:
-                break
-
-    # Spawns workers to process source with check_entity and
-    # returns the collected results.
-    def check_entity_parallel(self, source):
-        results = [self.pool.apply_async(check_entity, (entity,))
-                   for entity in source]
-        rep_errs = [result.get() for result in results]
-        return rep_errs
-
-    @staticmethod
-    def process_result(rep_errs, results,
-                       child, child_field):
-        for (entity, response, (error_type, error_msg)) in rep_errs:
-            if error_type:
-                results.add_result((entity, error_msg, error_type))
-            elif response:
-                for child_entity in response[child_field]:
-                    child.append(Entity(child_entity['resource'],
-                                        child_entity['classifier'],
-                                        child_entity['name']))
-
-    @staticmethod
-    def process_result_two(rep_errs, results,
-                           child1, child1_field,
-                           child2, child2_field):
-        for (entity, response, (error_type, error_msg)) in rep_errs:
-            if error_type:
-                results.add_result((entity, error_msg, error_type))
-            elif response:
-                for child_entity in response[child1_field]:
-                    child1.append(Entity(child_entity['resource'],
-                                         child_entity['classifier'],
-                                         child_entity['name']))
-                for child_entity in response[child2_field]:
-                    child2.append(Entity(child_entity['resource'],
-                                         child_entity['classifier'],
-                                         child_entity['name']))
-
-
-assigned_resources = multiprocessing.Manager().list()
-assigned_resources_mutex = multiprocessing.Lock()
-# is the mutex really necessary since assigned_resources already is
-# a multiprocessing list?
-
-# for url querying
-client = Client()
-
-
-# Ideally this function would be a method of class Checker. But this is
-# impossible because multiprocessing can't pickle methods.
-def check_entity(entity):
-    already_assigned = False
-    # MUTEX
-    assigned_resources_mutex.acquire()
-    try:
-        if entity.resource in assigned_resources:
-            already_assigned = True
+        # queue keeping track of entities to analyze
+        self.unchecked_entities_queue = multiprocessing.JoinableQueue()
+        if not self.time_to_run:
+            # Don't use any previous results, get everything from scratch.
+            self.entity_errors = {}
+            self.unchecked_entities_queue.put(
+                Entity("/discovery", "Namespace", "Namespace"))
         else:
-            assigned_resources.append(entity.resource)
-    finally:
-        assigned_resources_mutex.release()
-    # MUTEX
-    if already_assigned:
-        return entity, None, ("ResourceAlreadyAssignedError",
-                              "resource url was already assigned to "
-                              "another entity")
+            # Continue from previous invocations.
+            self.read_entity_errors()
+            self.read_unchecked_entities()
+            if self.unchecked_entities:
+                for entity in self.unchecked_entities:
+                    self.unchecked_entities_queue.put(entity)
+                self.unchecked_entities = []
+                self.read_assigned_resources()
+            else:
+                self.unchecked_entities_queue.put(
+                    Entity("/discovery", "Namespace", "Namespace"))
 
-    try:
-        # For some reason this call still produces Tracebacks if we catch
-        # the exception further down, how to supress these?
-        response = client.get(entity.resource,
-                              {'format': 'json',
-                               'validate': 'true'})
+        self.checked_entities_queue = multiprocessing.Queue()
 
-    except Exception as e:
-        return entity, None, (type(e).__name__, str(e))
+        # event that is set to true once time_to_run is over
+        self.should_stop = multiprocessing.Event()
 
-    if response.status_code != 200:
-        return entity, None, ("ResponseStatusNotOkError",
-                              "Did not return status ok (200) but instead ("
-                              + str(response.status_code) + ")")
+        try:
+            number_of_processes = multiprocessing.cpu_count()
+        except NotImplementedError:
+            number_of_processes = EntityAnalyzer.default_number_of_processes
+        self.processes = [multiprocessing.Process(
+                              target=EntityAnalyzer.entity_analyzer_worker,
+                              args=(self.unchecked_entities_queue,
+                                    self.checked_entities_queue,
+                                    self.should_stop,
+                                    self.assigned_resources,
+                                    self.assigned_resources_mutex))
+                          for _ in range(number_of_processes)]
 
-    parsed_response = loads(response.content)
-    parsed_classifier = parsed_response['classifier']
-    parsed_name = parsed_response['name']
-    wikified_name = wikifyNamespace(parsed_name)
+    def read_unchecked_entities(self):
+        """
+        Reads self.unchecked_entities from file.
+        """
+        if not os.path.isfile(EntityAnalyzer.unchecked_entities_file):
+            self.unchecked_entities = []
+        else:
+            with open(EntityAnalyzer.unchecked_entities_file, 'r') as infile:
+                raw_unchecked_entities = json.load(infile)
+                self.unchecked_entities =\
+                    [Entity(e["resource"], e["classifier"], e["name"])
+                     for e in raw_unchecked_entities]
 
-    if wikified_name and wikified_name != 'None':
-        parsed_name = wikified_name
+    def write_unchecked_entities(self):
+        """
+        Writes self.uncheck_entities to file.
+        """
+        with open(EntityAnalyzer.unchecked_entities_file, 'w') as outfile:
+            json.dump(self.unchecked_entities, outfile, cls=EntityJsonEncoder,
+                      indent=4)
 
-    if entity.classifier != parsed_classifier:
-        return entity, None, ("WrongClassifierError",
-                              "Did not have expected classifier '{} but "
-                              "instead '{}'".format(
-                                  entity.classifier,
-                                  parsed_classifier))
-    if entity.name != parsed_name:
-        return entity, None, ("WrongNameError",
-                              "Did not have expected name '{}' but "
-                              "instead '{}'".format(entity.name,
-                                                    parsed_name))
-    return None, parsed_response, (None, None)
+    def read_entity_errors(self):
+        """
+        Reads self.entity_errors from file.
+        """
+        if not os.path.isfile(EntityAnalyzer.entity_errors_file):
+            self.entity_errors = {}
+        else:
+            with open(EntityAnalyzer.entity_errors_file, 'r') as infile:
+                self.entity_errors = json.load(infile)
+
+    def write_entity_errors(self):
+        """
+        Writes self.entity_errors to file.
+        """
+        with open(EntityAnalyzer.entity_errors_file, 'w') as outfile:
+            json.dump(self.entity_errors, outfile, indent=4)
+
+    def update_entity_errors(self):
+        """
+        Uses self.checked_entities to update self.entity_errors.
+        """
+        for entity, time_taken, error in self.checked_entities:
+            if error:
+                error_type, error_msg = error
+                self.entity_errors[entity.resource] = {
+                    "classifier": entity.classifier,
+                    "name": entity.name,
+                    "time_taken": time_taken,
+                    "error": {
+                        "type": error_type,
+                        "msg": error_msg,
+                    },
+                }
+            else:
+                self.entity_errors.pop(entity.resource, None)
+
+    def read_assigned_resources(self):
+        """
+        Reads self.assigned_resources from file.
+        """
+        if os.path.isfile(EntityAnalyzer.assigned_resources_file):
+            with open(EntityAnalyzer.assigned_resources_file, 'r') as infile:
+                raw_assigned_resources = json.load(infile)
+                for assigned_resource in raw_assigned_resources:
+                    self.assigned_resources.append(assigned_resource)
+
+    def write_assigned_resources(self):
+        """
+        Writes self.assigned_resources to file.
+        """
+        with open(EntityAnalyzer.assigned_resources_file, 'w') as outfile:
+            json.dump(self.assigned_resources._getvalue(), outfile, indent=4)
+
+    def run(self):
+        for process in self.processes:
+            process.start()
+
+        if not self.time_to_run:
+            self.unchecked_entities_queue.join()
+        else:
+            time_to_stop = time.time() + self.time_to_run
+            while time.time() < time_to_stop:
+                time.sleep(EntityAnalyzer.main_process_sleep_time)
+
+        self.should_stop.set()
+
+        # queues needs to be emptied in order to join processes.
+        self.deplete_queues()
+
+        for process in self.processes:
+            process.join()
+
+        self.write_unchecked_entities()
+        self.update_entity_errors()
+        self.write_entity_errors()
+        self.write_assigned_resources()
+
+        return self.entity_errors
+
+    def deplete_queues(self):
+        self.unchecked_entities = []
+        try:
+            while True:
+                unchecked_entity = self.unchecked_entities_queue.get(block=True,
+                    timeout=EntityAnalyzer.worker_process_sleep_time)
+                self.unchecked_entities.append(unchecked_entity)
+                self.unchecked_entities_queue.task_done()
+        except Queue.Empty:
+            pass
+
+        self.checked_entities = []
+        try:
+            while True:
+                checked_entity, time_taken, error =\
+                    self.checked_entities_queue.get(block=True,
+                        timeout=EntityAnalyzer.worker_process_sleep_time)
+                self.checked_entities.append((checked_entity, time_taken, error))
+        except Queue.Empty:
+            pass
+
+    @staticmethod  # Method static because else multiprocessing can't pickle it.
+    def entity_analyzer_worker(unchecked_entities_queue,
+                               checked_entities_queue,
+                               should_stop,
+                               assigned_resources,
+                               assigned_resources_mutex):
+        client = Client()
+
+        def query_and_analyze_entity(entity):
+            assigned_resources_mutex.acquire()  # MUTEX ACQUIRE
+            try:
+                if entity.resource in assigned_resources:
+                    # URLs need to be unique for self.entity_errors
+                    entity.resource += " (duplicate-" + str(uuid.uuid1()) + ")"
+                    return entity, None, -1,\
+                           ("ResourceAlreadyAssignedError",
+                            "Resource url was already assigned to another "
+                            "entity.")
+                else:
+                    assigned_resources.append(entity.resource)
+            finally:
+                assigned_resources_mutex.release()  # MUTEX RELEASE
+
+            time_before = time.time()
+            try:
+                # For some reason this call still produces a traceback if we
+                # catch the exception further down, how to suppress these?
+                # Seems like Django logging. Do we want to disable that for the
+                # test? How?
+                response = client.get(entity.resource,
+                                      {'format': 'json', 'validate': 'true'})
+            except Exception as e:
+                time_taken = time.time() - time_before
+                return entity, None, time_taken,\
+                       (type(e).__name__, str(e))
+
+            time_taken = time.time() - time_before
+
+            if response.status_code != 200:
+                return entity, None, time_taken,\
+                       ("ResponseStatusNotOkError",
+                        "Did not return status ok (200) but instead '{}'."
+                        .format(response.status_code))
+
+            parsed_response = json.loads(response.content)
+            parsed_classifier = parsed_response['classifier']
+            parsed_name = parsed_response['name']
+            wikified_name = wikifyNamespace(parsed_name)
+            if wikified_name and wikified_name != 'None':
+                parsed_name = wikified_name
+
+            if entity.classifier != parsed_classifier:
+                return entity, None, time_taken,\
+                       ("WrongClassifierError",
+                        "Did not have expected classifier '{} but instead '{}'."
+                        .format(entity.classifier, parsed_classifier))
+            if entity.name != parsed_name:
+                return entity, None, time_taken,\
+                       ("WrongNameError",
+                        "Did not have expected name '{}' but instead '{}'."
+                        .format(entity.name, parsed_name))
+            return entity, parsed_response, time_taken, None
+
+        while not should_stop.is_set():
+            try:
+                entity_to_check = unchecked_entities_queue.get(
+                    block=True,
+                    timeout=EntityAnalyzer.worker_process_sleep_time)
+            except Queue.Empty:
+                continue
+
+            entity, response, time_taken, error =\
+                query_and_analyze_entity(entity_to_check)
+
+            checked_entities_queue.put((entity, time_taken, error))
+            if not error:
+                for child_field in \
+                        EntityAnalyzer.classifier_child_fields[
+                            entity.classifier]:
+                    for child_entity in response[child_field]:
+                        unchecked_entities_queue.put(
+                            Entity(child_entity['resource'],
+                                   child_entity['classifier'],
+                                   child_entity['name']))
+
+            unchecked_entities_queue.task_done()
+
+
+class ReportBuilder:
+    report_file = os.path.join(os.environ['worker101dir'],
+                               'modules', 'testAllExplorerEntities',
+                               'report.json')
+    classifier_report_fields = collections.defaultdict(
+        # unknown classifiers are treated as fragments
+        lambda: "fragment_errors",
+        {
+            "Namespace": "namespace_errors",
+            "Namespace member": "member_errors",
+            "Folder": "folder_errors",
+            "File": "file_errors",
+            "Fragment": "fragment_errors",
+        }
+    )
+    # Descriptions to all possible error types
+    # These are output as is after each exception listing, so they may contain
+    # html code. Newlines are replaced with <br>-Tags automatically
+    error_descriptions = {
+        'ResourceAlreadyAssignedError':
+            "This errors occurs if a link to an entity is found, and the link "
+            "was already found for an entity higher up in the hierarchy.\n\n"
+            "For Example: The top-level Root-Entity has the URL "
+            "<code>/</code>, if further down a link to another entity is "
+            "found, with exactly that url, it is assumed that the link "
+            "generation is faulty, instead of that one url points to two "
+            "different entities.\n\n"
+            "The URL contains a duplicate annotation, because the analyzer "
+            "needs unique urls.",
+        'ResponseStatusNotOkError':
+            "This error occurs if a http response is not served with message "
+            "<code>200 Ok</code>.",
+        'WrongClassifierError':
+            "This error occurs if the link to an entity specifies another "
+            "expected classifier than the entity itself reports.",
+        'WrongNameError':
+            "This error occurs if the link to an entity specifies another "
+            "expected name than the entity itself reports.",
+        'ResourceNotFoundException':
+            "This error occurs if the explorer script somehow deems an url "
+            "invalid, and throws this exception by hand to trigger a "
+            "<code>404 not found</code>.\n\n"
+            "This is fine behaviour for nonsensical URLs. But no page in the "
+            "explorer should produce a link to page that contains this "
+            "exception.",
+        'ValidationError':
+            "This error is thrown by the explorer intern page validation code, "
+            "that validates each entities output against a schema."
+    }
+
+    def __init__(self):
+        self.report = {}
+
+    def run(self, entity_errors):
+        def default_entry():
+            return {
+                "error_counts": collections.defaultdict(lambda: 0),
+                "error_list": collections.defaultdict(lambda: []),
+                "total_count": 0,
+            }
+
+        self.report = {
+            "error_descriptions": ReportBuilder.error_descriptions,
+            "file_errors": default_entry(),
+            "folder_errors": default_entry(),
+            "fragment_errors": default_entry(),
+            "member_errors": default_entry(),
+            "namespace_errors": default_entry(),
+            "root_errors": default_entry(),
+            "total_count": 0,
+        }
+
+        for resource, d in entity_errors.items():
+            classifier = d["classifier"]
+            name = d["name"]
+            time_taken = d["time_taken"]
+            error_type = d["error"]["type"]
+            error_msg = d["error"]["msg"]
+
+            entity = Entity(resource, classifier, name)
+
+            if resource == "/discovery":
+                errors = self.report["root_errors"]
+            else:
+                errors = self.report[
+                    ReportBuilder.classifier_report_fields[classifier]]
+            errors["total_count"] += 1
+            errors["error_counts"][error_type] += 1
+            errors["error_list"][error_type].append({
+                "entity": entity,
+                "error": error_msg,
+                "time_taken": time_taken,
+            })
+
+            self.report["total_count"] += 1
+
+        self.write_report()
+
+        return self.report
+
+    def write_report(self):
+        """
+        Writes self.report to file.
+        """
+        with open(ReportBuilder.report_file, 'w') as outfile:
+            json.dump(self.report, outfile, cls=EntityJsonEncoder, indent=4,
+                      sort_keys=True)
 
 
 @skipIf("TEST_ALL_EXPLORER_ENTITIES" not in os.environ,
@@ -288,36 +446,13 @@ class AllEntitiesTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        checker = Checker()
-        cls.results = checker.check_all_entities()
+        entity_analyzer = EntityAnalyzer(60)
+        entity_errors = entity_analyzer.run()
 
-        log = {
-            'total_count': 0,
-            'error_descriptions': error_descriptions
-        }
+        report_builder = ReportBuilder()
+        report = report_builder.run(entity_errors)
 
-        def add_result(result_name):
-            result = cls.results[result_name]
-            result.crunch_numbers()
-            log[result_name] = {
-                'total_count': result.total_count,
-                'error_counts': result.number_dict,
-                'error_list': result.error_dict,
-            }
-            log['total_count'] += result.total_count
-
-        add_result('root_errors')
-        add_result('namespace_errors')
-        add_result('member_errors')
-        add_result('folder_errors')
-        add_result('file_errors')
-        add_result('fragment_errors')
-
-        outpath = os.path.join(os.environ['worker101dir'],
-                               'modules', 'testAllExplorerEntities',
-                               'results.json')
-        with open(outpath, 'w') as outfile:
-            json.dump(log, outfile, cls=LogEncoder, sort_keys=True, indent=4)
+        cls.results = report
 
     @classmethod
     def tearDownClass(cls):
@@ -327,35 +462,25 @@ class AllEntitiesTest(TestCase):
     # errors happened
 
     def test_root(self):
-        if AllEntitiesTest.results['root_errors']:
+        if AllEntitiesTest.results['root_errors']['total_count']:
             self.fail()
 
     def test_namespaces(self):
-        if AllEntitiesTest.results['namespace_errors']:
+        if AllEntitiesTest.results['namespace_errors']['total_count']:
             self.fail()
 
     def test_members(self):
-        if AllEntitiesTest.results['member_errors']:
+        if AllEntitiesTest.results['member_errors']['total_count']:
             self.fail()
 
     def test_folders(self):
-        if AllEntitiesTest.results['folder_errors']:
+        if AllEntitiesTest.results['folder_errors']['total_count']:
             self.fail()
 
     def test_files(self):
-        if AllEntitiesTest.results['file_errors']:
+        if AllEntitiesTest.results['file_errors']['total_count']:
             self.fail()
 
     def test_fragments(self):
-        if AllEntitiesTest.results['fragment_errors']:
+        if AllEntitiesTest.results['fragment_errors']['total_count']:
             self.fail()
-
-
-# Custom JSON encoder
-class LogEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Entity):
-            return obj.__dict__
-        if isinstance(obj, Exception):
-            return str(obj)
-        return json.JSONEncoder.default(self, obj)
