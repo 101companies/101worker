@@ -17,6 +17,13 @@ import discovery
 
 from mediawiki101 import wikifyNamespace
 
+module_dir = os.path.join(os.environ['worker101dir'],
+                          'modules', 'testAllExplorerEntities')
+# Have to do some PATH manipulation to load config because it's in the module
+# directory and not in the test directory. http://stackoverflow.com/a/4383597
+sys.path.insert(0, module_dir)
+import config
+
 
 class Entity:
     def __init__(self, resource, classifier, name):
@@ -446,7 +453,7 @@ class AllEntitiesTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        entity_analyzer = EntityAnalyzer(60)
+        entity_analyzer = EntityAnalyzer(config.incremental_update_time)
         entity_errors = entity_analyzer.run()
 
         report_builder = ReportBuilder()
