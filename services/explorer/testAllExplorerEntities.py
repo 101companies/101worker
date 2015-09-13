@@ -75,14 +75,18 @@ class EntityAnalyzer:
         }
     )
 
-    def __init__(self, time_to_run=0):
+    def __init__(self, time_to_run=0, max_out_degree=0):
         """
-        :param time_to_run: A float giving the time in seconds that should be
-                            spent to incrementally search for errors.
-                            If zero or not present, will perform a full search
-                            for errors regardless of time taken.
+        :param time_to_run:
+            A float giving the time in seconds that should be spent to
+            incrementally search for errors. If zero or not present, will
+            perform a full search for errors regardless of time taken.
+        :param max_out_degree:
+            An int giving the number of childs per entity that are added to the
+            recursion. If zero or not present, will add all childs.
         """
         self.time_to_run = time_to_run
+        self.max_out_degree = max_out_degree
 
         self.assigned_resources = multiprocessing.Manager().list()
         self.assigned_resources_mutex = multiprocessing.Lock()
@@ -125,7 +129,8 @@ class EntityAnalyzer:
                                     self.checked_entities_queue,
                                     self.should_stop,
                                     self.assigned_resources,
-                                    self.assigned_resources_mutex))
+                                    self.assigned_resources_mutex,
+                                    self.max_out_degree))
                           for _ in range(number_of_processes)]
 
     def read_unchecked_entities(self):
@@ -254,7 +259,8 @@ class EntityAnalyzer:
                                checked_entities_queue,
                                should_stop,
                                assigned_resources,
-                               assigned_resources_mutex):
+                               assigned_resources_mutex,
+                               max_out_degree):
         client = Client()
 
         def query_and_analyze_entity(entity):
@@ -328,7 +334,10 @@ class EntityAnalyzer:
                 for child_field in \
                         EntityAnalyzer.classifier_child_fields[
                             entity.classifier]:
-                    for child_entity in response[child_field]:
+                    for counter, child_entity in enumerate(
+                            response[child_field]):
+                        if counter == max_out_degree and max_out_degree != 0:
+                            break
                         unchecked_entities_queue.put(
                             Entity(child_entity['resource'],
                                    child_entity['classifier'],
@@ -453,7 +462,8 @@ class AllEntitiesTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        entity_analyzer = EntityAnalyzer(config.incremental_update_time)
+        entity_analyzer = EntityAnalyzer(config.incremental_update_time,
+                                         config.max_out_degree)
         entity_errors = entity_analyzer.run()
 
         report_builder = ReportBuilder()
