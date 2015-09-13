@@ -195,6 +195,12 @@
         font-family: monospace;
       }
 
+      #errors .time_taken {
+        float: right;
+        margin-left: 10px;
+        font-family: monospace;
+      }
+
       #errors pre {
         clear: both;
         margin: 0;
@@ -347,6 +353,13 @@
               <li>
                 <span class="entity_name">{{ item.entity.name }}</span>
                 <span class="entity_resource">{{ item.entity.resource }}</span>
+                <span class="time_taken">
+                  {% if item.time_taken == -1 %}
+                    not available
+                  {% else %}
+                    {{ "%0.0f" % (item.time_taken * 1000) }}ms
+                  {% endif %}
+                </span>
                 <pre>{{ item.error }}</pre>
               </li>
             {% endmacro %}
