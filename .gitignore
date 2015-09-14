@@ -210,6 +210,11 @@ dump.json
 /modules/summarizeModuleDescriptions/.idea/testrunner.xml
 /modules/summarizeModuleDescriptions/.idea/vcs.xml
 /modules/summarizeModuleDescriptions/.idea/workspace.xml
+/modules/testAllExplorerEntities/results.json
+/modules/testAllExplorerEntities/assigned_resources.json
+/modules/testAllExplorerEntities/entity_errors.json
+/modules/testAllExplorerEntities/report.json
+/modules/testAllExplorerEntities/unchecked_entities.json
 /modules/zip/.idea/codeStyleSettings.xml
 /modules/zip/.idea/encodings.xml
 /modules/zip/.idea/misc.xml
