@@ -19,8 +19,8 @@ class Entity:
         self.type = data['@type']
 
         self.env = Environment(loader=FileSystemLoader('tmpl'))
-        self.connection = Connection('http://triples.101companies.org/openrdf-sesame/')
-        self.connection.use_repository('Testing_2')
+        self.connection = Connection('http://triples.101companies.org:8080/openrdf-sesame/')
+        self.connection.use_repository('sandbox')
 
         self.connection.addnamespace('onto', 'http://101companies.org/ontology#')
         self.connection.addnamespace('res', 'http://101companies.org/resources#')
@@ -40,18 +40,31 @@ class Entity:
             res2 = self.connection.query(query)
             for r in res2:
                 #print ">># of relationships declared: %s" % r['count']['value']
-                if int(r['count']['value']) > 0:
+                if int(r['count']['value']) >= 0:
                     #print r
                     #print r['count']['value']
                     v = int(r['count']['value'])
                     if v < c:
                         print "ERROR"
 
+    def checkRelationsExistance(self):
+        print "Existence check"
+        template = self.env.get_template('existenceCheck')
+        if self.properties is None:
+            return
+
+        for prop in self.properties:
+            p = prop['property']
+            query = template.render(ontoClass=self.id, relationship=p)
+            res1 = self.connection.query(query)
+            for r in res1:
+                print ">>", r
+
     @staticmethod
     def checkHirerarchy():
         env = Environment(loader=FileSystemLoader('tmpl'))
-        connection = Connection('http://triples.101companies.org/openrdf-sesame/')
-        connection.use_repository('Testing_2')
+        connection = Connection('http://triples.101companies.org:8080/openrdf-sesame/')
+        connection.use_repository('sandbox')
 
         connection.addnamespace('onto', 'http://101companies.org/ontology#')
         connection.addnamespace('res', 'http://101companies.org/resources#')
