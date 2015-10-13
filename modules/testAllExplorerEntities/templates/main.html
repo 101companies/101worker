@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>testAllExplorerEntities</title>
+    <style type="text/css">
+      /* <![CDATA[ */
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        margin: 0;
+        padding: 20px;
+        font: 30pt monospace;
+        font-weight: bold;
+        color: white;
+        background: black;
+      }
+
+      /* === Overview ======================================================= */
+
+      #overview {
+        margin: 10px;
+        padding: 0;
+        background: white;
+        border: 1px solid black;
+        position: fixed;
+        top: 0;
+        right: 0;
+        font-family: sans-serif;
+        width: 320px;
+      }
+
+      #overview h2 {
+        margin: 0;
+        padding: 10px;
+        font: 20pt monospace;
+        font-weight: bold;
+        color: white;
+        background: black;
+      }
+
+      #overview h2 a {
+        margin: 0;
+        padding: 0;
+        color: white;
+      }
+
+      #overview #total_errors {
+        position: absolute;
+        top: 17px;
+        right: 10px;
+        color: white;
+        font: 10pt monospace;
+      }
+
+      #overview div.control {
+        /* show/hide all buttons */
+        margin: 10px;
+        padding: 0;
+        cursor: pointer;
+        float:left;
+        text-decoration: underline;
+        font: 9pt monospace;
+      }
+
+      #overview ul {
+        clear: both;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      #overview li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      #overview a {
+        margin: 5px;
+        padding: 5px;
+        text-decoration: none;
+        display: block;
+      }
+
+      #overview .passed > a {
+        color: #050;
+        background: #5A5;
+        border: 2px solid #585;
+      }
+
+      #overview .failed > a {
+        color: #800;
+        background: #F55;
+        border: 2px solid #A55;
+      }
+
+      #overview li li a {
+        padding-left: 25px;
+        border: none;
+        color: black;
+        background: white;
+        font-family: monospace;
+        text-decoration: underline;
+      }
+
+      #overview .count {
+        position: absolute;
+        right: 12px;
+      }
+
+      /* === Errors ========================================================= */
+
+      #errors {
+        padding: 10px;
+        padding-right: 340px; /* make space for overview */
+      }
+
+      #errors h2 {
+        margin: 40px -10px 10px -10px;
+        padding: 20px;
+        font: 20pt sans-serif;
+      }
+
+      #errors h2.passed {
+        color: #050;
+        background: #5A5;
+      }
+
+      #errors h2.failed {
+        color: #800;
+        background: #F55;
+      }
+
+      #errors h2 a:nth-child(2) {
+        /* link to top */
+        margin-left: 5px;
+        color: inherit;
+        font: 10pt monospace;
+      }
+
+      #errors .none {
+        font-family: monospace;
+      }
+
+      #errors h3 {
+        margin: 0;
+        margin-top: 20px;
+        padding: 10px;
+        font: 12pt monospace;
+        color: white;
+        background: black;
+      }
+
+      #errors .desc {
+        border: 1px solid black;
+        border-top: none;
+        padding: 10px;
+        font-family: sans-serif;
+      }
+
+      #errors ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+      }
+
+      #errors li {
+        margin: 0;
+        padding: 10px;
+        list-style: none;
+        border-bottom: 1px solid black;
+      }
+
+      #errors li.control {
+        /* show/hide similar buttons */
+        cursor: pointer;
+        color: #08C;
+        font: 12pt sans-serif;
+      }
+
+      #errors .entity_name {
+        margin-left: 10px;
+        font: 12pt serif;
+        font-weight: bold;
+      }
+
+      #errors .entity_resource {
+        margin-left: 10px;
+        font-family: monospace;
+      }
+
+      #errors .time_taken {
+        float: right;
+        margin-left: 10px;
+        font-family: monospace;
+      }
+
+      #errors pre {
+        clear: both;
+        margin: 0;
+        margin-top: 5px;
+        padding: 10px;
+        background: #EEE;
+      }
+      /* ]]> */
+    </style>
+    <script type="text/javascript">
+      // <![CDATA[
+      function hide_similar_errors(ul) {
+        ul.style.display = "none";
+        ul.show_btn.style.display = "block";
+      }
+
+      function show_similar_errors(ul) {
+        ul.style.display = "block";
+        ul.show_btn.style.display = "none";
+      }
+
+      var uls = null;
+
+      window.onload = function() {
+        var errors = document.getElementById("errors");
+        uls = errors.getElementsByClassName("similar_errors");
+
+        for (var i = 0; i != uls.length; ++i) {
+          var ul = uls[i];
+          var numChilds = ul.children.length;
+          if (numChilds === 0)
+            continue;
+
+          // create buttons
+          ul.show_btn = document.createElement("li");
+          ul.show_btn.className = "control";
+          ul.show_btn.textContent = "show " + numChilds + " similar errors";
+          ul.show_btn.ul = ul;
+          ul.show_btn.onclick = function() {
+            show_similar_errors(this.ul);
+          };
+
+          ul.hide_btn1 = document.createElement("li");
+          ul.hide_btn1.className = "control";
+          ul.hide_btn1.textContent = "hide " + numChilds + " similar errors";
+          ul.hide_btn1.ul = ul;
+          ul.hide_btn1.onclick = function() {
+            hide_similar_errors(this.ul);
+          };
+
+          ul.hide_btn2 = ul.hide_btn1.cloneNode(true);
+          ul.hide_btn2.ul = ul;
+          ul.hide_btn2.onclick = function() {
+            hide_similar_errors(this.ul);
+          };
+
+          // insert buttons into document
+          ul.previousElementSibling.appendChild(ul.show_btn);
+            // double previous sibling because of text node inbetween uls
+          ul.insertBefore(ul.hide_btn1, ul.firstChild);
+          ul.appendChild(ul.hide_btn2);
+
+          // hide all similar errors initially
+          hide_similar_errors(ul);
+        }
+
+        // create buttons to hide/show everything
+        var show_all_btn = document.createElement("div");
+        show_all_btn.className = "control";
+        show_all_btn.textContent = "show all similar";
+        show_all_btn.onclick = function() {
+          for (var i = 0; i != uls.length; ++i)
+            if (uls[i].children.length != 0)
+              show_similar_errors(uls[i]);
+        };
+
+        var hide_all_btn = document.createElement("div");
+        hide_all_btn.className = "control";
+        hide_all_btn.textContent = "hide all similar";
+        hide_all_btn.onclick = function() {
+          for (var i = 0; i != uls.length; ++i)
+            if (uls[i].children.length != 0)
+              hide_similar_errors(uls[i]);
+        };
+
+        // insert buttons into document
+        var overview = document.getElementById("overview");
+        var total_errors = document.getElementById("total_errors");
+        overview.insertBefore(hide_all_btn, total_errors.nextSibling);
+        overview.insertBefore(show_all_btn, total_errors.nextSibling);
+      };
+      // ]]>
+    </script>
+  </head>
+  <body>
+    <h1>testAllExplorerEntities</h1>
+
+    <div id="overview">
+      <h2><a name="overview" href="#top">Overview</a></h2>
+
+      <div id="total_errors">
+        Total Errors: {{ total_count }}
+      </div>
+
+      <ul>
+        {% macro error_counts(title, anchor, errors) %}
+          <li class="{% if errors.total_count == 0 %}passed{% else %}failed{% endif %}">
+            <a href="#{{ anchor }}">
+              {{ title }} Errors
+              <span class="count">{{  errors.total_count }}</span>
+            </a>
+            <ul>
+              {% for error, count in errors.error_counts.iteritems() %}
+                <li>
+                  <a href="#{{ anchor }}_{{ error }}">
+                    {{ error }}
+                    <span class="count">{{ count }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endmacro %}
+
+        {{ error_counts("Root", "root", root_errors) }}
+        {{ error_counts("Namespace", "namespace", namespace_errors) }}
+        {{ error_counts("Member", "member", member_errors) }}
+        {{ error_counts("Folder", "folder", folder_errors) }}
+        {{ error_counts("File", "file", file_errors) }}
+        {{ error_counts("Fragment", "fragment", fragment_errors) }}
+      </ul>
+    </div>
+
+    <div id="errors">
+      {% macro error_listing(title, anchor, errors) %}
+        <h2 class="{% if not errors.error_list %}passed{% else %}failed{% endif %}">
+          <a name="{{ anchor }}">{{ title }} Errors</a> <a href="#top">top</a>
+        </h2>
+        {% if not errors.error_list %}
+          <div class="none">no errors</div>
+        {% else %}
+          {% for error, list in errors.error_list.iteritems() %}
+            <h3><a name="{{ anchor }}_{{ error }}">{{ error }}</a></h3>
+            {% if error in error_descriptions %}
+              <div class="desc">
+                {{ error_descriptions[error]|replace("\n", "\n<br/>") }}
+              </div>
+            {% endif %}
+            {% macro error_entry(item) %}
+              <li>
+                <span class="entity_name">{{ item.entity.name }}</span>
+                <span class="entity_resource">{{ item.entity.resource }}</span>
+                <span class="time_taken">
+                  {% if item.time_taken == -1 %}
+                    not available
+                  {% else %}
+                    {{ "%0.0f" % (item.time_taken * 1000) }}ms
+                  {% endif %}
+                </span>
+                <pre>{{ item.error }}</pre>
+              </li>
+            {% endmacro %}
+            <ul>
+              {{ error_entry(list[0]) }}
+            </ul>
+            <ul class="similar_errors">
+              {% for item in list %}
+                {% if loop.index != 1 %}
+                  {{ error_entry(item) }}
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endfor %}
+        {% endif %}
+      {% endmacro %}
+
+      {{ error_listing('Root', 'root', root_errors) }}
+      {{ error_listing('Namespace', 'namespace', namespace_errors) }}
+      {{ error_listing('Member', 'member', member_errors) }}
+      {{ error_listing('Folder', 'folder', folder_errors) }}
+      {{ error_listing('File', 'file', file_errors) }}
+      {{ error_listing('Fragment', 'fragment', fragment_errors) }}
+    </div>
+  </body>
+</html>

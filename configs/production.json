@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [
     "pull101repo",
     "pull",
@@ -30,3 +31,38 @@
     "integrate",
     "onto2ttl"
 ]
+=======
+[
+    "pull101repo",
+    "pull",
+    "pullLibraries",
+    "gatherGeshi",
+    "rules101meta",
+    "matches101meta",
+    "metrics101meta",
+    "validate101meta",
+    "extract101meta",
+    "fragmentMetrics101meta",
+    "refineTokens",
+    "predicates101meta",
+    "fragments101meta",
+    "summary101meta",
+    "wiki2json",
+    "themesExtractor",
+    "languageExtractor",
+    "vocabulary",
+    "wiki2tagclouds",
+    "moretagclouds",
+    "summarizeModuleDescriptions",
+    "members",
+    "resolve101meta",
+    "index101meta",
+    "repo2charts",
+    "parseMegaL",
+    "webDeployMegaModels",
+    "validateModuleDescriptions",
+    "integrate",
+    "onto2ttl",
+    "testAllExplorerEntities"
+]
+>>>>>>> 2b019eccaccd22e5d5c8e351cc8fa7e7942274b2
