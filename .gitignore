@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 *.idea
 *.*~
 modules/linked_data/demos.iml
@@ -226,8 +225,6 @@ dump.json
 /services/.idea/vagrant.xml
 *.bak
 *.pyc
-
-
 /modules/validate/subtyping_errors.json
 /libraries/mediawiki/.goutputstream-KX73TW
 =======
@@ -464,9 +461,6 @@ dump.json
 /services/.idea/vagrant.xml
 *.bak
 *.pyc
-
-
 /modules/validate/subtyping_errors.json
 /libraries/mediawiki/.goutputstream-KX73TW
->>>>>>> 2b019eccaccd22e5d5c8e351cc8fa7e7942274b2
 .idea
