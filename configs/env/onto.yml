@@ -1,0 +1,58 @@
+# Production values for enviroment variable constants.
+# Even though there's comments in this file, please see the README.md for
+# more details.
+
+# Directories
+# These MUST end with a slash so that they can be disambiguated from files,
+# but the resulting environment variable WILL NOT have a trailing slash!
+results101dir          : $output101dir/101results/
+web101dir              : $output101dir/101web/
+temps101dir            : $output101dir/101temps/
+
+repo101dir             : $results101dir/101repo/
+gitdeps101dir          : $results101dir/gitdeps/
+targets101dir          : $web101dir/data/resources/
+dumps101dir            : $web101dir/data/dumps/
+views101dir            : $web101dir/data/views/
+gatheredGeshi101dir    : $results101dir/geshi/
+themes101dir           : $targets101dir/themes/
+ontoDir                : $web101dir/data/onto/
+
+modules101dir          : $worker101dir/modules/
+predicates101dir       : $worker101dir/predicates/
+extractor101dir        : $worker101dir/extractors/
+validator101dir        : $worker101dir/validators/
+
+# Files
+# These MUST NOT end with a slash, otherwise they are mistaken for directories.
+config101              : $worker101dir/configs/production.json
+config101schema        : $worker101dir/schemas/config.schema.json
+module101schema        : $worker101dir/schemas/module.schema.json
+rules101dump           : $dumps101dir/rules.json
+matches101dump         : $dumps101dir/matches.json
+predicates101dump      : $dumps101dir/predicates.json
+fragments101dump       : $dumps101dir/fragments.json
+geshi101dump           : $dumps101dir/geshi.json
+validator101dump       : $dumps101dir/validator.json
+extractor101dump       : $dumps101dir/extractor.json
+metrics101dump         : $dumps101dir/metrics.json
+fragmentMetrics101dump : $dumps101dir/fragments.metrics.json
+summary101dump         : $dumps101dir/summary.json
+suffixes101dump        : $dumps101dir/suffixes.json
+imports101dump         : $dumps101dir/imports.json
+resolution101dump      : $dumps101dir/resolution.json
+wiki101dump            : $dumps101dir/wiki.json
+pullRepo101dump        : $dumps101dir/PullRepo.json
+moduleSummary101dump   : $dumps101dir/ModuleSummaryDump.json
+moduleSummary101temp   : $dumps101dir/tempModuleSummaryDump.json
+predicates101deps      : $modules101dir/predicates101meta/module.json
+
+# URLs
+# These must start with a protocol. URLs with the file:// are treated as files
+# or directories, so the trailing slash thing also counts.
+repo101url             : https://github.com/101companies/101repo
+gitdeps101url          : http://101companies.org/pullRepo.json
+wiki101url             : http://101companies.org/wiki/
+explorer101url         : http://101companies.org/resources/
+endpoint101url         : http://101companies.org/endpoint/
+data101url             : http://data.101companies.org/
