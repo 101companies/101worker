@@ -34,7 +34,7 @@ def isResource(description): return (not 'isA' in description) and (not descript
 # Issue aus der Liste machen um die Liste von Namespaces zu diskutieren
 def shouldBeSkipped(description): return description.get('p', '') in ['Dotnet', 'Information', 'Module',
                                                                       '101companies', 'Namespace', 'Issue', 'Java',
-                                                                      'Property', '101', 'Category' ]
+                                                                      'Property', '101', 'Category', 'Service' ]
 
 
 def main():
