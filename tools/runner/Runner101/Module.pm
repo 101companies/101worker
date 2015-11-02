@@ -9,7 +9,16 @@ use Class::Tiny qw(index name dir log environment dependencies
                    command wantdiff metadependencies metaobtained);
 
 
-our @PREFIX = qw(timeout -s KILL 1h);
+our @PREFIX;
+
+if (`which timeout` =~ /\S/)
+{
+    @PREFIX = qw(timeout -s KILL 1h);
+}
+else
+{
+    warn "timeout command not available, hung modules will not be killed after an hour\n";
+}
 
 
 sub BUILD
