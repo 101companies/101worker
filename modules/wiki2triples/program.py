@@ -39,8 +39,8 @@ def shouldBeSkipped(description): return description.get('p', '') in ['Dotnet', 
 
 def main():
     # Building the model defined in the json based language
-    for modelFile in filter(lambda x: x.endswith('.json'), os.listdir('./../validate/models')):
-        ConceptModel(json.load(open(os.path.join('./../validate/models', modelFile))))
+    for modelFile in filter(lambda x: x.endswith('.json'), os.listdir('./../onto2ttl/models')):
+        ConceptModel(json.load(open(os.path.join('./../onto2ttl/models', modelFile))))
 
     # Creating the graph
     graph = rdflib.Graph()
