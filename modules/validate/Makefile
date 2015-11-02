@@ -5,7 +5,6 @@ all:
 	make run
 
 run:
-	cp -r models ${output}
 	cp disjointness.txt ${output}
 	cp disjointness.rdf ${output}
 	python pysesame.py
