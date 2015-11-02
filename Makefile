@@ -1,6 +1,7 @@
 setup:
 	@echo Setting up 101worker - installation of dependencies requires sudo
-	./install -y
+	sudo ./install
+	./install -b
 	./test
 
 
