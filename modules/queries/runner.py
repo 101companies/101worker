@@ -51,9 +51,11 @@ def process(file_names, prefixes):
                     if ns in x:
                         x = x.replace(ns, prefixes[ns]+':')
                 return x
-
-            output = template.render(data=res, prefixy=lambda x: prefixy(x), unqualify=lambda x: unqualify(x), escape=lambda x: escape(x))
-            #print output
+            try:		
+            	output = template.render(data=res, prefixy=lambda x: prefixy(x), unqualify=lambda x: unqualify(x), escape=lambda x: escape(x))
+            except:
+	    	output = ""
+	    #print output
 
             with open(os.path.join(os.path.dirname(__file__), 'output', file_to_save.replace('.tmpl', '.txt')), "w") as output_file:
                 output_file.write(output)
@@ -63,7 +65,7 @@ def process(file_names, prefixes):
 if __name__=='__main__':
 
     env = Environment(loader=FileSystemLoader('templates'))
-    connection = Connection('http://141.26.71.163:8080/openrdf-sesame/')
+    connection = Connection('http://triples.101companies.org:8080/openrdf-sesame/')
     connection.use_repository('sandbox')
 
     with open('../onto2ttl/config.json') as json_data:
@@ -71,7 +73,7 @@ if __name__=='__main__':
         for x in m['@context']:
             connection.addnamespace(x, m['@context'][x])
 
-    req = urllib2.Request('http://141.26.71.163:8080/openrdf-sesame/repositories/sandbox/namespaces')
+    req = urllib2.Request('http://triples.101companies.org:8080/openrdf-workbench/repositories/sandbox/namespaces')
     req.add_header('Accept', 'application/sparql-results+json')
     req.add_header('Content-Type', 'application/x-www-form-urlencoded')
     sock = urllib2.urlopen(req)
