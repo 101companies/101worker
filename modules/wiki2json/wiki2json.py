@@ -45,13 +45,12 @@ def handle_page_name(name, props):
 
 
 client = MongoClient('localhost', 27017)
-db = client['wiki_development']
+db = client['wiki_production']
 
-# print os.environ
-# MONGODB_USER = os.environ['MONGODB_USER']
-# MONGODB_PWD = os.environ['MONGODB_PWD']
+MONGODB_USER = os.environ['MONGODB_USER']
+MONGODB_PWD = os.environ['MONGODB_PWD']
 
-# db.authenticate(MONGODB_USER, MONGODB_PWD)
+db.authenticate(MONGODB_USER, MONGODB_PWD)
 
 allPages = []
 for p in db.pages.find():
