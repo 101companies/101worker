@@ -62,6 +62,12 @@ report:
 full-reset:
 	rm -rf ../101web ../101logs ../101temps ../101results ../101diffs
 
+init:
+	mkdir ../101web
+	mkdir ../101logs
+	mkdir ../101temps
+	mkdir ../101results
+	mkdir ../101diffs
 
 download:
 	cd modules/zip; make download-and-extract

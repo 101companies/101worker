@@ -1,3 +1,5 @@
+include ../Makefile.vars
+
 run:
 	perl pull101repo
 

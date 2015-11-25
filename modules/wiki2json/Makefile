@@ -1,11 +1,8 @@
 include ../Makefile.vars
-output = ${dumpsDir}/wiki.json
+output = ${dumps101dir}/wiki.json
 
 run:
 	python wiki2json.py
-	#cd src
-	#mvn clean compile package
-	#@java -classpath target/jsonExtractor-1.0-SNAPSHOT-jar-with-dependencies.jar Main
 	cp dump.json ${output}
 
 clean:

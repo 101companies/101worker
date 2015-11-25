@@ -1,3 +1,11 @@
+include ../Makefile.vars
+repo = ${resultsdir}/101repo
+orig = ${repo}/technologies/geshi
+result = ${resultsdir}/geshi/src/geshi
+
 run:
-	@cp -r "$$repo101dir/technologies/geshi" "$$results101dir"
-	@python program.py "$$repo101dir" "$$gatheredGeshi101dir/src/geshi"
+	@cp -r ${orig} ${resultsdir}
+	@python program.py ${repo} ${result}
+
+clean:
+	@#no-op

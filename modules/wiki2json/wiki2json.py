@@ -44,13 +44,14 @@ def handle_page_name(name, props):
     return props
 
 
-client = MongoClient('db.101companies.org', 27017)
-db = client['wiki_production']
+client = MongoClient('localhost', 27017)
+db = client['wiki_development']
 
-MONGODB_USER = os.environ['MONGODB_USER']
-MONGODB_PWD = os.environ['MONGODB_PWD']
+# print os.environ
+# MONGODB_USER = os.environ['MONGODB_USER']
+# MONGODB_PWD = os.environ['MONGODB_PWD']
 
-db.authenticate(MONGODB_USER, MONGODB_PWD)
+# db.authenticate(MONGODB_USER, MONGODB_PWD)
 
 allPages = []
 for p in db.pages.find():
@@ -81,12 +82,4 @@ for p in db.pages.find():
     allPages.append(res)
 
 with open('dump.json', 'w') as f:
-    f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': allPages}}, sort_keys=False))
-
-#def url = 'http://101companies.org/endpoint/' + java.net.URLEncoder.encode(obj.label.replaceAll(' ', '_')) + '/summary'
-#                        def json = getJSON(url)
-#                        if (json != null){
-#                            def sections = json.sections
-#                            if ((sections != null) && (sections.size() > 0) && (sections[0].title == "Headline")){
-#                                props['headline'] = sections[0].content.replaceAll("== Headline ==", "").replaceAll("==Headline==","")
-#                            }
+    f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': allPages}}, sort_keys=True, indent=4))
