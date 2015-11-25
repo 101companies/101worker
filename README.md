@@ -11,7 +11,7 @@ Cotains extractors for the fact extraction in sources from different language.
 
 ## validators
 
-Cotains validators for the validation if a file is really of the suggested language. 
+Cotains validators for the validation if a file is really of the suggested language.
 
 ## predicates
 
@@ -102,10 +102,15 @@ To get all output to your terminal (which you probably don't, because some modul
 
 ## Run Only Select Module
 
-If you only want to run a single module out of a configuration, you can use the `RUNONLY` environment variable and set it to the name of the module you want to run.
+This was made easier on this development branch, not all modules will work
+but basically running `make` inside the module folder should do it.
 
-For example, to run only the [integrate module](modules/integrate) of the production configuration, you'd use `RUNONLY=integrate make production.debug`.
+If you got access to the worker production machine, modules can be run with
+`cap staging worker:run module=[module_name]`
 
+As this is very common for wiki2json, this can be simplified by running
+`cap staging worker:run_wiki2json`. This will also pull a dump.json onto
+your local machine.
 
 ## Run Environment With Different Module Configuration
 
