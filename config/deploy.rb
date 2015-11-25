@@ -12,11 +12,34 @@ set :deploy_to, '/home/ubuntu/101worker'
 
 task :init_config do
   on roles(:app) do
-    execute "some_command"
+    execute "cd '#{release_path}'; make init"
   end
 end
 
 after "deploy", :init_config
+
+namespace :worker do
+
+  desc 'runs a module'
+  task :run do
+    on roles(:app) do
+      execute("cd '#{release_path}/modules/#{ENV['module']}'; make")
+    end
+  end
+
+  desc 'pull a wiki dump local'
+  task :pull_wiki_dump do
+    system("scp ubuntu@101companies.org:/#{release_path}/modules/wiki2json/dump.json .")
+  end
+
+  desc 'run wiki2json and download file'
+  task :run_wiki2json do
+    ENV['module'] = 'wiki2json'
+    invoke 'worker:run'
+    invoke 'worker:pull_wiki_dump'
+  end
+
+end
 
 # Default value for :scm is :git
 # set :scm, :git
