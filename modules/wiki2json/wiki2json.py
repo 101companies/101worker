@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from pymongo import MongoClient
 import json
 import os
-
-camelize = lambda words: ''.join(words[0].lower() + words[1:])
-
+from inflection import camelize
 
 def extract_properties(internal_links):
     links = {}
@@ -33,7 +30,7 @@ def extract_properties(internal_links):
 def handle_page_name(name, props):
     if name.startswith('http'):
         return name
-    # print name
+
     n = name.split(':')
     if len(n) == 1:
         props['p'] = None
@@ -43,42 +40,40 @@ def handle_page_name(name, props):
         props['n'] = n[1]
     return props
 
+def main():
 
-client = MongoClient('localhost', 27017)
-db = client['wiki_production']
+    with open(os.environ['dumps101dir'] + '/pages.json') as f:
+        allPages = json.load(f)['pages']
 
-MONGODB_USER = os.environ['MONGODB_USER']
-MONGODB_PWD = os.environ['MONGODB_PWD']
+    for p in allPages:
+        if not p.has_key('page_title_namespace'):
+            continue
+        if p.has_key('headline'):
+            res = {'headline': p['headline']}
+        else:
+            res = {'headline': 'n/a'}
+        handle_page_name(p['page_title_namespace'], res)
 
-db.authenticate(MONGODB_USER, MONGODB_PWD)
+        if 'used_links' in p:
+            res['internal_links'] = p['used_links']
 
-allPages = []
-for p in db.pages.find():
-    if not p.has_key('page_title_namespace'):
-        continue
-    if p.has_key('headline'):
-        res = {'headline': p['headline']}
-    else:
-        res = {'headline': 'n/a'}
-    handle_page_name(p['page_title_namespace'], res)
+            properties = extract_properties(res['internal_links'])
+            for k, v in properties.items():
+                res[k] = v
+        else:
+            res['internal_links'] = {}
 
-    if 'used_links' in p:
-        res['internal_links'] = p['used_links']
+        if 'subresources' in p:
+            res['subresources'] = {}
+            for sr in p['subresources']:
+                for key, value in sr.iteritems():
+                    res['subresources'][key] = extract_properties(value)
+                    res['subresources'][key]['internal_links'] = value
 
-        properties = extract_properties(res['internal_links'])
-        for k, v in properties.items():
-            res[k] = v
-    else:
-        res['internal_links'] = {}
+        allPages.append(res)
 
-    if 'subresources' in p:
-        res['subresources'] = {}
-        for sr in p['subresources']:
-            for key, value in sr.iteritems():
-                res['subresources'][key] = extract_properties(value)
-                res['subresources'][key]['internal_links'] = value
+    with open(os.environ['dumps101dir'] + '/wiki.json', 'w') as f:
+        f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': allPages}}, sort_keys=True, indent=4))
 
-    allPages.append(res)
-
-with open('dump.json', 'w') as f:
-    f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': allPages}}, sort_keys=True, indent=4))
+if __name__ == '__main__':
+    main()

@@ -462,6 +462,11 @@ dump.json
 /services/.idea/inspectionProfiles/Project_Default.xml
 /services/.idea/vagrant.xml
 *.bak
+.coverage
+node_modules
+*.facts.json
+.coverage
+**/htmlcov
 *.pyc
 /modules/validate/subtyping_errors.json
 /libraries/mediawiki/.goutputstream-KX73TW

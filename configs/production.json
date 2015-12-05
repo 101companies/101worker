@@ -13,6 +13,7 @@
     "predicates101meta",
     "fragments101meta",
     "summary101meta",
+    "mongo2json",
     "wiki2json",
     "themesExtractor",
     "languageExtractor",
