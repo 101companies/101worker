@@ -2,11 +2,14 @@
 import os
 import fnmatch
 import json
+import sys
+
+sys.path.append('../../libraries')
+
 import incremental101
 
 
 repo101dir = os.environ["repo101dir"]
-
 
 # Check rule for validity
 def validRule(rule):

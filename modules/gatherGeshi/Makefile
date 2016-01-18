@@ -1,4 +1,5 @@
 include ../Makefile.vars
+resultsdir = ${results101dir}
 repo = ${resultsdir}/101repo
 orig = ${repo}/technologies/geshi
 result = ${resultsdir}/geshi/src/geshi

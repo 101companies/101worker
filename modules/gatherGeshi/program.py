@@ -4,7 +4,7 @@ import sys
 import commands
 
 if (len(sys.argv) == 3):
-   repo = sys.argv[1] 
+   repo = sys.argv[1]
    result = sys.argv[2]
    for lang in os.listdir(repo+'/languages'):
       dir = repo+'/languages/'+lang+'/geshi'
@@ -19,4 +19,4 @@ if (len(sys.argv) == 3):
                   sys.exit(status)
    sys.exit(0)
 else:
-   sys.exit(-1)
+   sys.exit(1)

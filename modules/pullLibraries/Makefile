@@ -1,3 +1,5 @@
+include ../Makefile.vars
+
 run:
 	mkdir -p "$$results101dir/libraries"
 	mkdir -p "$$web101dir/libraries"
