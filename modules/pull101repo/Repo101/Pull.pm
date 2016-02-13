@@ -97,8 +97,7 @@ sub extract_repo_info
 {
     my ($self, $url) = @_;
 
-    $url =~ m{^https://github\.com/([^/]+)/([^/]+)(?:/tree/master/?(.*))?$}
-        or die "Couldn't match repository URL: $url";
+    $url =~ m{^https://github\.com/([^/]+)/([^/]+)(?:/tree/master/?(.*))?$};
     my ($user, $repo_name, $suffix) = ($1, $2, $3);
 
     return undef if $user eq '101companies' && $repo_name eq '101repo';

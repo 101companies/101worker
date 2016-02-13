@@ -15,6 +15,7 @@
     "summary101meta",
     "mongo2json",
     "wiki2json",
+    "simpleLOC",
     "themesExtractor",
     "languageExtractor",
     "vocabulary",
@@ -28,7 +29,6 @@
     "parseMegaL",
     "webDeployMegaModels",
     "validateModuleDescriptions",
-    "integrate",
     "onto2ttl",
     "testAllExplorerEntities"
 ]
