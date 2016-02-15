@@ -66,7 +66,8 @@ def run(env):
 
     # gitdeps
     gitdeps = load_gitdeps(env)
-    pull_gitdeps(gitdeps)
+    gitdep_changes = pull_gitdeps(env, gitdeps)
+    changes.extend(gitdep_changes)
 
     context = {
         'env': env
@@ -82,9 +83,24 @@ def run(env):
                     'data': traceback.format_exc()
                 })
 
-def pull_gitdeps(gitdeps):
+def pull_gitdeps(env, gitdeps):
+    def pull_gitdep(dep):
+        user = dep['sourcerepo'].split('/')[-2]
+        filename = dep['sourcerepo'].split('/')[-1].replace('.git', '')
+        path = os.path.join(env['gitdeps101dir'], user, filename)
+        if os.path.exists(os.path.join(path, '.git')):
+            repo = Repo(path)
+            return pull_repo(repo)
+        else:
+            repo = Repo.clone_from(dep['sourcerepo'], path, branch='master')
+            result = []
+            for root, dirnames, filenames in os.walk(path):
+                for f in filenames:
+                    result.append({ 'type': 'NEW_FILE', 'file': f })
+            return result
 
-    pass
+
+    return sum(map(pull_gitdep, gitdeps), [])
 
 def load_gitdeps(env):
     with open(os.path.abspath(os.path.join(env['repo101dir'], '.gitdeps'))) as f:
