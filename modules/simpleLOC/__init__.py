@@ -1,18 +1,22 @@
 import os
+import json
 
 def count_loc(source):
     with open(source, 'r') as source:
         return sum(1 for line in source)
 
 def save_data(target, data):
-    with open(target) as f:
-        f.write(data)
+    if not os.path.exists(os.path.dirname(target)):
+        os.makedirs(os.path.dirname(target))
 
-def update_file(file, context):
+    with open(target, 'w') as f:
+        json.dump(data, f)
+
+def update_file(context, file):
     source = os.path.join(context['env']['repo101dir'], file)
     target = os.path.join(context['env']['targets101dir'], file + '.loc.json')
     loc = count_loc(source)
-    save_data(source, loc)
+    save_data(target, loc)
 
 def run(context, change):
 

@@ -1,6 +1,6 @@
 from shovel import task
 import os
-import worker_lib
+import worker_lib as worker
 
 @task
 def new_module(name):
@@ -12,11 +12,12 @@ def new_module(name):
 
 @task
 def run():
-    import pprint
-    runner = worker_lib.Runner(worker_lib.env)
-    runner.checkout_commit('83d4a5664a63fddcf0a4e464165fb5c71dd17e88')
-    pprint.pprint(runner.pull_repo())
+    pass
 
 @task
 def test():
-    pass
+    import pprint
+    repo = worker.runner.create_repo(worker.env)
+    worker.runner.checkout_commit(repo, '83d4a5664a63fddcf0a4e464165fb5c71dd17e88')
+
+    worker.runner.run(worker.env)
