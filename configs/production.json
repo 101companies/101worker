@@ -1,8 +1,5 @@
 [
-    "pull101repo",
     "pull",
-    "pullLibraries",
-    "gatherGeshi",
     "rules101meta",
     "matches101meta",
     "metrics101meta",
@@ -16,8 +13,6 @@
     "mongo2json",
     "wiki2json",
     "simpleLOC",
-    "themesExtractor",
-    "languageExtractor",
     "vocabulary",
     "wiki2tagclouds",
     "moretagclouds",

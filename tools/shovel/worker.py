@@ -15,6 +15,10 @@ def run():
     pass
 
 @task
+def run_tests():
+    worker.runner.run_tests(worker.env)
+
+@task
 def test():
     import pprint
     repo = worker.runner.create_repo(worker.env)

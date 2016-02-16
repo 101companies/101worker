@@ -6,8 +6,11 @@ import sys
 import traceback
 import datetime
 import time
+import shutil
 
 def report_error(error):
+    print error
+
     path = os.path.abspath('../../101logs/worker.log')
     if os.path.exists(path):
         with open(path, 'r') as f:
@@ -19,7 +22,7 @@ def report_error(error):
     error['timestamp'] = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     data.append(error)
     with open(path, 'w') as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=4)
 
 def convert_diff(diff):
     file_1 = diff.a_path
@@ -69,19 +72,48 @@ def run(env):
     gitdep_changes = pull_gitdeps(env, gitdeps)
     changes.extend(gitdep_changes)
 
+    copy_gitdeps(gitdep_changes, env)
+
     context = {
         'env': env
     }
 
     for module in modules:
-        for change in changes:
-            try:
-                module.run(context, change)
-            except:
-                report_error({
-                    'type': 'module_failed',
-                    'data': traceback.format_exc()
-                })
+        print 'Running', module
+        if module.config['wantdiff']:
+            for change in changes:
+                try:
+                    module.run(context, change)
+                except:
+                    report_error({
+                        'type': 'module_failed',
+                        'data': [traceback.format_exc()]
+                    })
+        else:
+            module.run(context)
+
+def run_tests(env):
+    config = load_config()
+    failed, modules = load_modules(config)
+
+    context = {
+        'env': env
+    }
+
+    for module in modules:
+        module.test()
+
+def copy_gitdeps(changes, env):
+    for change in changes:
+        if change['type'] == 'NEW_FILE':
+            target_file = os.path.join(env['repo101dir'], '/'.join(change['file'].split('/')[2:]))
+            dirname = os.path.dirname(target_file)
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+
+            source_file = os.path.join(env['gitdeps101dir'], change['file'])
+
+            shutil.copyfile(source_file, target_file)
 
 def pull_gitdeps(env, gitdeps):
     def pull_gitdep(dep):
@@ -96,7 +128,10 @@ def pull_gitdeps(env, gitdeps):
             result = []
             for root, dirnames, filenames in os.walk(path):
                 for f in filenames:
-                    result.append({ 'type': 'NEW_FILE', 'file': f })
+                    f = os.path.join(root, f).replace(env['gitdeps101dir'], '')[1:]
+                    if '.git/' in f:
+                        continue
+                    result.append({ 'type': 'NEW_FILE', 'file':  f})
             return result
 
 

@@ -20,12 +20,14 @@ def get_db():
 def get_pages(db):
     return list(db.pages.find())
 
-def get_output():
-    return os.environ['dumps101dir'] + '/pages.json'
+def get_output(env):
+    return os.path.join(env['dumps101dir'], 'pages.json')
 
-def main():
+def run(context):
+    env = context['env']
+
     db = get_db()
-    output = get_output()
+    output = get_output(env)
     allPages = get_pages(db)
     with open(output, 'w') as f:
         f.write(json.dumps({'pageCount': len(allPages), 'pages': allPages}, sort_keys=True, indent=4))

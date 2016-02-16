@@ -48,7 +48,7 @@ lcounts = Counter(uses)
 uses = [p.get('uses', []) for p in contributions]
 uses = [p for use in uses for p in use]
 
-uses = filter(lambda u: u['p'] == 'Technology', uses)
+uses = filter(lambda u: u.get('p', '') == 'Technology', uses)
 
 uses = [use['n'] for use in uses]
 

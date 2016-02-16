@@ -40,9 +40,10 @@ def handle_page_name(name, props):
         props['n'] = n[1]
     return props
 
-def main():
+def run(context):
+    env = context['env']
 
-    with open(os.environ['dumps101dir'] + '/pages.json') as f:
+    with open(os.path.join(env['dumps101dir'], 'pages.json')) as f:
         allPages = json.load(f)['pages']
 
     for p in allPages:
@@ -72,8 +73,5 @@ def main():
 
         allPages.append(res)
 
-    with open(os.environ['dumps101dir'] + '/wiki.json', 'w') as f:
+    with open(env['dumps101dir'] + '/wiki.json', 'w') as f:
         f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': allPages}}, sort_keys=True, indent=4))
-
-if __name__ == '__main__':
-    main()

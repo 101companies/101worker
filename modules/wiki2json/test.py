@@ -1,40 +1,41 @@
-import unittest
-from mock import Mock, MagicMock, patch
 import os
 
 import wiki2json
 
-class Wiki2JSONTestCase(unittest.TestCase):
-    def setUp(self):
-        self.dumps101dir = '/some/test/dir'
-        os.environ['dumps101dir'] = self.dumps101dir
+def test():
+    import TAP
+    import TAP.Simple
+    import StringIO
 
-    def tearDown(self):
-        os.environ['dumps101dir'] = ''
+    t = TAP.Simple
+    t.builder._plan = None
 
-    def test_extract_properties(self):
-        properties = [
-            "101project",
-            "101contribution",
-            "Implementation",
-            "Model",
-            "101system",
-            "101contributor",
-            "101project",
-            "http://google.de",
-            "~SomethingNotMentioned",
-            "RelatesTo::@contributor",
-            "InstanceOf::Namespace:101"
-        ]
+    t.plan(7)
 
-        result = wiki2json.extract_properties(properties)
+    dumps101dir = '/some/test/dir'
 
-        self.assertEqual(len(result['InstanceOf']), 1)
-        self.assertEqual(result['InstanceOf'][0]['n'], '101')
-        self.assertEqual(result['InstanceOf'][0]['p'], 'Namespace')
+    properties = [
+        "101project",
+        "101contribution",
+        "Implementation",
+        "Model",
+        "101system",
+        "101contributor",
+        "101project",
+        "http://google.de",
+        "~SomethingNotMentioned",
+        "RelatesTo::@contributor",
+        "InstanceOf::Namespace:101"
+    ]
 
-        self.assertEqual(len(result['mentions']), 8)
-        self.assertTrue('http://google.de' in result['mentions'])
+    result = wiki2json.extract_properties(properties)
 
-        self.assertEqual(len(result['mentionsNot']), 1)
-        self.assertEqual(result['mentionsNot'][0]['n'], 'SomethingNotMentioned')
+    t.eq_ok(len(result['InstanceOf']), 1, 'finds 1 instanceOf')
+    t.eq_ok(result['InstanceOf'][0]['n'], '101', 'splits namespace and title')
+    t.eq_ok(result['InstanceOf'][0]['p'], 'Namespace', 'splits title and namesspace')
+
+    t.eq_ok(len(result['mentions']), 8, 'finds 8 mentions')
+    t.is_ok('http://google.de' in result['mentions'], True, 'finds google in links')
+
+    t.eq_ok(len(result['mentionsNot']), 1, 'finds one mentionsNot')
+    t.eq_ok(result['mentionsNot'][0]['n'], 'SomethingNotMentioned', 'finds no wrong mentions')

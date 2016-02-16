@@ -2,7 +2,6 @@ import unittest
 
 import mongo2json
 import os
-from mock import Mock, MagicMock, patch
 import io
 import json
 
@@ -103,54 +102,41 @@ class TestMongoClient(object):
 
 mongo2json.MongoClient = TestMongoClient
 
-class Mongo2JSONTestCase(unittest.TestCase):
-    def setUp(self):
-        self.dumps101dir = '/some/test/dir'
-        os.environ['dumps101dir'] = self.dumps101dir
+def test():
+    import TAP
+    import TAP.Simple
+    import StringIO
 
-    def tearDown(self):
-        os.environ['MONGODB_USER'] = ''
-        os.environ['MONGODB_PWD'] = ''
-        os.environ['dumps101dir'] = ''
+    t = TAP.Simple
+    t.builder._plan = None
 
-    def test_get_db(self):
-        result = mongo2json.get_db()
-        self.assertEqual(result.name, 'wiki_production')
+    t.plan(6)
 
-    def test_get_db_auth(self):
-        user = 'user'
-        password = 'password'
-        os.environ['MONGODB_USER'] = user
-        os.environ['MONGODB_PWD'] = password
+    env = {}
 
-        result = mongo2json.get_db()
+    dumps101dir = '/some/test/dir'
+    env['dumps101dir'] = dumps101dir
 
-        self.assertEqual(result.name, 'wiki_production')
-        self.assertEqual(result.user, user)
-        self.assertEqual(result.password, password)
+    result = mongo2json.get_db()
+    t.eq_ok(result.name, 'wiki_production', 'chooses correct database')
 
-    def test_get_pages(self):
-        db = mongo2json.get_db()
+    user = 'user'
+    password = 'password'
+    os.environ['MONGODB_USER'] = user
+    os.environ['MONGODB_PWD'] = password
 
-        result = mongo2json.get_pages(db)
+    result = mongo2json.get_db()
 
-        self.assertEqual(result, pages)
+    t.eq_ok(result.name, 'wiki_production', 'chooses correct collection')
+    t.eq_ok(result.user, user, 'uses given username')
+    t.eq_ok(result.password, password, 'uses given password')
 
-    def test_get_output(self):
-        db = mongo2json.get_db()
 
-        result = mongo2json.get_output()
+    db = mongo2json.get_db()
+    result = mongo2json.get_pages(db)
+    t.eq_ok(result, pages, 'lists all pages')
 
-        self.assertEqual(result, self.dumps101dir + '/pages.json')
 
-    def test_main(self):
-        with patch('mongo2json.open', create=True) as mock_open:
-            mock_open.return_value = MagicMock(spec=file)
-
-            mongo2json.main()
-
-            file_handle = mock_open.return_value.__enter__.return_value
-
-            result = file_handle.write.call_args[0][0]
-            result = json.loads(result)
-            self.assertEqual(result['pageCount'], len(pages))
+    db = mongo2json.get_db()
+    result = mongo2json.get_output(env)
+    t.eq_ok(result, os.path.join(dumps101dir, 'pages.json'), 'uses correct output folder')

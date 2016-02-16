@@ -5,9 +5,9 @@ import os
 import json
 import re
 
-def update(repo, path):
+def update(repo, path, env):
     cwd  = os.getcwd()
-    path = re.sub('\$(\w+)', lambda match: os.environ[match.group(1)], path)
+    path = re.sub('\$(\w+)', lambda match: env[match.group(1)], path)
 
     if os.path.exists(path):
         os.chdir(path)
@@ -25,16 +25,32 @@ def update(repo, path):
     os.chdir(cwd)
     return 0
 
+def load_repos():
+    repo_json = os.path.join(os.path.dirname(__file__), 'repositories.json')
+    with open(repo_json, 'r') as f:
+        return json.load(f)
 
-repos = json.load(open('repositories.json', 'r'))
-ret   = 0
+def run(context):
+    repos = load_repos()
+    ret   = 0
 
-for target in repos:
-    try:
-        ret |= update(target['repo'], target['targetdir'])
-    except os.error as e:
-        print(e.strerror)
-        ret |= e.errno
+    for target in repos:
+        try:
+            ret |= update(target['repo'], target['targetdir'], context['env'])
+        except os.error as e:
+            print(e.strerror)
+            ret |= e.errno
 
-print('\n\nFinished updating repos with {0}errors'.format('' if ret else 'no '))
-sys.exit(ret)
+    print('\n\nFinished updating repos with {0}errors'.format('' if ret else 'no '))
+
+def test():
+    import TAP
+    import TAP.Simple
+    import StringIO
+
+    t = TAP.Simple
+    t.builder._plan = None
+
+    t.plan(1)
+
+    t.is_ok(len(load_repos()) > 0, True, 'loads repos')
