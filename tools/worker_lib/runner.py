@@ -7,22 +7,26 @@ import traceback
 import datetime
 import time
 import shutil
+import sqlite3
+from attrdict import AttrDict
 
-def report_error(error):
-    print error
+# --------- LOGGING ---------------------
 
-    path = os.path.abspath('../../101logs/worker.log')
-    if os.path.exists(path):
-        with open(path, 'r') as f:
-            data = json.load(f)
-    else:
-        data = []
+def create_logging_tables(connection):
+    c = connection.cursor()
+    c.execute('drop table log_messages')
+    c.execute('create table log_messages(type text, data text, ts timestamp)')
 
-    ts = time.time()
-    error['timestamp'] = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-    data.append(error)
-    with open(path, 'w') as f:
-        json.dump(data, f, indent=4)
+def report_error(db_connection, error_type, error_data):
+    '''
+    Logs an error to an internal dump.
+    :param error_type: error name
+    :param error_data: data for the error, e.g. stack trace
+    '''
+    c = db_connection.cursor()
+
+    c.execute('insert into log_messages values (?, ?, ?)', (error_type, json.dumps(error_data), datetime.datetime.now()))
+    db_connection.commit()
 
 def convert_diff(diff):
     file_1 = diff.a_path
@@ -54,15 +58,58 @@ def load_modules(modules):
 
     return [failed, filter(lambda x: x, map(load_module, modules))]
 
+def init_storage_system(env):
+    '''
+    Initializes the storage system and creates database tables.
+    '''
+    db_path = env['temps101dir']
+    connection = sqlite3.connect(os.path.join(db_path, 'db.sqlite'))
+    create_logging_tables(connection)
+    return connection
+
+def create_module_env(env, module=None):
+
+    def get_env(key):
+        return env[key]
+
+    def write_derived_resource(primary_resource, data, key):
+        target = os.path.join(get_env('targets101dir'), primary_resource + key + '.json')
+
+        if not os.path.exists(os.path.dirname(target)):
+            os.makedirs(os.path.dirname(target))
+
+        with open(target, 'w') as f:
+            json.dump(data, f)
+
+    def remove_derived_resource(primary_resource, key):
+        target = os.path.join(get_env('targets101dir'), primary_resource + key + '.json')
+        os.remove(target)
+
+    def get_primary_resource(primary_resource):
+        with open(os.path.join(get_env('repo101dir'), primary_resource), 'r') as f:
+            return f.read()
+
+    return AttrDict({
+        'get_env': get_env,
+        'write_derived_resource': write_derived_resource
+    })
+
 def run(env):
+    '''
+    The worker main loop.
+    At startup it initializes the "storage system".
+    '''
     config = load_config()
     failed, modules = load_modules(config)
 
+    db_connection = init_storage_system(env)
+
     if failed:
-        report_error({
-            'type': 'module_load_failed',
-            'data': failed
-        })
+        report_error(
+            db_connection,
+            'module_load_failed',
+            failed
+        )
 
     repo = create_repo(env)
     changes = pull_repo(repo)
@@ -74,23 +121,22 @@ def run(env):
 
     copy_gitdeps(gitdep_changes, env)
 
-    context = {
-        'env': env
-    }
-
     for module in modules:
         print 'Running', module
         if module.config['wantdiff']:
             for change in changes:
                 try:
-                    module.run(context, change)
+                    module.run(create_module_env(env, module), change)
                 except:
-                    report_error({
-                        'type': 'module_failed',
-                        'data': [traceback.format_exc()]
-                    })
+                    report_error(
+                        db_connection,
+                        'module_failed',
+                        traceback.format_exc()
+                    )
         else:
-            module.run(context)
+            module.run(create_module_env(env, module))
+
+    db_connection.close()
 
 def run_tests(env):
     config = load_config()

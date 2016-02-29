@@ -2,7 +2,8 @@ import os
 import json
 
 config = {
-    'wantdiff': True
+    'wantdiff': True,
+    'threadsafe': True
 }
 
 def count_lines(source):
@@ -12,23 +13,16 @@ def count_loc(source):
     with open(source, 'r') as source:
         count_lines(source)
 
-def save_data(target, data):
-    if not os.path.exists(os.path.dirname(target)):
-        os.makedirs(os.path.dirname(target))
+def save_data(context, f, data):
+    context.write_derived_resource(f, data, '.loc')
 
-    with open(target, 'w') as f:
-        json.dump(data, f)
-
-def update_file(context, file):
-    source = os.path.join(context['env']['repo101dir'], file)
-    target = os.path.join(context['env']['targets101dir'], file + '.loc.json')
+def update_file(context, f):
+    source = context.get_primary_resource(f)
     loc = count_loc(source)
-    save_data(target, loc)
+    save_data(context, f, loc)
 
-def remove_file(context, file):
-    target = os.path.join(context['env']['targets101dir'], file + '.loc.json')
-    if os.path.exists(target):
-        os.remove(target)
+def remove_file(context, f):
+    context.remove_derived_resource(f, '.loc')
 
 def run(context, change):
 

@@ -13,7 +13,6 @@
     "mongo2json",
     "wiki2json",
     "simpleLOC",
-    "vocabulary",
     "wiki2tagclouds",
     "moretagclouds",
     "summarizeModuleDescriptions",

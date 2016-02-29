@@ -5,9 +5,9 @@ import os
 import json
 import re
 
-def update(repo, path, env):
+def update(repo, path, context):
     cwd  = os.getcwd()
-    path = re.sub('\$(\w+)', lambda match: env[match.group(1)], path)
+    path = re.sub('\$(\w+)', lambda match: context.get_env(match.group(1)), path)
 
     if os.path.exists(path):
         os.chdir(path)
@@ -36,7 +36,7 @@ def run(context):
 
     for target in repos:
         try:
-            ret |= update(target['repo'], target['targetdir'], context['env'])
+            ret |= update(target['repo'], target['targetdir'], context)
         except os.error as e:
             print(e.strerror)
             ret |= e.errno
