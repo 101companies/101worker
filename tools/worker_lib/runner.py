@@ -73,8 +73,11 @@ def init_storage_system(env):
 
 def create_module_env(env, module=None):
 
-    def get_env(key):
-        return env[key]
+    def get_env(key=None):
+        if key:
+            return env[key]
+        else:
+            return env
 
     def write_derived_resource(primary_resource, data, key):
         target = os.path.join(get_env('targets101dir'), primary_resource + key + '.json')
@@ -158,12 +161,15 @@ def run(env):
                     )
         else:
             print 'manual run'
-            for root, dirs, files in os.walk(env['repo101dir']):
-                for f in files:
-                    module.run(create_module_env(env, module), {
-                        'type': 'NEW_FILE',
-                        'file': os.path.join(root, f)
-                    })
+            if module.config.get('wantsfiles', False):
+                for root, dirs, files in os.walk(env['repo101dir']):
+                    for f in files:
+                        module.run(create_module_env(env, module), {
+                            'type': 'NEW_FILE',
+                            'file': os.path.join(root, f)
+                        })
+            else:
+                module.run(create_module_env(env, module))
 
     db_connection.close()
 

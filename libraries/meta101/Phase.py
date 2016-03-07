@@ -82,7 +82,7 @@ class Phase(object):
         """
         if entirerepo:
             walk(self.suffix, self.onfile)
-            diff(self.suffix, [], D=self.ondelete)
+            # diff(self.suffix, [], D=self.ondelete)
         else:
             diff(self.suffix, [], A=self.onfile, M=self.onfile, D=self.ondelete)
         return self.dump()

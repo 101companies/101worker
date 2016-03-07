@@ -92,8 +92,6 @@ def matchall(phasekey, entirerepo=False):
     """
     dumpfile  = os.environ[phasekey + "101dump"]
     rulesfile = os.environ["rules101dump"]
-    changed   = havechanged(rulesfile)
-    runonly   = os.environ.get("RUNONLY")
     args      = []
 
     if os.path.exists(dumpfile):
@@ -105,7 +103,7 @@ def matchall(phasekey, entirerepo=False):
     with open(rulesfile) as f:
         args.insert(0, json.load(f)["results"]["rules"])
 
-    dump = getphase(phasekey)(*args).run(changed or entirerepo or runonly)
+    dump = getphase(phasekey)(*args).run(entirerepo)
     incremental101.writejson(dumpfile, dump)
 
 
