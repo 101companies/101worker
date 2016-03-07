@@ -12,7 +12,7 @@ def new_module(name):
 
 @task
 def run():
-    pass
+    worker.runner.run(worker.env)
 
 @task
 def run_tests():
@@ -20,7 +20,6 @@ def run_tests():
 
 @task
 def test():
-    import pprint
     repo = worker.runner.create_repo(worker.env)
     worker.runner.checkout_commit(repo, '83d4a5664a63fddcf0a4e464165fb5c71dd17e88')
 

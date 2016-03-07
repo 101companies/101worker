@@ -3,4 +3,4 @@ config = {
     'threadsafe': False
 }
 
-from .program import run, test
+from .program import run
