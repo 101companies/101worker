@@ -144,6 +144,8 @@ def diff(suffix, resources, **switch):
         modified and deleted files respecitvely. In practice, these are onfile
         and ondelete in Deriver and Phase.
     """
+    raise
+
     primary = set()
     derived = set()
 

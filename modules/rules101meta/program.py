@@ -28,12 +28,12 @@ def handleFileCreation(context, change, rules_dump):
     context.write_dump('rules101dump', rules_dump)
 
 def handleFileRemoved(context, change, rules_dump):
-    rules_dump['results']['rules'] = filter(lambda rule: rule['filename'] != change['filename'], rules_dump['results']['rules'])
+    rules_dump['results']['rules'] = filter(lambda rule: rule['filename'] != change['file'], rules_dump['results']['rules'])
 
     context.write_dump('rules101dump', rules_dump)
 
 def handleFileChanged(context, change, rules_dump):
-    rules_dump['results']['rules'] = filter(lambda rule: rule['filename'] != change['filename'], rules_dump['results']['rules'])
+    rules_dump['results']['rules'] = filter(lambda rule: rule['filename'] != change['file'], rules_dump['results']['rules'])
 
     handleFileCreation(context, change, rules_dump)
 

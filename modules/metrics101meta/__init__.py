@@ -4,6 +4,11 @@ import json
 import subprocess
 import meta101
 
+config = {
+    'wantdiff': False,
+    'wantsfiles': False,
+    'threadsafe': False
+}
 
 def initdump(deriver):
     if "geshicodes" in deriver.dump:
@@ -44,12 +49,16 @@ def preparedump(deriver):
     deriver.dump["geshicodes"] = sorted(list(deriver.dump["geshicodes"]))
 
 
-changed = meta101.havechanged(__file__, "helper.php", "megalib_leftover.php")
+# changed = meta101.havechanged(__file__, "helper.php", "megalib_leftover.php")
+changed = True
 
-meta101.derive(suffix    =[".metrics.json", ".tokens.json"],
-               dump      =os.environ["metrics101dump"],
-               oninit    =initdump,
-               getvalue  =getgeshi,
-               callback  =derive,
-               ondump    =preparedump,
-               entirerepo=changed)
+def run(context):
+    meta101.os.environ = context.get_env()
+
+    meta101.derive(suffix    =[".metrics.json", ".tokens.json"],
+                   dump      =os.environ["metrics101dump"],
+                   oninit    =initdump,
+                   getvalue  =getgeshi,
+                   callback  =derive,
+                   ondump    =preparedump,
+                   entirerepo=changed)

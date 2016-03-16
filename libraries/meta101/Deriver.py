@@ -43,12 +43,12 @@ class Deriver(object):
         101repo are re-derived. Otherwise, only new or modified files are
         handled. Deleted files, however, are always deleted.
         """
-        if entirerepo:
-            walk(self.suffix, self.onfile)
-            diff(self.suffix, tolist(self.resources), D=self.ondelete)
-        else:
-            diff(self.suffix, tolist(self.resources), A=self.onfile,
-                 M=self.onfile, D=self.ondelete)
+        # if entirerepo:
+        walk(self.suffix, self.onfile)
+        # diff(self.suffix, tolist(self.resources), D=self.ondelete)
+        # else:
+        # diff(self.suffix, tolist(self.resources), A=self.onfile,
+        #  M=self.onfile, D=self.ondelete)
 
         if self.ondump:
             self.ondump(self)

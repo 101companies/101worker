@@ -122,7 +122,7 @@ def run(env):
     At startup it initializes the "storage system".
     '''
     config = load_config()
-    if os.environ['MODULE']:
+    if os.environ.get('MODULE', None):
         failed, modules = load_modules([os.environ['MODULE']])
     else:
         failed, modules = load_modules(config)
@@ -139,7 +139,7 @@ def run(env):
     repo = create_repo(env)
     changes = pull_repo(repo)
 
-    if not os.environ['OMIT_GITDEPS']:
+    if not os.environ.get('OMIT_GITDEPS'):
         # gitdeps
         gitdeps = load_gitdeps(env)
         gitdep_changes = pull_gitdeps(env, gitdeps)
@@ -149,7 +149,7 @@ def run(env):
 
     for module in modules:
         print 'Running', module
-        if module.config['wantdiff'] and not os.environ['FULL_SWEEP']:
+        if module.config['wantdiff'] and not os.environ.get('FULL_SWEEP', None):
             for change in changes:
                 try:
                     module.run(create_module_env(env, module), change)

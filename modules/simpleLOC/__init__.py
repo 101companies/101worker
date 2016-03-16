@@ -9,16 +9,12 @@ config = {
 def count_lines(source):
     return sum(1 for line in source)
 
-def count_loc(source):
-    with open(source, 'r') as source:
-        count_lines(source)
-
 def save_data(context, f, data):
     context.write_derived_resource(f, data, '.loc')
 
 def update_file(context, f):
     source = context.get_primary_resource(f)
-    loc = count_loc(source)
+    loc = count_lines(source)
     save_data(context, f, loc)
 
 def remove_file(context, f):
