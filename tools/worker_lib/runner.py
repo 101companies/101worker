@@ -54,7 +54,7 @@ def load_modules(modules):
         try:
             return __import__(module)
         except ImportError, e:
-            print e
+            print module, e
             failed.append(module)
             return None
 

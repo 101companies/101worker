@@ -1,6 +1,6 @@
 [
     "pull",
-    "rules101meta",
+    "collectRules",
     "matches101meta",
     "metrics101meta",
     "validate101meta",

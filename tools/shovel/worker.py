@@ -6,6 +6,7 @@ import worker_lib as worker
 def new_module(name):
     '''
     Creates a new module with template.
+    Usage: new_module [name]
     '''
     path = os.path.abspath('../modules/')
     path = os.path.join(path, name)

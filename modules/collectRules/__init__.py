@@ -4,3 +4,4 @@ config = {
 }
 
 from .program import run
+from .test import test
