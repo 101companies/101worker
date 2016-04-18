@@ -1,5 +1,0 @@
-#!/bin/sh
-now=$(date +%Y-%m-%d-%H-%M)
-mkdir -p "../101web/logs/$now"
-cp ../101logs/* "../101web/logs/$now"
-printf "$now" > ../101web/logs/lastArchive
