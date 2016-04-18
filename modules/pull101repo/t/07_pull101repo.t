@@ -1,4 +1,4 @@
-use Test::Most      tests => 9;
+use Test::Most      tests => 11;
 use Cwd             qw(abs_path);
 use File::Slurp     qw(write_file append_file);
 use File::Temp;
@@ -135,16 +135,16 @@ my %pull = (
     repos     => $repos,
 );
 
-is_deeply pull101repo(%pull), {
+is_deeply [pull101repo(%pull)], [[], {
               'README.md'                                  => 'A',
               'Class.java'                                 => 'A',
               'contributions/repo_contribution/README.md'  => 'A',
               'contributions/dependency1/README.md'        => 'A',
               'contributions/dependency1/Class.java'       => 'A',
               'modules/dependency2/README.md'              => 'A',
-          }, 'clone';
+          }], 'clone';
 
-is_deeply pull101repo(%pull), {}, 'empty pull';
+is_deeply [pull101repo(%pull)], [[], {}], 'empty pull';
 
 for ($local_repo, $local_dep1)
 {
@@ -156,22 +156,22 @@ for ($local_repo, $local_dep1)
     git($_, 'push', '-q');
 }
 
-is_deeply pull101repo(%pull), {
+is_deeply [pull101repo(%pull)], [[], {
               'added'                                => 'A',
               'Class.java'                           => 'M',
               'README.md'                            => 'D',
               'contributions/dependency1/added'      => 'A',
               'contributions/dependency1/Class.java' => 'M',
               'contributions/dependency1/README.md'  => 'D',
-          }, 'pull';
+          }], 'pull';
 
 
 delete $repos->{contributions}{dependency1};
 
-is_deeply pull101repo(%pull), {
+is_deeply [pull101repo(%pull)], [[], {
               'contributions/dependency1/added'        => 'D',
               'contributions/dependency1/Class.java'   => 'D',
-          }, 'pull with deleted repo';
+          }], 'pull with deleted repo';
 
 ok !-e "$test_dir/101repo/dependency1", 'symlink deleted';
 ok !-e "$test_dir/gitdeps/dep1",        'real folder deleted';
@@ -186,10 +186,10 @@ $repos->{contributions} = {
                        subpath2",
 };
 
-is_deeply pull101repo(%pull), {
+is_deeply [pull101repo(%pull)], [[], {
               'contributions/subdependency1/README.md' => 'A',
               'contributions/subdependency2/main.c'    => 'A',
-          }, 'pull with sub-paths';
+          }], 'pull with sub-paths';
 
 ok -e "$test_dir/gitdeps/dep3/subpath3", 'unused subpath exists too';
 
@@ -198,3 +198,19 @@ $repos->{notafolder} = {};
 write_file("$test_dir/101repo/notafolder", "not a folder\n");
 throws_ok { pull101repo(%pull) } qr/Couldn't create/,
           'inability to create namespace dir fails';
+delete $repos->{notafolder};
+
+
+# monkey-patch so that the function fails every time
+# this would happen if repo URLs are invalid for example
+# also don't propagate warnings of expected test failures
+{
+    no warnings 'redefine';
+    *Repo101::Pull::extract_repo_info = sub { die "expected test failure" };
+    local $SIG{__WARN__} = sub { warn @_ unless "@_" =~ /expected test failure/ };
+
+    my ($failed, $changes) = pull101repo(%pull);
+    is_deeply $changes, {}, 'nothing is pulled when all members fail';
+    is_deeply [sort @$failed], [qw(dependency2 subdependency1 subdependency2)],
+              'pull101repo returns list of failed members';
+}

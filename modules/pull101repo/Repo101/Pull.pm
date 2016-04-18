@@ -10,13 +10,14 @@ use Repo101::Git   qw(clone_or_pull);
 use Try::Tiny;
 
 use Class::Tiny {
-    root_path => undef,
-    root_url  => undef,
-    deps_path => undef,
-    repos     => undef,
-    branches  => sub { {} },
-    changes   => sub { {} },
-    pulled    => sub { {} },
+    root_path      => undef,
+    root_url       => undef,
+    deps_path      => undef,
+    repos          => undef,
+    branches       => sub { {} },
+    changes        => sub { {} },
+    pulled         => sub { {} },
+    failed_members => sub { [] },
 };
 
 
@@ -25,7 +26,7 @@ sub pull101repo
     my $self = __PACKAGE__->new(@_);
     $self->merge_diffs($self->pull_repo($self->root_path, $self->root_url));
     $self->pull_namespace($_) for keys %{$self->repos};
-    $self->changes
+    ($self->failed_members, $self->changes)
 }
 
 
@@ -45,7 +46,10 @@ sub pull_namespace
         try
         {   $self->pull_member($repos->{$member}, $diff_path, $link_path) }
         catch
-        {   warn "Error in member $member: $_" };
+        {
+            warn "Error in member $member: $_";
+            push @{$self->failed_members}, $member;
+        };
     }
 
     $self->clean_link($repos, $_) for glob "$namespace_dir/*";
@@ -211,11 +215,16 @@ Which repos have already been pulled during this run, avoids calling git
 repeatedly for contributions from the same repo. Defaults to an empty hashref,
 which is also the Right Thing to start with.
 
+=item failed_members
+
+A list of repositories that failed to pull, for example bacause the URL was
+invalid.
+
 =back
 
 =head2 pull101repo
 
-    my $changes = pull101repo(
+    my ($failed_members, $changes) = pull101repo(
         root_path => $root_path,
         deps_path => $deps_path,
         root_url  => $root_url,
@@ -226,8 +235,9 @@ which is also the Right Thing to start with.
 
 This is probably what you want to call. It pulls the root repo, pulls all
 dependent repos and symlinks them into the root repo and cleans up removed
-symlinks and dependent repos. Returns a hashref of changes with paths relative
-to the given C<root_path>.
+symlinks and dependent repos. Returns a list containing the names of the
+members that failed to pull and a hashref of changes with paths relative to the
+given C<root_path>.
 
 The arguments map to the attributes described in L</Attributes> above.
 

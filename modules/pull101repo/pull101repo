@@ -28,7 +28,7 @@ my $repos = do
 };
 
 
-my $changes = pull101repo(
+my ($failed_members, $changes) = pull101repo(
     root_path => $paths{repo101dir   },
     deps_path => $paths{gitdeps101dir},
     root_url  => $paths{repo101url   },
@@ -44,3 +44,5 @@ for my $i (0 .. $#keys)
     my $op   = $changes->{$path};
     print "$i $op $paths{repo101dir}/$path\n";
 }
+
+exit scalar @$failed_members;
