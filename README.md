@@ -13,20 +13,24 @@ Windows might work to some extent.
 * `git clone https://github.com/101companies/101worker.git`
 * `sudo apt-get install python-pip`
 * `sudo pip install gitpython`
-* `sudo pip install attrdict`
-* `sudo pip install shovel`
 * `sudo pip install jinja2`
 
 ```bash
 cd 101worker
 git checkout development
 make init
+make pull_resources
 
 tools/worker worker.run
 ```
 
+Environment Variables are:
+
+* OMIT_GITDEPS - Skips pulling gitdeps
+* FULL_SWEEP - Perform a full sweep, disables incremental features
+
 The full list of modules is configured
-https://github.com/101companies/101worker/blob/master/configs/production.json
+https://github.com/101companies/101worker/blob/master/bin/worker
 
 # Development
 

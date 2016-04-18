@@ -3,6 +3,7 @@ import json
 
 config = {
     'wantdiff': True,
+    'wantsfiles': True,
     'threadsafe': True
 }
 
@@ -16,7 +17,7 @@ def update_file(context, f):
 
     loc = count_lines(source)
 
-    context.write_derived_resource(f, data, '.loc')
+    context.write_derived_resource(f, loc, '.loc')
 
 def remove_file(context, f):
     context.remove_derived_resource(f, '.loc')

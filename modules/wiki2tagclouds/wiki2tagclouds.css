@@ -1,20 +1,25 @@
+a {
+	margin-right: 5px;
+}
+
 a.size-0{
-   font-size: 10px;
+   font-size: 15px;
    color: red;
+  line-height: 25px;
 }
 
 a.size-1{
-   font-size: 15px;
+   font-size: 22px;
    color: orange;
 }
 
 a.size-2{
-   font-size: 16px;
-   color: magnenta;
+   font-size: 25px;
+   color: magenta;
 }
 
 a.size-3{
-   font-size: 20px;
+   font-size: 32px;
    color: blue;
 }
 
@@ -25,7 +30,7 @@ a.size-4{
 
 a.size-5{
    font-size: 50px;
-   color: brown;
+   color: #AA1B47;
 }
 
 a.size-6{

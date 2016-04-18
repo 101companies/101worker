@@ -23,9 +23,10 @@ clean:
 	rm -rf bin/*.dll
 	rm -rf bin/*.so
 	rm -f Company.cs.facts.json
-	
+
 .PHONY: install
 install:
-	apt-get install mono-complete
-	apt-get install mono-dmcs
+	sudo apt-get install -y mono-complete
+	sudo apt-get install -y mono-dmcs
+	sudo apt-get install -y libmono-cecil-private-cil
 	make build

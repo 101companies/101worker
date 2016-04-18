@@ -1,7 +1,0 @@
-{
-    "results" : {
-        "rules" : {
-            "invalid" : "because of trailing comma ->",
-        }
-    }
-}

@@ -1,9 +1,0 @@
-#!/usr/bin/python
-
-import os
-import sys
-
-os.chdir(os.path.abspath(os.path.dirname(sys.argv[0])))
-
-from shovel import run
-run()

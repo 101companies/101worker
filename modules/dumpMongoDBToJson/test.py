@@ -100,9 +100,9 @@ class TestMongoClient(object):
     def __getitem__(self, index):
         return TestDatabase(index)
 
-mongo2json.MongoClient = TestMongoClient
-
 def test():
+    mongo2json.MongoClient = TestMongoClient
+
     import TAP
     import TAP.Simple
     import StringIO

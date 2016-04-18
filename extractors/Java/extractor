@@ -7,5 +7,5 @@ import subprocess
 
 locatorPy = sys.argv[0]
 x = os.path.dirname(locatorPy)
-command = "java -classpath " + x + ":"+ x + "/lib/* " + "jfactextractor.JFactExtractor "
+command = "java -client -classpath " + x + ":"+ x + "/lib/* " + "jfactextractor.JFactExtractor "
 subprocess.call([command], shell=True)

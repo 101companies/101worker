@@ -1,5 +1,6 @@
 config = {
     'wantdiff': True,
+    'wantsfiles': True,
     'threadsafe': False
 }
 
