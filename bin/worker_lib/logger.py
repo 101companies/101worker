@@ -1,15 +1,18 @@
-from pymongo import MongoClient
 import os
 import datetime
+try:
+    from pymongo import MongoClient
 
-client = MongoClient('localhost', 27017)
-db = client['worker']
+    client = MongoClient('localhost', 27017)
+    db = client['worker']
 
-MONGODB_USER = os.environ.get('MONGODB_USER', '')
-MONGODB_PWD = os.environ.get('MONGODB_PWD', '')
+    MONGODB_USER = os.environ.get('MONGODB_USER', '')
+    MONGODB_PWD = os.environ.get('MONGODB_PWD', '')
 
-if MONGODB_USER and MONGODB_PWD:
-    db.authenticate(MONGODB_USER, MONGODB_PWD)
+    if MONGODB_USER and MONGODB_PWD:
+        db.authenticate(MONGODB_USER, MONGODB_PWD)
+except ImportError:
+    print 'pymongo is missing: "pip install pymongo"'
 
 def report_error(error_type, error_data):
     '''

@@ -5,7 +5,7 @@ try:
     from pymongo import MongoClient
     from bson.json_util import dumps
 except ImportError:
-    print 'could not import mongo2json'
+    print 'pymongo is missing: "pip install pymongo"'
 
 import json
 import os
