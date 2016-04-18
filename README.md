@@ -19,9 +19,9 @@ Windows might work to some extent.
 cd 101worker
 git checkout development
 make init
-make pull_resources
+make download
 
-tools/worker worker.run
+OMIT_GITDEPS=1 FULL_SWEEP=1 bin/worker
 ```
 
 Environment Variables are:
