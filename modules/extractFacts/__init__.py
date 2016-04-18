@@ -3,46 +3,28 @@
 import os
 import sys
 import json
-sys.path.append('../../libraries/101meta')
-sys.path.append('../../libraries')
-import service_api
-import const101
-import tools101
+import commands
 
+config = {
+    'wantdiff': True,
+    'wantsfiles': True,
+    'threadsafe': True
+}
 
-# Per-file functinonality
-def derive(extractor, sFilename, tFilename):
+def run(context, change):
+    if change['type'] == 'NEW_FILE':
+        language = context.get_derived_resource(change['file'], '.lang')
 
-   # Housekeeping for extractor
-   #extractors.add(extractor)
-   
-   #print "Extract facts from " + sFilename + " with " + extractor + "."
-   # sFilename = input
-   # tFilename = output
-   command = "{0} < \"{1}\" > \"{2}\"".format(os.path.join(const101.sRoot, extractor), sFilename, tFilename)
+        path = os.path.join('extractors', language, 'extractor')
+        if os.path.exists(path):
+            extractor = path
+        else:
+            extractor = None
 
-   (status, output) = tools101.run(command)
+        if extractor:
+            source_file = os.path.join(context.get_env('repo101dir'), change['file'])
+            command = "{0} < \"{1}\"".format(extractor, source_file)
 
-   return {
-        'extractor': extractor,
-        'command': command,
-        'status': status,
-        'output': output
-    }
+            (status, output) = commands.getstatusoutput(command)
 
-def main(data):
-    data = service_api.expand_data(data)
-
-    for f in data['data']:
-        if os.path.exists(f + '.metadata.json'):
-            metadata = json.load(open(f + '.metadata.json', 'r'))          
-            
-            for match in metadata:
-                print match
-                for unit in match['metadata']:
-                    if unit.has_key('extractor'):
-                        derive(unit['extractor'], f, f + '.extractor.json')
-                    
-if __name__ == '__main__':
-    main({'data': ['/tmp/jaxbExtension/contributions/jaxbExtension'], 'type': 'folders'})
-
+            context.write_derived_resource(change['file'], json.loads(output), '.extractor')

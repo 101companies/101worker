@@ -63,12 +63,12 @@ def mapMatches(
 
     for f in files:
         print f
-        if os.path.exists(f + '.metadata.json'): 
+        if os.path.exists(f + '.metadata.json'):
             entries = json.load(open(f + '.metadata.json'))
-            
+
         else:
             continue
-           
+
         for entry in entries:
             value = testEntry(entry)
             if value is None: continue

@@ -1,0 +1,38 @@
+#!/usr/bin/python
+
+import os
+import sys
+sys.path.append(os.path.abspath('.'))
+sys.path.append(os.path.abspath('./libraries'))
+
+from modules import pull
+from modules import collectRules
+from modules import matchLanguage
+from modules import extractFacts
+from modules import dumpMongoDBToJson
+from modules import convertMongoDump
+from modules import simpleLOC
+from modules import wiki2tagclouds
+from modules import moretagclouds
+from modules import zip
+
+modules = [
+    # pull,
+    # collectRules,
+    # matchLanguage,
+    # extractFacts,
+    # dumpMongoDBToJson,
+    # convertMongoDump,
+    simpleLOC,
+    # wiki2tagclouds,
+    # moretagclouds,
+    # zip
+]
+
+from worker_lib import *
+
+if os.environ.get('TEST', None):
+    repo = runner.create_repo(env)
+    runner.checkout_commit(repo, '83d4a5664a63fddcf0a4e464165fb5c71dd17e88')
+
+runner.run(modules, env)

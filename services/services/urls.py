@@ -9,6 +9,7 @@ from analyzeSubmission import views as analyzeSubmission
 from triggerCloneCreation import views as triggerCloneCreation
 from cloneDiffer import views as cloneDiffer
 from featureNameDetection import views as featureNameDetection
+from worker_ui import views as workerViews
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -44,5 +45,6 @@ urlpatterns = patterns('',
     ('^termResources\.(?P<format>.+)$', termResources.serveResourceNames),
     ('^termResourcesCode/(?P<term>.+)/(?P<resName>.+)/(?P<cat>.+)/(?P<resIndex>.+)/(?P<codeIndex>.+)\.(?P<format>.+)$', termResourcesCode.serveCode),
 
-    ('^analyzeSubmission$', analyzeSubmission.analyze)
+    ('^analyzeSubmission$', analyzeSubmission.analyze),
+    ('^worker$', workerViews.index),
 )

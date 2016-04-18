@@ -3,7 +3,6 @@ import copy
 import sys
 
 def expand_data(data, tmp=True):
-    print data
     data = copy.copy(data)
     if data['type'] == 'folders':
             folders = data['data']
@@ -14,7 +13,6 @@ def expand_data(data, tmp=True):
                     for file in files:
                         f = os.path.join(root,file)
                         data['data'].append(f)
-                        
+
     data['data'] = filter(lambda f: not any(map(lambda e: f.endswith(e), ('.metadata.json', '.metrics.json', '.extractor.json', '.tokens.json', '.refinedTokens.json'))), data['data'])
     return data
-    

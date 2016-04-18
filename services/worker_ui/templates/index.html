@@ -1,0 +1,31 @@
+{% extends "base_worker.html" %}
+{% block content %}
+<table class='table'>
+  <thead>
+    <tr>
+      <th>
+        Type
+      </th>
+
+      <th>
+        Message
+      </th>
+
+      <th>
+        Timestamp
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for error in errors %}
+      <tr>
+        <td>{{ error.type }}</td>
+        <td>{{ error.data|join:', ' }}</td>
+        <td>{{ error.timestamp }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+{% endblock %}

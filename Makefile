@@ -62,9 +62,15 @@ report:
 full-reset:
 	rm -rf ../101web ../101logs ../101temps ../101results ../101diffs
 
+init:
+	mkdir -p ../101web/data/dumps
+	mkdir -p ../101logs
+	mkdir -p ../101temps
+	mkdir -p ../101results
+	mkdir -p ../101diffs
 
 download:
-	cd modules/zip; make download-and-extract
+	bin/download_resources
 
 
 graphpm:

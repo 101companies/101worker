@@ -8,12 +8,14 @@ modules/igraph/build
 modules/igraph/dist
 *.log
 pid
+modules/Makefile.vars
 modules/wiki2tex/tex/content/data/categories.tex
 modules/wiki2tex/tex/content/data/features.tex
 modules/wiki2tex/tex/content/data/implementations.tex
 modules/wiki2tex/tex/content/data/languages.tex
 modules/wiki2tex/tex/content/data/pages.tex
 modules/wiki2tex/tex/content/data/technologies.tex
+**/node_modules/*
 utils.pyc
 pipeline.pyc
 document.pyc
@@ -460,6 +462,11 @@ dump.json
 /services/.idea/inspectionProfiles/Project_Default.xml
 /services/.idea/vagrant.xml
 *.bak
+.coverage
+node_modules
+*.facts.json
+.coverage
+**/htmlcov
 *.pyc
 /modules/validate/subtyping_errors.json
 /libraries/mediawiki/.goutputstream-KX73TW

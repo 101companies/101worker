@@ -1,9 +1,6 @@
 [
-    "pull101repo",
     "pull",
-    "pullLibraries",
-    "gatherGeshi",
-    "rules101meta",
+    "collectRules",
     "matches101meta",
     "metrics101meta",
     "validate101meta",
@@ -13,10 +10,9 @@
     "predicates101meta",
     "fragments101meta",
     "summary101meta",
+    "mongo2json",
     "wiki2json",
-    "themesExtractor",
-    "languageExtractor",
-    "vocabulary",
+    "simpleLOC",
     "wiki2tagclouds",
     "moretagclouds",
     "summarizeModuleDescriptions",
@@ -27,7 +23,6 @@
     "parseMegaL",
     "webDeployMegaModels",
     "validateModuleDescriptions",
-    "integrate",
     "onto2ttl",
     "testAllExplorerEntities"
 ]

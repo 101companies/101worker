@@ -7,11 +7,11 @@ jvalidator/JValidator.class: jvalidator/*.java Makefile
 		-classpath .:lib/javaparser-1.0.8.jar \
 		jvalidator/*.java
 
-test: 
+test:
 	./validator example/Serialization.java
 
-clean: 
+clean:
 	rm -f jvalidator/*.class
 
 install:
-    apt-get install openjdk-7-jdk
+	apt-get install openjdk-7-jdk
