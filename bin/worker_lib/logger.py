@@ -11,7 +11,10 @@ try:
 
     if MONGODB_USER and MONGODB_PWD:
         db.authenticate(MONGODB_USER, MONGODB_PWD)
+
+    MONGO = True
 except ImportError:
+    MONGO = False
     print 'pymongo is missing: "pip install pymongo"'
 
 def report_error(error_type, error_data):
@@ -24,8 +27,9 @@ def report_error(error_type, error_data):
     print error_type
     print error_data
 
-    db.errors.insert_one({
-        'error': error_type,
-        'data': error_data,
-        'created_at': datetime.datetime.now()
-    })
+    if MONGO:
+        db.errors.insert_one({
+            'error': error_type,
+            'data': error_data,
+            'created_at': datetime.datetime.now()
+        })
