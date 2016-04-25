@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+import os
+import sys
+sys.path.append(os.path.abspath('.'))
+sys.path.append(os.path.abspath('./libraries'))
+
+import importlib
+
+module = importlib.import_module('modules.' + sys.argv[1])
+
+os.environ['FULL_SWEEP'] = '1'
+os.environ['OMIT_GITDEPS'] = '1'
+os.environ['OMIT_PULL'] = '1'
+
+modules = [
+    module
+]
+
+import worker_lib
+
+worker_lib.env['repo101dir'] = os.path.abspath('../101test')
+
+worker_lib.runner.run(modules, worker_lib.env)

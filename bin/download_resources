@@ -41,7 +41,7 @@ print "extracting resources"
 unzip("./resources.zip", env['data101dir'])
 
 print "extracting 101repo"
-unzip("./101repo", env['repo101dir'])
+unzip("./101repo", env['results101dir'])
 
 print "cleaning up"
 os.remove("./dumps.zip")

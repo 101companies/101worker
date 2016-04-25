@@ -34,8 +34,11 @@ def run(modules, env):
     '''
     The worker main loop.
     '''
-    repo = create_repo(env)
-    changes = pull_repo(repo)
+    if not os.environ.get('OMIT_PULL'):
+        repo = create_repo(env)
+        changes = pull_repo(repo)
+    else:
+        changes = []
     # changes = []
 
     if not os.environ.get('OMIT_GITDEPS'):
