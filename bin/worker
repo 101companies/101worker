@@ -17,16 +17,16 @@ from modules import moretagclouds
 from modules import zip
 
 modules = [
-    # pull,
-    # collectRules,
-    # matchLanguage,
-    # extractFacts,
-    # dumpMongoDBToJson,
-    # convertMongoDump,
+    pull,
+    collectRules,
+    matchLanguage,
+    extractFacts,
+    dumpMongoDBToJson,
+    convertMongoDump,
     simpleLOC,
-    # wiki2tagclouds,
-    # moretagclouds,
-    # zip
+    wiki2tagclouds,
+    moretagclouds,
+    zip
 ]
 
 from worker_lib import *
