@@ -5,20 +5,16 @@ import os
 import sys
 import json
 
-os.chdir(os.path.dirname(__file__))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../bin/'))
+
+os.chdir(os.path.join(os.path.dirname(__file__), '..'))
+
+from worker_lib import env
 
 # load env vars
 this_file = os.path.dirname(os.path.realpath(__file__))
-from subprocess import Popen, PIPE
 
-process = Popen([
-    os.path.join(this_file, "../../tools/loadenv"),
-    os.path.join(this_file, "../../configs/env/production.yml")], stdout=PIPE)
-(output, err) = process.communicate()
-exit_code = process.wait()
-
-output = json.loads(output)
-for (key, value) in output.items():
+for (key, value) in env.items():
     os.environ[key] = value
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../libraries')))

@@ -6,12 +6,11 @@ import sys
 sys.path.append('../../libraries/101meta')
 sys.path.append('../../libraries')
 from mediawiki101 import remove_headline_markup
-import const101
-
+from worker_lib import env
 
 
 def getWikiData(namespace, member):
-    wiki = json.load(open(const101.wikiDump, 'r'))
+    wiki = json.load(open(env['wiki101dump'], 'r'))
     if namespace == '':
         namespace = None
     if member == '':

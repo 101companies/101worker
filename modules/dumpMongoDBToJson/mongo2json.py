@@ -18,7 +18,7 @@ config = {
 
 def get_db():
     client = MongoClient('localhost', 27017)
-    db = client['wiki_development']
+    db = client['wiki_production']
 
     MONGODB_USER = os.environ['MONGODB_USER']
     MONGODB_PWD = os.environ['MONGODB_PWD']
