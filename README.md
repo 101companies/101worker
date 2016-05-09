@@ -28,12 +28,18 @@ Environment Variables are:
 
 * OMIT_GITDEPS - Skips pulling gitdeps
 * FULL_SWEEP - Perform a full sweep, disables incremental features
+* OMIT_PULL - Skips pulling 101repo
 
 The full list of modules is configured
 https://github.com/101companies/101worker/blob/master/bin/worker
 
 # Development
 
+## Running a module
+Use `bin/run_module [moduleName]` to run a single Module. The Test-Environment
+is specified in `config/test_folders.txt` which lists a number of directories
+from 101results/101repo to be copied to 101test/. This mode sets OMIT_GITDEPS,
+FULL_SWEEP and OMIT_PULL.
 
 ## Resource Derivation
 
@@ -42,7 +48,7 @@ It counts the lines of code of every source file in 101repo.
 
 ## Dump Collection
 
-An example module for this can be found at https://github.com/101companies/101worker/tree/development/modules/collectRules. This modules collects all 101meta files and puts them into a dump.
+An example module for this can be found at https://github.com/101companies/101worker/tree/development/modules/locPerContribution. This modules collects all Loc files and puts them into a per contribution dump.
 
 ## Third party Resource
 An example module for this can be found at

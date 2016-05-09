@@ -1,2 +1,2 @@
 from .env import env
-import runner
+from . import runner

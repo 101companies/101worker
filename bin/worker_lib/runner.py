@@ -6,7 +6,7 @@ import traceback
 import datetime
 import time
 import shutil
-from logger import report_error
+from .logger import report_error
 
 from .repo import *
 from .env import create_module_env
@@ -53,13 +53,6 @@ def run(modules, env):
         executor = get_executor(module)
         executor.run(changes)
 
-def run_tests(env):
-    config = load_config()
-    failed, modules = load_modules(config)
-
-    context = {
-        'env': env
-    }
-
+def run_tests(modules):
     for module in modules:
         module.test()

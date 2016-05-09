@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding=utf-8
 
 try:
     from pymongo import MongoClient
     from bson.json_util import dumps
 except ImportError:
-    print 'pymongo is missing: "pip install pymongo"'
+    print('pymongo is missing: "pip install pymongo"')
 
 import json
 import os

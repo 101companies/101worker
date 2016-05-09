@@ -84,8 +84,51 @@ def get_lang(resource):
 
 def run(context, change):
     # dispatch the modified file
-    if change['type'] == 'NEW_FILE':
+    if change['type'] == 'NEW_FILE' or change['type'] == 'FILE_CHANGED':
         context.write_derived_resource(change['file'], get_lang(change['file']), '.lang')
 
     else:
         context.remove_derived_resource(change['file'], '.lang')
+
+import unittest
+from unittest.mock import Mock
+
+class TestMatchLanguage(unittest.TestCase):
+
+    def test_get_lang(self):
+        for ext in langs.keys():
+            self.assertEqual(get_lang('file.' + ext), langs[ext])
+
+    def test_run_new_file(self):
+        change = {
+            'type': 'NEW_FILE',
+            'file': 'some-file.py'
+        }
+        env = Mock()
+        run(env, change)
+
+        env.write_derived_resource.assert_called_with('some-file.py', 'Python', '.lang')
+
+    def test_run_changed_file(self):
+        change = {
+            'type': 'FILE_CHANGED',
+            'file': 'some-file.py'
+        }
+        env = Mock()
+        run(env, change)
+
+        env.write_derived_resource.assert_called_with('some-file.py', 'Python', '.lang')
+
+    def test_run_removed_file(self):
+        change = {
+            'type': 'DELETED_FILE',
+            'file': 'some-file.py'
+        }
+        env = Mock()
+        run(env, change)
+
+        env.remove_derived_resource.assert_called_with('some-file.py', '.lang')
+
+def test():
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestMatchLanguage)
+    unittest.TextTestRunner(verbosity=2).run(suite)

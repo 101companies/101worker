@@ -43,14 +43,13 @@ def run(context):
 
     print('\n\nFinished updating repos with {0}errors'.format('' if ret else 'no '))
 
+import unittest
+
+class TestPull(unittest.TestCase):
+
+  def test_load(self):
+      self.assertTrue(len(load_repos()) > 0)
+
 def test():
-    import TAP
-    import TAP.Simple
-    import StringIO
-
-    t = TAP.Simple
-    t.builder._plan = None
-
-    t.plan(1)
-
-    t.is_ok(len(load_repos()) > 0, True, 'loads repos')
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestPull)
+    unittest.TextTestRunner(verbosity=2).run(suite)

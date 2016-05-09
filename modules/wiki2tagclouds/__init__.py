@@ -1,1 +1,1 @@
-from .program import run, config
+from .program import run, config, test

@@ -33,24 +33,24 @@ def run(context, change):
     else:
         remove_file(context, change['file'])
 
+import unittest
+from unittest.mock import Mock
+import io
+
+class SimpleLocTest(unittest.TestCase):
+
+    def test_count_lines_three(self):
+        three_lines = io.StringIO('''
+        Test
+        ''')
+
+        self.assertEqual(count_lines(three_lines), 3)
+
+    def test_count_zero_lines(self):
+        zero_lines = io.StringIO('')
+
+        self.assertEqual(count_lines(zero_lines), 0)
+
 def test():
-    import TAP
-    import TAP.Simple
-    import StringIO
-
-    t = TAP.Simple
-    t.builder._plan = None
-
-    # test data
-    three_lines = StringIO.StringIO('''
-    Test
-    ''')
-
-    zero_lines = StringIO.StringIO('')
-
-    # plan gets the number of defined tests as parameter
-    t.plan(2)
-
-    # tests count lines
-    t.eq_ok(3, count_lines(three_lines), 'simple lines count')
-    t.eq_ok(0, count_lines(zero_lines), 'works for 0 lines')
+    suite = unittest.TestLoader().loadTestsFromTestCase(SimpleLocTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)

@@ -1,6 +1,6 @@
 import unittest
 
-import mongo2json
+from . import mongo2json
 import os
 import io
 import json

@@ -21,7 +21,7 @@ def zipFolder(source, target):
 ### SPECIFIC ###
 #zip all contributions in single files
 def zipContributions():
-    print "zipping single contribs"
+    print("zipping single contribs")
     dirlist = os.listdir(contrib)
     for d in dirlist:
         source = os.path.join(contrib, d)
@@ -31,21 +31,21 @@ def zipContributions():
 
 #zip 101repo folder
 def zip101Repo():
-    print "zipping 101repo folder"
+    print("zipping 101repo folder")
     source = repo
     target = os.path.join(webZip, "101repo")
     zipFolder(source, target)
 
 #zipping dumps
 def zipDumps():
-    print "zipping dumps folder"
+    print("zipping dumps folder")
     source = os.path.join(web, "dumps")
     target = os.path.join(webZip, "dumps")
     zipFolder(source, target)
 
 #zipping resources
 def zipResources():
-    print "zipping resources folder"
+    print("zipping resources folder")
     source = os.path.join(web, "resources")
     target = os.path.join(webZip, "resources")
     zipFolder(source, target)
@@ -76,3 +76,26 @@ def run(context):
 
     zipDumps()
     zipResources()
+
+import unittest
+from unittest.mock import patch, Mock
+
+class ZipTest(unittest.TestCase):
+
+    @patch('modules.zip.zipFolder')
+    @patch('modules.zip.ensureFolder')
+    @patch('modules.zip.zipContributions')
+    def test_run(self, zipContributions, ensureFolder, zipFolder):
+        env = Mock(**{ 'get_env.return_value': '/some/path/' })
+        run(env)
+
+        zipFolder.assert_any_call('/some/path/', '/some/path/zips/101repo')
+        zipFolder.assert_any_call('/some/path/dumps', '/some/path/zips/dumps')
+        zipFolder.assert_any_call('/some/path/resources', '/some/path/zips/resources')
+
+        ensureFolder.assert_any_call('/some/path/zips')
+        ensureFolder.assert_any_call('/some/path/zips/contributions')
+
+def test():
+    suite = unittest.TestLoader().loadTestsFromTestCase(ZipTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)

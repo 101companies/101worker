@@ -68,3 +68,6 @@ def run(context):
 
     css = os.path.join(os.path.dirname(__file__), 'wiki2tagclouds.css')
     shutil.copyfile(css, os.path.join(context.get_env('views101dir'), 'wiki2tagclouds.css'))
+
+def test():
+    pass

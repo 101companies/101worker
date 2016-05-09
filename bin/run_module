@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 import sys
@@ -7,7 +7,8 @@ sys.path.append(os.path.abspath('./libraries'))
 
 import importlib
 
-module = importlib.import_module('modules.' + sys.argv[1])
+m = 'modules.' + sys.argv[1]
+module = importlib.import_module(m)
 
 os.environ['FULL_SWEEP'] = '1'
 os.environ['OMIT_GITDEPS'] = '1'
@@ -18,7 +19,20 @@ modules = [
 ]
 
 import worker_lib
+import shutil
 
-worker_lib.env['repo101dir'] = os.path.abspath('../101test')
+d = os.path.abspath('../101test')
+if os.path.exists(d):
+    shutil.rmtree(d)
+    os.makedirs(d)
+
+with open('config/test_folders.txt') as f:
+    folders = f.read()
+
+folders = filter(bool, folders.split('\n'))
+for f in folders:
+    shutil.copytree(os.path.join(worker_lib.env.get('repo101dir'), f), os.path.join(d, f))
+
+worker_lib.env['repo101dir'] = d
 
 worker_lib.runner.run(modules, worker_lib.env)

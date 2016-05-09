@@ -82,7 +82,7 @@ def create_module_env(env, module=None):
         if os.path.exists(target):
             os.remove(target)
         else:
-            print 'cant remove missing resource ' + primary_resource + key
+            print('cant remove missing resource ' + primary_resource + key)
 
     def get_primary_resource(primary_resource):
         with open(os.path.join(get_env('repo101dir'), primary_resource), 'r') as f:

@@ -15,7 +15,7 @@ try:
     MONGO = True
 except ImportError:
     MONGO = False
-    print 'pymongo is missing: "pip install pymongo"'
+    print('pymongo is missing: "pip install pymongo"')
 
 def report_error(error_type, error_data):
     '''
@@ -24,8 +24,8 @@ def report_error(error_type, error_data):
     :param error_data: data for the error, e.g. stack trace
     '''
 
-    print error_type
-    print error_data
+    print(error_type)
+    print(error_data)
 
     if MONGO:
         db.errors.insert_one({

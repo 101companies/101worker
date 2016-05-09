@@ -61,7 +61,6 @@ def pull_repo(repo):
     return map(lambda diff: convert_diff(diff), diffs)
 
 def create_repo(env):
-    print env['repo101dir']
     return Repo(env['repo101dir'])
 
 def checkout_commit(repo, commit):

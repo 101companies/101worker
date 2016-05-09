@@ -1,6 +1,6 @@
 import os
 
-import wiki2json
+from . import wiki2json
 
 def test():
     import TAP
