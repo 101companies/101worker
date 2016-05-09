@@ -12,22 +12,32 @@ config = {
 }
 
 def run(context, change):
+    '''
+    New/Changed files:
+        - get the language
+        - find the matching extractor (https://github.com/101companies/101docs/blob/master/worker/extractors.md)
+        - run the extractor
+        - save the extractor output as a derived resource
+    Deleted Files:
+        - remove a possible extractor resource
+    '''
     if change['type'] == 'NEW_FILE' or change['type'] == 'FILE_CHANGED':
         language = context.get_derived_resource(change['file'], '.lang')
 
         path = os.path.join('extractors', language, 'extractor')
+        # we ignore non-existant extractors
         if os.path.exists(path):
             extractor = path
-        else:
-            extractor = None
 
-        if extractor:
+            # run the extractor
             source_file = os.path.join(context.get_env('repo101dir'), change['file'])
             command = "{0} < \"{1}\"".format(extractor, source_file)
-
             output = subprocess.check_output(command, stderr=subprocess.STDOUT)
 
+            
             context.write_derived_resource(change['file'], json.loads(output), '.extractor')
+    else:
+        context.remove_derived_resource(change['file'], 'extractor')
 
 import unittest
 from unittest.mock import Mock, patch
