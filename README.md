@@ -9,20 +9,12 @@ Windows might work to some extent.
 
 **Install on Ubuntu Linux**
 
-* `sudo apt-get install git`
-* `sudo apt-get install python-pip`
-* `sudo pip install gitpython`
-* `sudo pip install jinja2`
-* `sudo pip install pymongo`
-
 ```bash
 git clone https://github.com/101companies/101worker.git
 cd 101worker
 make init -B
 sudo make install -B
 make download
-
-FULL_SWEEP=1 bin/worker
 ```
 
 Environment Variables are:
