@@ -52,7 +52,8 @@ env = {
     'web101dir': abs_path('../101web'),
     'wiki101dump': abs_path('../101web/data/dumps/wiki.json'),
     'wiki101url': 'http://101companies.org/wiki/',
-    'worker101dir': abs_path('../101worker')
+    'worker101dir': abs_path('../101worker'),
+    'locPerContribution': abs_path('../101web/data/dumps/locPerContribution.json')
 }
 
 class AttrDict(dict):
@@ -98,7 +99,7 @@ def create_module_env(env, module=None):
         try:
             with open(get_env(dump_name), 'r') as f:
                 return json.load(f)
-        except IOError:
+        except FileNotFoundError:
             return None
 
     def write_dump(dump_name, data):

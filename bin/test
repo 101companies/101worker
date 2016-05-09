@@ -14,6 +14,7 @@ from modules import simpleLOC
 from modules import wiki2tagclouds
 from modules import moretagclouds
 from modules import zip
+from modules import locPerContribution
 
 modules = [
     pull,
@@ -22,6 +23,7 @@ modules = [
     #dumpMongoDBToJson,
     #convertMongoDump,
     simpleLOC,
+    locPerContribution,
     wiki2tagclouds,
     moretagclouds,
     zip

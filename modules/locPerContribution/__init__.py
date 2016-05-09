@@ -3,23 +3,56 @@ import json
 
 config = {
     'wantdiff': False,
-    'wantsfiles': False,
-    'threadsafe': True
+    'wantsfiles': True,
+    'threadsafe': False
 }
 
-def run(env):
-    base = os.path.join(env.get_env('repo101dir'), 'contributions')
-    output = env.get_env('targets101dir')
+def run(env, change):
+    data = env.read_dump('locPerContribution')
 
-    for c in os.listdir(base):
-        loc = 0
-        for root, dirs, files in os.walk(os.path.join(base, c)):
-            for f in files:
-                source_file = os.path.join(root, f).replace(base + '/', 'contributions/')
-                loc += (env.get_derived_resource(source_file, '.loc'))
+    if data is None:
+        data = {}
 
-        with open(os.path.join(output, 'contributions', c + '.module_loc.json'), 'w') as f:
-            json.dump(loc, f)
+    f = change['file']
+    if f.startswith('contributions/'):
+        contribution = f.split('/')[1]
+
+        if data.get(contribution, None) is None:
+            data[contribution] = 0
+
+        data[contribution] += env.get_derived_resource(f, '.loc')
+
+    env.write_dump('locPerContribution', data)
+
+import unittest
+from unittest.mock import Mock, patch
+
+class LocPerContributionTest(unittest.TestCase):
+
+    def test_run(self):
+        change = {
+            'file': 'contributions/python/some-file.py'
+        }
+        env = Mock()
+        env.read_dump.return_value = { 'python': 45 }
+        env.get_derived_resource.return_value = 10
+
+        run(env, change)
+
+        env.write_dump.assert_called_with('locPerContribution', { 'python': 55 })
+
+    def test_run_no_contribution(self):
+        change = {
+            'file': 'something/python/some-file.py'
+        }
+        env = Mock()
+        env.read_dump.return_value = { 'python': 45 }
+        env.get_derived_resource.return_value = 10
+
+        run(env, change)
+
+        env.write_dump.assert_called_with('locPerContribution', { 'python': 45 })
 
 def test():
-    pass
+    suite = unittest.TestLoader().loadTestsFromTestCase(LocPerContributionTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)
