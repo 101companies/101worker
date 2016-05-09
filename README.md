@@ -18,10 +18,11 @@ Windows might work to some extent.
 ```bash
 git clone https://github.com/101companies/101worker.git
 cd 101worker
-make init
+make init -B
+sudo make install -B
 make download
 
-OMIT_GITDEPS=1 FULL_SWEEP=1 bin/worker
+FULL_SWEEP=1 bin/worker
 ```
 
 Environment Variables are:
