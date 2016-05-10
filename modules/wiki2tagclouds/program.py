@@ -26,7 +26,7 @@ def run(context):
 
         # Prepare for buckets of scaling
         # Inspired by http://stackoverflow.com/questions/3180779/html-tag-cloud-in-python
-        step = max(counts.values()) / 6
+        step = max(counts.values() or [0]) / 6
 
         counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
 
@@ -57,7 +57,7 @@ def run(context):
     uses = [p.get('Uses', []) for p in contributions]
     uses = [p for use in uses for p in use]
 
-    uses = filter(lambda u: u.get('p', '') == 'Technology', uses)
+    uses = list(filter(lambda u: u.get('p', '') == 'Technology', uses))
 
     uses = [use['n'] for use in uses]
 

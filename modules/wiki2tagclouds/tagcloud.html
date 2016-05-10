@@ -9,7 +9,7 @@
 {% for tag, count in counts -%}
 
     {% set css = count // step %}
-    <a href="{{ root }}:{{ tag }}" class="size-{{ css }}">{{ tag }}</a>
+    <a href="{{ root }}:{{ tag }}" class="size-{{ css|int }}">{{ tag }}</a>
 
 {%- endfor %}
 

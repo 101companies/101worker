@@ -39,7 +39,7 @@ def run(context):
     output = get_output(context)
     allPages = get_pages(db)
     with open(output, 'w') as f:
-        f.write(dumps({'pageCount': len(allPages), 'pages': allPages}))
+        f.write(dumps({'pageCount': len(allPages), 'pages': allPages}, indent=4))
 
 if __name__ == '__main__':
     main()

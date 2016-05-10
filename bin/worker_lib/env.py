@@ -53,7 +53,8 @@ env = {
     'wiki101dump': abs_path('../101web/data/dumps/wiki.json'),
     'wiki101url': 'http://101companies.org/wiki/',
     'worker101dir': abs_path('../101worker'),
-    'locPerContribution': abs_path('../101web/data/dumps/locPerContribution.json')
+    'locPerContribution': abs_path('../101web/data/dumps/locPerContribution.json'),
+    'mostUsedLanguages': abs_path('../101web/data/dumps/mostUsedLanguages.json')
 }
 
 class AttrDict(dict):
@@ -104,7 +105,7 @@ def create_module_env(env, module=None):
 
     def write_dump(dump_name, data):
         with open(get_env(dump_name), 'w') as f:
-            json.dump(data, f)
+            json.dump(data, f, indent=4)
 
     return AttrDict({
         'get_env': get_env,

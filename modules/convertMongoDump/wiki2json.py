@@ -45,13 +45,14 @@ def run(context):
         allPages = json.load(f)['pages']
 
     for p in allPages:
-        if not p.has_key('page_title_namespace'):
+        if not 'page_title_namespace' in p:
             continue
-        if p.has_key('headline'):
+        if 'headline' in p:
             res = {'headline': p['headline']}
         else:
             res = {'headline': 'n/a'}
-        handle_page_name(p['page_title_namespace'], res)
+
+        handle_page_name(p.get('page_title_namespace', ''), res)
 
         if 'used_links' in p:
             res['internal_links'] = p['used_links']
@@ -65,11 +66,11 @@ def run(context):
         if 'subresources' in p:
             res['subresources'] = {}
             for sr in p['subresources']:
-                for key, value in sr.iteritems():
+                for key, value in sr.items():
                     res['subresources'][key] = extract_properties(value)
                     res['subresources'][key]['internal_links'] = value
 
         allPages.append(res)
-
+    
     with open(context.get_env('dumps101dir') + '/wiki.json', 'w') as f:
         f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': allPages}}, sort_keys=True, indent=4))

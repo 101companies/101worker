@@ -20,7 +20,7 @@ def unzip(fileName, into):
 		print output
 		sys.exit(status)
 
-url = "http://data.101companies.org/zips/";
+url = "http://worker.101companies.org/data/zips/";
 
 #retrieve data
 print "downloading dumps"

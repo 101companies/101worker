@@ -13,7 +13,8 @@ full-reset:
 
 init:
 	mkdir -p ../101web/data/dumps
-	mkdir -p ../101web/data/resouces
+	mkdir -p ../101web/data/resources
+	mkdir -p ../101web/data/views
 	mkdir -p ../101logs
 	mkdir -p ../101temps
 	mkdir -p ../101results

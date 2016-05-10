@@ -5,6 +5,7 @@ import sys
 from collections import Counter
 from jinja2 import *
 import os
+from functools import reduce
 
 config = {
     'wantdiff': False,
@@ -30,7 +31,7 @@ def run(context):
     uses = [p.get('Uses', []) for p in contributions]
     uses = [p for use in uses for p in use]
 
-    uses = filter(lambda u: u['p'] == 'Language', uses)
+    uses = list(filter(lambda u: u['p'] == 'Language', uses))
 
     uses = [use['n'].replace('_', ' ') for use in uses]
 
@@ -48,10 +49,10 @@ def run(context):
     # features
 
     implements = map(lambda c: c.get('implements', []), contributions)
-    implements = reduce(lambda a, b: a+b, implements)
+    implements = list(reduce(lambda a, b: a+b, implements, []))
 
     features = filter(lambda o: o['p'] == 'Feature', implements)
-    features = map(lambda o: o['n'], features)
+    features = map(lambda o: o['n'], features, [])
 
     features = [f.replace('_', ' ') for f in features]
 
@@ -60,10 +61,10 @@ def run(context):
     #contributors
 
     developedBy = map(lambda c: c.get('developedBy', []), contributions)
-    developedBy = reduce(lambda a, b: a+b, developedBy)
+    developedBy = list(reduce(lambda a, b: a+b, developedBy, []))
 
     developedBy = filter(lambda o: o['p'] == 'Contributor', developedBy)
-    developedBy = map(lambda o: o['n'], developedBy)
+    developedBy = map(lambda o: o['n'], developedBy, [])
 
     developedBy = filter(lambda n: n is not None, developedBy)
 
