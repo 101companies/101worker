@@ -13,11 +13,14 @@ def count_lines(source):
 
 def update_file(context, f):
     # reads the content of the file (primary resource)
-    source = context.get_primary_resource(f)
+    try:
+        source = context.get_primary_resource(f)
 
-    loc = count_lines(source)
+        loc = count_lines(source)
 
-    context.write_derived_resource(f, loc, '.loc')
+        context.write_derived_resource(f, loc, '.loc')
+    except UnicodeDecodeError:
+        context.write_derived_resource(f, 0, '.loc')
 
 def remove_file(context, f):
     context.remove_derived_resource(f, '.loc')

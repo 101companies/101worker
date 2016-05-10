@@ -54,7 +54,8 @@ env = {
     'wiki101url': 'http://101companies.org/wiki/',
     'worker101dir': abs_path('../101worker'),
     'locPerContribution': abs_path('../101web/data/dumps/locPerContribution.json'),
-    'languageFrequency': abs_path('../101web/data/dumps/languageFrequency.json')
+    'languageFrequency': abs_path('../101web/data/dumps/languageFrequency.json'),
+    'packageFrequency': abs_path('../101web/data/dumps/packageFrequency.json')
 }
 
 class AttrDict(dict):
