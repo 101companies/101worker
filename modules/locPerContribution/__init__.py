@@ -7,13 +7,13 @@ config = {
     'threadsafe': False
 }
 
-def run(env, change):
+def run(env, res):
     data = env.read_dump('locPerContribution')
 
     if data is None:
         data = {}
 
-    f = change['file']
+    f = res['file']
     if f.startswith('contributions/'):
         contribution = f.split('/')[1]
 
@@ -35,25 +35,25 @@ class LocPerContributionTest(unittest.TestCase):
         self.env.get_derived_resource.return_value = 10
 
     def test_run(self):
-        change = {
+        res = {
             'file': 'contributions/python/some-file.py'
         }
-        run(self.env, change)
+        run(self.env, res)
 
         self.env.write_dump.assert_called_with('locPerContribution', { 'python': 55 })
 
     def test_new_contribution(self):
-        change = {
+        res = {
             'file': 'contributions/ruby/some-file.rb'
         }
-        run(self.env, change)
+        run(self.env, res)
         self.env.write_dump.assert_called_with('locPerContribution', { 'python': 45, 'ruby': 10 })
 
     def test_run_no_contribution(self):
-        change = {
+        res = {
             'file': 'something/python/some-file.py'
         }
-        run(self.env, change)
+        run(self.env, res)
 
         self.env.write_dump.assert_called_with('locPerContribution', { 'python': 45 })
 
