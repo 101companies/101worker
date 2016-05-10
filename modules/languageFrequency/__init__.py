@@ -22,4 +22,4 @@ def run(env):
 
     lcounts = Counter(uses)
 
-    env.write_dump('mostUsedLanguages', lcounts)
+    env.write_dump('languageFrequency', lcounts)

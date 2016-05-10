@@ -1,7 +1,8 @@
-install:
-	@echo Setting up 101worker - installation of dependencies requires sudo
+install-debian-pkgs:
 	sudo apt-get install git
 	sudo apt-get install python3-pip
+
+install-pip-pkgs:
 	sudo pip3 install gitpython
 	sudo pip3 install jinja2
 	sudo pip3 install pymongo

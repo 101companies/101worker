@@ -1,2 +1,6 @@
 contributions/py3k
 contributions/ruby
+contributions/javaComposition
+contributions/jdom
+contributions/haskellEngineer
+contributions/haskellComposition
