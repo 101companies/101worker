@@ -15,6 +15,7 @@ from modules import wiki2tagclouds
 from modules import moretagclouds
 from modules import zip
 from modules import locPerContribution
+from modules import languageFrequency
 
 modules = [
     pull,
@@ -26,7 +27,8 @@ modules = [
     locPerContribution,
     wiki2tagclouds,
     moretagclouds,
-    zip
+    zip,
+    languageFrequency
 ]
 
 from worker_lib import *

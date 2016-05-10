@@ -54,3 +54,48 @@ An example module for this can be found at
 https://github.com/101companies/101worker/tree/master/modules/moretagclouds.
 It parses the wiki dump and produces some tag clouds. These kinds of modules
 are not incremental.
+
+# Modules
+
+## Structure
+
+Modules define the following names:
+
+* run(context, c) or run(context) depending on the configuration (see below).
+* test()
+* config
+
+### config
+
+A dictionary which describes the required contract for the module. Keys are:
+* wantdiff   - gets called for every incremental change
+* wantsfiles - not incremental but needs all files from 101repo (like FULL_SWEEP), if set to false and wantdiff is false as well, the module run is only run(context)
+* threadsafe - not used atm
+
+### run(context, c)
+
+Define this method if you use wantdiff or wantsfiles. c has the following Structure:
+```python
+{
+  'type': 'NEW_FILE|FILE_CHANGED|DELETED_FILE',
+  'file': 'contributions/some-contribution/some-file.py'
+}
+```
+Use this for modules which operate on single files, also for modules which work on derived resources.
+
+### run(context)
+
+Define this method for modules which set wantdiff and wantsfiles to false.
+Use this for modules which use dumps or external resources.
+
+### test()
+
+This method is used for testing, run `bin/test` to execute all tests for every module. Executing the tests executes the test function for every module. The test function should be in most cases:
+
+```python
+def test():
+    suite = unittest.TestLoader().loadTestsFromTestCase(ExampleModuleTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+```
+
+Refer to simpleLoc for an example. Testing the run function requires some kind of mocking usually, refer to the [python documentation](https://docs.python.org/3/library/unittest.mock.html) for further details. Note that you should make sure that the necessary functions are called with the correct parameters, use [assert_called_with](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.Mock.assert_called_with).

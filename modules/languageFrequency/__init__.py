@@ -20,6 +20,36 @@ def run(env):
 
     uses = [use['n'].replace('_', ' ') for use in uses]
 
-    lcounts = Counter(uses)
+    lcounts = dict(Counter(uses))
 
     env.write_dump('languageFrequency', lcounts)
+
+
+import unittest
+from unittest.mock import Mock, patch
+
+class LanguageFrquencyTest(unittest.TestCase):
+
+    def setUp(self):
+        self.env = Mock()
+        self.env.read_dump.return_value = {
+            'wiki': {
+                'pages': [
+                    {
+                        'p': 'Contribution',
+                        'Uses': [
+                            { 'p': 'Language', 'n': 'Python' }
+                        ]
+                    }
+                ]
+            }
+        }
+
+    def test_run(self):
+        run(self.env)
+
+        self.env.write_dump.assert_called_with('languageFrequency', { 'Python': 1 })
+
+def test():
+    suite = unittest.TestLoader().loadTestsFromTestCase(LanguageFrquencyTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)

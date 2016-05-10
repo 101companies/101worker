@@ -9,7 +9,7 @@ config = {
 
 # this is the actual logic of the module
 def count_lines(source):
-    return sum(1 for line in source)
+    return sum(1 for line in source.split('\n'))
 
 def update_file(context, f):
     # reads the content of the file (primary resource)
@@ -42,17 +42,48 @@ import io
 
 class SimpleLocTest(unittest.TestCase):
 
+    def setUp(self):
+        self.env = Mock()
+        self.env.get_primary_resource.return_value = 'x = 5\ny=6\nprint(x)\n'
+
+    def test_run_new(self):
+        change = {
+            'type': 'NEW_FILE',
+            'file': 'some-file.py'
+        }
+        run(self.env, change)
+
+        self.env.write_derived_resource.assert_called_with('some-file.py', 4, '.loc')
+
+    def test_run_changed(self):
+        change = {
+            'type': 'FILE_CHANGED',
+            'file': 'some-file.py'
+        }
+        run(self.env, change)
+
+        self.env.write_derived_resource.assert_called_with('some-file.py', 4, '.loc')
+
+    def test_run_removed(self):
+        change = {
+            'type': '',
+            'file': 'some-file.py'
+        }
+        run(self.env, change)
+
+        self.env.remove_derived_resource.assert_called_with('some-file.py', '.loc')
+
     def test_count_lines_three(self):
-        three_lines = io.StringIO('''
+        three_lines = '''
         Test
-        ''')
+        '''
 
         self.assertEqual(count_lines(three_lines), 3)
 
-    def test_count_zero_lines(self):
-        zero_lines = io.StringIO('')
+    def test_count_one_line(self):
+        one_line = ''
 
-        self.assertEqual(count_lines(zero_lines), 0)
+        self.assertEqual(count_lines(one_line), 1)
 
 def test():
     suite = unittest.TestLoader().loadTestsFromTestCase(SimpleLocTest)
