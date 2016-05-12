@@ -4,6 +4,7 @@ import os
 import sys
 import urllib.request
 import subprocess
+import zipfile
 
 from worker_lib.env import env
 
@@ -14,11 +15,11 @@ def progress(blockCount, blockSize, totalSize):
 
 
 def unzip(fileName, into):
-	status, output = subprocess.getstatusoutput("unzip -uod " + into + " " + fileName)
-	if (status):
-		print("extracting " + fileName + " failed")
-		print(output)
-		sys.exit(status)
+	print(fileName)
+	print(into)
+
+	with zipfile.ZipFile(fileName, "r") as z:
+	    z.extractall(into)
 
 url = "http://worker.101companies.org/data/zips/";
 
@@ -41,7 +42,7 @@ print("extracting resources")
 unzip("./resources.zip", env['data101dir'])
 
 print("extracting 101repo")
-unzip("./101repo", env['results101dir'])
+unzip("./101repo.zip", env['results101dir'])
 
 print("cleaning up")
 os.remove("./dumps.zip")
