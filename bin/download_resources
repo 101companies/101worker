@@ -1,49 +1,49 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 import sys
-import urllib
-import commands
+import urllib.request
+import subprocess
 
 from worker_lib.env import env
 
 def progress(blockCount, blockSize, totalSize):
 	status = r"%10d  [%3.2f%%]" % (blockCount*blockSize, blockCount*blockSize * 100. / totalSize)
 	status = status + chr(8)*(len(status)+1)
-	print status,
+	print (status)
 
 
 def unzip(fileName, into):
-	status, output = commands.getstatusoutput("unzip -uod " + into + " " + fileName)
+	status, output = subprocess.getstatusoutput("unzip -uod " + into + " " + fileName)
 	if (status):
-		print "extracting " + fileName + " failed"
-		print output
+		print("extracting " + fileName + " failed")
+		print(output)
 		sys.exit(status)
 
 url = "http://worker.101companies.org/data/zips/";
 
 #retrieve data
-print "downloading dumps"
-urllib.urlretrieve(url+"dumps.zip", "./dumps.zip", progress)
-print "\ndownloading resources"
-urllib.urlretrieve(url+"resources.zip", "./resources.zip", progress)
-print "\ndownloading 101repo"
-urllib.urlretrieve(url+"101repo.zip", "./101repo.zip", progress)
+print("downloading dumps")
+urllib.request.urlretrieve(url+"dumps.zip", "./dumps.zip", progress)
+print("\ndownloading resources")
+urllib.request.urlretrieve(url+"resources.zip", "./resources.zip", progress)
+print("\ndownloading 101repo")
+urllib.request.urlretrieve(url+"101repo.zip", "./101repo.zip", progress)
 
-print "\nextracting dumps"
+print("\nextracting dumps")
 #extract dumps
 unzip("./dumps.zip", env['data101dir'])
 
 
 
-print "extracting resources"
+print("extracting resources")
 #extract resources
 unzip("./resources.zip", env['data101dir'])
 
-print "extracting 101repo"
+print("extracting 101repo")
 unzip("./101repo", env['results101dir'])
 
-print "cleaning up"
+print("cleaning up")
 os.remove("./dumps.zip")
 os.remove("./resources.zip")
 os.remove("./101repo.zip")
