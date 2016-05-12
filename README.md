@@ -13,7 +13,17 @@ Windows might work to some extent.
 git clone https://github.com/101companies/101worker.git
 cd 101worker
 make init -B
-sudo make install -B
+sudo make install-pip-pkgs -B
+make download
+```
+
+**Install on Windows**
+
+```cmd
+git clone https://github.com/101companies/101worker.git
+cd 101worker
+make init
+make install-pip-pkgs
 make download
 ```
 
@@ -33,6 +43,8 @@ Use `bin/run_module [moduleName]` to run a single Module. The Test-Environment
 is specified in `config/test_folders.txt` which lists a number of directories
 from 101results/101repo to be copied to 101test/. This mode sets OMIT_GITDEPS,
 FULL_SWEEP and OMIT_PULL.
+
+(Windows users have to use `python bin/run_module [moduleName]`)
 
 ## Resource Derivation
 
