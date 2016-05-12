@@ -19,7 +19,7 @@ def run(context):
     problems = []
     namespaceMembers = dict([(ns, []) for ns in mappings.values()])
 
-    for page in json.load(open(context.get_env('wiki101dump'), 'r'))['wiki']['pages']:
+    for page in json.load(open(context.get_env('wiki'), 'r'))['wiki']['pages']:
         p, n = page.get('p', None), page.get('n', 'None')
         if n.startswith('@'): p = '101'
         elif not p: p = 'Concept'

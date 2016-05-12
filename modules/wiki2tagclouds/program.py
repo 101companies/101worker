@@ -15,7 +15,7 @@ config = {
 
 def run(context):
     # Load 101wiki into memory
-    wiki = context.read_dump('wiki101dump')['wiki']
+    wiki = context.read_dump('wiki')['wiki']
 
     # Write .json and .html file -- the latter as a tag cloud
     def writeFiles(counts, label, prefix):

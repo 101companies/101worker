@@ -7,7 +7,7 @@ config = {
 }
 
 def run(env):
-    wiki_dump = env.read_dump('wiki101dump')
+    wiki_dump = env.read_dump('wiki')
 
     pages = wiki_dump['wiki']['pages']
 
