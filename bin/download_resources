@@ -15,9 +15,6 @@ def progress(blockCount, blockSize, totalSize):
 
 
 def unzip(fileName, into):
-	print(fileName)
-	print(into)
-
 	with zipfile.ZipFile(fileName, "r") as z:
 	    z.extractall(into)
 
