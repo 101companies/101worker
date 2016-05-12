@@ -2,6 +2,7 @@ from .env import create_module_env, env
 from .logger import report_error
 
 import os
+import sys
 import traceback
 
 class Executor(object):
@@ -31,10 +32,16 @@ class FileFullSweepExecutor(Executor):
                 if '.git' in os.path.join(root, f):
                     continue
 
-                change = {
-                    'type': 'NEW_FILE',
-                    'file': os.path.join(root, f).replace(env['repo101dir'] + '/', '')
-                }
+                if sys.platform == 'win32':
+                    change = {
+                        'type': 'NEW_FILE',
+                        'file': os.path.join(root, f).replace(env['repo101dir'] + '\\', '')
+                    }
+                else:
+                    change = {
+                        'type': 'NEW_FILE',
+                        'file': os.path.join(root, f).replace(env['repo101dir'] + '/', '')
+                    }
 
                 self._exec(change)
 
