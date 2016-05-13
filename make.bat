@@ -13,6 +13,10 @@ if %1 == download (
 call :download
 )
 
+if %1 == full-reset (
+call :full-reset
+)
+
 goto :end
 
 :init
@@ -25,17 +29,21 @@ md 101temps
 md 101results
 md 101diffs
 cd 101worker
-goto :eof
+goto :end
 
 :install-pip-pkgs
 pip3 install gitpython
 pip3 install jinja2
 pip3 install pymongo
 pip3 install inflection
-goto :eof
+goto :end
 
 :download
 python bin/download_resources
-goto :eof
+goto :end
+
+:full-reset
+rm -rf ../101web ../101logs ../101temps ../101results ../101diffs ../101test
+goto :end
 
 :end
