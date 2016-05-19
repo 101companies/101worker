@@ -19,6 +19,8 @@ make download
 
 **Install on Windows**
 
+Install [python3](https://www.python.org/downloads/release/python-351/). Be sure to check "Add to path" when the installer prompts.
+
 ```cmd
 git clone https://github.com/101companies/101worker.git
 cd 101worker
