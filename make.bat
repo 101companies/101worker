@@ -43,7 +43,9 @@ python bin/download_resources
 goto :end
 
 :full-reset
-rm -rf ../101web ../101logs ../101temps ../101results ../101diffs ../101test
+cd ..
+rmdir 101web 101logs 101temps 101results 101diffs 101test /s
+cd 101worker
 goto :end
 
 :end
