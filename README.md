@@ -45,7 +45,8 @@ Use `bin/run_module [moduleName]` to run a single Module. The Test-Environment
 is specified in `config/test_folders.txt` which lists a number of directories
 from 101results/101repo to be copied to 101test/. This mode sets OMIT_GITDEPS,
 FULL_SWEEP and OMIT_PULL. This also deletes any dumps created by the module.
-Note for this to work the `behavior` must be configured.
+Note for this to work the `behavior` must be configured. For more verbose output
+please use `-v [2 or 3]`.
 
 (Windows users have to use `python bin/run_module [moduleName]`)
 
