@@ -7,6 +7,7 @@ install-pip-pkgs:
 	sudo pip3 install jinja2
 	sudo pip3 install pymongo
 	sudo pip3 install inflection
+	sudo pip3 install networkx
 
 # Remove ALL derived files
 full-reset:

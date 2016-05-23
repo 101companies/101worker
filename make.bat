@@ -36,6 +36,7 @@ pip3 install gitpython
 pip3 install jinja2
 pip3 install pymongo
 pip3 install inflection
+pip3 install networkx
 goto :end
 
 :download
