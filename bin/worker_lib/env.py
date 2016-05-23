@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 
 def abs_path(path):
     return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', path))
@@ -69,7 +70,7 @@ def create_module_env(env, module=None):
             return env
 
     def write_derived_resource(primary_resource, data, key):
-        target = os.path.join(get_env('targets101dir'), primary_resource + key + '.json')
+        target = os.path.join(get_env('targets101dir'), primary_resource + '.' + key + '.json')
 
         if not os.path.exists(os.path.dirname(target)):
             os.makedirs(os.path.dirname(target))
@@ -77,22 +78,31 @@ def create_module_env(env, module=None):
         with open(target, 'w') as f:
             json.dump(data, f)
 
+        logging.debug('Wrote derived resource %s', target)
+
     def remove_derived_resource(primary_resource, key):
-        target = os.path.join(get_env('targets101dir'), primary_resource + key + '.json')
+        target = os.path.join(get_env('targets101dir'), primary_resource + '.' + key + '.json')
         if os.path.exists(target):
             os.remove(target)
         else:
-            print('cant remove missing resource ' + primary_resource + key)
+            logging.warn('cant remove missing resource ' + primary_resource + key)
 
     def get_primary_resource(primary_resource):
         with open(os.path.join(get_env('repo101dir'), primary_resource), 'r') as f:
             return f.read()
 
     def get_derived_resource(primary_resource, key):
-        path = os.path.join(get_env('targets101dir'), primary_resource + key + '.json')
+        path = os.path.join(get_env('targets101dir'), primary_resource + '.' + key + '.json')
 
         with open(path, 'r') as f:
             return json.load(f)
+
+    def remove_dump(dump_name):
+        target = os.path.join(get_env('dumps101dir'), dump_name + '.json')
+        if os.path.exists(target):
+            os.remove(target)
+        else:
+            logging.warn('Trying to delete non existing dump %s', target)
 
     def read_dump(dump_name):
         try:
@@ -102,8 +112,10 @@ def create_module_env(env, module=None):
             return None
 
     def write_dump(dump_name, data):
-        with open(os.path.join(get_env('dumps101dir'), dump_name + '.json'), 'w') as f:
+        d = os.path.join(get_env('dumps101dir'), dump_name + '.json')
+        with open(d, 'w') as f:
             json.dump(data, f, indent=4)
+            logging.debug('Wrote dump %s at %s', dump_name, d)
 
     return AttrDict({
         'get_env': get_env,
@@ -112,5 +124,6 @@ def create_module_env(env, module=None):
         'get_primary_resource': get_primary_resource,
         'read_dump': read_dump,
         'write_dump': write_dump,
-        'get_derived_resource': get_derived_resource
+        'get_derived_resource': get_derived_resource,
+        'remove_dump': remove_dump
     })

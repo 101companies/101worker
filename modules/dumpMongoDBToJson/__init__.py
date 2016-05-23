@@ -2,5 +2,8 @@ from .mongo2json import run
 from .test import test
 
 config = {
-    'wantdiff': False
+    'wantdiff': False,
+    'behavior': {
+        'creates': [['dump', 'pages']]
+    }
 }

@@ -44,7 +44,8 @@ https://github.com/101companies/101worker/blob/master/bin/worker
 Use `bin/run_module [moduleName]` to run a single Module. The Test-Environment
 is specified in `config/test_folders.txt` which lists a number of directories
 from 101results/101repo to be copied to 101test/. This mode sets OMIT_GITDEPS,
-FULL_SWEEP and OMIT_PULL.
+FULL_SWEEP and OMIT_PULL. This also deletes any dumps created by the module.
+Note for this to work the `behavior` must be configured.
 
 (Windows users have to use `python bin/run_module [moduleName]`)
 
@@ -85,6 +86,19 @@ A dictionary which describes the required contract for the module. Keys are:
 * wantdiff   - gets called for every incremental change
 * wantsfiles - not incremental but needs all files from 101repo (like FULL_SWEEP), if set to false and wantdiff is false as well, the module run is only run(context)
 * threadsafe - not used atm
+* behavior - defines input and output (optional)
+
+#### behavior
+
+```python
+config = {
+    'behavior': {
+        'creates': [['dump', 'locPerContribution']],
+        'uses': [['resource', 'loc']]
+    }
+}
+```
+Note that `creates` and `uses` are lists of lists.
 
 ### run(context, c)
 

@@ -10,12 +10,15 @@ from functools import reduce
 config = {
     'wantdiff': False,
     'wantsfiles': False,
-    'threadsafe': True
+    'threadsafe': True,
+    'behavior': {
+        'uses': [['dump', 'wiki']]
+    }
 }
 
 def run(context):
     # Load 101wiki into memory
-    wiki = context.read_dump('wiki101dump')
+    wiki = context.read_dump('wiki')
 
     # Write .json and .html file -- the latter as a tag cloud
     def writeFiles(counts, label, prefix):

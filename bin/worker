@@ -5,30 +5,6 @@ import sys
 sys.path.append(os.path.abspath('.'))
 sys.path.append(os.path.abspath('./libraries'))
 
-from modules import pull
-from modules import collectRules
-from modules import matchLanguage
-from modules import extractFacts
-from modules import dumpMongoDBToJson
-from modules import convertMongoDump
-from modules import simpleLOC
-from modules import wiki2tagclouds
-from modules import moretagclouds
-from modules import zip
-
-modules = [
-    pull,
-    collectRules,
-    matchLanguage,
-    extractFacts,
-    #dumpMongoDBToJson,
-    #convertMongoDump,
-    simpleLOC,
-    wiki2tagclouds,
-    moretagclouds,
-    zip
-]
-
 from worker_lib import *
 
 if os.environ.get('TEST', None):

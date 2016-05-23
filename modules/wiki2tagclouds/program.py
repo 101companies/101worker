@@ -10,7 +10,10 @@ import shutil
 config = {
     'wantdiff': False,
     'wantsfiles': False,
-    'threadsafe': True
+    'threadsafe': True,
+    'behavior': {
+        'uses': [['dump', 'wiki']]
+    }
 }
 
 def run(context):

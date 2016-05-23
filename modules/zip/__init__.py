@@ -82,9 +82,9 @@ from unittest.mock import patch, Mock
 
 class ZipTest(unittest.TestCase):
 
-    @patch('modules.zip.zipFolder')
-    @patch('modules.zip.ensureFolder')
-    @patch('modules.zip.zipContributions')
+    @patch('zip.zipFolder')
+    @patch('zip.ensureFolder')
+    @patch('zip.zipContributions')
     def test_run(self, zipContributions, ensureFolder, zipFolder):
         env = Mock(**{ 'get_env.return_value': '/some/path/' })
         run(env)

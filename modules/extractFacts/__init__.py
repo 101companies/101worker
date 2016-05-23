@@ -8,7 +8,11 @@ import subprocess
 config = {
     'wantdiff': True,
     'wantsfiles': True,
-    'threadsafe': True
+    'threadsafe': True,
+    'behavior': {
+        'creates': [['resource', 'extractor']],
+        'uses': [['resource', 'lang']]
+    }
 }
 
 def run(context, change):
@@ -22,7 +26,7 @@ def run(context, change):
         - remove a possible extractor resource
     '''
     if change['type'] == 'NEW_FILE' or change['type'] == 'FILE_CHANGED':
-        language = context.get_derived_resource(change['file'], '.lang')
+        language = context.get_derived_resource(change['file'], 'lang')
 
         path = os.path.join('extractors', language, 'extractor')
         # we ignore non-existant extractors
@@ -34,8 +38,8 @@ def run(context, change):
             command = "{0} < \"{1}\"".format(extractor, source_file)
             output = subprocess.check_output(command, stderr=subprocess.STDOUT)
 
-            
-            context.write_derived_resource(change['file'], json.loads(output), '.extractor')
+
+            context.write_derived_resource(change['file'], json.loads(output), 'extractor')
     else:
         context.remove_derived_resource(change['file'], 'extractor')
 
@@ -54,7 +58,7 @@ class RunTest(unittest.TestCase):
         }
 
         env = Mock(**{'get_derived_resource.return_value': 'Python', 'get_env.return_value': '/some/path'})
-        lang = env.get_derived_resource('some-file.py', '.lang')
+        lang = env.get_derived_resource('some-file.py', 'lang')
         os.path.join('extractors', lang, 'extractor')
 
         run(env, change)

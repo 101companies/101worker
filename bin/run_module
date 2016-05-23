@@ -2,10 +2,18 @@
 
 import os
 import sys
+import argparse
+import logging
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--verbose', '-v', action='store', type=int, default=2, help='Log level 1-5')
+parser.add_argument('module', nargs=1)
+args = parser.parse_args()
+
 sys.path.append(os.path.abspath('.'))
 sys.path.append(os.path.abspath('./libraries'))
 
-import importlib
+logging.getLogger().setLevel(40 - args.verbose * 10)
 
 def onerror(func, path, exc_info):
     """
@@ -20,38 +28,57 @@ def onerror(func, path, exc_info):
     """
     import stat
     if not os.access(path, os.W_OK):
-        # Is the error an access error ?
-        os.chmod(path, stat.S_IWUSR)
+        # Is the error an access error ?parser.add_argument('bar', nargs=1)
         func(path)
     else:
         raise
-        
-m = 'modules.' + sys.argv[1]
-module = importlib.import_module(m)
 
 os.environ['FULL_SWEEP'] = '1'
 os.environ['OMIT_GITDEPS'] = '1'
 os.environ['OMIT_PULL'] = '1'
 
-modules = [
-    module
-]
-
 import worker_lib
 import shutil
 
+try:
+    module = next(filter(lambda m: m.__name__ == args.module[0], worker_lib.modules))
+except StopIteration:
+    logging.critical('Module %s not found', args.module[0])
+    sys.exit(1)
+
+modules = [module]
+
+graph = worker_lib.resolve_modules_graph(worker_lib.modules)
+dependencies = worker_lib.depending_modules(graph, args.module[0])
+if dependencies:
+    logging.info('Module depends on %s', ', '.join(dependencies))
+
+dependents = worker_lib.dependent_modules(graph, args.module[0])
+if dependents:
+    logging.info('Module is depency of %s', ', '.join(dependents))
+
+logging.info('Running module %s', module.__name__)
+
 d = os.path.abspath('../101test')
 if os.path.exists(d):
+    logging.info('Reseting 101test')
+    logging.debug('Deleting %s and recreating', d)
     shutil.rmtree(d,onerror=onerror)
     os.makedirs(d)
 
 with open('config/test_folders.txt') as f:
     folders = f.read()
 
-folders = filter(bool, folders.split('\n'))
+folders = list(filter(bool, folders.split('\n')))
+logging.debug('Copying folders %s to 101test', ', '.join(folders))
+
 for f in folders:
     shutil.copytree(os.path.join(worker_lib.env.get('repo101dir'), f), os.path.join(d, f))
+
+worker_lib.delete_dumps_for_module(module)
 
 worker_lib.env['repo101dir'] = d
 
 worker_lib.runner.run(modules, worker_lib.env)
+
+logging.info('Module %s was run', module.__name__)

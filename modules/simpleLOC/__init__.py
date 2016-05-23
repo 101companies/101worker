@@ -4,7 +4,10 @@ import json
 config = {
     'wantdiff': True,
     'wantsfiles': True,
-    'threadsafe': True
+    'threadsafe': True,
+    'behavior': {
+        'creates': [['resource', 'loc']]
+    }
 }
 
 # this is the actual logic of the module
@@ -18,12 +21,12 @@ def update_file(context, f):
 
         loc = count_lines(source)
 
-        context.write_derived_resource(f, loc, '.loc')
+        context.write_derived_resource(f, loc, 'loc')
     except UnicodeDecodeError:
-        context.write_derived_resource(f, 0, '.loc')
+        context.write_derived_resource(f, 0, 'loc')
 
 def remove_file(context, f):
-    context.remove_derived_resource(f, '.loc')
+    context.remove_derived_resource(f, 'loc')
 
 def run(context, change):
     # dispatch the modified file
@@ -53,7 +56,7 @@ class SimpleLocTest(unittest.TestCase):
         }
         run(self.env, change)
 
-        self.env.write_derived_resource.assert_called_with('some-file.py', 4, '.loc')
+        self.env.write_derived_resource.assert_called_with('some-file.py', 4, 'loc')
 
     def test_run_changed(self):
         change = {
@@ -62,7 +65,7 @@ class SimpleLocTest(unittest.TestCase):
         }
         run(self.env, change)
 
-        self.env.write_derived_resource.assert_called_with('some-file.py', 4, '.loc')
+        self.env.write_derived_resource.assert_called_with('some-file.py', 4, 'loc')
 
     def test_run_removed(self):
         change = {
@@ -71,7 +74,7 @@ class SimpleLocTest(unittest.TestCase):
         }
         run(self.env, change)
 
-        self.env.remove_derived_resource.assert_called_with('some-file.py', '.loc')
+        self.env.remove_derived_resource.assert_called_with('some-file.py', 'loc')
 
     def test_count_lines_three(self):
         three_lines = '''

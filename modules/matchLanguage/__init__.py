@@ -18,7 +18,10 @@
 config = {
     'wantdiff': True,
     'wantsfiles': True,
-    'threadsafe': True
+    'threadsafe': True,
+    'behavior': {
+        'creates': [['resource', 'lang']],
+    }
 }
 
 langs = {
@@ -85,10 +88,10 @@ def get_lang(resource):
 def run(context, change):
     # dispatch the modified file
     if change['type'] == 'NEW_FILE' or change['type'] == 'FILE_CHANGED':
-        context.write_derived_resource(change['file'], get_lang(change['file']), '.lang')
+        context.write_derived_resource(change['file'], get_lang(change['file']), 'lang')
 
     else:
-        context.remove_derived_resource(change['file'], '.lang')
+        context.remove_derived_resource(change['file'], 'lang')
 
 import unittest
 from unittest.mock import Mock
@@ -107,7 +110,7 @@ class TestMatchLanguage(unittest.TestCase):
         env = Mock()
         run(env, change)
 
-        env.write_derived_resource.assert_called_with('some-file.py', 'Python', '.lang')
+        env.write_derived_resource.assert_called_with('some-file.py', 'Python', 'lang')
 
     def test_run_changed_file(self):
         change = {
@@ -117,7 +120,7 @@ class TestMatchLanguage(unittest.TestCase):
         env = Mock()
         run(env, change)
 
-        env.write_derived_resource.assert_called_with('some-file.py', 'Python', '.lang')
+        env.write_derived_resource.assert_called_with('some-file.py', 'Python', 'lang')
 
     def test_run_removed_file(self):
         change = {
@@ -127,7 +130,7 @@ class TestMatchLanguage(unittest.TestCase):
         env = Mock()
         run(env, change)
 
-        env.remove_derived_resource.assert_called_with('some-file.py', '.lang')
+        env.remove_derived_resource.assert_called_with('some-file.py', 'lang')
 
 def test():
     suite = unittest.TestLoader().loadTestsFromTestCase(TestMatchLanguage)

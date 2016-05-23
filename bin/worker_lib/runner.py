@@ -6,11 +6,21 @@ import traceback
 import datetime
 import time
 import shutil
+import logging
 from .logger import report_error
 
 from .repo import *
-from .env import create_module_env
+from .env import create_module_env, env
 from .executor import *
+
+def delete_dumps_for_module(module):
+    if module.config.get('behavior', None) and module.config['behavior'].get('creates', None):
+        creates = module.config['behavior']['creates']
+        for creation in creates:
+            if creation[0] == 'dump':
+                ctx = create_module_env(env, module)
+                logging.debug('deleting dump %s', creation[1])
+                ctx.remove_dump(creation[1])
 
 def get_executor(module):
     value = [os.environ.get('FULL_SWEEP', 0) == 1, module.config.get('wantdiff', False), module.config.get('wantsfiles', False)]
@@ -39,7 +49,6 @@ def run(modules, env):
         changes = pull_repo(repo)
     else:
         changes = []
-    # changes = []
 
     if not os.environ.get('OMIT_GITDEPS'):
         # gitdeps
