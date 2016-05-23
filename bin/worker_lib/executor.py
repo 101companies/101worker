@@ -32,16 +32,10 @@ class FileFullSweepExecutor(Executor):
                 if '.git' in os.path.join(root, f):
                     continue
 
-                if sys.platform == 'win32':
-                    change = {
-                        'type': 'NEW_FILE',
-                        'file': os.path.join(root, f).replace(env['repo101dir'] + '\\', '')
-                    }
-                else:
-                    change = {
-                        'type': 'NEW_FILE',
-                        'file': os.path.join(root, f).replace(env['repo101dir'] + '/', '')
-                    }
+                change = {
+                    'type': 'NEW_FILE',
+                    'file': os.path.join(root, f).replace(env['repo101dir'] + os.sep, '')
+                }
 
                 self._exec(change)
 
