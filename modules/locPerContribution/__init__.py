@@ -14,7 +14,7 @@ def run(env, res):
         data = {}
 
     f = res['file']
-    if f.startswith('contributions/'):
+    if f.startswith('contributions' + os.sep):
         contribution = f.split(os.sep)[1]
 
         if data.get(contribution, None) is None:
