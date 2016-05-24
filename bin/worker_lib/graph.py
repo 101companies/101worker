@@ -18,17 +18,19 @@ def resolve_modules_graph(modules):
     # data is { module: [module_creating_the_resource, resource_name], ... }
     deps = {}
     for module, behavior in settings.items():
+        if behavior.get('uses', []):
+            deps[module] = []
         for uses in behavior.get('uses', []):
             name = uses[0] + ':' + uses[1]
-            deps[module] = [creations[name], name]
+            deps[module] += [[creations[name], name]]
 
     graph = nx.DiGraph()
 
     for module in modules:
         graph.add_node(module.__name__)
-
-    for dep, [source, name] in deps.items():
-        graph.add_edge(dep.__name__, source.__name__, label=name)
+    for dep, data in deps.items():
+        for [source, name] in data:
+            graph.add_edge(dep.__name__, source.__name__, label=name)
 
     return graph
 
