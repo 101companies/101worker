@@ -13,6 +13,8 @@ modules = [
     'extractFacts',
     'dumpMongoDBToJson',
     'convertMongoDump',
+    'packageFrequency',
+    'languageFrequency',
     'simpleLOC',
     'locPerContribution',
     'wiki2tagclouds',

@@ -42,20 +42,21 @@ import shutil
 
 try:
     module = next(filter(lambda m: m.__name__ == args.module[0], worker_lib.modules))
+
+    graph = worker_lib.resolve_modules_graph(worker_lib.modules)
+    dependencies = worker_lib.depending_modules(graph, args.module[0])
+    if dependencies:
+        logging.info('Module depends on %s', ', '.join(dependencies))
+
+    dependents = worker_lib.dependent_modules(graph, args.module[0])
+    if dependents:
+        logging.info('Module is depency of %s', ', '.join(dependents))
+        
 except StopIteration:
-    logging.critical('Module %s not found', args.module[0])
-    sys.exit(1)
+    logging.warn('Module %s not found, importing manually, please add it to bin/worker_lib/env.py', args.module[0])
+    module = worker_lib.import_module(args.module[0])
 
 modules = [module]
-
-graph = worker_lib.resolve_modules_graph(worker_lib.modules)
-dependencies = worker_lib.depending_modules(graph, args.module[0])
-if dependencies:
-    logging.info('Module depends on %s', ', '.join(dependencies))
-
-dependents = worker_lib.dependent_modules(graph, args.module[0])
-if dependents:
-    logging.info('Module is depency of %s', ', '.join(dependents))
 
 logging.info('Running module %s', module.__name__)
 

@@ -3,7 +3,11 @@ from collections import Counter
 config = {
     'wantdiff': False,
     'wantsfiles': False,
-    'threadsafe': False
+    'threadsafe': False,
+    'behavior': {
+        'uses': [['dump', 'wiki']],
+        'creates': [['dump', 'languageFrequency']]
+    }
 }
 
 def run(env):
@@ -28,7 +32,7 @@ def run(env):
 import unittest
 from unittest.mock import Mock, patch
 
-class LanguageFrquencyTest(unittest.TestCase):
+class LanguageFrequencyTest(unittest.TestCase):
 
     def setUp(self):
         self.env = Mock()
@@ -51,5 +55,5 @@ class LanguageFrquencyTest(unittest.TestCase):
         self.env.write_dump.assert_called_with('languageFrequency', { 'Python': 1 })
 
 def test():
-    suite = unittest.TestLoader().loadTestsFromTestCase(LanguageFrquencyTest)
+    suite = unittest.TestLoader().loadTestsFromTestCase(LanguageFrequencyTest)
     unittest.TextTestRunner(verbosity=2).run(suite)
