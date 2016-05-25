@@ -51,9 +51,9 @@ try:
     dependents = worker_lib.dependent_modules(graph, args.module[0])
     if dependents:
         logging.info('Module is depency of %s', ', '.join(dependents))
-        
+
 except StopIteration:
-    logging.warn('Module %s not found, importing manually, please add it to bin/worker_lib/env.py', args.module[0])
+    logging.warn('Module %s not found, importing manually, please add it to bin/worker_lib/modules.py', args.module[0])
     module = worker_lib.import_module(args.module[0])
 
 modules = [module]
