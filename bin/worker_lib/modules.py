@@ -19,7 +19,8 @@ modules = [
     'locPerContribution',
     'wiki2tagclouds',
     'moretagclouds',
-    'zip'
+    'zip',
+    'mongodump'
 ]
 
 modules = [import_module(module) for module in modules]
