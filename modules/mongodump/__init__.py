@@ -8,5 +8,9 @@ config = {
 def run(context):
     os.system('mongodump')
     os.system('tar -zcvf wiki_db.tar.gz dump')
-    os.system('rm -rf dump')
-    shutil.move('wiki_db.tar.gz', context.get_env('dumps101dir'))
+    shutil.rmtree('dump')
+    shutil.copy('wiki_db.tar.gz', context.get_env('dumps101dir'))
+    os.unlink('wiki_db.tar.gz')
+
+def test():
+    pass
