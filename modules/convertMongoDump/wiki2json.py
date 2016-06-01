@@ -44,6 +44,7 @@ def run(context):
     with open(os.path.join(context.get_env('dumps101dir'), 'pages.json')) as f:
         allPages = json.load(f)['pages']
 
+    result = []
     for p in allPages:
         if not 'page_title_namespace' in p:
             continue
@@ -70,7 +71,7 @@ def run(context):
                     res['subresources'][key] = extract_properties(value)
                     res['subresources'][key]['internal_links'] = value
 
-        allPages.append(res)
-    
+        result.append(res)
+
     with open(context.get_env('dumps101dir') + '/wiki.json', 'w') as f:
-        f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': allPages}}, sort_keys=True, indent=4))
+        f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': result}}, sort_keys=True, indent=4))
