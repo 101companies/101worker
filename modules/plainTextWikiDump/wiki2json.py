@@ -12,7 +12,7 @@ def chunks(l, n):
         yield l[i:i+n]
 
 def run(context):
-    with open(os.path.join(context.get_env('dumps101dir'), 'pages.json')) as f:
+    with open(os.path.join(context.get_env('dumps101dir'), 'raw-wiki.json')) as f:
         allPages = json.load(f)['pages']
 
 
@@ -46,7 +46,7 @@ def run(context):
 
                     elif syntaxhighlight != -1 and syntaxhighlight > 0:
                         paragraphs.append({
-                            'classifier': 'syntaxhighlight',
+                            'classifier': 'text',
                             'content':  content[:content.find('<syntaxhighlight') + len('<syntaxhighlight')]
                         })
 

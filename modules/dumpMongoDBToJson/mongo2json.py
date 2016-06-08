@@ -20,11 +20,11 @@ def get_db():
     client = MongoClient('localhost', 27017)
     db = client['wiki_production']
 
-    MONGODB_USER = os.environ['MONGODB_USER']
-    MONGODB_PWD = os.environ['MONGODB_PWD']
+    #MONGODB_USER = os.environ['MONGODB_USER']
+    #MONGODB_PWD = os.environ['MONGODB_PWD']
 
-    if MONGODB_USER and MONGODB_PWD:
-        db.authenticate(MONGODB_USER, MONGODB_PWD)
+    #if MONGODB_USER and MONGODB_PWD:
+    #    db.authenticate(MONGODB_USER, MONGODB_PWD)
 
     return db
 
