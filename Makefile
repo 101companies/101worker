@@ -20,6 +20,7 @@ init:
 	mkdir -p ../101logs
 	mkdir -p ../101temps
 	mkdir -p ../101results
+	mkdir -p ../101results/101repo
 	mkdir -p ../101diffs
 
 download:

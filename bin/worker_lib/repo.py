@@ -1,4 +1,6 @@
 from git import Repo
+import git
+
 import shutil
 import os
 import json
@@ -47,8 +49,7 @@ def pull_gitdeps(env, gitdeps):
                     result.append({ 'type': 'NEW_FILE', 'file':  f})
             return result
 
-
-    return sum(map(pull_gitdep, gitdeps), [])
+    return sum(list(map(pull_gitdep, gitdeps)), [])
 
 def load_gitdeps(env):
     with open(os.path.abspath(os.path.join(env['repo101dir'], '.gitdeps'))) as f:
@@ -61,7 +62,10 @@ def pull_repo(repo):
     return map(lambda diff: convert_diff(diff), diffs)
 
 def create_repo(env):
-    return Repo(env['repo101dir'])
+    try:
+        return Repo(env['repo101dir'])
+    except git.exc.InvalidGitRepositoryError:
+        return Repo.clone_from('https://github.com/101companies/101repo.git', env['repo101dir'], branch='master')
 
 def checkout_commit(repo, commit):
     repo.git.checkout(commit)

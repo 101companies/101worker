@@ -41,7 +41,7 @@ def handle_page_name(name, props):
     return props
 
 def run(context):
-    with open(os.path.join(context.get_env('dumps101dir'), 'pages.json')) as f:
+    with open(os.path.join(context.get_env('dumps101dir'), 'raw-wiki.json')) as f:
         allPages = json.load(f)['pages']
 
     result = []
@@ -73,5 +73,5 @@ def run(context):
 
         result.append(res)
 
-    with open(context.get_env('dumps101dir') + '/wiki.json', 'w') as f:
+    with open(context.get_env('dumps101dir') + '/wiki-links.json', 'w') as f:
         f.write(json.dumps({'wiki': {'pageCount': len(allPages), 'pages': result}}, sort_keys=True, indent=4))

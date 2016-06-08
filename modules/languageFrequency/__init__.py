@@ -5,13 +5,13 @@ config = {
     'wantsfiles': False,
     'threadsafe': False,
     'behavior': {
-        'uses': [['dump', 'wiki']],
+        'uses': [['dump', 'wiki-links']],
         'creates': [['dump', 'languageFrequency']]
     }
 }
 
 def run(env):
-    wiki_dump = env.read_dump('wiki')
+    wiki_dump = env.read_dump('wiki-links')
 
     pages = wiki_dump['wiki']['pages']
 

@@ -32,7 +32,7 @@ def get_pages(db):
     return list(db.pages.find())
 
 def get_output(context):
-    return os.path.join(context.get_env('dumps101dir'), 'pages.json')
+    return os.path.join(context.get_env('dumps101dir'), 'raw-wiki.json')
 
 def run(context):
     db = get_db()
