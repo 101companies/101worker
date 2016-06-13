@@ -37,8 +37,6 @@ def run(context, change):
             source_file = os.path.join(context.get_env('repo101dir'), change['file'])
             command = "{0} < \"{1}\"".format(extractor, source_file)
             output = subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True).decode('utf-8')
-            print(output)
-
 
             context.write_derived_resource(change['file'], json.loads(output), 'extractor')
     else:

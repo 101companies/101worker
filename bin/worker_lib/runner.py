@@ -53,7 +53,7 @@ def run(modules, env):
     if not os.environ.get('OMIT_GITDEPS'):
         # gitdeps
         gitdeps = load_gitdeps(env)
-        gitdep_changes = pull_gitdeps(env, gitdeps)
+        gitdep_changes = list(pull_gitdeps(env, gitdeps))
         changes.extend(gitdep_changes)
 
         copy_gitdeps(gitdep_changes, env)

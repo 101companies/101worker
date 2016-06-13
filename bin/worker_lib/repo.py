@@ -37,17 +37,21 @@ def pull_gitdeps(env, gitdeps):
         path = os.path.join(env['gitdeps101dir'], user, filename)
         if os.path.exists(os.path.join(path, '.git')):
             repo = Repo(path)
-            return pull_repo(repo)
+            return list(pull_repo(repo))
         else:
-            repo = Repo.clone_from(dep['sourcerepo'], path, branch='master')
-            result = []
-            for root, dirnames, filenames in os.walk(path):
-                for f in filenames:
-                    f = os.path.join(root, f).replace(env['gitdeps101dir'], '')[1:]
-                    if '.git/' in f:
-                        continue
-                    result.append({ 'type': 'NEW_FILE', 'file':  f})
-            return result
+            try:
+                print(dep['sourcerepo'])
+                repo = Repo.clone_from(dep['sourcerepo'], path, branch='master')
+                result = []
+                for root, dirnames, filenames in os.walk(path):
+                    for f in filenames:
+                        f = os.path.join(root, f).replace(env['gitdeps101dir'], '')[1:]
+                        if '.git/' in f:
+                            continue
+                        result.append({ 'type': 'NEW_FILE', 'file':  f})
+                return result
+            except git.exc.GitCommandError:
+                return []
 
     return sum(list(map(pull_gitdep, gitdeps)), [])
 
@@ -59,7 +63,7 @@ def pull_repo(repo):
     base_commit = repo.head.commit.hexsha
     info = repo.remotes.origin.pull('master')[0]
     diffs = info.commit.diff(base_commit)
-    return map(lambda diff: convert_diff(diff), diffs)
+    return list(map(lambda diff: convert_diff(diff), diffs))
 
 def create_repo(env):
     try:
