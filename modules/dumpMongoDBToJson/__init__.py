@@ -4,6 +4,6 @@ from .test import test
 config = {
     'wantdiff': False,
     'behavior': {
-        'creates': [['dump', 'pages']]
+        'creates': [['dump', 'raw-wiki']]
     }
 }

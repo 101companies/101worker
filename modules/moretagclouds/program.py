@@ -12,7 +12,7 @@ config = {
     'wantsfiles': False,
     'threadsafe': True,
     'behavior': {
-        'uses': [['dump', 'wiki']]
+        'uses': [['dump', 'wiki-links']]
     }
 }
 
