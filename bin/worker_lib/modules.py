@@ -19,6 +19,7 @@ modules = [
     'locPerContribution',
     'wiki2tagclouds',
     'moretagclouds',
+    'plainTextWikiDump',
     'zip',
     'mongodump'
 ]
