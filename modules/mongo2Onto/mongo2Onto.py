@@ -11,7 +11,7 @@ config = {
 
 def createRDFGraph(context):
     export_format = "xml"
-    export_format = "turtle"
+    #export_format = "turtle"
     #export_format = "pretty-xml"
     graphfilepath = get_output(context)
 
