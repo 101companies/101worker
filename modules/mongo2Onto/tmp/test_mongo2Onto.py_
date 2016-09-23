@@ -1,0 +1,250 @@
+#!/usr/bin/env python3
+# coding=utf-8
+
+try:
+    from pymongo import MongoClient
+    from bson.json_util import dumps
+except ImportError:
+    print('Error: pymongo is missing: "pip3 install pymongo"')
+
+try:
+    from rdflib import ConjunctiveGraph, Graph, URIRef, BNode, Literal, RDF, Namespace
+    from rdflib.store import NO_STORE, VALID_STORE
+    from rdflib.namespace import FOAF, DC
+    import rdflib.graph as g
+    import urllib.parse
+    from bson.son import SON
+    import glob
+except ImportError:
+    print('Error: rdflib is missing: "pip3 install rdflib"')
+
+
+import json
+import os
+
+config = {
+    'wantdiff': False,
+    'wantsfiles': False,
+    'threadsafe': False
+}
+
+debug = True
+#debug = False
+pageurl = "http://101companies.org/"
+if debug:
+    pageurl = "http://localhost:3000/"
+
+
+ref_wikipage = URIRef(pageurl + "ld/ressources/101wikipage")
+ref_repo = URIRef(pageurl + "ld/ressources/101repo")
+ref_lable = URIRef("http://www.w3.org/2000/01/rdf-schema#label")
+ref_created = URIRef("http://purl.org/dc/terms/created")
+
+def createRDFGraph(context):
+    export_format = "xml"
+    export_format = "turtle"
+    #export_format = "pretty-xml"
+    graphfilepath = get_output(context)
+
+    # Graphen laden
+    graph = g.Graph()
+    graph.open(get_output(context), create=False)
+
+    # Externes Vokabular einbinden
+    graph.bind("dc", DC)
+    graph.bind("foaf", FOAF)
+
+
+    '''
+    #n = Namespace(pageurl + "ld/")
+
+    #graph.parse("http://www.w3.org/2000/01/rdf-schema")
+    #graph.parse("http://dbpedia.org/")
+
+    # testings:
+    add_pages(context, graph)
+    add_repo(context, graph)
+    '''
+
+    # Graphen exportieren
+    graph.serialize(destination=graphfilepath, format=export_format)
+
+def add_pages(context, graph):
+    print ('pages >> graph')
+    db = get_db()
+    output = get_output(context)
+    allPages = get_pages(db)
+
+    for p in allPages:
+        add_singlepage(p, graph)
+
+def add_worker_modules(context, graph):
+    print ('worker_modules >> graph')
+    return
+
+def add_ressources(context, graph):
+    print ('ressources >> graph')
+    return
+
+#ex_pattern = ['js': 'javascript']
+
+def add_repo(context, graph):
+    print ('repo >> graph')
+    repo_dir = "/home/andi/dev/ba/101results/101repo/"
+
+    file_extension_name = "Java"
+    file_extension = (".java", ".hs", ".js", ".c", ".cpp", ".hpp", ".html", ".css", ".php", ".py", ".rb", ".cfg", ".json")
+
+    counter = 0
+    for root, dirs, files in os.walk(repo_dir):
+        for file in files:
+            if file.endswith(file_extension):
+                counter=counter+1
+                #print(os.path.join(root, file))
+                #add_file(os.path.join(root, file), context, graph)
+    print (counter)
+'''
+    for dirname, dirnames, filenames in os.walk(repo_dir):
+        # print path to all subdirectories first.
+        #for subdirname in dirnames:
+        #    print(os.path.join(dirname, subdirname))
+
+        # print path to all filenames.
+        for filename in filenames:
+            add_file(os.path.join(dirname, filename), context, graph)
+            #print(os.path.join(dirname, filename))
+
+        # Advanced usage:
+        # editing the 'dirnames' list will stop os.walk() from recursing into there.
+        if '.git' in dirnames:
+            # don't go into any .git directories.
+            dirnames.remove('.git')
+    #print (dirnames)
+'''
+
+def add_file(fpath, context, graph):
+    pageNode = URIRef(pageurl + "ld/ressources/" + urllib.parse.quote(fpath.strip()) + "_(file)")
+    #pageNode = URIRef(pageurl + "ld/ressources/" + quote(pagejson['title'].strip()))
+    filename, file_extension = os.path.splitext(fpath)
+
+    add_thing(pageNode, DC.Format, Literal(file_extension), graph)
+    add_thing(pageNode, DC.isPartOf , ref_repo, graph)
+
+
+def add_singlepage(pagejson, graph):
+
+    ''' other properties:
+    print (p['title'])
+    print (p['headline'])
+    print (p['namespace'])
+    print (p['subresources'])
+    print (p['used_links'])
+    print (p['_id'])
+    print (p['_keywords'])
+    print (p['created_at'])
+    print (p['updated_at'])
+
+    return
+    '''
+    #pageNode = BNode(pagejson['_id'])
+
+    pageNode = URIRef(pageurl + "ld/ressources/" + urllib.parse.quote(pagejson['title'].strip()) + "_(wikipage)")
+    #pageNode = URIRef(pageurl + "ld/ressources/" + quote(pagejson['title'].strip()))
+
+    add_thing(pageNode, ref_lable, Literal(pagejson['title'].strip()), graph)
+    add_thing(pageNode, RDF.type, ref_wikipage, graph)
+    add_thing(pageNode, DC.modified, Literal(pagejson['updated_at']), graph)
+    add_thing(pageNode, DC.created, Literal(pagejson['created_at']), graph)
+
+    if(pagejson.get('page_title_namespace', 'missing_page_title_namespace') != 'missing_page_title_namespace'):
+        #print (pagejson['page_title_namespace'])
+        add_thing(pageNode, DC.InteractiveResource, Literal(pageurl + "wiki/" + urllib.parse.quote(pagejson['page_title_namespace'])), graph)
+
+def add_thing(sub, pre, obj, graph):
+    graph.add((sub, pre, obj))
+
+def get_db():
+    client = MongoClient('localhost', 27017)
+    db = client['wiki_production']
+
+    #MONGODB_USER = os.environ['MONGODB_USER']
+    #MONGODB_PWD = os.environ['MONGODB_PWD']
+
+    #if MONGODB_USER and MONGODB_PWD:
+    #    db.authenticate(MONGODB_USER, MONGODB_PWD)
+
+    return db
+
+def get_pages(db):
+    return list(db.pages.find())
+    '''
+    pipe = [{'$group':
+                 {'_id': '$_id',
+                  'created_at': {'$min': '$created_at'},
+                  'page_title_namespace' : {'$first': '$page_title_namespace'},
+                  'title' : {'$first': '$title'},
+                  'updated_at' : {'$max': '$updated_at'},
+                  'count': {'$sum': 1}}}]
+    return list(db.pages.aggregate(pipe))
+    '''
+
+def get_output(context):
+    return os.path.join(context.get_env('dumps101dir'), 'ontology.rdf')
+
+def run(context):
+    #add_thing(context)
+
+    createRDFGraph(context)
+
+    #db = get_db()
+    #output = get_output(context)
+    #allPages = get_pages(db)
+    #with open(output, 'w') as f:
+    #    f.write(dumps({'pageCount': len(allPages), 'pages': allPages}, indent=4))
+
+if __name__ == '__main__':
+    main()
+
+
+def foo(context):
+
+    store = Graph()
+
+    #datadir = os.path.join(context.get_env('modules101dir'), "mongo2Onto/data/")
+    #store = graph.open(datadir, create=False)
+
+    #if store == NO_STORE:
+    #    # There is no underlying Sleepycat infrastructure, create it
+    #    graph.open(datadir, create=True)
+    #else:
+    #    assert store == VALID_STORE, 'The underlying store is corrupt'
+
+    #file = open(datadir, "r")
+
+    store.bind("dc", DC)
+    store.bind("foaf", FOAF)
+
+    donna = BNode()
+
+    store.add((donna, RDF.type, FOAF.Person))
+    store.add((donna, FOAF.nick, Literal("donna", lang="foo")))
+    store.add((donna, FOAF.name, Literal("Donna Fales")))
+
+    print("start nt")
+    print(store.serialize(format="nt"))
+    print("end nt")
+
+    rdftestlib = Namespace('http://rdflib.net/test/')
+    store.bind('test', 'http://rdflib.net/test/')
+
+    store.add((rdftestlib['pic:1'], rdftestlib.name, Literal('Jane & Bob')))
+
+    for s, p, o in store:
+        print(s, p, o)
+
+    print("start nt")
+    print(store.serialize(format="nt"))
+    print("end nt")
+
+    m2o = '42'
+    print(m2o)
