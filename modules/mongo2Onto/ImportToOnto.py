@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
 # coding=utf-8
 
+import os
+import worker_lib
+
 try:
     from pymongo import MongoClient
     from bson.json_util import dumps
+    from bson.son import SON
 except ImportError:
     print('Error: pymongo is missing: "pip3 install pymongo"')
 
 try:
     from rdflib import ConjunctiveGraph, Graph, URIRef, BNode, Literal, RDF, Namespace
     from rdflib.store import NO_STORE, VALID_STORE
-    from rdflib.namespace import FOAF, DC
-    import rdflib.graph as g
-    import urllib.parse
-    from bson.son import SON
+    from rdflib.namespace import FOAF, DC, RDFS
+    from urllib import parse as urlparse
 
 except ImportError:
     print('Error: rdflib is missing: "pip3 install rdflib"')
 
-import json
-import os
-import glob
-
 class ImportToOnto(object):
 
-    def __init__(self, _worker_context, _graph, debug):
+    def __init__(self, _worker_context, _graph, debug=None):
+        if(debug is None):
+            debug = False
         self.debugmode = debug
         self.context = _worker_context
         self.graph = _graph
@@ -48,12 +48,12 @@ class ImportToOnto(object):
         self.graph.bind("foaf", FOAF)
 
     def get_onto_uriref(self, name):
-        return URIRef(self.pageurl + "resources/" + urllib.parse.quote(name.strip().lower()))
+        return URIRef(self.pageurl + "resources/" + urlparse.quote(name.strip().lower()))
 
     def import_repo(self):
         '''
             imports the 101repo
-            :return: nothing
+            :return: None
             '''
         self.msg ("import repo into graph")
 
@@ -62,30 +62,38 @@ class ImportToOnto(object):
     def import_workermodules(self):
         '''
         imports the informations of 101worker and its modules based on ...
-        :return: nothing
+        :return: None
         '''
         self.msg ("import worker and modules into graph")
-        '''
+
+        # first, import 101worker itself:
+        self.addLabel("101worker")
+        self.addToGraph("101worker", FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/101worker"))
+        self.addToGraph("101worker", FOAF.abstract, Literal("Computational component of the infrastructure of the 101project"))
+
         module_counter = 0
-        for root, dirs, files in os.walk(context.get_env("modules101dir")):
+        for root, dirs, files in os.walk(self.context.get_env("modules101dir")):
             for file in files:
                 if file.endswith("__init__.py"):
                     txt = open(os.path.join(root, file))
                     #print (txt.read().config)
                     module_counter = module_counter + 1
-                    # print(os.path.join(root, file))
-                    # add_file(os.path.join(root, file), context, graph)
-        graph = worker_lib.resolve_modules_graph(worker_lib.modules)
-        msg (str(module_counter) + " modules found")
+                    module_name = root.split('/')[-1]
+                    self.msg("import module: " + module_name)
+                    self.addLabel(module_name)
+                    self.addToGraph(module_name, RDF.type, "101worker module")
+                    self.addToGraph(module_name, DC.isPartOf, "101worker")
+                    self.addToGraph(module_name, DC.requires, "101worker")
+        self.msg (str(module_counter) + " modules imported")
 
         #msg ("Or is it " + graph.count)
-        '''
+
         self.msg ("done")
 
     def import_resources_and_dumps(self):
         '''
         imports informations about resources, dumps and their relations
-        :return: nothing
+        :return: None
         '''
         self.msg ("import resources and dumps into graph")
 
@@ -94,7 +102,7 @@ class ImportToOnto(object):
     def import_wikipages(self):
         '''
         imports the informations given by the wiki-pages based on the wiki-links.json dump
-        :return: nothing
+        :return: None
         '''
         self.msg ("import wikipages into graph")
         wiki_links_json = self.context.read_dump('wiki-links')
@@ -109,12 +117,21 @@ class ImportToOnto(object):
         for t in types:
             filtered  = filter(lambda p: t == p.get('p', ''), pages)
             for f in filtered:
-                self.msg(t + ": " + f['n'])
+                #self.msg('headline:' + f['headline'] + ',n:' + f['n'] + str(f))
+                #self.msg(">>>>>>>>>><" + t + ": " + f['n'])
+
+                self.addToGraph(f['n'], FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')))
 
                 self.scan('Uses', f)
                 #self.scan('mentions', f)
+                #self.scan('LinksTo', f) # LinksTo is a wikipedia-link or mabye a github 101repo link
                 self.scan('InstanceOf', f)
                 self.scan('MemberOf', f)
+
+    def import_conceptual_data(self):
+        self.msg ("import conceptual data into graph")
+
+        self.msg ("done")
 
     def scan(self, t, item):
         if (t in item):
@@ -130,18 +147,35 @@ class ImportToOnto(object):
         :param s: Subject
         :param p: Predicate
         :param o: Object
-        :return:
+        :return: None
         '''
-        if(isinstance(p, URIRef)):
-            self.graph.add((self.get_onto_uriref(s), p, self.get_onto_uriref(o)))
-        else:
-            self.graph.add((self.get_onto_uriref(s), self.get_onto_uriref(p), self.get_onto_uriref(o)))
+        self.addLabel(s)
 
-    def import_conceptual_data(self):
-        self.msg ("import conceptual data into graph")
+        if(not isinstance(o, Literal) and isinstance(o, str)):
+            o = self.get_onto_uriref(o)
+        if(not isinstance(p, URIRef)):
+            p = self.get_onto_uriref(p)
+        self.graph.add((self.get_onto_uriref(s), p, o))
 
-        self.msg ("done")
+    labeled_entities = []   # list of labeled entities
+    def addLabel(self, item):
+        '''
+        insert a label of an entity if it isn't labeled
+        :param item: name of the item as a string
+        :return: None
+        '''
+        if(item not in self.labeled_entities):
+            self.labeled_entities.append(item)
+            self.graph.add((self.get_onto_uriref(item), DC.label, Literal(item)))
 
     def msg(self, txt):
         if(self.debugmode):
             print ("  " + txt)
+
+    def test(self):
+        tested_entities = []
+        for s, p, o in self.graph:
+            if (p == self.get_onto_uriref("instanceof")):
+                if (s in tested_entities):
+                    print (str(s) + " hat mehrere Instanzierungen")
+                tested_entities.append(s)

@@ -2,6 +2,7 @@
 # coding=utf-8
 
 from .ImportToOnto import *
+import time
 
 config = {
     'wantdiff': False,
@@ -13,20 +14,22 @@ def createRDFGraph(context):
     graphfilepath = get_output(context)
 
     # load graph
-    graph = g.Graph()
+    graph = Graph()
     graph.open(get_output(context), create=False)
 
     # import 101companies
-    ito = ImportToOnto(context, graph, True)
-    ito.import_repo()
-    ito.import_workermodules()
-    ito.import_resources_and_dumps()
+    ito = ImportToOnto(context, graph, False)
     ito.import_wikipages()
+    ito.import_workermodules()
+    ito.import_repo()
+    ito.import_resources_and_dumps()
     ito.import_conceptual_data()
+
+    ito.test()
 
     # export graph
     export_format = "xml"
-    export_format = "turtle"
+    #export_format = "turtle"
     #export_format = "pretty-xml"
     graph.serialize(destination=graphfilepath, format=export_format)
 
@@ -50,5 +53,10 @@ def get_output(context):
     return os.path.join(context.get_env('ontoDir'), 'ontology')
 
 def run(context):
+    start_time = time.time()
+
     createRDFGraph(context)
+
+    print("--- %s ms ---" % ((time.time() - start_time)*1000))
+
     #createSingleFiles(context)
