@@ -24,9 +24,8 @@ import glob
 
 class ImportToOnto(object):
 
-    def __init__(self, _worker_context, _graph):
-        self.debugmode = True
-        # self.debugmode = False
+    def __init__(self, _worker_context, _graph, debug):
+        self.debugmode = debug
         self.context = _worker_context
         self.graph = _graph
         self.pageurl = "http://101companies.org/"
@@ -39,14 +38,21 @@ class ImportToOnto(object):
         self.ref_lable = URIRef("http://www.w3.org/2000/01/rdf-schema#label")
         self.ref_created = URIRef("http://purl.org/dc/terms/created")
 
+    def prepare_graph(self):
+        # 101 Vokabular einbinden
+        ns101 = Namespace("https://www.101companies.org/ontology")
+        self.graph.bind("101", ns101)
+
+        # Externes Vokabular einbinden
+        self.graph.bind("dc", DC)
+        self.graph.bind("foaf", FOAF)
+
     def get_onto_uriref(self, name):
         return URIRef(self.pageurl + "resources/" + urllib.parse.quote(name.strip().lower()))
 
     def import_repo(self):
         '''
             imports the 101repo
-            :param context: 101worker context object
-            :param graph: Graph to be edited
             :return: nothing
             '''
         self.msg ("import repo into graph")
@@ -56,8 +62,6 @@ class ImportToOnto(object):
     def import_workermodules(self):
         '''
         imports the informations of 101worker and its modules based on ...
-        :param context: 101worker context object
-        :param graph: Graph to be edited
         :return: nothing
         '''
         self.msg ("import worker and modules into graph")
@@ -81,8 +85,6 @@ class ImportToOnto(object):
     def import_resources_and_dumps(self):
         '''
         imports informations about resources, dumps and their relations
-        :param context: 101worker context object
-        :param graph: Graph to be edited
         :return: nothing
         '''
         self.msg ("import resources and dumps into graph")
@@ -92,8 +94,6 @@ class ImportToOnto(object):
     def import_wikipages(self):
         '''
         imports the informations given by the wiki-pages based on the wiki-links.json dump
-        :param context: 101worker context object
-        :param graph: Graph to be edited
         :return: nothing
         '''
         self.msg ("import wikipages into graph")
@@ -106,23 +106,15 @@ class ImportToOnto(object):
                  'Language',
                  'Features']
 
-        sammler = []
-        counter = 0
         for t in types:
             filtered  = filter(lambda p: t == p.get('p', ''), pages)
             for f in filtered:
                 self.msg(t + ": " + f['n'])
-                counter = counter +1
 
                 self.scan('Uses', f)
                 #self.scan('mentions', f)
                 self.scan('InstanceOf', f)
                 self.scan('MemberOf', f)
-
-        self.msg("______ count: " + str(counter))
-
-        for s in sammler:
-            self.msg("typen: " + s)
 
     def scan(self, t, item):
         if (t in item):
