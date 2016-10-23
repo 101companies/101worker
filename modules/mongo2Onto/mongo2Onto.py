@@ -2,6 +2,7 @@
 # coding=utf-8
 
 from .ImportToOnto import *
+
 import time
 
 config = {
@@ -17,8 +18,15 @@ def createRDFGraph(context):
     graph = Graph()
     graph.open(get_output(context), create=False)
 
+    # 101onto erzeugen:
+    # 1. rdfs laden
+    # 2. dem rdfs entsprechend die 101 relationen erzeugen
+    # 3. als ontology speichern
+    # 4.1 für den import wieder laden
+    # 4.2 im Import korrekte links verwenden
+
     # import 101companies
-    ito = ImportToOnto(context, graph, False)
+    ito = ImportToOnto(context, graph, True)
     ito.import_wikipages()
     ito.import_workermodules()
     ito.import_repo()
@@ -29,9 +37,14 @@ def createRDFGraph(context):
 
     # export graph
     export_format = "xml"
-    #export_format = "turtle"
-    #export_format = "pretty-xml"
-    graph.serialize(destination=graphfilepath, format=export_format)
+    export_format = "turtle"
+    # export_format = "n3"
+    # export_format = "pretty-xml"
+    #ito.save(graphfilepath, export_format)
+    ito.save(graphfilepath, "turtle")
+    ito.save(graphfilepath, "xml")
+    ito.save(graphfilepath, "n3")
+    ito.save(graphfilepath, "foo")
 
 def createSingleFiles(context):
     graphfilepath = get_output(context)

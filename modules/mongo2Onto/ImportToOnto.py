@@ -13,6 +13,7 @@ except ImportError:
 
 try:
     from rdflib import ConjunctiveGraph, Graph, URIRef, BNode, Literal, RDF, Namespace
+    from rdflib.plugins.serializers import turtle, n3, rdfxml
     from rdflib.store import NO_STORE, VALID_STORE
     from rdflib.namespace import FOAF, DC, RDFS
     from urllib import parse as urlparse
@@ -179,3 +180,19 @@ class ImportToOnto(object):
                 if (s in tested_entities):
                     print (str(s) + " hat mehrere Instanzierungen")
                 tested_entities.append(s)
+        print ("anzahl: " + str(len(tested_entities)))
+
+    def save(self, output_path, export_format):
+        if (export_format == "turtle"):
+            s = turtle.TurtleSerializer(self.graph)
+            out = open(output_path + '.ttl', 'wb')
+        elif (export_format == "xml"):
+            s = rdfxml.XMLSerializer(self.graph)
+            out = open(output_path + '.xml', 'wb')
+        elif (export_format == "n3"):
+            s = n3.N3Serializer(self.graph)
+            out = open(output_path + '.n3', 'wb')
+        else:
+            raise Exception('unknown export format "' + export_format + '"!')
+        s.serialize(out)
+        self.msg('export done with format "' + export_format + '"!')
