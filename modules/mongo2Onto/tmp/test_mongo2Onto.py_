@@ -35,8 +35,8 @@ if debug:
     pageurl = "http://localhost:3000/"
 
 
-ref_wikipage = URIRef(pageurl + "ld/ressources/101wikipage")
-ref_repo = URIRef(pageurl + "ld/ressources/101repo")
+ref_wikipage = URIRef(pageurl + "resource/101wikipage")
+ref_repo = URIRef(pageurl + "resource/101repo")
 ref_lable = URIRef("http://www.w3.org/2000/01/rdf-schema#label")
 ref_created = URIRef("http://purl.org/dc/terms/created")
 
@@ -123,8 +123,8 @@ def add_repo(context, graph):
 '''
 
 def add_file(fpath, context, graph):
-    pageNode = URIRef(pageurl + "ld/ressources/" + urllib.parse.quote(fpath.strip()) + "_(file)")
-    #pageNode = URIRef(pageurl + "ld/ressources/" + quote(pagejson['title'].strip()))
+    pageNode = URIRef(pageurl + "resource/" + urllib.parse.quote(fpath.strip()) + "_(file)")
+    #pageNode = URIRef(pageurl + "resource/" + quote(pagejson['title'].strip()))
     filename, file_extension = os.path.splitext(fpath)
 
     add_thing(pageNode, DC.Format, Literal(file_extension), graph)
@@ -148,8 +148,8 @@ def add_singlepage(pagejson, graph):
     '''
     #pageNode = BNode(pagejson['_id'])
 
-    pageNode = URIRef(pageurl + "ld/ressources/" + urllib.parse.quote(pagejson['title'].strip()) + "_(wikipage)")
-    #pageNode = URIRef(pageurl + "ld/ressources/" + quote(pagejson['title'].strip()))
+    pageNode = URIRef(pageurl + "resource/" + urllib.parse.quote(pagejson['title'].strip()) + "_(wikipage)")
+    #pageNode = URIRef(pageurl + "resource/" + quote(pagejson['title'].strip()))
 
     add_thing(pageNode, ref_lable, Literal(pagejson['title'].strip()), graph)
     add_thing(pageNode, RDF.type, ref_wikipage, graph)

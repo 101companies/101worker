@@ -34,8 +34,8 @@ class ImportToOnto(object):
             self.pageurl = "http://localhost:3000/"
 
         # set references:
-        self.ref_wikipage = URIRef(self.pageurl + "ld/ressources/101wikipage")
-        self.ref_repo = URIRef(self.pageurl + "ld/ressources/101repo")
+        self.ref_wikipage = URIRef(self.pageurl + "resource/101wikipage")
+        self.ref_repo = URIRef(self.pageurl + "resource/101repo")
         self.ref_lable = URIRef("http://www.w3.org/2000/01/rdf-schema#label")
         self.ref_created = URIRef("http://purl.org/dc/terms/created")
 
@@ -49,7 +49,7 @@ class ImportToOnto(object):
         self.graph.bind("foaf", FOAF)
 
     def get_onto_uriref(self, name):
-        return URIRef(self.pageurl + "resources/" + urlparse.quote(name.strip().lower()))
+        return URIRef(self.pageurl + "resource/" + urlparse.quote(name.strip().lower()))
 
     def import_repo(self):
         '''
@@ -70,7 +70,8 @@ class ImportToOnto(object):
         # first, import 101worker itself:
         self.addLabel("101worker")
         self.addToGraph("101worker", FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/101worker"))
-        self.addToGraph("101worker", FOAF.abstract, Literal("Computational component of the infrastructure of the 101project"))
+        #self.addToGraph("101worker", DC.abstract, Literal("Computational component of the infrastructure of the 101project"))
+        self.addToGraph("101worker", URIRef('http://purl.org/dc/terms/abstract'), Literal("Computational component of the infrastructure of the 101project"))
 
         module_counter = 0
         for root, dirs, files in os.walk(self.context.get_env("modules101dir")):

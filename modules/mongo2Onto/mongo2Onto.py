@@ -44,7 +44,7 @@ def createRDFGraph(context):
     ito.save(graphfilepath, "turtle")
     ito.save(graphfilepath, "xml")
     ito.save(graphfilepath, "n3")
-    ito.save(graphfilepath, "foo")
+    #ito.save(graphfilepath, "foo")
 
 def createSingleFiles(context):
     graphfilepath = get_output(context)
