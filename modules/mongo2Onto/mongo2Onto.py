@@ -4,6 +4,7 @@
 from .ImportToOnto import *
 
 import time
+import requests
 
 config = {
     'wantdiff': False,
@@ -36,11 +37,12 @@ def createRDFGraph(context):
     ito.test()
 
     # export graph
-    export_format = "xml"
-    export_format = "turtle"
+    #export_format = "xml"
+    #export_format = "turtle"
     # export_format = "n3"
     # export_format = "pretty-xml"
     #ito.save(graphfilepath, export_format)
+
     ito.save(graphfilepath, "turtle")
     ito.save(graphfilepath, "xml")
     ito.save(graphfilepath, "n3")

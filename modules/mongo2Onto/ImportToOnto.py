@@ -123,6 +123,8 @@ class ImportToOnto(object):
                 #self.msg(">>>>>>>>>><" + t + ": " + f['n'])
 
                 self.addToGraph(f['n'], FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')))
+                print ('<<<<<<<<<< ' + f['n'])
+                self.addToGraph(f['n'], URIRef('http://purl.org/dc/terms/abstract'), Literal(f['headline']))
 
                 self.scan('Uses', f)
                 #self.scan('mentions', f)
