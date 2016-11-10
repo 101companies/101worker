@@ -2,7 +2,6 @@
 # coding=utf-8
 
 import os
-import worker_lib
 
 try:
     from pymongo import MongoClient
@@ -17,9 +16,13 @@ try:
     from rdflib.store import NO_STORE, VALID_STORE
     from rdflib.namespace import FOAF, DC, RDFS
     from urllib import parse as urlparse
-
 except ImportError:
     print('Error: rdflib is missing: "pip3 install rdflib"')
+
+try:
+    from graphviz import Digraph
+except ImportError:
+    print('Error: graphviz is missing: "pip3 install graphviz"')
 
 class ImportToOnto(object):
 
@@ -36,20 +39,33 @@ class ImportToOnto(object):
         # set references:
         self.ref_wikipage = URIRef(self.pageurl + "resource/101wikipage")
         self.ref_repo = URIRef(self.pageurl + "resource/101repo")
-        self.ref_lable = URIRef("http://www.w3.org/2000/01/rdf-schema#label")
-        self.ref_created = URIRef("http://purl.org/dc/terms/created")
+        #self.ref_lable = URIRef("http://www.w3.org/2000/01/rdf-schema#label")
+        #self.ref_created = URIRef("http://purl.org/dc/terms/created")
+
+        self.prepare_graph()
 
     def prepare_graph(self):
         # 101 Vokabular einbinden
-        ns101 = Namespace("https://www.101companies.org/ontology")
-        self.graph.bind("101", ns101)
+        ns101 = Namespace("http://localhost:3000/resource/")
+        self.graph.bind("ns101", ns101)
 
         # Externes Vokabular einbinden
         self.graph.bind("dc", DC)
         self.graph.bind("foaf", FOAF)
 
+        # 101 vocabulary
+        self.addToGraph("uses", RDFS.comment, Literal("The subject uses the object."), 'prepare_graph')
+        #self.addToGraph("uses", RDF.type, RDF.predicate)
+        self.addToGraph("instanceof", RDFS.comment, Literal("The subject is an instance of the object."), 'prepare_graph')
+        #self.addToGraph("instanceof", RDF.type, RDF.predicate)
+        self.addToGraph("memberof", RDFS.comment, Literal("The subject member the object."), 'prepare_graph')
+        #self.addToGraph("memberof", RDF.type, RDF.predicate)
+
     def get_onto_uriref(self, name):
-        return URIRef(self.pageurl + "resource/" + urlparse.quote(name.strip().lower()))
+        #name = name.replace(".", "_")
+        name = name.strip().replace(" ", "_")
+        #name = name.replace("101", "the101")
+        return URIRef(self.pageurl + "resource/" + urlparse.quote(name.lower()))
 
     def import_repo(self):
         '''
@@ -68,27 +84,25 @@ class ImportToOnto(object):
         self.msg ("import worker and modules into graph")
 
         # first, import 101worker itself:
-        self.addLabel("101worker")
-        self.addToGraph("101worker", FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/101worker"))
+        #self.addLabel("101worker")
+        self.addToGraph("101worker", FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/101worker"), 'import_workermodules_init')
         #self.addToGraph("101worker", DC.abstract, Literal("Computational component of the infrastructure of the 101project"))
-        self.addToGraph("101worker", URIRef('http://purl.org/dc/terms/abstract'), Literal("Computational component of the infrastructure of the 101project"))
+        self.addToGraph("101worker", URIRef('http://purl.org/dc/terms/abstract'), Literal("Computational component of the infrastructure of the 101project"), 'import_workermodules_init')
 
         module_counter = 0
         for root, dirs, files in os.walk(self.context.get_env("modules101dir")):
             for file in files:
                 if file.endswith("__init__.py"):
                     txt = open(os.path.join(root, file))
-                    #print (txt.read().config)
+
                     module_counter = module_counter + 1
                     module_name = root.split('/')[-1]
                     self.msg("import module: " + module_name)
                     self.addLabel(module_name)
-                    self.addToGraph(module_name, RDF.type, "101worker module")
-                    self.addToGraph(module_name, DC.isPartOf, "101worker")
-                    self.addToGraph(module_name, DC.requires, "101worker")
+                    self.addToGraph(module_name, RDF.type, "101worker module", 'import_workermodules')
+                    self.addToGraph(module_name, DC.isPartOf, "101worker", 'import_workermodules')
+                    self.addToGraph(module_name, DC.requires, "101worker", 'import_workermodules')
         self.msg (str(module_counter) + " modules imported")
-
-        #msg ("Or is it " + graph.count)
 
         self.msg ("done")
 
@@ -119,12 +133,10 @@ class ImportToOnto(object):
         for t in types:
             filtered  = filter(lambda p: t == p.get('p', ''), pages)
             for f in filtered:
-                #self.msg('headline:' + f['headline'] + ',n:' + f['n'] + str(f))
-                #self.msg(">>>>>>>>>><" + t + ": " + f['n'])
+                self.addToGraph(f['n'], FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')), 'import_wikipages')
 
-                self.addToGraph(f['n'], FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')))
-                print ('<<<<<<<<<< ' + f['n'])
-                self.addToGraph(f['n'], URIRef('http://purl.org/dc/terms/abstract'), Literal(f['headline']))
+                if len(str(f['headline']).strip()) > 0:
+                    self.addToGraph(f['n'], URIRef('http://purl.org/dc/terms/abstract'), Literal(f['headline']), 'import_wikipages_headline')
 
                 self.scan('Uses', f)
                 #self.scan('mentions', f)
@@ -142,23 +154,51 @@ class ImportToOnto(object):
             for u in item[t]:
                 self.msg("  " + t + " " + u['n'])
                 if ('p' in u and str(u['p']) != 'None'):
-                    self.msg("    " + u['n'] + " is a " + u['p'])
-                    self.addToGraph(u['n'], RDF.type, u['p'])
-                    self.addToGraph(item['n'], t, u['n'])
+                    subj = self.getsubjectname(u['n'], u['p'])
 
-    def addToGraph(self, s, p, o):
+                    self.msg("    " + subj + " is a " + u['p'])
+
+                    self.addToGraph(subj, RDF.type, u['p'], 'scan_' + t)
+                    self.addToGraph(item['n'], t, subj, 'scan_' + t)
+
+    def getsubjectname(self, subjname, typename):
+        if(typename):
+            return typename + "-" + subjname
+        else:
+            return subjname
+
+    def addToGraph(self, s, p, o, debuginfo, create_label = True):
         ''' insert a new triple into the graph
         :param s: Subject
         :param p: Predicate
         :param o: Object
         :return: None
         '''
+
+        if (self.debugmode):
+            self.graph.add(
+                (self.get_onto_uriref(s),
+                 self.get_onto_uriref('importedBy'),
+                 self.get_onto_uriref(debuginfo))
+            )
+            self.graph.add(
+                (self.get_onto_uriref(debuginfo),
+                 RDF.type,
+                 self.get_onto_uriref('import_method'))
+            )
+            self.graph.add(
+                (self.get_onto_uriref(debuginfo),
+                 DC.isPartOf,
+                 self.get_onto_uriref('mongo2onto'))
+            )
+
         self.addLabel(s)
 
         if(not isinstance(o, Literal) and isinstance(o, str)):
             o = self.get_onto_uriref(o)
-        if(not isinstance(p, URIRef)):
+        if not isinstance(p, URIRef):
             p = self.get_onto_uriref(p)
+
         self.graph.add((self.get_onto_uriref(s), p, o))
 
     labeled_entities = []   # list of labeled entities
@@ -170,6 +210,7 @@ class ImportToOnto(object):
         '''
         if(item not in self.labeled_entities):
             self.labeled_entities.append(item)
+            #self.addToGraph(self.get_onto_uriref(item), DC.label, Literal(item), False)
             self.graph.add((self.get_onto_uriref(item), DC.label, Literal(item)))
 
     def msg(self, txt):
@@ -183,7 +224,14 @@ class ImportToOnto(object):
                 if (s in tested_entities):
                     print (str(s) + " hat mehrere Instanzierungen")
                 tested_entities.append(s)
-        print ("anzahl: " + str(len(tested_entities)))
+        customtypes = []
+        for s, p, o in self.graph:
+            if str(p) not in customtypes:
+                customtypes.append(str(p))
+        for t in customtypes:
+            self.msg(t)
+
+        print (type(RDF.predicate))
 
     def save(self, output_path, export_format):
         if (export_format == "turtle"):
@@ -199,3 +247,16 @@ class ImportToOnto(object):
             raise Exception('unknown export format "' + export_format + '"!')
         s.serialize(out)
         self.msg('export done with format "' + export_format + '"!')
+
+    def viz_prep(self, uri):
+        return str(uri).split('/').pop().replace('.', '').replace('\'', '')
+
+    def viz(self):
+        e = Digraph('ER', filename='er.gv', engine='neato')
+        for s, p, o in self.graph:
+            sub = self.viz_prep(s)
+            pre = self.viz_prep(p)
+            obj = self.viz_prep(o)
+            e.edge(sub, pre, obj)
+        e.view()
+        

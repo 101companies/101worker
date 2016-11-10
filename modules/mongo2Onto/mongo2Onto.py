@@ -36,6 +36,8 @@ def createRDFGraph(context):
 
     ito.test()
 
+    ito.viz()
+
     # export graph
     #export_format = "xml"
     #export_format = "turtle"
@@ -48,20 +50,20 @@ def createRDFGraph(context):
     ito.save(graphfilepath, "n3")
     #ito.save(graphfilepath, "foo")
 
-def createSingleFiles(context):
+#def createSingleFiles(context):
     graphfilepath = get_output(context)
 
     # Graphen laden
-    graph = g.Graph()
-    graph.parse(get_output(context))
+    #graph = g.Graph()
+    #graph.parse(get_output(context))
 
-    print(len(graph))
-    import pprint
-    for stmt in graph:
-        pprint.pprint(stmt)
+    #print(len(graph))
+    #import pprint
+    #for stmt in graph:
+    #    pprint.pprint(stmt)
 
-    for subject,predicate,obj_ in graph:
-        print (subject + ' ' + predicate + ' ' . obj_)
+    #for subject,predicate,obj_ in graph:
+    #    print (subject + ' ' + predicate + ' ' . obj_)
 
 
 def get_output(context):
@@ -73,5 +75,3 @@ def run(context):
     createRDFGraph(context)
 
     print("--- %s ms ---" % ((time.time() - start_time)*1000))
-
-    #createSingleFiles(context)
