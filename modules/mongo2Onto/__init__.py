@@ -4,6 +4,6 @@ from .test import test
 config = {
     'wantdiff': False,
     'behavior': {
-        'creates': [['dump', 'ontology.rdf']]
+        'creates': [['dump', 'ontology.ttl']]
     }
 }

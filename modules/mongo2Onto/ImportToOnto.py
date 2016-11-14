@@ -45,6 +45,11 @@ class ImportToOnto(object):
         self.debugmode = debug
         self.context = _worker_context
         self.graph = _graph
+
+        self.repo_dir = self.context.get_env('repo101dir')
+        self.target_dir = self.context.get_env('targets101dir')
+        self.modules_dir = self.context.get_env("modules101dir")
+
         self.labeled_entities = []
         self.pageurl = "http://101companies.org/"
         if self.debugmode:
@@ -95,7 +100,22 @@ class ImportToOnto(object):
     def import_repo(self):
         self.msg ("import repo into graph", printcolors.OKBLUE)
 
+        self.import_repo_bytype('technologies', 'technology')
+        self.import_repo_bytype('languages', 'language')
+        self.import_repo_bytype('contributions', 'contribution')
+        self.import_repo_bytype('modules', '101worker_module')
+
         self.msg ("done", printcolors.OKBLUE)
+
+    def import_repo_bytype(self, foldername, typname):
+        self.msg ("import from repo: " + foldername, printcolors.ENDC, 1)
+
+        for subfolder in os.listdir(os.path.join(self.target_dir, foldername)):
+            subj = self.getentityname(subfolder, typname)
+            self.addToGraph(subj, RDF.type, typname, 'import_repo_bytype')
+
+        #for root, dirs, files in os.walk(os.path.join(self.target_dir, foldername)):
+        #    print (dirs)
 
     def import_workermodules(self):
         self.msg ("import worker and modules into graph", printcolors.OKBLUE)
@@ -137,7 +157,9 @@ class ImportToOnto(object):
             filtered  = filter(lambda p: t == p.get('p', ''), pages)
             for f in filtered:
                 subj = self.getentityname(self.getentityname(f['n'], f['p']), 'wikipage')
+                wikipage_obj = self.getentityname('101wikipage')
 
+                self.addToGraph(subj, RDF.type, wikipage_obj, 'import_wikipages')
                 self.addToGraph(subj, FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')), 'import_wikipages')
                 self.addToGraph(subj, FOAF.isPrimaryTopicOf, self.getentityname(f['n'], f['p']), 'import_wikipages')
 
