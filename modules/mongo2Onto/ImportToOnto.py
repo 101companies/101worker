@@ -27,6 +27,9 @@ except ImportError:
 class ImportToOnto(object):
 
     def __init__(self, _worker_context, _graph, debug=None):
+
+        self.cur_id = 0
+
         if(debug is None):
             debug = False
         self.debugmode = debug
@@ -36,23 +39,29 @@ class ImportToOnto(object):
         if self.debugmode:
             self.pageurl = "http://localhost:3000/"
 
-        # set references:
-        self.ref_wikipage = URIRef(self.pageurl + "resource/101wikipage")
-        self.ref_repo = URIRef(self.pageurl + "resource/101repo")
-        #self.ref_lable = URIRef("http://www.w3.org/2000/01/rdf-schema#label")
-        #self.ref_created = URIRef("http://purl.org/dc/terms/created")
-
         self.prepare_graph()
 
     def prepare_graph(self):
-        # 101 Vokabular einbinden
-        ns101 = Namespace("http://localhost:3000/resource/")
-        self.graph.bind("ns101", ns101)
+        # bind 101 vocabulary
+        ns101 = Namespace(self.pageurl + "resource/")
+        self.graph.bind("ns101", ns101) # Namespace 101
 
-        # Externes Vokabular einbinden
+        # bind externes vocabulary
         self.graph.bind("dc", DC)
         self.graph.bind("foaf", FOAF)
 
+    def get_onto_uriref(self, name):
+        #name = name.replace(".", "_")
+        name = name.strip().replace(" ", "_")
+        #name = name.replace("101", "the101")
+        #name = name.lower()
+        return URIRef(self.pageurl + "resource/" + urlparse.quote(name))
+
+    def do_import(self):
+        self.do_manually_import()
+        self.do_automatic_import()
+
+    def do_manually_import(self):
         # 101 vocabulary
         self.addToGraph("uses", RDFS.comment, Literal("The subject uses the object."), 'prepare_graph')
         #self.addToGraph("uses", RDF.type, RDF.predicate)
@@ -61,11 +70,12 @@ class ImportToOnto(object):
         self.addToGraph("memberof", RDFS.comment, Literal("The subject member the object."), 'prepare_graph')
         #self.addToGraph("memberof", RDF.type, RDF.predicate)
 
-    def get_onto_uriref(self, name):
-        #name = name.replace(".", "_")
-        name = name.strip().replace(" ", "_")
-        #name = name.replace("101", "the101")
-        return URIRef(self.pageurl + "resource/" + urlparse.quote(name.lower()))
+    def do_automatic_import(self):
+        self.import_wikipages()
+        self.import_workermodules()
+        self.import_repo()
+        self.import_resources_and_dumps()
+        self.import_conceptual_data()
 
     def import_repo(self):
         '''
@@ -84,7 +94,7 @@ class ImportToOnto(object):
         self.msg ("import worker and modules into graph")
 
         # first, import 101worker itself:
-        #self.addLabel("101worker")
+        self.addLabel("101worker")
         self.addToGraph("101worker", FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/101worker"), 'import_workermodules_init')
         #self.addToGraph("101worker", DC.abstract, Literal("Computational component of the infrastructure of the 101project"))
         self.addToGraph("101worker", URIRef('http://purl.org/dc/terms/abstract'), Literal("Computational component of the infrastructure of the 101project"), 'import_workermodules_init')
@@ -133,10 +143,13 @@ class ImportToOnto(object):
         for t in types:
             filtered  = filter(lambda p: t == p.get('p', ''), pages)
             for f in filtered:
-                self.addToGraph(f['n'], FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')), 'import_wikipages')
+                subj = self.getentityname(self.getentityname(f['n'], f['p']), 'wikipage')
 
-                if len(str(f['headline']).strip()) > 0:
-                    self.addToGraph(f['n'], URIRef('http://purl.org/dc/terms/abstract'), Literal(f['headline']), 'import_wikipages_headline')
+                self.addToGraph(subj, FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')), 'import_wikipages')
+                self.addToGraph(subj, FOAF.isPrimaryTopicOf, self.getentityname(f['n'], f['p']), 'import_wikipages')
+
+                #if len(str(f['headline']).strip()) > 0:
+                    #self.addToGraph(subj, URIRef('http://purl.org/dc/terms/abstract'), Literal(f['headline']), 'import_wikipages_headline')
 
                 self.scan('Uses', f)
                 #self.scan('mentions', f)
@@ -154,26 +167,29 @@ class ImportToOnto(object):
             for u in item[t]:
                 self.msg("  " + t + " " + u['n'])
                 if ('p' in u and str(u['p']) != 'None'):
-                    subj = self.getsubjectname(u['n'], u['p'])
+                    subj = self.getentityname(u['n'], u['p'])
+                    self.addLabel(subj, u['n'])
+
+                    subj_type = self.getentityname(u['p'])
+
+                    item_name = self.getentityname(item['n'], item['p'])
+                    item_type = self.getentityname(item['p'])
 
                     self.msg("    " + subj + " is a " + u['p'])
 
-                    self.addToGraph(subj, RDF.type, u['p'], 'scan_' + t)
-                    self.addToGraph(item['n'], t, subj, 'scan_' + t)
+                    self.addToGraph(subj, RDF.type, subj_type, 'scan_' + t + '1')
 
-    def getsubjectname(self, subjname, typename):
+                    self.addToGraph(item_name, RDF.type, item_type, 'scan_' + t + '2')
+                    self.addToGraph(item_name, t.lower(), subj, 'scan_' + t + '3')
+                    #print (item)
+
+    def getentityname(self, subjname, typename = None):
         if(typename):
-            return typename + "-" + subjname
+            return typename.lower() + "-" + subjname.lower()
         else:
-            return subjname
+            return subjname.lower()
 
     def addToGraph(self, s, p, o, debuginfo, create_label = True):
-        ''' insert a new triple into the graph
-        :param s: Subject
-        :param p: Predicate
-        :param o: Object
-        :return: None
-        '''
 
         if (self.debugmode):
             self.graph.add(
@@ -192,8 +208,6 @@ class ImportToOnto(object):
                  self.get_onto_uriref('mongo2onto'))
             )
 
-        self.addLabel(s)
-
         if(not isinstance(o, Literal) and isinstance(o, str)):
             o = self.get_onto_uriref(o)
         if not isinstance(p, URIRef):
@@ -201,21 +215,52 @@ class ImportToOnto(object):
 
         self.graph.add((self.get_onto_uriref(s), p, o))
 
+        if self.debugmode:
+            need_id = True
+            for id in self.graph.objects(self.get_onto_uriref(s), self.get_onto_uriref('ontoid')):
+                need_id = False
+
+            if need_id:
+                self.cur_id = self.cur_id + 1
+                self.graph.add((self.get_onto_uriref(s), self.get_onto_uriref('ontoid'), Literal(self.cur_id)))
+
+
     labeled_entities = []   # list of labeled entities
-    def addLabel(self, item):
-        '''
-        insert a label of an entity if it isn't labeled
-        :param item: name of the item as a string
-        :return: None
-        '''
-        if(item not in self.labeled_entities):
-            self.labeled_entities.append(item)
+    def addLabel(self, entity, label = None):
+
+        if label == None:
+            label = entity
+
+        if(entity not in self.labeled_entities):
+            self.labeled_entities.append(entity)
             #self.addToGraph(self.get_onto_uriref(item), DC.label, Literal(item), False)
-            self.graph.add((self.get_onto_uriref(item), DC.label, Literal(item)))
+            self.graph.add((self.get_onto_uriref(entity), DC.label, Literal(label)))
 
     def msg(self, txt):
         if(self.debugmode):
             print ("  " + txt)
+
+    def check_integrity(self):
+
+        # Recognize similar objects
+
+        # check predicates, which are to be used once
+        single_use_predicats = [
+            DC.label,
+            URIRef('http://purl.org/dc/terms/abstract'),
+            self.get_onto_uriref('instanceof'),
+            RDF.type
+        ]
+
+        for s in self.graph.subjects():
+            for pred in single_use_predicats:
+                tmp = []
+                for o in self.graph.objects(s, pred):
+                    tmp.append(o)
+                    if(len(tmp) == 2):
+                        print(str(s) + ' has multiple ' + str(pred))
+        return False
+
 
     def test(self):
         tested_entities = []
@@ -259,4 +304,3 @@ class ImportToOnto(object):
             obj = self.viz_prep(o)
             e.edge(sub, pre, obj)
         e.view()
-        

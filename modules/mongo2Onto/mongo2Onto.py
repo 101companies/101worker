@@ -28,15 +28,12 @@ def createRDFGraph(context):
 
     # import 101companies
     ito = ImportToOnto(context, graph, True)
-    ito.import_wikipages()
-    ito.import_workermodules()
-    ito.import_repo()
-    ito.import_resources_and_dumps()
-    ito.import_conceptual_data()
+    ito.do_import()
 
-    ito.test()
+    ito.check_integrity()
+    #ito.test()
 
-    ito.viz()
+    #ito.viz()
 
     # export graph
     #export_format = "xml"
