@@ -18,7 +18,7 @@ try:
     from urllib import parse as urlparse
 except ImportError:
     print('Error: rdflib is missing: "pip3 install rdflib"')
-
+    
 try:
     from graphviz import Digraph
 except ImportError:
