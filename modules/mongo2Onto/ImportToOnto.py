@@ -19,12 +19,7 @@ try:
 except ImportError:
     print('Error: rdflib is missing: "pip3 install rdflib"')
 
-try:
-    from graphviz import Digraph
-except ImportError:
-    print('Error: graphviz is missing: "pip3 install graphviz"')
-
-class printcolors:
+class PrintColors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKGREEN = '\033[92m'
@@ -36,12 +31,10 @@ class printcolors:
 
 class ImportToOnto(object):
 
-    def __init__(self, _worker_context, _graph, debug=None):
+    def __init__(self, _worker_context, _graph, debug = False):
 
         self.cur_id = 0
 
-        if(debug is None):
-            debug = False
         self.debugmode = debug
         self.context = _worker_context
         self.graph = _graph
@@ -98,17 +91,17 @@ class ImportToOnto(object):
         self.import_conceptual_data()
 
     def import_repo(self):
-        self.msg ("import repo into graph", printcolors.OKBLUE)
+        self.msg ("import repo into graph", PrintColors.OKBLUE)
 
         self.import_repo_bytype('technologies', 'technology')
         self.import_repo_bytype('languages', 'language')
         self.import_repo_bytype('contributions', 'contribution')
         self.import_repo_bytype('modules', '101worker_module')
 
-        self.msg ("done", printcolors.OKBLUE)
+        self.msg ("done", PrintColors.OKBLUE)
 
     def import_repo_bytype(self, foldername, typname):
-        self.msg ("import from repo: " + foldername, printcolors.ENDC, 1)
+        self.msg ("import from repo: " + foldername, PrintColors.ENDC, 1)
 
         for subfolder in os.listdir(os.path.join(self.target_dir, foldername)):
             subj = self.getentityname(subfolder, typname)
@@ -118,7 +111,7 @@ class ImportToOnto(object):
         #    print (dirs)
 
     def import_workermodules(self):
-        self.msg ("import worker and modules into graph", printcolors.OKBLUE)
+        self.msg ("import worker and modules into graph", PrintColors.OKBLUE)
 
         module_counter = 0
         for root, dirs, files in os.walk(self.context.get_env("modules101dir")):
@@ -128,22 +121,22 @@ class ImportToOnto(object):
 
                     module_counter = module_counter + 1
                     module_name = root.split('/')[-1]
-                    self.msg("import module: " + module_name, printcolors.ENDC, 1)
+                    self.msg("import module: " + module_name, PrintColors.ENDC, 1)
                     self.addLabel(module_name)
                     self.addToGraph(module_name, RDF.type, "101worker module", 'import_workermodules')
                     self.addToGraph(module_name, DC.isPartOf, "101worker", 'import_workermodules')
                     self.addToGraph(module_name, DC.requires, "101worker", 'import_workermodules')
-        self.msg (str(module_counter) + " modules imported", printcolors.ENDC, 1)
+        self.msg (str(module_counter) + " modules imported", PrintColors.ENDC, 1)
 
-        self.msg ("done", printcolors.OKBLUE)
+        self.msg ("done", PrintColors.OKBLUE)
 
     def import_resources_and_dumps(self):
-        self.msg ("import resources and dumps into graph", printcolors.OKBLUE)
+        self.msg ("import resources and dumps into graph", PrintColors.OKBLUE)
 
-        self.msg ("done", printcolors.OKBLUE)
+        self.msg ("done", PrintColors.OKBLUE)
 
     def import_wikipages(self):
-        self.msg ("import wikipages into graph", printcolors.OKBLUE)
+        self.msg ("import wikipages into graph", PrintColors.OKBLUE)
         wiki_links_json = self.context.read_dump('wiki-links')
 
         pages = wiki_links_json['wiki']['pages']
@@ -169,12 +162,12 @@ class ImportToOnto(object):
                 self.scan('InstanceOf', f)
                 self.scan('MemberOf', f)
 
-        self.msg ("done", printcolors.OKBLUE)
+        self.msg ("done", PrintColors.OKBLUE)
 
     def import_conceptual_data(self):
-        self.msg ("import conceptual data into graph", printcolors.OKBLUE)
+        self.msg ("import conceptual data into graph", PrintColors.OKBLUE)
 
-        self.msg ("done", printcolors.OKBLUE)
+        self.msg ("done", PrintColors.OKBLUE)
 
     def scan(self, t, item):
         if (t in item):
@@ -223,17 +216,25 @@ class ImportToOnto(object):
             o = self.get_onto_uriref(o)
         if not isinstance(p, URIRef):
             p = self.get_onto_uriref(p)
+        s = self.get_onto_uriref(s)
 
-        self.graph.add((self.get_onto_uriref(s), p, o))
+        # Add tuple to graph
+        self.graph.add((s, p, o))
+
 
         if self.debugmode:
-            need_id = True
-            for id in self.graph.objects(self.get_onto_uriref(s), self.get_onto_uriref('ontoid')):
-                need_id = False
+            id_uri_ref = self.get_onto_uriref('ontology_data_id')
+            id_exists = False
+            for id in self.graph.objects(s, id_uri_ref):
+                id_exists = True
+            for id in self.graph.objects(o, id_uri_ref):
+                id_exists = True
 
-            if need_id:
-                self.cur_id = self.cur_id + 1
-                self.graph.add((self.get_onto_uriref(s), self.get_onto_uriref('ontoid'), Literal(self.cur_id)))
+            if not id_exists:
+                self.cur_id += 1
+                self.graph.add((s, id_uri_ref, Literal(self.cur_id)))
+                if not isinstance(o, Literal):
+                    self.graph.add((o, id_uri_ref, Literal(self.cur_id)))
 
     def addLabel(self, entity, label = None):
 
@@ -244,12 +245,12 @@ class ImportToOnto(object):
             self.labeled_entities.append(entity)
             self.graph.add((self.get_onto_uriref(entity), DC.label, Literal(label)))
 
-    def msg(self, txt, txtcolor = printcolors.ENDC, level = 0):
+    def msg(self, txt, txtcolor = PrintColors.ENDC, level = 0):
         if(self.debugmode):
-            print (txtcolor + ('  ' * (level + 1)) + txt + printcolors.ENDC)
+            print (txtcolor + ('  ' * (level + 1)) + txt + PrintColors.ENDC)
 
     def check_integrity(self):
-        self.msg("checking integrity now", printcolors.OKBLUE)
+        self.msg("checking integrity now", PrintColors.OKBLUE)
 
         # Recognize similar objects
 
@@ -261,6 +262,12 @@ class ImportToOnto(object):
             RDF.type
         ]
 
+        if False:
+            # insert wrong data
+            for p in single_use_predicats:
+                self.addToGraph('test', p, 'a', 'check_integrity')
+                self.addToGraph('test', p, 'b', 'check_integrity')
+
         checked_subjects = []
         for s in self.graph.subjects():
             if s not in checked_subjects:
@@ -271,9 +278,9 @@ class ImportToOnto(object):
                         if(o not in tmp):
                             tmp.append(o)
                             if (len(tmp) == 2):
-                                self.msg(str(s) + ' has multiple ' + str(pred) + "(" + str(o), printcolors.WARNING, 1)
+                                self.msg(str(s) + ' has multiple ' + str(pred) + "(" + str(o), PrintColors.WARNING, 1)
 
-        self.msg("done", printcolors.OKBLUE)
+        self.msg("done", PrintColors.OKBLUE)
 
     def save(self, output_path, export_format):
         if (export_format == "turtle"):
@@ -289,4 +296,4 @@ class ImportToOnto(object):
             raise Exception('unknown export format "' + export_format + '"!')
         s.serialize(out)
 
-        self.msg('export done with format "' + export_format + '"', printcolors.OKGREEN)
+        self.msg('export done in format "' + export_format + '"', PrintColors.OKGREEN)

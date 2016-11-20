@@ -17,7 +17,7 @@ def createRDFGraph(context):
 
     # load graph
     graph = Graph()
-    graph.open(get_output(context), create=False)
+    graph.open(graphfilepath, create=False)
 
     # import 101companies and create 101ontology
     ito = ImportToOnto(context, graph, True)
