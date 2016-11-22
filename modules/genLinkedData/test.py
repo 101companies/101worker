@@ -1,6 +1,5 @@
 import unittest
 
-from . import mongo2Onto
 import os
 import io
 import json

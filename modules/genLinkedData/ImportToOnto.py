@@ -60,10 +60,8 @@ class ImportToOnto(object):
         self.graph.bind("foaf", FOAF)
 
     def get_onto_uriref(self, name):
-        #name = name.replace(".", "_")
-        name = name.strip().replace(" ", "_")
-        #name = name.replace("101", "the101")
-        #name = name.lower()
+        name = '_'.join(name.split()).lower()
+
         return URIRef(self.pageurl + "resource/" + urlparse.quote(name))
 
     def do_import(self):
@@ -80,7 +78,7 @@ class ImportToOnto(object):
         self.addToGraph("101worker", URIRef('http://purl.org/dc/terms/abstract'), Literal("Computational component of the infrastructure of the 101project"), 'import_workermodules_init')
 
         self.addToGraph("uses", RDFS.comment, Literal("The subject uses the object."), 'prepare_graph')
-        self.addToGraph("instanceof", RDFS.comment, Literal("The subject is an instance of the object."), 'prepare_graph')
+        # legacy > self.addToGraph("instanceof", RDFS.comment, Literal("The subject is an instance of the object."), 'prepare_graph')
         self.addToGraph("memberof", RDFS.comment, Literal("The subject member the object."), 'prepare_graph')
 
     def do_automatic_import(self):
@@ -104,11 +102,11 @@ class ImportToOnto(object):
         self.msg ("import from repo: " + foldername, PrintColors.ENDC, 1)
 
         for subfolder in os.listdir(os.path.join(self.target_dir, foldername)):
-            subj = self.getentityname(subfolder, typname)
-            self.addToGraph(subj, RDF.type, typname, 'import_repo_bytype')
 
-        #for root, dirs, files in os.walk(os.path.join(self.target_dir, foldername)):
-        #    print (dirs)
+            subj = self.getentityname(subfolder, typname)
+            obj = self.getentityname(typname, 'namespace')
+
+            self.addToGraph(subj, RDF.type, obj, 'import_repo_bytype')
 
     def import_workermodules(self):
         self.msg ("import worker and modules into graph", PrintColors.OKBLUE)
@@ -153,39 +151,44 @@ class ImportToOnto(object):
                 wikipage_obj = self.getentityname('101wikipage')
 
                 self.addToGraph(subj, RDF.type, wikipage_obj, 'import_wikipages')
-                self.addToGraph(subj, FOAF.isPrimaryTopicOf, Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')), 'import_wikipages')
+                self.addToGraph(subj, 'external_url', Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')), 'import_wikipages')
                 self.addToGraph(subj, FOAF.isPrimaryTopicOf, self.getentityname(f['n'], f['p']), 'import_wikipages')
 
                 self.scan('Uses', f)
                 #self.scan('mentions', f)
                 #self.scan('LinksTo', f) # LinksTo is a wikipedia-link or mabye a github 101repo link
-                self.scan('InstanceOf', f)
+                self.scan('InstanceOf', f, RDF.type) # alternative predicate because InstanceOf is legacy
                 self.scan('MemberOf', f)
+                self.scan('PartOf', f)
 
         self.msg ("done", PrintColors.OKBLUE)
+
+    def scan(self, t, item, alt_predicate = None):
+        if (t in item):
+            for u in item[t]:
+                #self.msg("  " + t + " " + u['n'])
+                if ('p' in u and u['p'] != None):
+                    subj = self.getentityname(u['n'], u['p']) # e.g. language-haskell
+                    self.addLabel(subj, u['n']) # e.g. Label "Haskell" for Entity language-haskell
+
+                    subj_type = self.getentityname(u['p'], 'namespace') # e.g. namespace-language
+
+                    item_name = self.getentityname(item['n'], item['p'])
+
+                    item_type = self.getentityname(item['p'], 'namespace')
+
+                    self.addToGraph(subj, RDF.type, subj_type, 'scan_' + t + '1')
+                    self.addToGraph(item_name, RDF.type, item_type, 'scan_' + t + '2')
+
+                    if alt_predicate != None:
+                        self.addToGraph(item_name, RDF.type, subj, 'scan_' + t + '3')
+                    else:
+                        self.addToGraph(item_name, t.lower(), subj, 'scan_' + t + '3')
 
     def import_conceptual_data(self):
         self.msg ("import conceptual data into graph", PrintColors.OKBLUE)
 
         self.msg ("done", PrintColors.OKBLUE)
-
-    def scan(self, t, item):
-        if (t in item):
-            for u in item[t]:
-                #self.msg("  " + t + " " + u['n'])
-                if ('p' in u and str(u['p']) != 'None'):
-                    subj = self.getentityname(u['n'], u['p'])
-                    self.addLabel(subj, u['n'])
-
-                    subj_type = self.getentityname(u['p'])
-
-                    item_name = self.getentityname(item['n'], item['p'])
-                    item_type = self.getentityname(item['p'])
-
-                    self.addToGraph(subj, RDF.type, subj_type, 'scan_' + t + '1')
-
-                    self.addToGraph(item_name, RDF.type, item_type, 'scan_' + t + '2')
-                    self.addToGraph(item_name, t.lower(), subj, 'scan_' + t + '3')
 
     def getentityname(self, subjname, typename = None):
         if(typename):
@@ -216,11 +219,14 @@ class ImportToOnto(object):
             o = self.get_onto_uriref(o)
         if not isinstance(p, URIRef):
             p = self.get_onto_uriref(p)
+
         s = self.get_onto_uriref(s)
 
         # Add tuple to graph
         self.graph.add((s, p, o))
 
+        if p == RDF.type and 'namespace' not in o and 'langua' in o:
+            print ((s,p,o, debuginfo))
 
         if self.debugmode:
             id_uri_ref = self.get_onto_uriref('ontology_data_id')

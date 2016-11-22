@@ -26,6 +26,9 @@ def createRDFGraph(context):
     # check integrity and display warnings
     ito.check_integrity()
 
+    # print count
+    print (len(ito.graph))
+
     # export graph
     ito.save(graphfilepath, "turtle")
     #ito.save(graphfilepath, "xml")
@@ -33,7 +36,7 @@ def createRDFGraph(context):
     #ito.save(graphfilepath, "foo")
 
 def get_output(context):
-    return os.path.join(context.get_env('ontoDir'), 'ontology')
+    return os.path.join(context.get_env('dumps101dir'), 'ontology')
 
 def run(context):
     start_time = time.time()

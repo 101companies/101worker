@@ -1,4 +1,4 @@
-from .mongo2Onto import run
+from .genLinkedData import run
 from .test import test
 
 config = {
