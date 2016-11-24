@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+
+import worker_lib
+import json 
+
+data = []
+for module in worker_lib.modules:
+    data.append({'name': module.__name__, 'behavior': module.config.get('behavior', {})})
+
+
+print(json.dumps(data, indent=4))
+
