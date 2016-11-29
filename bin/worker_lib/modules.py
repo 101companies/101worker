@@ -21,8 +21,8 @@ modules = [
     'moretagclouds',
     'plainTextWikiDump',
     'zip',
-    'mongodump',
-    'genLinkedData'
+    'mongodump'
+    #, 'genLinkedData'
 ]
 
 modules = [import_module(module) for module in modules]
