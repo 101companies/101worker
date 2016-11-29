@@ -3,6 +3,10 @@
 
 import os
 
+from bin.worker_lib.graph import dependent_modules, depending_modules, resolve_modules_graph
+
+from bin.worker_lib import modules
+
 try:
     from pymongo import MongoClient
     from bson.json_util import dumps
@@ -99,7 +103,8 @@ class ImportToOnto(object):
         self.msg ("done", PrintColors.OKBLUE)
 
     def import_repo_bytype(self, foldername, typname):
-        self.msg ("import from repo: " + foldername, PrintColors.ENDC, 1)
+        self.msg("import from repo: " + foldername, PrintColors.ENDC, 1)
+        self.msg(self.target_dir, PrintColors.OKBLUE, 2)
 
         for subfolder in os.listdir(os.path.join(self.target_dir, foldername)):
 
@@ -126,10 +131,34 @@ class ImportToOnto(object):
                     self.addToGraph(module_name, DC.requires, "101worker", 'import_workermodules')
         self.msg (str(module_counter) + " modules imported", PrintColors.ENDC, 1)
 
+        self.msg("create module dependencies", PrintColors.ENDC, 1)
+
+        graph = resolve_modules_graph(modules)
+        for module_name in graph:
+            for depenting_module in depending_modules(graph, module_name):
+                self.addToGraph(str(module_name), "depending", str(depenting_module), 'import_workermodules_dependencies')
+
+        self.msg("module dependencies added", PrintColors.ENDC, 1)
+
         self.msg ("done", PrintColors.OKBLUE)
 
     def import_resources_and_dumps(self):
         self.msg ("import resources and dumps into graph", PrintColors.OKBLUE)
+
+        for module in modules:
+            behavior = module.config.get('behavior')
+            if behavior != None:
+                for predicate in behavior:
+                    for o in behavior[predicate]:
+                        object_name = str(o[0] + '_' + o[1]) # e.g. dump_languagefrequency or resource_lang
+                        self.addToGraph(str(module.__name__), predicate, object_name, 'import_resources_and_dumps')
+                        self.addToGraph(object_name, RDF.type, o[0], 'import_resources_and_dumps')
+
+                        if(str(o[0]).lower() == 'resource'):
+                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a label for naming resources like "/path/file.ext.' + o[1] + '.json"'), 'import_resources_and_dumps')
+                        if(str(o[0]).lower() == 'dump'):
+                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a dump file named "' + o[1] + '.json"'), 'import_resources_and_dumps')
+                        self.addLabel(object_name, o[1])
 
         self.msg ("done", PrintColors.OKBLUE)
 
@@ -142,7 +171,17 @@ class ImportToOnto(object):
                  'Contributor',
                  'Technology',
                  'Language',
-                 'Features']
+                 'Features',
+                 'Concept']
+
+        #pagetypes = []
+        #for page in pages:
+        #    if page['p'] not in pagetypes:
+        #        pagetypes.append(page['p'])
+        #for t in pagetypes:
+        #    if(t == None):
+        #        t = 'none'
+        #    print (t)
 
         for t in types:
             filtered  = filter(lambda p: t == p.get('p', ''), pages)
@@ -196,7 +235,7 @@ class ImportToOnto(object):
         else:
             return subjname.lower()
 
-    def addToGraph(self, s, p, o, debuginfo, create_label = True):
+    def addToGraph(self, s, p, o, debuginfo):
 
         if (self.debugmode):
             self.graph.add(
