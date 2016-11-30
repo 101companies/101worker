@@ -4,7 +4,6 @@
 from .ImportToOnto import *
 
 import time
-import requests
 
 config = {
     'wantdiff': False,
@@ -27,7 +26,7 @@ def createRDFGraph(context):
     ito.check_integrity()
 
     # print count
-    print (len(ito.graph))
+    print ('graph has ' + str(len(ito.graph)) + ' entities.')
 
     # export graph
     ito.save(graphfilepath, "turtle")

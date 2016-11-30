@@ -7,6 +7,3 @@ config = {
         'uses': [['dump', 'wiki-links']]
     }
 }
-
-
-

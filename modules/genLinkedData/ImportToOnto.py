@@ -3,9 +3,8 @@
 
 import os
 
-from bin.worker_lib.graph import dependent_modules, depending_modules, resolve_modules_graph
-
-from bin.worker_lib import modules
+#from worker_lib.graph import dependent_modules, depending_modules, resolve_modules_graph
+#from worker_lib import modules
 
 try:
     from pymongo import MongoClient
@@ -109,7 +108,7 @@ class ImportToOnto(object):
         for subfolder in os.listdir(os.path.join(self.target_dir, foldername)):
 
             subj = self.getentityname(subfolder, typname)
-            obj = self.getentityname(typname, 'namespace')
+            obj = self.getentityname(typname)
 
             self.addToGraph(subj, RDF.type, obj, 'import_repo_bytype')
 
@@ -133,10 +132,10 @@ class ImportToOnto(object):
 
         self.msg("create module dependencies", PrintColors.ENDC, 1)
 
-        graph = resolve_modules_graph(modules)
-        for module_name in graph:
-            for depenting_module in depending_modules(graph, module_name):
-                self.addToGraph(str(module_name), "depending", str(depenting_module), 'import_workermodules_dependencies')
+        #graph = resolve_modules_graph(modules)
+        #for module_name in graph:
+        #    for depenting_module in depending_modules(graph, module_name):
+        #        self.addToGraph(str(module_name), "depending", str(depenting_module), 'import_workermodules_dependencies')
 
         self.msg("module dependencies added", PrintColors.ENDC, 1)
 
@@ -208,13 +207,17 @@ class ImportToOnto(object):
                 #self.msg("  " + t + " " + u['n'])
                 if ('p' in u and u['p'] != None):
                     subj = self.getentityname(u['n'], u['p']) # e.g. language-haskell
+
+                    if u['p'].lower() == 'namespace':
+                        subj = self.getentityname(u['n'])
+
                     self.addLabel(subj, u['n']) # e.g. Label "Haskell" for Entity language-haskell
 
-                    subj_type = self.getentityname(u['p'], 'namespace') # e.g. namespace-language
+                    subj_type = self.getentityname(u['p'])#, 'namespace') # e.g. namespace-language
 
                     item_name = self.getentityname(item['n'], item['p'])
 
-                    item_type = self.getentityname(item['p'], 'namespace')
+                    item_type = self.getentityname(item['p'])#, 'namespace')
 
                     self.addToGraph(subj, RDF.type, subj_type, 'scan_' + t + '1')
                     self.addToGraph(item_name, RDF.type, item_type, 'scan_' + t + '2')
@@ -264,8 +267,8 @@ class ImportToOnto(object):
         # Add tuple to graph
         self.graph.add((s, p, o))
 
-        if p == RDF.type and 'namespace' not in o and 'langua' in o:
-            print ((s,p,o, debuginfo))
+        #if p == RDF.type and 'namespace' not in o and 'langua' in o:
+        #    print ((s,p,o, debuginfo))
 
         if self.debugmode:
             id_uri_ref = self.get_onto_uriref('ontology_data_id')
