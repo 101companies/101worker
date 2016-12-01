@@ -165,13 +165,13 @@ class ImportToOnto(object):
                 for predicate in behavior:
                     for o in behavior[predicate]:
                         object_name = str(o[0] + '_' + o[1]) # e.g. dump_languagefrequency or resource_lang
-                        self.addToGraph(module.__name__, 'behavior_' + predicate, object_name, 'import_resources_and_dumps')
-                        self.addToGraph(object_name, RDF.type, o[0], 'import_resources_and_dumps')
+                        self.addToGraph(module.__name__, 'behavior_' + predicate, object_name, 'import_workermodules_behavior')
+                        self.addToGraph(object_name, RDF.type, o[0], 'import_workermodules_behavior')
 
                         if(str(o[0]).lower() == 'resource'):
-                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a label for naming resources like "/path/file.ext.' + o[1] + '.json"'), 'import_resources_and_dumps')
+                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a label for naming resources like "/path/file.ext.' + o[1] + '.json"'), 'import_workermodules_behavior')
                         if(str(o[0]).lower() == 'dump'):
-                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a dump file named "' + o[1] + '.json"'), 'import_resources_and_dumps')
+                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a dump file named "' + o[1] + '.json"'), 'import_workermodules_behavior')
                         self.addLabel(object_name, o[1])
 
         self.msg("module dependencies added", PrintColors.ENDC, 1)
@@ -213,14 +213,14 @@ class ImportToOnto(object):
 
                 self.addToGraph(subj, RDF.type, wikipage_obj, 'import_wikipages')
                 self.addToGraph(subj, 'external_url', Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')), 'import_wikipages')
-                self.addToGraph(subj, FOAF.isPrimaryTopicOf, self.getentityname(f['n'], f['p']), 'import_wikipages')
+                self.addToGraph(self.getentityname(f['n'], f['p']), FOAF.isPrimaryTopicOf, subj, 'import_wikipages')
 
                 self.scan('Uses', f)
                 #self.scan('mentions', f)
                 #self.scan('LinksTo', f) # LinksTo is a wikipedia-link or mabye a github 101repo link
-                self.scan('InstanceOf', f, RDF.type) # alternative predicate because InstanceOf is legacy
                 self.scan('MemberOf', f)
                 self.scan('PartOf', f)
+                self.scan('InstanceOf', f, RDF.type)  # alternative predicate because InstanceOf is legacy
 
         self.msg ("done", PrintColors.OKBLUE)
 
@@ -228,27 +228,27 @@ class ImportToOnto(object):
         if (t in item):
             for u in item[t]:
                 #self.msg("  " + t + " " + u['n'])
-                if ('p' in u and u['p'] != None):
-                    subj = self.getentityname(u['n'], u['p']) # e.g. language-haskell
+
+                #if ('p' in u and u['p'] != None):
+
+                subj = self.getentityname(u['n'], u['p']) # e.g. language-haskell
+                item_name = self.getentityname(item['n'], item['p'])
+
+                if u['p'] != None:
+                    subj_type = self.getentityname(u['p'])  # , 'namespace') # e.g. namespace-language
+                    item_type = self.getentityname(item['p'])#, 'namespace')
+                    #self.addToGraph(subj, RDF.type, subj_type, 'scan_' + t + '1')
+                    self.addToGraph(item_name, RDF.type, item_type, 'scan_' + t + '2')
 
                     if u['p'].lower() == 'namespace':
                         subj = self.getentityname(u['n'])
 
-                    self.addLabel(subj, u['n']) # e.g. Label "Haskell" for Entity language-haskell
+                self.addLabel(subj, u['n']) # e.g. Label "Haskell" for Entity language-haskell
 
-                    subj_type = self.getentityname(u['p'])#, 'namespace') # e.g. namespace-language
-
-                    item_name = self.getentityname(item['n'], item['p'])
-
-                    item_type = self.getentityname(item['p'])#, 'namespace')
-
-                    self.addToGraph(subj, RDF.type, subj_type, 'scan_' + t + '1')
-                    self.addToGraph(item_name, RDF.type, item_type, 'scan_' + t + '2')
-
-                    if alt_predicate != None:
-                        self.addToGraph(item_name, RDF.type, subj, 'scan_' + t + '3')
-                    else:
-                        self.addToGraph(item_name, t.lower(), subj, 'scan_' + t + '3')
+                if alt_predicate != None:
+                    self.addToGraph(item_name, RDF.type, subj, 'scan_' + t + '3')
+                else:
+                    self.addToGraph(item_name, t.lower(), subj, 'scan_' + t + '3')
 
     def import_conceptual_data(self):
         self.msg ("import conceptual data into graph", PrintColors.OKBLUE)

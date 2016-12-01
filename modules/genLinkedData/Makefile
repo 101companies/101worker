@@ -4,7 +4,7 @@ run:
 	python genLinkedData.py
 
 test:
-	coverage run --source=mongo2Onto.py -m unittest discover
+	coverage run --source=genLinkedData.py -m unittest discover
 	coverage html
 
 install:
