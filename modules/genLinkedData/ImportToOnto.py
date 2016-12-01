@@ -3,15 +3,15 @@
 
 import os
 
-#from worker_lib.graph import dependent_modules, depending_modules, resolve_modules_graph
-#from worker_lib import modules
+from bin.worker_lib.graph import dependent_modules, depending_modules, resolve_modules_graph
+from bin.worker_lib import modules
 
 try:
-    from pymongo import MongoClient
+    #from pymongo import MongoClient
     from bson.json_util import dumps
     from bson.son import SON
 except ImportError:
-    print('Error: pymongo is missing: "pip3 install pymongo"')
+    print('Error: bson is missing: "pip3 install bson"')
 
 try:
     from rdflib import ConjunctiveGraph, Graph, URIRef, BNode, Literal, RDF, Namespace
@@ -97,13 +97,12 @@ class ImportToOnto(object):
         self.import_repo_bytype('technologies', 'technology')
         self.import_repo_bytype('languages', 'language')
         self.import_repo_bytype('contributions', 'contribution')
-        self.import_repo_bytype('modules', '101worker_module')
 
         self.msg ("done", PrintColors.OKBLUE)
 
     def import_repo_bytype(self, foldername, typname):
         self.msg("import from repo: " + foldername, PrintColors.ENDC, 1)
-        self.msg(self.target_dir, PrintColors.OKBLUE, 2)
+        #self.msg(self.target_dir, PrintColors.OKBLUE, 2)
 
         for subfolder in os.listdir(os.path.join(self.target_dir, foldername)):
 
@@ -111,6 +110,29 @@ class ImportToOnto(object):
             obj = self.getentityname(typname)
 
             self.addToGraph(subj, RDF.type, obj, 'import_repo_bytype')
+
+            return # don't import the files yet
+
+            # reading list of resource extentions from the current state of the ontology graph
+            list_resource_ext = {}
+            for s in self.graph.subjects(RDF.type, self.get_onto_uriref('resource')):
+                for o in self.graph.objects(s, RDFS.label):
+                    list_resource_ext.update({str(o): s})
+
+            for root, dirs, files in os.walk(os.path.join(os.path.join(self.target_dir, foldername), subfolder)): #os.walk(self.target_dir):
+                for name in files:
+                    relative_resource_path = os.path.join(root, name).split(self.target_dir)[1]
+
+                    arr_parts = relative_resource_path.split('.')
+                    arr_parts.reverse()
+                    resource_ext = arr_parts[1]
+
+                    if resource_ext in list_resource_ext:
+                        # print ((self.getentityname(relative_resource_path), RDF.type, list_resource_ext[resource_ext], 'import_repo_all_files'))
+                        self.addToGraph(self.getentityname(relative_resource_path), RDF.type,
+                                        list_resource_ext[resource_ext], 'import_repo_all_files')
+                        self.addToGraph(self.getentityname(relative_resource_path), DC.isPartOf,
+                                        subj, 'import_repo_all_files')
 
     def import_workermodules(self):
         self.msg ("import worker and modules into graph", PrintColors.OKBLUE)
@@ -123,19 +145,34 @@ class ImportToOnto(object):
 
                     module_counter = module_counter + 1
                     module_name = root.split('/')[-1]
+
                     self.msg("import module: " + module_name, PrintColors.ENDC, 1)
                     self.addLabel(module_name)
                     self.addToGraph(module_name, RDF.type, "101worker module", 'import_workermodules')
-                    self.addToGraph(module_name, DC.isPartOf, "101worker", 'import_workermodules')
                     self.addToGraph(module_name, DC.requires, "101worker", 'import_workermodules')
         self.msg (str(module_counter) + " modules imported", PrintColors.ENDC, 1)
 
         self.msg("create module dependencies", PrintColors.ENDC, 1)
 
-        #graph = resolve_modules_graph(modules)
-        #for module_name in graph:
-        #    for depenting_module in depending_modules(graph, module_name):
-        #        self.addToGraph(str(module_name), "depending", str(depenting_module), 'import_workermodules_dependencies')
+        graph = resolve_modules_graph(modules)
+        for module_name in graph:
+            for depenting_module in depending_modules(graph, module_name):
+                self.addToGraph(module_name, "depending", str(depenting_module), 'import_workermodules_dependencies')
+
+        for module in modules:
+            behavior = module.config.get('behavior')
+            if behavior != None:
+                for predicate in behavior:
+                    for o in behavior[predicate]:
+                        object_name = str(o[0] + '_' + o[1]) # e.g. dump_languagefrequency or resource_lang
+                        self.addToGraph(module.__name__, 'behavior_' + predicate, object_name, 'import_resources_and_dumps')
+                        self.addToGraph(object_name, RDF.type, o[0], 'import_resources_and_dumps')
+
+                        if(str(o[0]).lower() == 'resource'):
+                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a label for naming resources like "/path/file.ext.' + o[1] + '.json"'), 'import_resources_and_dumps')
+                        if(str(o[0]).lower() == 'dump'):
+                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a dump file named "' + o[1] + '.json"'), 'import_resources_and_dumps')
+                        self.addLabel(object_name, o[1])
 
         self.msg("module dependencies added", PrintColors.ENDC, 1)
 
@@ -144,20 +181,6 @@ class ImportToOnto(object):
     def import_resources_and_dumps(self):
         self.msg ("import resources and dumps into graph", PrintColors.OKBLUE)
 
-        for module in modules:
-            behavior = module.config.get('behavior')
-            if behavior != None:
-                for predicate in behavior:
-                    for o in behavior[predicate]:
-                        object_name = str(o[0] + '_' + o[1]) # e.g. dump_languagefrequency or resource_lang
-                        self.addToGraph(str(module.__name__), predicate, object_name, 'import_resources_and_dumps')
-                        self.addToGraph(object_name, RDF.type, o[0], 'import_resources_and_dumps')
-
-                        if(str(o[0]).lower() == 'resource'):
-                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a label for naming resources like "/path/file.ext.' + o[1] + '.json"'), 'import_resources_and_dumps')
-                        if(str(o[0]).lower() == 'dump'):
-                            self.addToGraph(object_name, URIRef('http://purl.org/dc/terms/abstract'), Literal('Is a dump file named "' + o[1] + '.json"'), 'import_resources_and_dumps')
-                        self.addLabel(object_name, o[1])
 
         self.msg ("done", PrintColors.OKBLUE)
 
@@ -233,6 +256,7 @@ class ImportToOnto(object):
         self.msg ("done", PrintColors.OKBLUE)
 
     def getentityname(self, subjname, typename = None):
+
         if(typename):
             return typename.lower() + "-" + subjname.lower()
         else:
@@ -240,9 +264,11 @@ class ImportToOnto(object):
 
     def addToGraph(self, s, p, o, debuginfo):
 
+        s = self.get_onto_uriref(s)
+
         if (self.debugmode):
             self.graph.add(
-                (self.get_onto_uriref(s),
+                (s,
                  self.get_onto_uriref('importedBy'),
                  self.get_onto_uriref(debuginfo))
             )
@@ -254,15 +280,13 @@ class ImportToOnto(object):
             self.graph.add(
                 (self.get_onto_uriref(debuginfo),
                  DC.isPartOf,
-                 self.get_onto_uriref('mongo2onto'))
+                 self.get_onto_uriref('genLinkedData'))
             )
 
-        if(not isinstance(o, Literal) and isinstance(o, str)):
+        if(not isinstance(o, Literal) and not isinstance(o, URIRef) and isinstance(o, str)):
             o = self.get_onto_uriref(o)
         if not isinstance(p, URIRef):
             p = self.get_onto_uriref(p)
-
-        s = self.get_onto_uriref(s)
 
         # Add tuple to graph
         self.graph.add((s, p, o))
@@ -291,7 +315,7 @@ class ImportToOnto(object):
 
         if(entity not in self.labeled_entities):
             self.labeled_entities.append(entity)
-            self.graph.add((self.get_onto_uriref(entity), DC.label, Literal(label)))
+            self.graph.add((self.get_onto_uriref(entity), RDFS.label, Literal(label)))
 
     def msg(self, txt, txtcolor = PrintColors.ENDC, level = 0):
         if(self.debugmode):
@@ -304,10 +328,8 @@ class ImportToOnto(object):
 
         # check predicates, which are to be used once
         single_use_predicats = [
-            DC.label,
-            URIRef('http://purl.org/dc/terms/abstract'),
-            self.get_onto_uriref('instanceof'),
-            RDF.type
+            RDFS.label,
+            URIRef('http://purl.org/dc/terms/abstract')
         ]
 
         if False:
