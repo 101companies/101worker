@@ -39,39 +39,70 @@ def extract_comments(context, f):
         #iterate over all lines
        	for line in source.split('\n'):
 
-            if blockExists:
+            #positionNumber marks later, where a block has ended and where the rest of the line continues
+            #lineRest is the rest of the line
+            positionNumber = 0
+            lineRest = line
+                
+            #loop gets stopped, when a) we are already in a block and do not find a end symbol
+            #                        b) we are not in a block, but do not find a start symbol
+            while True and blockExists:
                 #check if we are already in a block
                 if block == True:
                     blockendFound = False
                     for blockend in languages[lang].get("BlockEnd"):
-                        end = line.find(blockend)
+                        end = lineRest.find(blockend)
                         #if we find a block-end symbol end the block
                         if end != -1:
-                            comments[entry] = comments[entry]+'\n'+line[0:end+1]
+                            comments[entry] = comments[entry]+'\n'+lineRest[0:end+1]
                             entry = entry + 1
                             block = False
                             blockendFound = True
+                            #mark number of blockend, to determine where rest of line starts
+                            positionNumber = end+len(blockend)
                             break
+                    #when we find a blockend, add the text to the comments
                     if blockendFound == False:
-                        comments[entry] = comments[entry]+'\n'+line     
-                #if we are not in a block, try to find a start-symbol
+                        comments[entry] = comments[entry]+'\n'+lineRest     
+                        #check if positionNumber is already over the length of the string, if not continue with
+                        #the rest of the line...
+                    if positionNumber+1 < len(lineRest) and blockendFound == True:
+                        lineRest = lineRest[positionNumber+1:len(lineRest)]        
+                    #...otherwise stop while loop                        
+                    else:   
+                        break
+                #if not in a block, try to find blockstart symbol                
                 else:
                     for blockstart in languages[lang].get("BlockStart"):
-                        start = line.find(blockstart)
+                        start = lineRest.find(blockstart)
+                        blockendFound = False                        
                         if start != -1 and block == False:
                             blockendFound = False
                             #try to find block-end symbol in same line
                             for blockend in languages[lang].get("BlockEnd"):
-                                end = line[start+len(blockstart):len(line)].find(blockend)
+                                #note that we change here the lineRest to a shorter path, where the blockstart
+                                #symbol is at the beginning
+                                lineRest = lineRest[start:len(lineRest)] 
+                                end = lineRest.find(blockend)
+                                #if blockend symbol in same line, take only this part
                                 if end != -1:
-                                    comments.append(line[start+len(blockstart):end+1])
+                                    comments.append(lineRest[len(blockstart):end])
                                     entry = entry + 1
                                     blockendFound = True
+                                    #mark number of blockend, to determine where rest of line starts
+                                    positionNumber = end+len(blockend)
                                     break
                             #if no block-end symbol has been found, set block to true
                             if blockendFound == False:
-                                comments.append(line[start+len(blockstart):len(line)])
+                                comments.append(lineRest[start+len(blockstart):len(lineRest)])
                                 block = True
+                    #check if positionNumber is already over the length of the string and if we are in a block,  
+                    #if not continue with the rest of the line...
+                    if positionNumber+1 < len(lineRest) and blockendFound == True:
+                        lineRest = lineRest[positionNumber+1:len(lineRest)]        
+                    #...otherwise stop while loop                    
+                    else:   
+                        break
 
             #check for single-line comment
             for single in languages[lang].get("Single"):
