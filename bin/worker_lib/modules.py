@@ -11,7 +11,7 @@ modules = [
     'pull',
     'matchLanguage',
     'extractFacts',
-    'dumpMongoDBToJson',
+    'dumpPG',
     'convertMongoDump',
     'packageFrequency',
     'languageFrequency',

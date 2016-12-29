@@ -1,5 +1,4 @@
 from .env import create_module_env, env
-from .logger import report_error
 
 import os
 import sys
@@ -15,7 +14,7 @@ class Executor(object):
         try:
             self._module.run(self._env, change)
         except:
-            report_error(
+            print(
                 'module_failed',
                 traceback.format_exc()
             )
@@ -45,7 +44,7 @@ class AllFullSweepExecutor(Executor):
         try:
             self._module.run(self._env)
         except:
-            report_error(
+            print(
                 'module_failed',
                 traceback.format_exc()
             )

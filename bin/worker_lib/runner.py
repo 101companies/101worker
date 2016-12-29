@@ -7,7 +7,6 @@ import datetime
 import time
 import shutil
 import logging
-from .logger import report_error
 
 from .repo import *
 from .env import create_module_env, env
