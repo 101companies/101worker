@@ -1,6 +1,6 @@
 # Actual information for project practical
 
--Changed bin/workerlib/extractor to allow call of visualisation
+-Changed bin/workerlib/executor to allow call of visualisation
 
 -Added boolean visualisation to locPerContribution, which is used (when True), to tell the extractor that
 a chart should be created
