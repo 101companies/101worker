@@ -38,6 +38,11 @@ class FileFullSweepExecutor(Executor):
                 }
 
                 self._exec(change)
+        ####### added to create Image ################
+        if self._module.config.get('visualisation') == True :        
+            print("Creating Image")
+            self._module.createImage(self._env,env)
+        ##############################################
 
 class AllFullSweepExecutor(Executor):
 
