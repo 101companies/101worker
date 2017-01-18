@@ -7,15 +7,6 @@ from collections import Counter
 from jinja2 import *
 import shutil
 
-config = {
-    'wantdiff': False,
-    'wantsfiles': False,
-    'threadsafe': True,
-    'behavior': {
-        'uses': [['dump', 'wiki-links']]
-    }
-}
-
 def run(context):
     # Load 101wiki into memory
     wiki = context.read_dump('wiki-links')['wiki']

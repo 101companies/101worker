@@ -1,0 +1,9 @@
+{
+    "wantdiff": false,
+    "wantsfiles": true,
+    "threadsafe": false,
+    "behavior": {
+        "creates": [["dump", "locPerContribution"]],
+        "uses": [["resource", "loc"]]
+    }
+}

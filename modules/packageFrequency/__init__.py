@@ -1,12 +1,10 @@
-config = {
-    'wantdiff': False,
-    'wantsfiles': True,
-    'threadsafe': False,
-    'behavior': {
-        'uses': [['resource', 'lang']],
-        'creates': [['dump', 'packageFrequency']]
-    }
-}
+import os
+import json
+
+dir = os.path.dirname(__file__)
+
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)
 
 def run(context, change):
     f = change['file']

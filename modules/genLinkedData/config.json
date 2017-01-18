@@ -1,0 +1,6 @@
+{
+    "wantdiff": false,
+    "behavior": {
+        "uses": [["dump", "wiki-links"]]
+    }
+}

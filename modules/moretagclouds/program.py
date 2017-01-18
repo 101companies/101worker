@@ -7,14 +7,13 @@ from jinja2 import *
 import os
 from functools import reduce
 
-config = {
-    'wantdiff': False,
-    'wantsfiles': False,
-    'threadsafe': True,
-    'behavior': {
-        'uses': [['dump', 'wiki-links']]
-    }
-}
+import os
+import json
+
+dir = os.path.dirname(__file__)
+
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)
 
 def run(context):
     # Load 101wiki into memory

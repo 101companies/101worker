@@ -1,0 +1,9 @@
+{
+    "wantdiff": true,
+    "wantsfiles": true,
+    "threadsafe": true,
+    "behavior": {
+        "creates": [["resource", "extractor"]],
+        "uses": [["resource", "lang"]]
+    }
+}

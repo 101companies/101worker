@@ -5,15 +5,13 @@ import sys
 import json
 import subprocess
 
-config = {
-    'wantdiff': True,
-    'wantsfiles': True,
-    'threadsafe': True,
-    'behavior': {
-        'creates': [['resource', 'extractor']],
-        'uses': [['resource', 'lang']]
-    }
-}
+import json
+import os
+
+dir = os.path.dirname(__file__)
+
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)
 
 def run(context, change):
     '''

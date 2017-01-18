@@ -4,9 +4,13 @@ import os
 import sys
 from distutils.archive_util import make_zipfile
 
-config = {
-    'wantdiff': False
-}
+import os
+import json
+
+dir = os.path.dirname(__file__)
+
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)
 
 ### GENERAL ###
 def ensureFolder(folder):

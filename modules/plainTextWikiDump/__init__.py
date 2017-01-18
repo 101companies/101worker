@@ -1,10 +1,10 @@
 from .wiki2json import run
 from .test import test
 
-config = {
-    'wantdiff': False,
-    'behavior': {
-        'creates': [['dump', 'wiki-content']],
-        'uses': [['dump', 'raw-wiki']]
-    }
-}
+import os
+import json
+
+dir = os.path.dirname(__file__)
+
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)

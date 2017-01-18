@@ -1,28 +1,11 @@
-#!/usr/bin/env python
+import os
+import json
 
-# migration code:
-# import json
-# data = json.load(open('rules.json'))
-#
-# rules = data['results']['rules']
-#
-# result = {}
-# for rule in rules:
-#     metadata = rule['rule']['metadata']
-#     for metadata in metadata:
-#         lang = metadata.get('language', None)
-#         if lang:
-#             result[rule['rule']['suffix'][1:]] = lang
-# print json.dumps(result, indent=4)
+dir = os.path.dirname(__file__)
 
-config = {
-    'wantdiff': True,
-    'wantsfiles': True,
-    'threadsafe': True,
-    'behavior': {
-        'creates': [['resource', 'lang']],
-    }
-}
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)
+
 
 langs = {
     'py': 'Python',

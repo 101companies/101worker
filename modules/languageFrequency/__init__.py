@@ -1,14 +1,13 @@
 from collections import Counter
 
-config = {
-    'wantdiff': False,
-    'wantsfiles': False,
-    'threadsafe': False,
-    'behavior': {
-        'uses': [['dump', 'wiki-links']],
-        'creates': [['dump', 'languageFrequency']]
-    }
-}
+import os
+import json
+
+dir = os.path.dirname(__file__)
+
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)
+
 
 def run(env):
     wiki_dump = env.read_dump('wiki-links')

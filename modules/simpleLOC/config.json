@@ -1,0 +1,8 @@
+{
+    "wantdiff": true,
+    "wantsfiles": true,
+    "threadsafe": true,
+    "behavior": {
+        "creates": [["resource", "loc"]]
+    }
+}

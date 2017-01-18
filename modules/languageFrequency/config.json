@@ -1,0 +1,9 @@
+{
+    "wantdiff": false,
+    "wantsfiles": false,
+    "threadsafe": false,
+    "behavior": {
+        "uses": [["dump", "wiki-links"]],
+        "creates": [["dump", "languageFrequency"]]
+    }
+}

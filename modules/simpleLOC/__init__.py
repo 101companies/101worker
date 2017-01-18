@@ -1,14 +1,10 @@
 import os
 import json
 
-config = {
-    'wantdiff': True,
-    'wantsfiles': True,
-    'threadsafe': True,
-    'behavior': {
-        'creates': [['resource', 'loc']]
-    }
-}
+dir = os.path.dirname(__file__)
+
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)
 
 # this is the actual logic of the module
 def count_lines(source):

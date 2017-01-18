@@ -1,12 +1,10 @@
-config = {
-    'wantdiff': False,
-    'wantsfiles': True,
-    'threadsafe': False,
-    'behavior': {
-        'creates': [['dump', 'locPerContribution']],
-        'uses': [['resource', 'loc']]
-    }
-}
-
 from .program import run
 from .test import test
+
+import os
+import json
+
+dir = os.path.dirname(__file__)
+
+with open(os.path.join(dir, 'config.json')) as f:
+    config = json.load(f)
