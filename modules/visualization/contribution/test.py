@@ -1,6 +1,9 @@
-def meta_locPerContribution(env, res):
+from ..program import check_path
+from ..program import write_csv
+
+def run(env, res):
 	
-	# locPerContribution - meta - Stacked BarChart
+	# test
 	data = env.read_dump('locPerContribution')
 	out = []
 	header = ['loc']
@@ -10,4 +13,4 @@ def meta_locPerContribution(env, res):
 		sum_value.append(value)
 	out.append(header)
 	out.append(sum_value)	
-	write_csv_meta('locPerContribution', out)
+	write_csv('test', 'contribution', out)
