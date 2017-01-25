@@ -24,6 +24,25 @@ def write_csv(name, dest, data):
 		for item in data:
 			wr.writerow(item)
 
+def create_barchart(xName,yName,xValues,yValues,moduleName,env):
+    path = env.get_env("views101dir")+os.sep+'Module'
+    check_path(path)
+    path = path +os.sep+moduleName
+    check_path(path)
+    d = os.path.join(path, 'data.tsv')
+    data = []
+    #labels = [xName,yName] actually not in use because of special read in format
+    labels = ['letter','frequency']
+    data.append(labels)
+    for x,y in zip(xValues,yValues): 
+        data.append([x,y])
+    with open(d, 'w') as f:
+        wr = csv.writer(f, delimiter = "\t")        
+        for item in data:
+            wr.writerow(item)
+    #TODO: shutil copy js data (like the one at http://bl.ocks.org/mbostock/3885304) to path
+
+
 
 '''
 program
@@ -32,19 +51,7 @@ program
 '''
 
 def run(env, res):
-	
-	# meta
-	from .meta.test import run as test_meta
-	test_meta(env, res)
-	
-	# contribution	
-	from .contribution.test import run as test_contribution
-	test_contribution(env, res)
-
-	# contributor
-	from .contributor.test import run as test_contributor
-	test_contributor(env, res)
 
 	# modules
-	from .module.test import run as test_module
-	test_module(env, res)
+	from .module.locPerContribution import run as runLocPerContribution
+	runLocPerContribution(env, res)
