@@ -1,5 +1,4 @@
-from ..program import check_path
-from ..program import write_csv
+from ..program import assemble_barchart
 
 def run(env, res):
 

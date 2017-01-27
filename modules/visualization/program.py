@@ -2,52 +2,60 @@ import os
 import json
 import csv
 
+
 '''
-output definitions
+write functions
 '''
 
 def check_path(path):
 	if not os.path.exists(path):
-        	os.mkdir(path)
+       		os.mkdir(path)
 
-def write_csv(name, dest, data):
-	path = {'meta': '../101web/data/views/meta',
-		'contribution': '../101web/data/views/contribution',
-		'contributor': '../101web/data/views/contributor',
-		'module': '../101web/data/views/module'}	
-
-	destination = path[dest]
+def write_csv(name, source, dest, data, env):
+	destination = os.path.join(env.get_env('views101dir'), source)
+	check_path(destination)
+	destination = os.path.join(destination, dest)
 	check_path(destination)
 	d = os.path.join(destination, name + '.csv')
 	with open(d, 'w') as f:
 		wr = csv.writer(f)
 		for item in data:
 			wr.writerow(item)
+	
+def write_tsv(name, source, dest, data, env):
+	destination = env.get_env('views101dir')
+	destination = os.path.join(destination, source, dest)
+	check_path(destination)
+	d = os.path.join(destination, name + '.tsv')
+	with open(d, 'w') as f:
+		wr = csv.writer(f, delimiter='\t')
+		for item in data:
+			wr.writerow(item)
 
-def create_barchart(xName,yName,xValues,yValues,moduleName,env):
-    path = env.get_env("views101dir")+os.sep+'Module'
-    check_path(path)
-    path = path +os.sep+moduleName
-    check_path(path)
-    d = os.path.join(path, 'data.tsv')
-    data = []
-    #labels = [xName,yName] actually not in use because of special read in format
-    labels = ['letter','frequency']
-    data.append(labels)
-    for x,y in zip(xValues,yValues): 
-        data.append([x,y])
-    with open(d, 'w') as f:
-        wr = csv.writer(f, delimiter = "\t")        
-        for item in data:
-            wr.writerow(item)
-    #TODO: shutil copy js data (like the one at http://bl.ocks.org/mbostock/3885304) to path
 
+'''
+write functions
+'''
+		
+def assemble_barchart(xName,yName,xValues,yValues, source, dest, env):
+	out = []
+	labels = ['letter','frequency']
+	out.append(labels)
+	for x,y in zip(xValues,yValues): 
+		out.append([x,y])
+	write_tsv('bar', source, dest, out, env)
+
+def assemble_piechart(xName,yName,xValues,yValues, source, dest, env):
+	out = []
+	labels = [xName,yName]
+	out.append(labels)
+	for x,y in zip(xValues,yValues): 
+		out.append([x,y])
+	write_csv('pie', source, dest, out, env)
 
 
 '''
 program
-+ graphs need to be put into seperate folders: meta, contribution, contributor
-+ 1 file per graph
 '''
 
 def run(env, res):
