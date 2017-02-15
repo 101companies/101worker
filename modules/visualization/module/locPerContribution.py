@@ -1,4 +1,3 @@
-from ..program import assemble_barchart
 from ..program import assemble_piechart
 
 def run(env, res):
@@ -13,5 +12,5 @@ def run(env, res):
 		xValues.append(key)
 		yValues.append(value)
 
-	assemble_barchart(xName, yName, xValues, yValues,'module', 'locPerContribution', env)
-	assemble_piechart(xName, yName, xValues, yValues,'module', 'locPerContribution', env)
+	assemble_piechart("normal",xName, yName, xValues, yValues, 'locPerContribution', env)
+	assemble_piechart("inverted",yName, xName, xValues, yValues, 'locPerContribution', env)
