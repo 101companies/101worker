@@ -1,7 +1,7 @@
 {
-    "wantdiff": False,
-    "wantsfiles": True,
-    "threadsafe": False,
+    "wantdiff": false,
+    "wantsfiles": true,
+    "threadsafe": false,
     "behavior": {
         "uses": [["resource", "lang"]],
         "creates": [["dump", "packageFrequency"]]

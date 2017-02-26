@@ -3,6 +3,6 @@
     "wantsfiles": true,
     "threadsafe": true,
     "behavior": {
-        "creates": [["resource", "lang"]],
+        "creates": [["resource", "lang"]]
     }
 }
