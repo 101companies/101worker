@@ -47,9 +47,9 @@ class ImportToOnto(object):
         self.modules_dir = self.context.get_env("modules101dir")
 
         self.labeled_entities = []
-        self.pageurl = "http://101companies.org/"
-        if self.debugmode:
-            self.pageurl = "http://localhost:3000/"
+        # self.pageurl = "http://101companies.org/"
+        # if self.debugmode:
+        self.pageurl = "http://101companies.org:80/"
 
         self.prepare_graph()
 
@@ -85,7 +85,7 @@ class ImportToOnto(object):
         self.addToGraph('memberof', RDFS.comment, Literal('The subject member the object.'), 'import_manually')
 
         self.addToGraph('technology-101worker', OWL.sameas, '101worker', 'import_manually')
-        
+
         wiki_links_json = self.context.read_dump('wiki-links')
         pages = wiki_links_json['wiki']['pages']
 
