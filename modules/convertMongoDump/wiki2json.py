@@ -46,14 +46,14 @@ def run(context):
 
     result = []
     for p in allPages:
-        if not 'page_title_namespace' in p:
-            continue
         if 'headline' in p:
             res = {'headline': p['headline']}
         else:
             res = {'headline': 'n/a'}
 
-        handle_page_name(p.get('page_title_namespace', ''), res)
+        # handle_page_name(p.get('title', ''), p.get('namespace'), res)
+        res['n'] = p.get('title', '')
+        res['p'] = p.get('namespace', '')
 
         if 'used_links' in p:
             res['internal_links'] = p['used_links']
