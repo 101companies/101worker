@@ -47,9 +47,9 @@ class ImportToOnto(object):
         self.modules_dir = self.context.get_env("modules101dir")
 
         self.labeled_entities = []
-        # self.pageurl = "http://101companies.org/"
-        # if self.debugmode:
         self.pageurl = "http://101companies.org:80/"
+        if self.debugmode:
+            self.pageurl = "http://localhost:3000/"
 
         self.prepare_graph()
 
@@ -240,13 +240,18 @@ class ImportToOnto(object):
         #        t = 'none'
         #    print (t)
 
+        wikipage_obj = self.getentityname('101wikipage')
+        wiki_obj = self.getentityname('101wiki')
+        self.addToGraph(wiki_obj, DC.isPartOf, '101companies', 'import_wikipages')
+
         for t in types:
             filtered  = filter(lambda p: t == p.get('p', ''), pages)
             for f in filtered:
                 subj = self.getentityname(self.getentityname(f['n'], f['p']), 'wikipage')
-                wikipage_obj = self.getentityname('101wikipage')
+
 
                 self.addToGraph(subj, RDF.type, wikipage_obj, 'import_wikipages')
+                self.addToGraph(subj, DC.isPartOf, wiki_obj, 'import_wikipages')
                 self.addToGraph(subj, 'external_url', Literal("http://101companies.org/wiki/" + f['p'] + ":" + f['n'].strip().replace(' ','_')), 'import_wikipages')
                 self.addToGraph(self.getentityname(f['n'], f['p']), FOAF.isPrimaryTopicOf, subj, 'import_wikipages')
 
