@@ -20,6 +20,9 @@ def createRDFGraph(context):
 
     # import 101companies and create 101ontology
     ito = ImportToOnto(context, graph)
+
+    #ito = ImportToOnto(context, graph, True) # run in debugmode for local development
+
     ito.do_import()
 
     # check integrity and display warnings

@@ -126,7 +126,7 @@ class ImportToOnto(object):
 
         self.import_repo_bytype('technologies', 'technology', list_resource_ext)
         self.import_repo_bytype('languages', 'language',list_resource_ext)
-        self.import_repo_bytype('contributions', '101contribution', list_resource_ext)
+        self.import_repo_bytype('contributions', 'contribution', list_resource_ext)
 
         self.msg ("done", PrintColors.OKBLUE)
 
@@ -145,8 +145,11 @@ class ImportToOnto(object):
 
             self.addToGraph(subj, RDF.type, obj, 'import_repo_bytype')
 
-            return # fileimport is not supported
+            # handle 101-specific name schema
+            if (typname == 'contribution'):
+                self.addToGraph(subj, RDF.type, '101contribution', 'import_repo_bytype')
 
+            continue # fileimport is not supported
             # scan repository in file system
             for root, dirs, files in os.walk(os.path.join(os.path.join(self.target_dir, foldername), subfolder)):
                 for name in files:
@@ -276,10 +279,11 @@ class ImportToOnto(object):
 
                 if u['p'] != None:
                     item_type = self.getentityname(item['p'])#, 'namespace')
-                    self.addToGraph(item_name, RDF.type, item_type, 'scan_' + t + '_1')
+
 
                     if u['p'].lower() == 'namespace':
                         subj = self.getentityname(u['n'])
+                        self.addToGraph(subj, RDF.type, 'namespace', 'scan_' + t + '_1')
 
                 self.addLabel(subj, u['n']) # e.g. Label "Haskell" for Entity language-haskell
 
@@ -320,10 +324,6 @@ class ImportToOnto(object):
                  DC.isPartOf,
                  self.get_onto_uriref('genLinkedData'))
             )
-
-        # handle 101-specific name schema
-        if (o == 'contribution'):
-            o = '101contribution'
 
         if(not isinstance(o, Literal) and not isinstance(o, URIRef) and isinstance(o, str)):
             o = self.get_onto_uriref(o)
