@@ -49,7 +49,8 @@ class ImportToOnto(object):
         self.labeled_entities = []
         self.pageurl = "http://101companies.org:80/"
         if self.debugmode:
-            self.pageurl = "http://localhost:3000/"
+            self.pageurl = "http://localhost/"
+            #self.pageurl = "http://localhost:3000/"
 
         self.prepare_graph()
 
