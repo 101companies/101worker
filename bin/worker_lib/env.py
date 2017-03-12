@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+from .visualiser import create_piechart as c_piechart
 
 def abs_path(path):
     return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', path))
@@ -100,6 +101,9 @@ def create_module_env(env, module=None):
             json.dump(data, f, indent=4)
             logging.debug('Wrote dump %s at %s', dump_name, d)
 
+    def create_piechart(name,xName,yName,xValue,yValue):
+        c_piechart(name,xName,yName,xValue,yValue,get_env('views101dir'))
+
     return AttrDict({
         'get_env': get_env,
         'write_derived_resource': write_derived_resource,
@@ -108,5 +112,6 @@ def create_module_env(env, module=None):
         'read_dump': read_dump,
         'write_dump': write_dump,
         'get_derived_resource': get_derived_resource,
-        'remove_dump': remove_dump
+        'remove_dump': remove_dump,
+        'create_piechart': create_piechart
     })

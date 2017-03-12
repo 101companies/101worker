@@ -23,6 +23,11 @@ class Executor(object):
     def run(self, changes):
         for change in changes:
             self._exec(change)
+        ####### added to create Image ################
+        if self._module.config.get('visualisation') == True :        
+            print("Creating Image")
+            self._module.createImage(self._env)
+        ##############################################
 
 class FileFullSweepExecutor(Executor):
 
@@ -41,7 +46,7 @@ class FileFullSweepExecutor(Executor):
         ####### added to create Image ################
         if self._module.config.get('visualisation') == True :        
             print("Creating Image")
-            self._module.createImage(self._env,env)
+            self._module.createImage(self._env)
         ##############################################
 
 class AllFullSweepExecutor(Executor):
@@ -57,3 +62,8 @@ class AllFullSweepExecutor(Executor):
 
     def run(self, changes):
         self._exec()
+        ####### added to create Image ################
+        if self._module.config.get('visualisation') == True :        
+            print("Creating Image")
+            self._module.createImage(self._env)
+        ##############################################
