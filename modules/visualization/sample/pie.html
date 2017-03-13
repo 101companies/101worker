@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+
 <style>
 
 .arc text {
@@ -12,10 +13,12 @@
 }
 
 </style>
-<body>
-<script src="//d3js.org/d3.v3.min.js"></script>
-<script>
 
+<body>
+  
+<script src="//d3js.org/d3.v3.min.js"></script>
+  
+<script>
 var width = 960,
     height = 500,
     radius = Math.min(width, height) / 2;
@@ -59,5 +62,10 @@ function type(d) {
   d.population = +d.population;
   return d;
 }
-
 </script>
+
+</body>
+
+<footer>
+  <p>Released under the <a href="https://opensource.org/licenses/GPL-3.0">GNU General Public License, version 3.</a>.</p>
+</footer> 
