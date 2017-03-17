@@ -18,7 +18,7 @@ config = {
 
 def run(env, res):
     data = env.read_dump('sentimentsPerLanguage')
-    langData = env.read_dump('LangPerContribution')
+    #langData = env.read_dump('LangPerContribution')
     helpData = env.read_dump('sentimentsPerContribution')
 
     if data is None:
@@ -30,7 +30,9 @@ def run(env, res):
         folders = f.split(os.sep)
         contribution = folders[1]
         fileSentiment = env.get_derived_resource(f, 'sentiment')
-        lang = langData[contribution]['Main Language']
+        #lang = langData[contribution]['Main Language']
+		
+        lang = env.get_derived_resource(f, 'lang')
         fileName = folders[-1]
 
         if helpData.get(lang, None) is None:
