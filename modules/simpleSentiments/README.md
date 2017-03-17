@@ -10,3 +10,8 @@ A resource file named sentiment.json is saved containing the polarity and subjec
 # Requirements
 
 This module requires a working installation of TextBlob and extractComments to be run first.
+
+# How to install TextBlob
+
+$ pip install -U textblob
+$ python -m textblob.download_corpora
