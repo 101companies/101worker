@@ -1,6 +1,3 @@
-import os
-import json
-
 config = {
     'wantdiff': True,
     'wantsfiles': True,
@@ -14,73 +11,62 @@ config = {
 # this is the actual logic of the module
 def count_non_comment_lines(context, f):
     #datastructure for languages and their corresponding comment symbols
-    languages = {'Java': {'Single': ['//'], 'BlockStart': ['/*'], 'BlockEnd': ['*/']},
-		 'Python': {'Single': ['#'], 'BlockStart': ["'''"], 'BlockEnd': ["'''"]},
-		 'Haskell': {'Single': ['--'], 'BlockStart': ["{-"], 'BlockEnd': ["-}"]}}
+    languages = {'Java': {'Single': ['//'], 'Block': [{'BlockStart': '/*', 'BlockEnd': '*/'}]},
+             'Python': {'Single': ['#'], 'Block': [{'BlockStart': '"""', 'BlockEnd': '"""'},{'BlockStart': "'''", 'BlockEnd': "'''"},]},
+             'Haskell': {'Single': ['--'], 'Block': [{'BlockStart': '{-', 'BlockEnd': '-}'}]}}
     #get file
     source = context.get_primary_resource(f)
     #get language of file
     lang = context.get_derived_resource(f,'lang')
     
     ncloc = 0
-    block = False
-    lineNumber = 0
-    blockLineBegin = -1 # only needed when block start and end symbol are equal
-    
+    inBlock = False
+
     #check if language is in datastructure
     if languages.get(lang) != None :
         #check if langauges have block/singe-line comments
         singleExists = languages[lang].get("Single") != None
-        blockExists = languages[lang].get("BlockStart") != None
+        blockExists = languages[lang].get("Block") != None
 
-        if blockExists:
-            equalBlockSymbols = languages[lang].get("BlockStart") == languages[lang].get("BlockEnd")
         #iterate over all lines
        	for line in source.split('\n'):
-            lineNumber = lineNumber +1
 
             if blockExists:
                 #check if symbols are one of the given comment symbols for block comments
-                for blockstart in languages[lang].get("BlockStart"):
+                for block in languages[lang].get("Block"):
+                    blockStart = block["BlockStart"]
                     line = line.replace("\t","").replace(" ","").replace("\n","")
-                    if line[0:len(blockstart)] == blockstart and block == False:
-                        block = True
-                        #set marker for blockLineBegin, if block symbols are equal, to prevent reading of
-                        #block start as block end later
-                        if equalBlockSymbols:
-                            if len((line)) == len(blockstart):
-                                blockLineBegin = lineNumber
+                    if line[0:len(blockStart)] == blockStart and inBlock == False:
+                        inBlock = True
+                        blockEnd = block["BlockEnd"]
+                        line = line[len(blockStart):len(line)]
+                        break
                     
                     
             
             #if we are not in a Block comment, check if it's a single line comment...            
             singleCheck = False            
-            if block == False:
+            if inBlock == False:
                 if singleExists:            
                     for single in languages[lang]["Single"]:
                         if len(line)>len(single):
                             if line[0:len(single)] == single:                
                                 singleCheck = True
             #...if not increment sum of non comment lines of code 
-            if singleCheck == False and block == False:
+            if singleCheck == False and inBlock == False:
                 ncloc = ncloc + 1
        
 
             #check for block end symbols
             if blockExists:
-                for blockend in languages[lang]["BlockEnd"]:           
+                if inBlock == True:         
                     #invert line    
                     line = line[::-1]
+                    line = line.replace("\t","").replace(" ","").replace("\n","")
                     #check if the first found signs are now the inverted signs of the endblock       
                     #of a comment (because we inverted the whole line before) 
-                    if line[0:len(blockend)] == (blockend)[::-1] and block == True:
-                        #if block start and end sign are equal, take care that you do not read  
-                        #a block-start as a block-end                         
-                        if equalBlockSymbols:
-                            if not blockLineBegin == lineNumber:
-                                block = False
-                        else:
-                            block = False
+                    if line[0:len(blockEnd)] == (blockEnd)[::-1] and inBlock == True:
+                            inBlock = False
 
     return ncloc
 
@@ -106,3 +92,52 @@ def run(context, change):
 
     else:
         remove_file(context, change['file'])
+
+
+
+import unittest
+from unittest.mock import Mock
+import io
+
+class NclocTest(unittest.TestCase):
+
+    def test_run_java(self):
+        change = {
+            'type': 'NEW_FILE',
+            'file': 'some-file.java'
+        }
+        self.env = Mock()
+        self.env.get_primary_resource.return_value = '//x = 5\n/*y=6*/\nprint(x)\nz=7\nw=8'
+        self.env.get_derived_resource.return_value = 'Java'
+        run(self.env, change)
+
+        self.env.write_derived_resource.assert_called_with('some-file.java', 3, 'ncloc')
+
+    def test_run_haskell(self):
+        change = {
+            'type': 'FILE_CHANGED',
+            'file': 'some-file.hs'
+        }
+        self.env = Mock()
+        self.env.get_primary_resource.return_value = "\t--x = 5\n\t{-y=6\nprint(x)-}\nz=7\nw=8"
+        self.env.get_derived_resource.return_value = 'Haskell'
+        run(self.env, change)
+
+        self.env.write_derived_resource.assert_called_with('some-file.hs', 2, 'ncloc')
+
+    def test_run_python(self):
+        change = {
+            'type': 'FILE_CHANGED',
+            'file': 'some-file.py'
+        }
+        self.env = Mock()
+        self.env.get_primary_resource.return_value = '\t#x = 5\n\t"""y=6\nprint(x)""" \nz=7\nw=8'
+        self.env.get_derived_resource.return_value = 'Python'
+        run(self.env, change)
+
+        self.env.write_derived_resource.assert_called_with('some-file.py', 2, 'ncloc')
+
+
+def test():
+    suite = unittest.TestLoader().loadTestsFromTestCase(NclocTest)
+    unittest.TextTestRunner(verbosity=2).run(suite)
