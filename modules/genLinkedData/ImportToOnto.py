@@ -47,7 +47,7 @@ class ImportToOnto(object):
         self.modules_dir = self.context.get_env("modules101dir")
 
         self.labeled_entities = []
-        self.pageurl = "http://101companies.org:80/"
+        self.pageurl = "http://101companies.org/"
         if self.debugmode:
             self.pageurl = "http://localhost/"
             #self.pageurl = "http://localhost:3000/"
