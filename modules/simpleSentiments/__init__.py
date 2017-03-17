@@ -15,11 +15,13 @@ config = {
     }
 }
 
-
+# calculate Sentiments from comments ressource
 def calc_sentiment(context, f):
     comments = context.get_derived_resource(f, 'comments')
+	# creating a textblob object from comments.json
     comments_blob = TextBlob(comments)
     comment_sentiment = comments_blob.sentiment
+	# handling files without comments
     if (comments == ''):
         return 'N/A'
     else:
