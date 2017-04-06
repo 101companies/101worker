@@ -3,8 +3,8 @@
 
 import os
 
-from bin.worker_lib.graph import dependent_modules, depending_modules, resolve_modules_graph
-from bin.worker_lib import modules
+from worker_lib.graph import dependent_modules, depending_modules, resolve_modules_graph
+from worker_lib import modules
 
 try:
     #from pymongo import MongoClient
@@ -34,11 +34,9 @@ class PrintColors:
 
 class ImportToOnto(object):
 
-    def __init__(self, _worker_context, _graph, debug = False):
-
+    def __init__(self, _worker_context, _graph):
         self.cur_id = 0
 
-        self.debugmode = debug
         self.context = _worker_context
         self.graph = _graph
 
@@ -48,15 +46,12 @@ class ImportToOnto(object):
 
         self.labeled_entities = []
         self.pageurl = "http://101companies.org/"
-        if self.debugmode:
-            self.pageurl = "http://localhost/"
-            #self.pageurl = "http://localhost:3000/"
 
         self.prepare_graph()
 
     def prepare_graph(self):
         # bind 101 vocabulary
-        ns101 = Namespace(self.pageurl + "resource/")
+        ns101 = Namespace(self.pageurl + "resources/")
         self.graph.bind("ns101", ns101) # Namespace 101
 
         # bind externes vocabulary
@@ -66,7 +61,7 @@ class ImportToOnto(object):
     def get_onto_uriref(self, name):
         name = '_'.join(name.split()).lower()
 
-        return URIRef(self.pageurl + "resource/" + urlparse.quote(name))
+        return URIRef(self.pageurl + "resources/" + urlparse.quote(name))
 
     def do_import(self):
         # do collection of manuelly imports e.g. static objects
@@ -105,7 +100,7 @@ class ImportToOnto(object):
 
         self.addToGraph('101linkeddata', URIRef('http://purl.org/dc/terms/abstract'), Literal('The exploration service of the 101 project in a linked open data manner.'), 'import_manually')
         self.addToGraph('101linkeddata', RDFS.label, Literal('The web-based exploration service of the 101 project'), 'import_manually')
-        self.addToGraph('101linkeddata', 'external_url', Literal('http://101companies.org/resource/'), 'import_manually')
+        self.addToGraph('101linkeddata', 'external_url', Literal('http://101companies.org/resources/'), 'import_manually')
         self.addToGraph('genlinkeddata', DC.isPartOf, '101linkeddata', 'import_manually')
 
 
@@ -121,7 +116,7 @@ class ImportToOnto(object):
 
         # initilize list of resource labels
         list_resource_ext = {}
-        for s in self.graph.subjects(RDF.type, self.get_onto_uriref('resource')):
+        for s in self.graph.subjects(RDF.type, self.get_onto_uriref('resources')):
             for o in self.graph.objects(s, RDFS.label):
                 list_resource_ext.update({str(o): s})
 
@@ -166,7 +161,7 @@ class ImportToOnto(object):
         for ext in list_files_per_expt:
             list_files_per_expt[ext].sort()
             file_literal = Literal("<br>".join(list_files_per_expt[ext]))
-            print ('resource_' + ext)
+            print ('sresource_' + ext)
             self.addToGraph('resource_' + ext, RDF.type, file_literal, 'import_repo_bytype')
 
     def import_workermodules(self):
@@ -306,25 +301,7 @@ class ImportToOnto(object):
             return subjname.lower()
 
     def addToGraph(self, s, p, o, debuginfo):
-
         s = self.get_onto_uriref(s)
-
-        if (self.debugmode):
-            self.graph.add(
-                (s,
-                 self.get_onto_uriref('importedBy'),
-                 self.get_onto_uriref(debuginfo))
-            )
-            self.graph.add(
-                (self.get_onto_uriref(debuginfo),
-                 RDF.type,
-                 self.get_onto_uriref('import_method'))
-            )
-            self.graph.add(
-                (self.get_onto_uriref(debuginfo),
-                 DC.isPartOf,
-                 self.get_onto_uriref('genLinkedData'))
-            )
 
         if(not isinstance(o, Literal) and not isinstance(o, URIRef) and isinstance(o, str)):
             o = self.get_onto_uriref(o)
@@ -333,20 +310,6 @@ class ImportToOnto(object):
 
         # Add tuple to graph
         self.graph.add((s, p, o))
-
-        if self.debugmode:
-            id_uri_ref = self.get_onto_uriref('ontology_data_id')
-            id_exists = False
-            for id in self.graph.objects(s, id_uri_ref):
-                id_exists = True
-            for id in self.graph.objects(o, id_uri_ref):
-                id_exists = True
-
-            if not id_exists:
-                self.cur_id += 1
-                self.graph.add((s, id_uri_ref, Literal(self.cur_id)))
-                if not isinstance(o, Literal):
-                    self.graph.add((o, id_uri_ref, Literal(self.cur_id)))
 
     def addLabel(self, entity, label = None):
 
@@ -358,8 +321,7 @@ class ImportToOnto(object):
             self.graph.add((self.get_onto_uriref(entity), RDFS.label, Literal(label)))
 
     def msg(self, txt, txtcolor = PrintColors.ENDC, level = 0):
-        if(self.debugmode):
-            print (txtcolor + ('  ' * (level + 1)) + txt + PrintColors.ENDC)
+        print (txtcolor + ('  ' * (level + 1)) + txt + PrintColors.ENDC)
 
     def check_integrity(self):
         self.msg("checking integrity now", PrintColors.OKBLUE)

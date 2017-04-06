@@ -18,13 +18,8 @@ def createRDFGraph(context):
     graph = Graph()
     graph.open(graphfilepath, create=False)
 
-    run_debugmode = False
-    # run in debugmode for local development
-    #run_debugmode = True
-
     # import 101companies and create 101ontology
-    ito = ImportToOnto(context, graph, run_debugmode)
-
+    ito = ImportToOnto(context, graph)
     ito.do_import()
 
     # check integrity and display warnings
