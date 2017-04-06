@@ -1,6 +1,8 @@
 import os
 import json
 import logging
+from .graph import dependent_modules, depending_modules, resolve_modules_graph
+from .worker_modules import worker_modules, import_module
 
 def abs_path(path):
     return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', path))
@@ -108,5 +110,8 @@ def create_module_env(env, module=None):
         'read_dump': read_dump,
         'write_dump': write_dump,
         'get_derived_resource': get_derived_resource,
-        'remove_dump': remove_dump
+        'remove_dump': remove_dump,
+        'resolve_modules_graph': resolve_modules_graph,
+        'worker_modules': worker_modules,
+        'depending_modules': depending_modules
     })

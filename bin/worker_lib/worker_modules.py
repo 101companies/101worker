@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../m
 def import_module(module_name):
     return importlib.import_module(module_name)
 
-modules = [
+module_names = [
     'pull',
     'matchLanguage',
     'extractFacts',
@@ -24,4 +24,4 @@ modules = [
     'zip'
 ]
 
-modules = [import_module(module) for module in modules]
+worker_modules = [import_module(module) for module in module_names]

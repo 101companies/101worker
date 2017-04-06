@@ -5,6 +5,6 @@ import sys
 sys.path.append(os.path.abspath('.'))
 sys.path.append(os.path.abspath('./libraries'))
 
-from worker_lib import runner, modules
+from worker_lib import runner, worker_modules
 
 runner.run_tests(modules)

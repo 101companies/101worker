@@ -3,16 +3,6 @@
 
 import os
 
-from worker_lib.graph import dependent_modules, depending_modules, resolve_modules_graph
-from worker_lib import modules
-
-try:
-    #from pymongo import MongoClient
-    from bson.json_util import dumps
-    from bson.son import SON
-except ImportError:
-    print('Error: bson is missing: "pip3 install bson"')
-
 try:
     from rdflib import ConjunctiveGraph, Graph, URIRef, BNode, Literal, RDF, Namespace
     from rdflib.plugins.serializers import turtle, n3, rdfxml
@@ -184,12 +174,12 @@ class ImportToOnto(object):
 
         self.msg("create module dependencies", PrintColors.ENDC, 1)
 
-        graph = resolve_modules_graph(modules)
+        graph = self.context.resolve_modules_graph(self.context.worker_modules)
         for module_name in graph:
-            for depenting_module in depending_modules(graph, module_name):
+            for depenting_module in self.context.depending_modules(graph, module_name):
                 self.addToGraph(module_name, "depending", str(depenting_module), 'import_workermodules_dependencies')
 
-        for module in modules:
+        for module in self.context.worker_modules:
             behavior = module.config.get('behavior')
             if behavior != None:
                 for predicate in behavior:

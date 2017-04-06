@@ -41,9 +41,9 @@ import worker_lib
 import shutil
 
 try:
-    module = next(filter(lambda m: m.__name__ == args.module[0], worker_lib.modules))
+    module = next(filter(lambda m: m.__name__ == args.module[0], worker_lib.worker_modules))
 
-    graph = worker_lib.resolve_modules_graph(worker_lib.modules)
+    graph = worker_lib.resolve_modules_graph(worker_lib.worker_modules)
     dependencies = worker_lib.depending_modules(graph, args.module[0])
     if dependencies:
         logging.info('Module depends on %s', ', '.join(dependencies))
