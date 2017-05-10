@@ -16,7 +16,7 @@
 
 <body>
   
-<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
   
 <script>
 var width = 960,
@@ -40,7 +40,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-d3.csv("pie.csv", type, function(error, data) {
+d3.csv("enterDataHere", type, function(error, data) {
   if (error) throw error;
 
   var g = svg.selectAll(".arc")
