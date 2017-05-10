@@ -4,8 +4,10 @@ import json
 def getLanguages():
     #datastructure for languages and their corresponding comment symbols
     languages = {'Java': {'Single': ['//'], 'Block': [{'BlockStart': '/*', 'BlockEnd': '*/'}]},
-             'Python': {'Single': ['#'], 'Block': [{'BlockStart': '"""', 'BlockEnd': '"""'},{'BlockStart': "'''", 'BlockEnd': "'''"},]},
-             'Haskell': {'Single': ['--'], 'Block': [{'BlockStart': '{-', 'BlockEnd': '-}'}]}}
+            'Python': {'Single': ['#'], 'Block': [{'BlockStart': '"""', 'BlockEnd': '"""'},{'BlockStart': "'''", 'BlockEnd': "'''"},]},
+            'Haskell': {'Single': ['--'], 'Block': [{'BlockStart': '{-', 'BlockEnd': '-}'}]},
+            'Ruby': {'Single': ['#'], 'Block': [{'BlockStart': '=begin', 'BlockEnd': '=end'}]},
+            'CPlusPlus': {'Single': ['//'], 'Block': [{'BlockStart': '/*', 'BlockEnd': '*/'}]}}
     return languages
 
 # this is the actual logic of the module

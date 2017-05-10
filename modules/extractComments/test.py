@@ -103,6 +103,42 @@ class ExtractCommentsTest(unittest.TestCase):
         run(self.env, self.change)
         self.env.write_derived_resource.assert_called_with('some-file.any', {'comments':[self.commentText+"''' abc",self.commentText]}, 'comments')
 
+    #Test for Ruby Single Line Comments
+    def test_Java_singleCommentStandard(self):
+        sourceCode = "x=42 \n y=101 \n "+"#"+self.commentText+"\n"+"z=x+y"
+        self.env = Mock()
+        self.env.get_derived_resource.return_value = "Ruby"
+        self.env.get_primary_resource.return_value = sourceCode
+        run(self.env, self.change)
+        self.env.write_derived_resource.assert_called_with('some-file.any', {'comments':[self.commentText]}, 'comments')
+
+    #Test for Ruby Multiline Comments
+    def test_Java_multiCommentStandard(self):
+        sourceCode = "x=42 \n y=101 \n "+"=begin"+self.commentText+"=end"+"z=x+y"
+        self.env = Mock()
+        self.env.get_derived_resource.return_value = "Ruby"
+        self.env.get_primary_resource.return_value = sourceCode
+        run(self.env, self.change)
+        self.env.write_derived_resource.assert_called_with('some-file.any', {'comments':[self.commentText]}, 'comments')
+    
+    #Test for C++ Single Line Comments
+    def test_Java_singleCommentStandard(self):
+        sourceCode = "x=42 \n y=101 \n "+"//"+self.commentText+"\n"+"z=x+y"
+        self.env = Mock()
+        self.env.get_derived_resource.return_value = "CPlusPlus"
+        self.env.get_primary_resource.return_value = sourceCode
+        run(self.env, self.change)
+        self.env.write_derived_resource.assert_called_with('some-file.any', {'comments':[self.commentText]}, 'comments')
+
+    #Test for C++ Multiline Comments
+    def test_Java_multiCommentStandard(self):
+        sourceCode = "x=42 \n y=101 \n "+"/*"+self.commentText+"*/"+"z=x+y"
+        self.env = Mock()
+        self.env.get_derived_resource.return_value = "CPlusPlus"
+        self.env.get_primary_resource.return_value = sourceCode
+        run(self.env, self.change)
+        self.env.write_derived_resource.assert_called_with('some-file.any', {'comments':[self.commentText]}, 'comments')
+
 def test():
     suite = unittest.TestLoader().loadTestsFromTestCase(ExtractCommentsTest)
     unittest.TextTestRunner(verbosity=2).run(suite)
