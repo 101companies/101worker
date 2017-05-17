@@ -76,6 +76,36 @@ def insertTemplate(template, targetpath, dataname):
         outputfile.writelines(line)
 
 
+#################
+# Google Charts #
+#################
+
+# barChart
+def create_googleChart_bar(moduleName, fileName, options, data, path):
+    sourcePath = os.path.join('templates', 'googleCharts', 'barChart.html')
+    targetPath = os.path.join(path, moduleName, fileName + '.html')
+    inputFile = open(sourcePath)
+    check_path(targetPath)
+    outputFile = open(targetPath, 'w')
+    for line in inputFile:
+        if line.find('INSERT_DATA'):
+            line = line.replace('INSERT_DATA', str(data))
+        if line.find('INSERT_OPTIONS'):
+            line = line.replace('INSERT_OPTIONS', options)
+# pieChart
+def create_googleChart_pie(moduleName, fileName, options, data, path): 
+    sourcePath = os.path.join('templates', 'googleCharts', 'pieChart.html')
+    targetPath = os.path.join(path, moduleName, fileName + '.html')
+    inputFile = open(sourcePath)
+    check_path(targetPath)
+    outputFile = open(targetPath, 'w')
+    for line in inputFile:
+        if line.find('INSERT_DATA'):
+            line = line.replace('INSERT_DATA', str(data))
+        if line.find('INSERT_OPTIONS'):
+            line = line.replace('INSERT_OPTIONS', options)
+        outputFile.writelines(line)
+
 
 
 

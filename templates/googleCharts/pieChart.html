@@ -10,13 +10,13 @@
 
       function drawChart() {
 
-	var data_in = INSTERT_DATA;
+	var data_in = INSERT_DATA;
 
-	var options_in = INSERT_DATA;
+	var options_in = INSERT_OPTIONS;
 
         var data = google.visualization.arrayToDataTable(data_in);
 
-        var options = {options_in};
+        var options = options_in;
 
         var chart = new google.visualization.PieChart(document.getElementById('googleChart'));
 
