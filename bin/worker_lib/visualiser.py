@@ -70,7 +70,7 @@ def updateIndex(path, data):
             tempfile = open(path + os.sep + 'temp', 'w')
             for line in inputfile:
                 if line.find('<!-- xxx -->') != -1:
-                    line = '<!--'+ key + '-->' + "\n" + '<!--'+key+'-END-->' + "\n<!-- xxx -->"
+                    line = '<!--'+ key + '-->' + "\n" + '<!--'+key+'-END-->' + "\n<!-- xxx -->\n"
                 tempfile.writelines(line)
         tempfile = open(path + os.sep + 'temp', 'r')
         inputfile = open(path + os.sep + 'index.html', 'w')
@@ -82,12 +82,12 @@ def updateIndex(path, data):
 
 def createHtmlTag(key, array):
     htmlNote = '<!--'+ key + '-->' + "\n"
-    header = "<h2>"+key+"</h2><br>\n"
+    header = "<ul><li>"+key+"</li>\n<ul>\n"
     fullCode = htmlNote + header
     for item in array:
-        linkperitem = "<a href="+key+os.sep+item+">"+item+"</a><br>\n"
+        linkperitem = "<li><a href="+key+os.sep+item+" target=\'content_frame\'>"+item+"</a></li>\n"
         fullCode = fullCode + linkperitem
-    endNode = "\n <!--'+key+'-END--> \n"
+    endNode = "\n</ul>\n</ul>\n"+"<!--"+key+"-END--> \n"
     fullcode = fullCode + endNode
     return fullcode
 

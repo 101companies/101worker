@@ -10,4 +10,5 @@ def createImage(env):
         yValue.append(value)
 
     env.create_piechart('Piechart1',xName,yName,xValue,yValue)
-
+    env.create_piechart('Piechart6',xName,yName,xValue,yValue)
+    env.create_piechart('Piechart999',xName,yName,xValue,yValue)
