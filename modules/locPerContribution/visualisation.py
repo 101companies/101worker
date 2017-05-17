@@ -16,7 +16,11 @@ def createImage(env):
         yValue.append(value)
         data_in.append([key, value])
 
+<<<<<<< HEAD
     #env.create_piechart('Piechart1','locPerContribution',xName,yName,xValue,yValue)
 
     env.create_googleChart_pie('locPerContribution', 'googlePieFTW', options_in, data_in)
+=======
+    env.create_piechart('Piechart1',xName,yName,xValue,yValue)
+>>>>>>> f28d9b9e9e25722e593d0e03569310596222d192
 

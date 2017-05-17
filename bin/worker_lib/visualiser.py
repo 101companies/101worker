@@ -34,6 +34,8 @@ def folderIterator(path):
     data = {}
     for dirs in os.listdir(path):
         htmlfiles = []
+        if dirs.endswith('index.html'):
+            continue
         for files in os.listdir(path + os.sep + dirs):
             if files.endswith('.html'):
                 htmlfiles.append(files)
@@ -41,11 +43,53 @@ def folderIterator(path):
     updateIndex(path, data)
 
 def updateIndex(path, data):
-    if not os.path.isfile(path + os.sep + 'index.html'):
-        target = open(path + os.sep + 'index.html', 'w')
-    
-        
-                
+
+    targetpath = path + os.sep + 'index.html'
+    templatepath = os.path.join('templates','index.html')
+    shutil.copyfile(templatepath, targetpath)
+    for key in data.keys():
+        skiplines = False
+        inputfile = open(targetpath, 'r')
+        tempfile = open(path + os.sep + 'temp', 'w')
+        keyfound = False
+		
+        for line in inputfile:
+            if line.find('<!--'+ key + '-->') != -1:
+                skiplines = True
+                keyfound = True
+                tempfile.writelines(line)
+            if line.find('<!--'+key+'-END-->') != -1:
+                skiplines = False
+                line = ""
+            if not skiplines:
+                tempfile.writelines(line)
+
+        if not keyfound:
+            os.remove(path + os.sep + 'temp')
+            inputfile = open(path + os.sep + 'index.html', 'r')
+            tempfile = open(path + os.sep + 'temp', 'w')
+            for line in inputfile:
+                if line.find('<!-- xxx -->') != -1:
+                    line = '<!--'+ key + '-->' + "\n" + '<!--'+key+'-END-->' + "\n<!-- xxx -->"
+                tempfile.writelines(line)
+        tempfile = open(path + os.sep + 'temp', 'r')
+        inputfile = open(path + os.sep + 'index.html', 'w')
+        for line in tempfile:
+            if line.find('<!--'+ key + '-->') != -1:
+                line = createHtmlTag(key, data[key])
+            inputfile.writelines(line)
+        os.remove(path + os.sep + 'temp')
+
+def createHtmlTag(key, array):
+    htmlNote = '<!--'+ key + '-->' + "\n"
+    header = "<h2>"+key+"</h2><br>\n"
+    fullCode = htmlNote + header
+    for item in array:
+        linkperitem = "<a href="+key+os.sep+item+">"+item+"</a><br>\n"
+        fullCode = fullCode + linkperitem
+    endNode = "\n <!--'+key+'-END--> \n"
+    fullcode = fullCode + endNode
+    return fullcode
 
 def manageLinkFile(moduleName, chartName,mainPath):
     name = moduleName + os.sep + chartName
