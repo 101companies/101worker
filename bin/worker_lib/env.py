@@ -101,8 +101,11 @@ def create_module_env(env, module=None):
             json.dump(data, f, indent=4)
             logging.debug('Wrote dump %s at %s', dump_name, d)
 
-    def create_piechart(name,moduleName,xName,yName,xValue,yValue):
+    def create_piechart(name,xName,yName,xValue,yValue):
+        moduleName = str(module).replace("'","").split(" ")[1]
         c_piechart(name,moduleName,xName,yName,xValue,yValue,get_env('views101dir'))
+
+
 
     return AttrDict({
         'get_env': get_env,

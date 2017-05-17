@@ -4,6 +4,7 @@ from .logger import report_error
 import os
 import sys
 import traceback
+import shutil
 
 class Executor(object):
 
@@ -46,6 +47,9 @@ class FileFullSweepExecutor(Executor):
         ####### added to create Image ################
         if self._module.config.get('visualisation') == True :        
             print("Creating Image")
+            folderName = str(self._module).replace("'","").split(" ")[1]
+            path = self._env.get_env('views101dir')
+            shutil.rmtree(path + os.sep + folderName)
             self._module.createImage(self._env)
         ##############################################
 
