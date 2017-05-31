@@ -114,9 +114,10 @@ def insertTemplate(template, targetpath, dataname):
 # barChart
 def create_googleChart_bar(moduleName, fileName, options, data, path):
     sourcePath = os.path.join('templates', 'googleCharts', 'barChart.html')
+    targetFolder = os.path.join(path, moduleName)
     targetPath = os.path.join(path, moduleName, fileName + '.html')
     inputFile = open(sourcePath)
-    check_path(targetPath)
+    check_path(targetFolder)
     outputFile = open(targetPath, 'w')
     for line in inputFile:
         if line.find('INSERT_DATA'):
@@ -126,9 +127,10 @@ def create_googleChart_bar(moduleName, fileName, options, data, path):
 # pieChart
 def create_googleChart_pie(moduleName, fileName, options, data, path): 
     sourcePath = os.path.join('templates', 'googleCharts', 'pieChart.html')
+    targetFolder = os.path.join(path, moduleName)
     targetPath = os.path.join(path, moduleName, fileName + '.html')
     inputFile = open(sourcePath)
-    check_path(targetPath)
+    check_path(targetFolder)
     outputFile = open(targetPath, 'w')
     for line in inputFile:
         if line.find('INSERT_DATA'):
