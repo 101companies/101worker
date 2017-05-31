@@ -22,3 +22,26 @@ pieChart
 
 
 
+
+
+
+
+
+
+
+
+------------------------
+
+TODO:
+1. doc templates (siehe hier oben )
+2. doc modules
+3. module eval
+4. visualization modules
+5. How-To: Visualize
+	Config (visualization = true)
+	def createImage(env)
+	...
+6. createImage umbennen
+7. Nameskonsistenz
+8. Modul entfernen
+9. error handling (chart not found)
