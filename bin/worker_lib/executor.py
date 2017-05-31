@@ -29,7 +29,8 @@ class Executor(object):
             print("Creating Image")
             folderName = str(self._module).replace("'","").split(" ")[1]
             path = self._env.get_env('views101dir')
-            shutil.rmtree(path + os.sep + folderName)
+            if(os.path.isdir(path + os.sep + folderName))
+                shutil.rmtree(path + os.sep + folderName)
             self._module.createImage(self._env)
         ##############################################
 
@@ -52,7 +53,8 @@ class FileFullSweepExecutor(Executor):
             print("Creating Image")
             folderName = str(self._module).replace("'","").split(" ")[1]
             path = self._env.get_env('views101dir')
-            shutil.rmtree(path + os.sep + folderName)
+            if(os.path.isdir(path + os.sep + folderName))
+                shutil.rmtree(path + os.sep + folderName)
             self._module.createImage(self._env)
         ##############################################
 
@@ -74,6 +76,7 @@ class AllFullSweepExecutor(Executor):
             print("Creating Image")
             folderName = str(self._module).replace("'","").split(" ")[1]
             path = self._env.get_env('views101dir')
-            shutil.rmtree(path + os.sep + folderName)
+            if(os.path.isdir(path + os.sep + folderName))
+                shutil.rmtree(path + os.sep + folderName)
             self._module.createImage(self._env)
         ##############################################
