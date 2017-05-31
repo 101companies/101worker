@@ -1,9 +1,11 @@
 import os
 import json
 import logging
+
 from .visualiser import create_piechart as c_piechart
-from .visualiser import create_googleChart_pie as create_googleChart_pie_be
-from .visualiser import create_googleChart_bar as create_googleChart_bar_be
+
+from .visualiser import create_googleChart as create_googleChart_viz
+
 
 def abs_path(path):
     return os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', path))
@@ -103,15 +105,25 @@ def create_module_env(env, module=None):
             json.dump(data, f, indent=4)
             logging.debug('Wrote dump %s at %s', dump_name, d)
 
+
+########
+# d3js #
+########
     def create_piechart(name,xName,yName,xValue,yValue):
         moduleName = str(module).replace("'","").split(" ")[1]
         c_piechart(name,moduleName,xName,yName,xValue,yValue,get_env('views101dir'))
+#
+########
 
-    def create_googleChart_pie(ModuleName, fileName, options, data):
-        create_googleChart_pie_be(ModuleName, fileName, options, data, get_env('views101dir'))
 
-    def create_googleChart_bar(ModuleName, fileName, options, data):
-        create_googleChart_bar_be(ModuleName, fileName, options, data, get_env('views101dir'))
+#################
+# Google Charts #
+#################
+#
+    def create_googleChart(chartType, fileName, data, options = None):
+        create_googleChart_viz(chartType, str(module).replace("'","").split(" ")[1], fileName, get_env('views101dir'), data, options)
+#
+#################
 
     return AttrDict({
         'get_env': get_env,
@@ -123,6 +135,5 @@ def create_module_env(env, module=None):
         'get_derived_resource': get_derived_resource,
         'remove_dump': remove_dump,
         'create_piechart': create_piechart,
-	'create_googleChart_pie': create_googleChart_pie,
-	'create_googleChart_bar': create_googleChart_pie
+	'create_googleChart': create_googleChart
     })

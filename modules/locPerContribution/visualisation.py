@@ -1,24 +1,19 @@
 def createImage(env):
     data = env.read_dump('locPerContribution')
-    out = []
-    xName = 'Contribution'
-    yName = 'Lines of Code'
-    xValue = []
-    yValue = []
     
-    data_in = []
-    options_in = '{title: \'locPerContribution\'}'    
+    # google input variables
+    google_data = []
+    google_options = '{title: \'locPerContribution\'}'    
 
-    data_in.append(['contribution', 'loc'])
+    # value labels
+    google_data.append(['contribution', 'loc'])
 
+    # filling data
     for key, value in data.items():
-        xValue.append(key)
-        yValue.append(value)
-        data_in.append([key, value])
+        google_data.append([key, value])
 
-
-    env.create_googleChart_pie('locPerContribution', 'googlePieFTW', options_in, data_in)
-    env.create_piechart('Piechart1',xName,yName,xValue,yValue)
-
-    env.create_piechart('Piechart6',xName,yName,xValue,yValue)
-    env.create_piechart('Piechart999',xName,yName,xValue,yValue)
+    # create  charts
+    env.create_googleChart('pieChart', 'googlePie', google_data, google_options)
+    env.create_googleChart('barChart', 'googleBar', google_data, google_options)
+    env.create_googleChart('lineChart', 'googleLine', google_data, google_options)
+    env.create_googleChart('bubbleChart', 'googleBubble', google_data, google_options)
