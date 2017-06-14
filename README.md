@@ -1,16 +1,3 @@
-# Actual information for project practical
-
--Changed bin/workerlib/executor to allow call of visualisation
-
--Added boolean visualisation to locPerContribution, which is used (when True), to tell the extractor that
-a chart should be created
-
--We are actually using matplotlib and numpy as imports, which are not automatically installed
--> Need to add it to the makefile?
-
-
-
-
 # Installation
 
 It is advised to familiar yourself with the basic concepts of 101worker

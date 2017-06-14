@@ -1,47 +1,62 @@
+# Templates
 
-Formaler Aufbau:
-1. titel
-2. input daten format
-3. options
-4. link zu googlechart doc
-5. bild
+All files contained in this folder are used by the visualizer.
 
 
+## googleChart
+
+With these googleCharts templates you can quickly create simple or even highly customized charts.
+
+To use the visualization you need to add the folling parameter to your config.json: 
+*visualization = true
+To do so simply use the following function in your visualization.py:
+*env.create_googleChart(chartType, chartName, data, options)
+
+chartType		defines the template to use for creating a chart
+chartName		defines a custom name for the chart and although the name of the chart in the index file
+data			defines the resouces used for chart creation, for further documentation see below
+options			defines the options used for chart creation, those can be customly specified
 
 
-barChart
+## documentation
+For a full documentation of google charts please refer to the general documentation.
+*https://developers.google.com/chart/interactive/docs/
 
+For usig the templates here is a general example how data and options could look like.
+*sample data
+data = [
+	['Language', 'Speakers (in millions)'],
+	['German',  5.85],
+	['French',  1.66]
+	]);
+*sample options
+options = {
+	legend: 'none',
+	pieSliceText: 'label',
+	title: 'Swiss Language Use (100 degree rotation)',
+	pieStartAngle: 100,
+    };
 
-bubbleChart
+### google pie chart
+*chartType	'pieChart'
+*chartName	String customŃame
+*data		refer to https://developers.google.com/chart/interactive/docs/gallery/piechart#data-format
+*options	refer to https://developers.google.com/chart/interactive/docs/gallery/piechart#configuration-options
 
+### google bar chart
+*chartType	'pieChart'
+*chartName	String customŃame
+*data		refer to https://developers.google.com/chart/interactive/docs/gallery/barchart#data-format
+*options	refer to https://developers.google.com/chart/interactive/docs/gallery/barchart#configuration-options
 
-lineChart
+### google line chart
+*chartType	'pieChart'
+*chartName	String customŃame
+*data		refer to https://developers.google.com/chart/interactive/docs/gallery/linechart#data-format
+*options	refer to https://developers.google.com/chart/interactive/docs/gallery/linechart#configuration-options
 
-
-pieChart
-
-
-
-
-
-
-
-
-
-
-
-------------------------
-
-TODO:
-1. doc templates (siehe hier oben )
-2. doc modules
-3. module eval
-4. visualization modules
-5. How-To: Visualize
-	Config (visualization = true)
-	def createImage(env)
-	...
-6. createImage umbennen
-7. Nameskonsistenz
-8. Modul entfernen
-9. error handling (chart not found)
+### google bubble chart
+*chartType	'pieChart'
+*chartName	String customŃame
+*data		refer to https://developers.google.com/chart/interactive/docs/gallery/bubblechart#data-format
+*options	refer to https://developers.google.com/chart/interactive/docs/gallery/bubblechart#configuration-options

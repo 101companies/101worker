@@ -2,8 +2,6 @@ import os
 import json
 import logging
 
-from .visualiser import create_piechart as c_piechart
-
 from .visualiser import create_googleChart as create_googleChart_viz
 
 
