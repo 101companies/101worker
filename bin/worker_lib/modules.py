@@ -21,8 +21,7 @@ modules = [
     'moretagclouds',
     'plainTextWikiDump',
     'zip',
-	'mongodump',
-	'visualization'
+	'mongodump'
 ]
 
 modules = [import_module(module) for module in modules]

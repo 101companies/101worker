@@ -25,13 +25,13 @@ class Executor(object):
         for change in changes:
             self._exec(change)
         ####### added to create Image ################
-        if self._module.config.get('visualisation') == True :        
+        if self._module.config.get('visualization') == True :        
             print("Creating Image")
             folderName = str(self._module).replace("'","").split(" ")[1]
             path = self._env.get_env('views101dir')
-            if(os.path.isdir(path + os.sep + folderName))
+            if(os.path.isdir(path + os.sep + folderName)):
                 shutil.rmtree(path + os.sep + folderName)
-            self._module.createImage(self._env)
+            self._module.visualize(self._env)
         ##############################################
 
 class FileFullSweepExecutor(Executor):
@@ -49,13 +49,13 @@ class FileFullSweepExecutor(Executor):
 
                 self._exec(change)
         ####### added to create Image ################
-        if self._module.config.get('visualisation') == True :        
+        if self._module.config.get('visualization') == True :        
             print("Creating Image")
             folderName = str(self._module).replace("'","").split(" ")[1]
             path = self._env.get_env('views101dir')
-            if(os.path.isdir(path + os.sep + folderName))
+            if(os.path.isdir(path + os.sep + folderName)):
                 shutil.rmtree(path + os.sep + folderName)
-            self._module.createImage(self._env)
+            self._module.visualize(self._env)
         ##############################################
 
 class AllFullSweepExecutor(Executor):
@@ -72,11 +72,11 @@ class AllFullSweepExecutor(Executor):
     def run(self, changes):
         self._exec()
         ####### added to create Image ################
-        if self._module.config.get('visualisation') == True :        
+        if self._module.config.get('visualization') == True :        
             print("Creating Image")
             folderName = str(self._module).replace("'","").split(" ")[1]
             path = self._env.get_env('views101dir')
-            if(os.path.isdir(path + os.sep + folderName))
+            if(os.path.isdir(path + os.sep + folderName)):
                 shutil.rmtree(path + os.sep + folderName)
-            self._module.createImage(self._env)
+            self._module.visualize(self._env)
         ##############################################

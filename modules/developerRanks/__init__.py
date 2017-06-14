@@ -9,11 +9,11 @@ config = {
         'uses': [['dump', 'wiki-links']],
         'creates': [['dump', 'developerRanks']]
     },
-    'visualisation': True
+    'visualization': True
 }
 
 from .program import run
-from .visualisation import createImage
+from .visualization import visualize
 
 
 

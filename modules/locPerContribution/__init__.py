@@ -6,9 +6,9 @@ config = {
         'creates': [['dump', 'locPerContribution']],
         'uses': [['resource', 'loc']],
     },
-    'visualisation': True
+    'visualization': True
 }
 
 from .program import run
 from .test import test
-from .visualisation import createImage
+from .visualization import visualize

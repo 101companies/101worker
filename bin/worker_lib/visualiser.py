@@ -16,6 +16,7 @@ def check_path(path):
 ###################
 
 
+
 ########
 # d3JS #
 ########
@@ -70,8 +71,12 @@ def insertTemplate(template, targetpath, dataname):
 def create_googleChart(chartType, moduleName, fileName, path, data, options):
     
     sourcePath = os.path.join('templates', 'googleCharts', chartType + '.html')
+        
+    if not os.path.isfile(sourcePath):
+        raise FileNotFoundError('Could not find template: ' + '\'' + sourcePath + '\'\nPlease check the charttype.')
+    
     targetFolder = os.path.join(path, moduleName)
-    targetPath = os.path.join(path, moduleName, fileName + '.html')
+    targetPath = os.path.join(path, moduleName, fileName.replace(' ', '_') + '.html')
     inputFile = open(sourcePath, 'r')
     check_path(targetFolder)
     outputFile = open(targetPath, 'w')
@@ -158,3 +163,5 @@ def createHtmlTag(key, array):
     return fullcode
 #
 ##################
+
+
