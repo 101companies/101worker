@@ -83,7 +83,7 @@ langs = {
 
 def get_lang(resource):
     suffix = resource.split('.')[-1]
-    return langs.get(suffix, 'unkown')
+    return langs.get(suffix, 'unknown')
 
 def run(context, change):
     # dispatch the modified file

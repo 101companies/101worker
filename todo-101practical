@@ -1,0 +1,31 @@
+modules:
+
+.lang dateien --> prozentualer anteil der Programmiersprache im gesamten repo
+
+top 10 loc (nutze simple loc)
+
+package frequency erweitern für mehr PL
+
+Verhältnis dokumentation code (loc / ncloc -> %, derived resource)
+Dokumentation % pro PL -> dump -> visualisieren (loc, loc-ncloc, %)
+
+auflistung: loc-ncloc = 0
+
+-------------------------------------------------------
+maybe:
+folderDepth: Median and maximum folder nesting depth for contributions grouped by language.
+
+checkTesting: Verify that all Java contributions contain tests; report violations.
+
+    extractor -> imports -> org.junit
+-------------------------------------------------------
+
+visualizer:
+
+scrolling
+
+uml fixen
+
+html endungen in der liste entfernen
+
+verlinkung dumps
