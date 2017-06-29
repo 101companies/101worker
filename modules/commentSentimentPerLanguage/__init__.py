@@ -2,6 +2,7 @@
 import statistics
 import unittest
 from unittest.mock import Mock, patch
+from .visualization import visualize
 
 config = {
     'wantdiff': True,
@@ -12,7 +13,8 @@ config = {
                     ['dump', 'sentimentsPerLanguage']],
         'uses': [['dump', 'LangPerContribution'],
                  ['resource', 'sentiment']]
-    }
+    },
+    'visualization': True
 }
 
 

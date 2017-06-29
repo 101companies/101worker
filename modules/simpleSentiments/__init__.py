@@ -19,7 +19,10 @@ config = {
 def calc_sentiment(context, f):
     comments = context.get_derived_resource(f, 'comments')
 	# creating a textblob object from comments.json
-    comments_blob = TextBlob(comments)
+    comments_string =""
+    for c in comments["comments"]:
+        comments_string = comments_string + c
+    comments_blob = TextBlob(comments_string)
     comment_sentiment = comments_blob.sentiment
 	# handling files without comments
     if (comments == ''):
