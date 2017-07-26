@@ -1,9 +1,0 @@
-SELECT ?language ?technology (COUNT(*) AS ?count) WHERE {
- ?contribution onto:uses ?language .
- ?contribution onto:uses ?technology .
-
- ?language rdf:type onto:Language .
- ?technology rdf:type onto:Technology .
-}
-GROUP BY ?language ?technology
-ORDER BY DESC(?count)

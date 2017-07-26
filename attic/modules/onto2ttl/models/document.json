@@ -1,9 +1,0 @@
-{
-    "@id": "Document",
-    "@type": [
-        "foaf:Document",
-        "Entity",
-        "Description"
-    ],
-    "comment": "Documents in a broad sense"
-}

@@ -1,6 +1,0 @@
-SELECT ?feature ?concept ?headline {
-  ?feature onto:illustrates ?concept .
-  ?feature a onto:Feature .
-  ?concept a onto:Concept .
-  ?concept onto:hasHeadline ?headline
-}

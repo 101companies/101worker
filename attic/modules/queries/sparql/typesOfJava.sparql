@@ -1,6 +1,0 @@
-SELECT ?type
-WHERE { 
-  lang:Java rdf:type ?type .
-  ?type a onto:Classifier
-}
-ORDER BY ?type

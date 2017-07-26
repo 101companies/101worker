@@ -1,9 +1,0 @@
-SELECT DISTINCT
-   ?script
-   (COUNT(?prerequisite) AS ?count)
-WHERE {
-   ?script onto:memberOf course:Lambdas_in_Koblenz .
-   OPTIONAL { ?script onto:dependsOn+ ?prerequisite }
-}
-GROUP BY ?script
-ORDER BY ?count

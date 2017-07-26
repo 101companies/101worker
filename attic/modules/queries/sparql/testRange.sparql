@@ -1,4 +1,0 @@
-SELECT ?y {
-  ?x onto:contribUsesLang ?y .
-  FILTER NOT EXISTS { ?y sesame:directType onto:Language }
-}

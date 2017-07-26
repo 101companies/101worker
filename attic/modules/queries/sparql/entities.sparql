@@ -1,9 +1,0 @@
-SELECT ?type (COUNT(?type) AS ?count) 
-WHERE {
-  ?type rdfs:subClassOf onto:Entity .
-  FILTER (?type != onto:Entity) .
-  FILTER NOT EXISTS { ?type a onto:Classifier } .
-  ?entity a ?type
-}
-GROUP BY ?type
-ORDER BY ?count

@@ -1,5 +1,0 @@
-SELECT ?course ?headline
-WHERE {
-  ?course a onto:Course .
-  ?course onto:hasHeadline ?headline
-}

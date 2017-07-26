@@ -1,6 +1,0 @@
-{
-    "objective":"Determine wether less complex contribution are introduced before more complex ones in lecture scripts",
-    "output":"Shows the script in which the \"error\" occurs as well as the contribution that wasn't referenced ",
-    "query": "lectureProgression.sparql",
-    "template": "lectureProgression.tmpl"
-}

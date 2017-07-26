@@ -1,5 +1,0 @@
-
-	co:wiki "{{ wiki }}" ;
-	co:github "{{ github }}" ;
-	co:sesame "{{ sesame }}" ;
-	co:endpoint "{{ endpoint }}"

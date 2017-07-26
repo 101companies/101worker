@@ -1,6 +1,0 @@
-SELECT ?concept ?headline {
-  ?concept a onto:Concept .
-  ?concept onto:memberOf voc:Functional_programming .
-  ?concept onto:hasHeadline ?headline
-}
-ORDER BY ?concept

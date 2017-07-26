@@ -1,5 +1,0 @@
-{
-    "@id": "Container",
-    "@type": "Resource",
-    "comment": "Base type for vocabularies, scripts, and themes"
-}

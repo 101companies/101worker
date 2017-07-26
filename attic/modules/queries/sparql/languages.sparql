@@ -1,8 +1,0 @@
-SELECT ?language ?headline (COUNT(?subject) AS ?count)
-WHERE {
-  ?language a onto:Language .
-  ?language onto:hasHeadline ?headline .
-  ?subject ?predicate ?language .
-}
-GROUP BY ?language ?headline
-ORDER BY DESC(?count)

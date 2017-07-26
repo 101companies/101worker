@@ -1,7 +1,0 @@
-SELECT DISTINCT ?thing ?dev WHERE {
- ?thing onto:carries res:Stub .
- ?contribution ?somereference ?thing .
-
- ?contribution onto:developedBy ?dev .
- ?contribution rdf:type onto:Contribution .
-}

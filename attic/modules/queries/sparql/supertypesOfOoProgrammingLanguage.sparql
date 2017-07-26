@@ -1,7 +1,0 @@
-SELECT ?type
-WHERE {
-  onto:OO_programming_language rdfs:subClassOf ?type .
-  ?type a onto:Classifier .
-  FILTER (?type != onto:OO_programming_language )
-}
-ORDER BY ?type

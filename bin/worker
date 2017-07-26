@@ -11,4 +11,4 @@ if os.environ.get('TEST', None):
     repo = runner.create_repo(env)
     runner.checkout_commit(repo, '83d4a5664a63fddcf0a4e464165fb5c71dd17e88')
 
-runner.run(modules, env)
+runner.run(worker_modules, env)

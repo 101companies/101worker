@@ -1,9 +1,0 @@
-SELECT ?entity ?t1 ?t2 {
-  ?entity a ?t1 .
-  ?entity a ?t2 .
-  FILTER (?t1 != ?t2 && ?t1 != onto:Entity && ?t2 != onto:Entity) .
-  ?t1 rdfs:subClassOf onto:Entity .
-  ?t2 rdfs:subClassOf onto:Entity .
-  FILTER NOT EXISTS { ?t1 a onto:Classifier } . 
-  FILTER NOT EXISTS { ?t2 a onto:Classifier }
-}

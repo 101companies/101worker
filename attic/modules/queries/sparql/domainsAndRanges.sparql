@@ -1,7 +1,0 @@
-SELECT ?property ?domain ?range
-WHERE {
-  ?property rdfs:domain ?domain .
-  ?property rdfs:range ?range .
-  ?domain rdfs:subClassOf onto:Resource .
-}
-ORDER BY ?property ?domain ?range

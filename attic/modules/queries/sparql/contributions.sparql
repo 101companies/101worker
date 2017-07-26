@@ -1,8 +1,0 @@
-SELECT ?contribution ?headline (COUNT(?subject) AS ?count)
-WHERE {
-  ?contribution a onto:Contribution .
-  ?contribution onto:hasHeadline ?headline .
-  ?subject ?predicate ?contribution
-}
-GROUP BY ?contribution ?headline
-ORDER BY DESC(?count)

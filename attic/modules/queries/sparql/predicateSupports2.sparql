@@ -1,3 +1,0 @@
-SELECT ?subject ?object {
-  ?subject onto:supports ?object
-}

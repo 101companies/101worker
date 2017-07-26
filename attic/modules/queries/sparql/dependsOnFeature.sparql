@@ -1,5 +1,0 @@
-SELECT ?feature ?implied {
-  ?feature a onto:Feature .
-  ?implied a onto:Feature .
-  ?feature onto:dependsOn ?implied
-}

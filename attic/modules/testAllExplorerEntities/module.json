@@ -1,6 +1,0 @@
-{
-    "command"      : "make run",
-    "wantdiff"     : false,
-    "environment"  : [],
-    "dependencies" : []
-}

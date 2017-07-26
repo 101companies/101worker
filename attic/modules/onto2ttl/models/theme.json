@@ -1,8 +1,0 @@
-{
-    "@id": "Theme",
-    "@type": [
-        "Entity",
-        "Container"
-    ],
-    "comment": "Containers of contributions"
-}

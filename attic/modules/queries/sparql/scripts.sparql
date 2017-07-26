@@ -1,6 +1,0 @@
-SELECT ?script ?headline
-WHERE {
-  ?script a onto:Script .
-  ?script onto:hasHeadline ?headline
-}
-ORDER BY ?script

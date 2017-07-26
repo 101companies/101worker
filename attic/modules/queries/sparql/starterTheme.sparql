@@ -1,6 +1,0 @@
-SELECT ?contribution ?headline
-WHERE {
-  ?contribution onto:memberOf theme:Starter .
-  ?contribution onto:hasHeadline ?headline
-}
-ORDER BY ?contribution

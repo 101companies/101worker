@@ -1,9 +1,0 @@
-{
-	"Hierarchical company": {
-		"Haskell": {
-			"data": {
-				"exact": ["company", "department", "employee", "name", "address", "salary"]
-			}
-		}
-	}
-}

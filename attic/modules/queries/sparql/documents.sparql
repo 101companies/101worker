@@ -1,6 +1,0 @@
-SELECT ?headline
-WHERE {
-  ?doc a onto:Document .
-  ?doc onto:hasHeadline ?headline
-}
-ORDER BY ?headline

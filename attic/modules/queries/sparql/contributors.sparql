@@ -1,7 +1,0 @@
-SELECT ?contributor (COUNT(?subject) AS ?count)
-WHERE {
-  ?contributor a onto:Contributor .
-  ?subject ?predicate ?contributor
-}
-GROUP BY ?contributor
-ORDER BY DESC(?count)

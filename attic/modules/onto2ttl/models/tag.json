@@ -1,5 +1,0 @@
-{
-    "@id": "Tag",
-    "@type": "Entity",
-    "comment": "Tags to be carried by entities"
-}

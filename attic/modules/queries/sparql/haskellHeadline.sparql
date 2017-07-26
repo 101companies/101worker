@@ -1,2 +1,0 @@
-SELECT ?headline
-WHERE { lang:Haskell onto:hasHeadline ?headline }

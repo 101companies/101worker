@@ -1,5 +1,0 @@
-SELECT ?contribution ?headline {
-  ?contribution onto:developedBy contributor:avaranovich .
-  ?contribution a onto:Contribution .
-  ?contribution onto:hasHeadline ?headline
-}

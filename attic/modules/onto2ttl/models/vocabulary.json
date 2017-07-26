@@ -1,8 +1,0 @@
-{
-    "@id": "Vocabulary",
-    "@type": [
-        "Entity",
-        "Container"
-    ],
-    "comment": "Containers of terms"
-}

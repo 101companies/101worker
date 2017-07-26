@@ -8,6 +8,7 @@ install-pip-pkgs:
 	sudo pip3 install pymongo
 	sudo pip3 install inflection
 	sudo pip3 install networkx
+	sudo pip3 install psycopg2
 
 # Remove ALL derived files
 full-reset:

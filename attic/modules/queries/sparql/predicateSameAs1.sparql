@@ -1,4 +1,0 @@
-ASK {
-  "http://101companies.org/resources/Document#JLS"
-    onto:sameAs "http://docs.oracle.com/javase/specs/"
-}

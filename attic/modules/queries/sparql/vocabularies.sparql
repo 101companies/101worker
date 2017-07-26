@@ -1,6 +1,0 @@
-SELECT ?vocabulary ?headline
-WHERE {
-  ?vocabulary a onto:Vocabulary .
-  ?vocabulary onto:hasHeadline ?headline
-}
-ORDER BY ?vocabulary

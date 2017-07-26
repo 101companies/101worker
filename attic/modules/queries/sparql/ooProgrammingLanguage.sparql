@@ -1,3 +1,0 @@
-SELECT ?language
-WHERE { ?language rdf:type onto:OO_programming_language }
-ORDER BY ?language
