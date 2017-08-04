@@ -1,0 +1,9 @@
+{
+    "wantdiff": false,
+    "wantsfiles": false,
+    "threadsafe": false,
+    "behavior": {
+        "creates": [["dump", "moduleDependencies"]],
+        "uses": [["dump", "moduleDescriptions"]]
+    }
+}
