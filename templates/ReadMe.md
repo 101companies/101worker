@@ -20,7 +20,7 @@ options			defines the options used for chart creation, those can be customly spe
 
 ## documentation
 For a full documentation of google charts please refer to the general documentation.
-*https://developers.google.com/chart/interactive/docs/
+* https://developers.google.com/chart/interactive/docs/
 
 For usig the templates here is a general example how data and options could look like.
 * sample data
