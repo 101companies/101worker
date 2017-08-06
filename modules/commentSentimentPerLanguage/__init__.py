@@ -11,7 +11,7 @@ config = {
     'behavior': {
         'creates': [['dump', 'sentimentsPerContribution'],
                     ['dump', 'sentimentsPerLanguage']],
-        'uses': [['dump', 'LangPerContribution'],
+        'uses': [['resource', 'lang'],
                  ['resource', 'sentiment']]
     },
     'visualization': True
@@ -20,7 +20,6 @@ config = {
 
 def run(env, res):
     data = env.read_dump('sentimentsPerLanguage')
-    #langData = env.read_dump('LangPerContribution')
     helpData = env.read_dump('sentimentsPerContribution')
 
     if data is None:
@@ -32,7 +31,6 @@ def run(env, res):
         folders = f.split(os.sep)
         contribution = folders[1]
         fileSentiment = env.get_derived_resource(f, 'sentiment')
-        #lang = langData[contribution]['Main Language']
 		
         lang = env.get_derived_resource(f, 'lang')
         fileName = folders[-1]
@@ -61,18 +59,13 @@ def run(env, res):
             if len(polarity) != 0:
                 p_min = min(polarity)
                 p_max = max(polarity)
-                #p_median = statistics.median(polarity)
-                #p_mean = statistics.mean(polarity)
 
                 s_min = min(subjectivity)
                 s_max = max(subjectivity)
-                #s_median = statistics.median(subjectivity)
-                #s_mean = statistics.mean(subjectivity)
 
                 data[c_lang]['Min'] = (p_min, s_min)
                 data[c_lang]['Max'] = (p_max, s_max)
-               #data[c_lang]['Median'] = (p_median, s_median)
-               #data[c_lang]['Mean'] = (p_mean, s_mean)
+
 
 
     env.write_dump('sentimentsPerContribution', helpData)
