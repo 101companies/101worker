@@ -9,8 +9,7 @@ config = {
     'wantsfiles': True,
     'threadsafe': False,
     'behavior': {
-        'creates': [['dump', 'sentimentsPerContribution'],
-                    ['dump', 'sentimentsPerLanguage']],
+        'creates': [['dump', 'sentimentsPerContribution']],
         'uses': [['resource', 'lang'],
                  ['resource', 'sentiment']]
     },
@@ -20,55 +19,32 @@ config = {
 
 def run(env, res):
     data = env.read_dump('sentimentsPerLanguage')
-    helpData = env.read_dump('sentimentsPerContribution')
-
+    testRange = {'Python', 'Haskell', 'Java', 'XML', 'SQL'}
     if data is None:
         data = {}
-    if helpData is None:
-        helpData = {}
     f = res['file']
     if f.startswith('contributions' + os.sep):
         folders = f.split(os.sep)
-        contribution = folders[1]
         fileSentiment = env.get_derived_resource(f, 'sentiment')
 		
         lang = env.get_derived_resource(f, 'lang')
-        fileName = folders[-1]
 
-        if helpData.get(lang, None) is None:
-            helpData[lang] = {}
-        if helpData[lang].get(contribution, None) is None:
-            helpData[lang][contribution] = {}
-        if res['type'] == "NEW_FILE" or res['type'] == "FILE_CHANGED":
-            helpData[lang][contribution][fileName] = env.get_derived_resource(f, 'sentiment')
-        else:
-            del helpData[lang][contribution][fileName]
+        if (lang in testRange) & (fileSentiment[0] != 0.0):
+            if data.get(lang, None) is None:
+                data[lang] = {}
+            if (data[lang].get('Min', None) is None):
+                data[lang]['Min'] = 0.0
+            if (data[lang]['Min'] > fileSentiment[0]):
+                data[lang]['Min'] = fileSentiment[0]
+            if (data[lang].get('Max', None) is None):
+                data[lang]['Max'] = 0.0
+            if (data[lang]['Max'] < fileSentiment[0]):
+                data[lang]['Max'] = fileSentiment[0]
+            if data[lang].get('Average', None) is None:
+                data[lang]['Average'] = (fileSentiment[0],1)
+            else:
+                data[lang]['Average'] = (((data[lang]['Average'][0] + fileSentiment[0])/2.0),(data[lang]['Average'][1] + 1))
 
-        if data.get(lang, None) is None:
-            data[lang] = {}
-        
-        for c_lang in helpData:
-            polarity = []
-            subjectivity = []
-            for c_name in helpData[c_lang]:
-                for c_file in helpData[c_lang][c_name]:
-                    if helpData[c_lang][c_name][c_file] != 'N/A':
-                        f_sentiment = helpData[c_lang][c_name][c_file]
-                        polarity.append(f_sentiment[0])
-                        subjectivity.append(f_sentiment[1])
-            if len(polarity) != 0:
-                p_min = min(polarity)
-                p_max = max(polarity)
-
-                s_min = min(subjectivity)
-                s_max = max(subjectivity)
-
-                data[c_lang]['Min'] = (p_min, s_min)
-                data[c_lang]['Max'] = (p_max, s_max)
-
-
-
-    env.write_dump('sentimentsPerContribution', helpData)
     env.write_dump('sentimentsPerLanguage', data)
         
 class CommentSentimentPerLanguageTest(unittest.TestCase):
