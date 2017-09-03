@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import argparse
+import logging
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--verbose', '-v', action='store', type=int, default=2, help='Log level 1-5')
+parser.add_argument('module', nargs=1)
+
+#Added argument for path
+parser.add_argument('dataPath', nargs=1)
+#Added argument for path
+parser.add_argument('resultPath', nargs=1)
+
+args = parser.parse_args()
+
+sys.path.append(os.path.abspath('.'))
+sys.path.append(os.path.abspath('./libraries'))
+
+logging.getLogger().setLevel(40 - args.verbose * 10)
+
+def onerror(func, path, exc_info):
+    """
+    Error handler for ``shutil.rmtree``.
+
+    If the error is due to an access error (read only file)
+    it attempts to add write permission and then retries.
+
+    If the error is for another reason it re-raises the error.
+
+    Usage : ``shutil.rmtree(path, onerror=onerror)``
+    """
+    import stat
+    if not os.access(path, os.W_OK):
+        # Is the error an access error ?parser.add_argument('bar', nargs=1)
+        func(path)
+    else:
+        raise
+
+os.environ['FULL_SWEEP'] = '1'
+os.environ['OMIT_GITDEPS'] = '1'
+os.environ['OMIT_PULL'] = '1'
+
+import worker_lib
+import shutil
+
+try:
+    module = next(filter(lambda m: m.__name__ == args.module[0], worker_lib.modules))
+
+    graph = worker_lib.resolve_modules_graph(worker_lib.modules)
+    dependencies = worker_lib.depending_modules(graph, args.module[0])
+    if dependencies:
+        logging.info('Module depends on %s', ', '.join(dependencies))
+
+    dependents = worker_lib.dependent_modules(graph, args.module[0])
+    if dependents:
+        logging.info('Module is depency of %s', ', '.join(dependents))
+
+except StopIteration:
+    logging.warn('Module %s not found, importing manually, please add it to bin/worker_lib/modules.py', args.module[0])
+    module = worker_lib.import_module(args.module[0])
+
+modules = [module]
+
+logging.info('Running module %s', module.__name__)
+
+print(args.dataPath[0])
+
+#add directory path of files
+worker_lib.env['repo101dir'] = args.dataPath[0]
+#changed env variable targets for new output directory
+worker_lib.env['targets101dir'] = args.resultPath[0]
+worker_lib.env['dumps101dir'] = args.resultPath[0]
+
+worker_lib.runner.run(modules, worker_lib.env)
+
+
+logging.info('Module %s was run', module.__name__)
